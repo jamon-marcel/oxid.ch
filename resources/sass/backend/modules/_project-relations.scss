@@ -1,0 +1,16 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: modules/project-selector
+ * -----------------------------------------------------------------------------
+ *
+ */
+
+.project-relations {
+  @include responsive-prop('margin-bottom', $space-lg);
+
+  .project-relations__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+  }
+}

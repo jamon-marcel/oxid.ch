@@ -1,0 +1,243 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: component/grid/global
+ * -----------------------------------------------------------------------------
+ *
+ */
+
+ .grid-row {
+  border-top: 2px solid $color-dark;
+  @include responsive-prop('padding-top', $space-xs);
+  @include responsive-prop('margin-bottom', $space-md);
+  
+  &.grid-row--highlight {
+      @include responsive-prop('margin-bottom', $space-lg); 
+  }
+
+  &.is-list {
+      margin-bottom: 0 !important;
+      padding-bottom: 10px;
+      padding-top: 10px !important;
+      transition: background-color .12s ease-out;
+
+      &:hover {
+          background-color: #eee;
+          cursor: move;
+      }
+  }
+}
+
+.grid-layout-selector {
+
+  position: relative;
+
+  ul {
+      background-color: $color-white;
+      border-top: 2px solid $color-dark;
+      display: none;
+      margin: 0;
+      padding: 0;
+
+      &.is-visible {
+          display: block;
+          display: grid;
+          margin-bottom: 10px;
+          grid-template-columns: repeat(8, 90px);
+          grid-gap: 10px;
+
+          @include bp-lg() {
+              grid-template-columns: repeat(8, 100px);
+          }
+      }
+
+      li {
+          display: block;
+          margin-top: 10px;
+      }
+  
+      a {
+          display: block;
+          width: 90px;
+
+          @include bp-lg() {
+              width: 100px;
+          }
+
+          img {
+              display: block;
+              height: auto;
+              opacity: 1;
+              transition: opacity .12s ease-out;
+              width: 100%;
+          }
+  
+          &:hover img {
+              opacity: 0.7;
+          }
+      }
+  }
+}
+
+.grids {
+  
+  .span {
+      border: 2px dashed #999;
+      display: flex;
+      align-items: center;
+      justify-content:center;
+      min-height: 200px;
+
+      > div {
+          text-align: center;
+          width: 100%;
+      }
+
+      figure {
+          @include background-default();
+          background-size: cover;
+          background-position: center center;
+          padding: 0;
+          position: relative;
+
+          .btn-trash {
+              margin: 0;
+              position: absolute;
+              right: 10px;
+              top: 10px;
+          }
+
+          .btn-crop {
+              margin: 0;
+              position: absolute;
+              right: 10px;
+              top: 55px;
+          }
+
+          figcaption {
+              background-color: rgba(255,255,255,.6);
+              bottom: 0;
+              display: block;
+              left: 0;
+              padding: 10px;
+              position: absolute;
+              text-align: left;
+              width: 100%;
+          }
+      }
+
+      img {
+          display: block;
+          height: auto;
+          width: 100%;
+      }
+  }
+  
+  [class^='grid-'] {
+      background-size: 80px auto;
+      background-position: top 8px right 8px;
+      background-repeat: no-repeat;
+  }
+  
+  .grid-1fr {
+      background-image: url($url-icons + 'grid-layout-1fr.svg');
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 400px;
+
+      figure,
+      .span {
+          min-height: 400px;
+      }
+  }
+  
+  .grid-1fr-portrait {
+      background-image: url($url-icons + 'grid-layout-1fr-portrait.svg');
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 600px;
+      
+      figure,
+      .span {
+          min-height: 600px;
+      }
+  }
+
+  .grid-1fr-wide {
+      background-image: url($url-icons + 'grid-layout-1fr-wide.svg');
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 200px;
+      
+      figure,
+      .span {
+          min-height: 200px;
+      }
+  }
+
+  .grid-2x1fr-wide {
+      background-image: url($url-icons + 'grid-layout-2x1fr-wide.svg');
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 20px;
+      min-height: 200px;
+
+      figure,
+      .span {
+          min-height: 200px;
+      }
+
+      &.is-logo .span {
+          border: 2px dashed #c80000 !important;
+      }
+  }
+
+  .grid-2x1fr {
+      background-image: url($url-icons + 'grid-layout-2x1fr.svg');
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 20px;
+      min-height: 400px;
+
+      figure,
+      .span {
+          min-height: 400px;
+      }
+  }
+
+  .grid-1fr-1fr_stacked {
+      background-image: url($url-icons + 'grid-layout-1fr-1fr_stacked.svg');
+  }
+
+  .grid-1fr_stacked-1fr {
+      background-image: url($url-icons + 'grid-layout-1fr_stacked-1fr.svg');
+  }
+
+  .grid-1fr_stacked-1fr,
+  .grid-1fr-1fr_stacked {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 20px;
+      min-height: 400px;
+
+      figure,
+      .span {
+          min-height: 440px;
+      }
+  }
+
+  .grid-stacked {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 1fr;
+      padding: 10px;
+  }
+  
+  .grid-stacked .span {
+      min-height: 200px;
+      width: 100%;
+      figure {
+          min-height: 200px;
+      }        
+  }
+}
+

@@ -1,0 +1,35 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: form/layout
+ * -----------------------------------------------------------------------------
+ */
+
+.form-row {
+	@include responsive-prop('margin-bottom', $space-md);
+	display: block;
+
+	&.is-last {
+		margin-bottom: 0 !important;
+	}
+
+	&.is-sm {
+		@include responsive-prop('margin-bottom', $space-sm);
+	}
+
+	&.has-error {
+		label {
+			color: $color-danger;
+		}
+
+		input, select, textarea {
+			border-color: $color-danger;
+		}
+	}
+}
+
+.form-helper {
+	color: $color-medium-grey;
+	@include font-size($fs-xs);
+	display: block;
+	margin-top: 5px;
+}

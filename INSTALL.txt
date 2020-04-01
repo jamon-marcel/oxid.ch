@@ -1,0 +1,34 @@
+Add admin user:
+
+1) php artisan tinker
+2) DB::table('users')->insert(['name'=>'marcel','email'=>'m@marceli.to','password'=>Hash::make('7aq31rr')])
+
+DB
+--
+
+nine: 494c93b3239a8f474bc166c685500735:ae5f2c1af3e432704b70898a0ff8de6b
+
+
+DEPLOYING
+---------
+
+1. BUILD PRODUCTION FILES
+npm run production
+
+2. COMPRESS FILES
+tar --exclude="INSTALL.txt" --exclude="*.DS_Store" --exclude="_old/" --exclude="storage/app/public/uploads/" --exclude="node_modules/" --exclude=".git*" --exclude=".env" --exclude=".editorconfig" --exclude="public/storage/" --exclude="public/.htaccess" -cvzf app.tar.gz *
+
+3. COPY FILE
+scp app.tar.gz www-data@silverfish02.nine.ch:/home/www-data/marceli.to/oxid.ch/
+
+4. SSH TO SERVER
+ssh www-data@silverfish02.nine.ch
+
+5. UNTAR FILE
+tar -zxvf app.tar.gz
+
+6. CLEANUP
+php composer.phar install --optimize-autoloader --no-dev
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear

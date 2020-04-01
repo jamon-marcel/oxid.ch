@@ -1,0 +1,25 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: form/input
+ * -----------------------------------------------------------------------------
+ */
+
+input {
+
+    &.is-md {
+        padding: 7px;
+    }
+
+    &.is-caption {
+        border: 2px solid $color-dark-grey;
+        @include font-size($fs-xs);
+        line-height: 1 !important;
+        padding: 7px 5px 5px 5px;
+        width: 100%;
+    }
+
+    &.is-light {
+        border: 2px solid $color-grey;
+        color: $color-dark;
+    }
+}

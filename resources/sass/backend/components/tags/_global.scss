@@ -1,0 +1,50 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/tags/global
+ * -----------------------------------------------------------------------------
+ *
+ * 
+ */
+
+.tags-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 40px;
+}
+
+.tag {
+  border-radius: 2px;
+  color: $color-white;
+  display: inline-block !important;
+  @include font-mono();
+  @include font-size($fs-xxs);
+  line-height: 1 !important;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  opacity: 1;
+  padding: 6px;
+  text-decoration: none;
+  transition: opacity .1s ease-out;
+  width: auto;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.tags {
+  background-color: #f9f9f9;
+  border: 2px dashed $color-light-grey;
+  border-radius: 2px;
+  display: block;
+  border-radius: 2px;
+  padding: 6px 6px 0 6px;
+  width: 100%;
+
+  &.is-empty {
+    color: $color-grey;
+    @include font-mono();
+    @include font-size($fs-xxs);
+    padding-bottom: 6px;
+  }
+}

@@ -1,0 +1,42 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: component/cards/post-preview
+ * -----------------------------------------------------------------------------
+ *
+ */
+
+ .article-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+  
+  > div {
+    background-color: transparent;
+    border: 2px solid $color-white;
+    border-radius: 2px;
+    padding: 10px;
+    transition: background-color .12s ease-out;
+
+    &:hover {
+      background-color: $color-dark-grey;
+      cursor: pointer;
+    }
+  }
+}
+
+.article-selector__item {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.article-selector__text {
+
+  h2 {
+    @include font-size($fs-sm);
+    @include font-bold();
+  }
+
+  .item-text {
+    margin-bottom: 5px;
+  }
+}
