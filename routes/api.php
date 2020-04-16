@@ -54,11 +54,14 @@ Route::middleware('auth:api')->group(function() {
   Route::get('settings/program', 'Api\SettingsController@program');
   Route::get('settings/state', 'Api\SettingsController@state');
   Route::get('settings/authors', 'Api\SettingsController@authors');
+  Route::get('settings/discourseCategories', 'Api\SettingsController@discourseCategories');
+  Route::get('settings/teamCategories', 'Api\SettingsController@teamCategories');
 
   /**
    * Project routes
    */
   Route::get('projects/get', 'Api\ProjectController@get');
+  Route::get('project/get/{project}', 'Api\ProjectController@getOne');
   Route::post('project/create', 'Api\ProjectController@store');
   Route::get('project/edit/{project}', 'Api\ProjectController@edit');
   Route::post('project/update/{project}', 'Api\ProjectController@update');
@@ -69,8 +72,70 @@ Route::middleware('auth:api')->group(function() {
   /**
    * ProjectImage routes
    */
-  Route::get('project/image/status/{projectImage}', 'Api\ProjectImageController@status');
+  Route::get('project/image/get/{projectId}', 'Api\ProjectImageController@get');
+  Route::get('project/image/status/{id}', 'Api\ProjectImageController@status');
   Route::delete('project/image/destroy/{projectImage}', 'Api\ProjectImageController@destroy');
+
+  /**
+   * ProjectDocument routes
+   */
+  Route::get('project/document/status/{id}', 'Api\ProjectDocumentController@status');
+  Route::delete('project/document/destroy/{projectFile}', 'Api\ProjectDocumentController@destroy');
+
+  /**
+   * Project grid routes
+   */
+  Route::get('project/grids/{id}', 'Api\GridController@get');
+  Route::post('project/grids/order', 'Api\GridController@order');
+  Route::get('project/grid/store/{projectId}/{layoutId}', 'Api\GridController@store');
+  Route::delete('project/grid/delete/{id}', 'Api\GridController@destroy');
+  Route::get('project/grid/layouts', 'Api\GridLayoutController@get');
+  Route::get('project/grid/images/{gridId}', 'Api\GridElementController@get');
+  Route::post('project/grid/image/store', 'Api\GridElementController@store');
+  Route::delete('project/grid/image/delete/{id}', 'Api\GridElementController@destroy');
+
+  /**
+   * Discourse routes
+   */
+  Route::get('discourses/get', 'Api\DiscourseController@get');
+  Route::get('discourse/get/{discourse}', 'Api\DiscourseController@getOne');
+  Route::post('discourse/create', 'Api\DiscourseController@store');
+  Route::get('discourse/edit/{discourse}', 'Api\DiscourseController@edit');
+  Route::post('discourse/update/{discourse}', 'Api\DiscourseController@update');
+  Route::get('discourse/status/{discourse}', 'Api\DiscourseController@status');
+  Route::post('discourse/order', 'Api\DiscourseController@order');
+  Route::delete('discourse/destroy/{discourse}', 'Api\DiscourseController@destroy');
+
+  /**
+   * DiscourseImage routes
+   */
+  Route::get('discourse/image/get/{discourseId}', 'Api\DiscourseImageController@get');
+  Route::get('discourse/image/status/{id}', 'Api\DiscourseImageController@status');
+  Route::delete('discourse/image/destroy/{discourseImage}', 'Api\DiscourseImageController@destroy');
+
+  /**
+   * DiscourseDocument routes
+   */
+  Route::get('discourse/document/status/{id}', 'Api\DiscourseDocumentController@status');
+  Route::delete('discourse/document/destroy/{discourseFile}', 'Api\DiscourseDocumentController@destroy');
+
+  /**
+   * Team routes
+   */
+  Route::get('teams/get', 'Api\TeamController@get');
+  Route::get('team/get/{team}', 'Api\TeamController@getOne');
+  Route::post('team/create', 'Api\TeamController@store');
+  Route::get('team/edit/{team}', 'Api\TeamController@edit');
+  Route::post('team/update/{team}', 'Api\TeamController@update');
+  Route::get('team/status/{team}', 'Api\TeamController@status');
+  Route::post('team/order', 'Api\TeamController@order');
+  Route::delete('team/destroy/{team}', 'Api\TeamController@destroy');
+
+  /**
+   * TeamDocument routes
+   */
+  Route::get('team/document/status/{id}', 'Api\TeamDocumentController@status');
+  Route::delete('team/document/destroy/{teamFile}', 'Api\TeamDocumentController@destroy');
 
 });
 

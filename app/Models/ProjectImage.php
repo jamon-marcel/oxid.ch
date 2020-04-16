@@ -16,7 +16,13 @@ class ProjectImage extends Model
     'caption',
     'is_preview_navigation',
     'is_preview_works',
+    'is_grid',
     'publish',
     'project_id',
 	];
+
+  public function project()
+  {
+    return $this->belongsTo('App\Models\Project');
+  }
 }

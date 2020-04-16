@@ -25,7 +25,7 @@ export default {
       });
     },
 
-    // Remove error classes
+    // Remove error per field
     removeError(field, language) {
       if (language) {
         this.errors[field][language] = false;
@@ -34,5 +34,16 @@ export default {
         this.errors[field] = false;
       }
     },
+
+    // Remove all errors at once
+    removeErrors() {
+      this.$el.querySelectorAll('.has-error').forEach(el => {
+        el.classList.remove('has-error');
+      });
+    },
+
+    getSource(asset, size) {
+      return `/image/${size}/${asset}`;
+    }
   }
 };

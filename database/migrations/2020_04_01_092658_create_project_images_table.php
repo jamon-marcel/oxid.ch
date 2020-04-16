@@ -21,7 +21,7 @@ class CreateProjectImagesTable extends Migration
             $table->tinyInteger('is_preview_works')->default(0);
             $table->tinyInteger('publish')->default(0);
             $table->unsignedBigInteger('project_id');
-            $table->foreign('project_id')->references('id')->on('projects');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();
         });
     }

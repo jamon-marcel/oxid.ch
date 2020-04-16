@@ -27,6 +27,12 @@
 				<li>
 					<router-link :to="{ name: 'projects' }">Projekte</router-link>
 				</li>
+				<li>
+					<router-link :to="{ name: 'discourses' }">Diskurs</router-link>
+				</li>
+				<li>
+					<router-link :to="{ name: 'team' }">Team</router-link>
+				</li>
 			</ul>
 			<router-link :to="{ name: 'logout' }" class="icon-logout">Logout</router-link>
 		</nav>

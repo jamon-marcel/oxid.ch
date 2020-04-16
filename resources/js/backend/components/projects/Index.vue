@@ -12,18 +12,23 @@
           <div class="list-items" v-if="projects.length">
             <div
               :class="[p.publish == 0 ? 'is-disabled' : '', 'list-item']"
-              v-for="p in project"
+              v-for="p in projects"
               :key="p.id"
-              data-icons="3"
+              data-icons="4"
             >
               <div class="list-item-body">
                 <strong>{{ p.title.de }}</strong>
               </div>
-              <div class="list-item-action" data-icons="3">
+              <div class="list-item-action" data-icons="4">
+                <router-link
+                  :to="{name: 'project-grids', params: { id: p.id }}"
+                  :class="[p.images.length > 0 ? '' : 'is-disabled', 'icon-grid icon-mini']"
+                  title="Layout"
+                ></router-link>
                 <a
                   href="javascript:;"
                   :class="[p.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
-                  @click.prevent="toggleStatus(p.id,$event)"
+                  @click.prevent="toggle(p.id,$event)"
                 ></a>
                 <router-link
                   :to="{name: 'project-edit', params: { id: p.id }}"
@@ -86,14 +91,14 @@ export default {
       }
     },
 
-    toggleStatus(id,event) {
+    toggle(id,event) {
       let uri = `/api/project/status/${id}`;
       let el = this.progress(event.target);
       this.axios.get(uri).then(response => {
-        const index = this.project.findIndex(x => x.id === id);
-        this.project[index].publish = response.data;
+        const index = this.projects.findIndex(x => x.id === id);
+        this.projects[index].publish = response.data;
         this.$notify({ type: "success", text: "Status geändert" });
-        this.progress(el)
+        this.progress(el);
       });
     },
   },

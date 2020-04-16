@@ -24,4 +24,14 @@ return [
   'wood'  => 'Holz',
   'reuse' => 'Umnutzung',
 
+  // Discoure categories
+  'research' => 'Recherche',
+  'events' => 'Veranstaltungen',
+  'publications' => 'Publikationen',
+
+  // Team categories
+  'partner' => 'Partner',
+  'employee' => 'Mitarbeiter',
+  'alumni' => 'Ehemalige',
+
 ];

@@ -45,7 +45,6 @@
 @import 'components/buttons/trash';
 @import 'components/cards/global';
 @import 'components/cards/post';
-@import 'components/grid/global';
 @import 'components/headings/global';
 @import 'components/headings/h1';
 @import 'components/headings/h2';
@@ -69,7 +68,6 @@
 @import 'components/overlay/global';
 @import 'components/images';
 @import 'components/tables/global';
-@import 'components/tags/global';
 @import 'components/pagination/global';
 
 // Forms
@@ -103,16 +101,11 @@
 @import 'ui';
 
 // Modules
-@import 'modules/article-selector';
-@import 'modules/project-selector';
-@import 'modules/project-relations';
+@import 'modules/grid-image-selector';
+@import 'modules/grid-layout';
 
-// Vendor - Dropzone
+// Vendor
 @import 'vendor/dropzone';
 @import 'vendor/dropzone-custom';
-
-// Vendor - Notifications
 @import 'vendor/notifications';
-
-// Vendor - Draggable
 @import 'vendor/draggable';

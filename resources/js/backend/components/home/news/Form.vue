@@ -4,24 +4,7 @@
     <main class="content" role="main">
       <div>
         <h1>{{title}}</h1>
-        <nav class="tabs">
-          <ul>
-            <li>
-              <a
-                href="javascript:;"
-                @click="changeTab('data')"
-                :class="[tabs.data.active ? 'is-active' : '', tabs.data.error ? 'has-error' : '']"
-              >Daten</a>
-            </li>
-            <li>
-              <a
-                href="javascript:;"
-                @click="changeTab('translation')"
-                :class="[tabs.translation.active ? 'is-active' : '', tabs.translation.error ? 'has-error' : '']"
-              >Übersetzung</a>
-            </li>
-          </ul>
-        </nav>
+        <tabs :tabs="tabs" :errors="errors"></tabs>
         <form @submit.prevent="submit">
           <div v-show="tabs.data.active">
             <div class="grid-main-sidebar">
@@ -138,15 +121,22 @@
 <script>
 import PageHeader from "@/layout/PageHeader.vue";
 import FormButtons from "@/components/global/buttons/FormButtons.vue";
+import Tabs from "@/components/global/tabs/Tabs.vue";
+
 import { TheMask } from "vue-the-mask";
 import tinyConfig from "@/config/tinyconfig.js";
 import Editor from "@tinymce/tinymce-vue";
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
+import newsModel from "@/components/home/news/config/model.js";
+import newsTabs from "@/components/home/news/config/tabs.js";
+import newsErrors from "@/components/home/news/config/errors.js";
+
 export default {
   components: {
     FormButtons: FormButtons,
+    Tabs: Tabs,
     tinymceEditor: Editor,
     TheMask
   },
@@ -160,43 +150,14 @@ export default {
   data() {
     return {
 
-      // fields to validate
-      errors: {
-        title: {
-          de: false
-        }
-      },
+      // validation
+      errors: newsErrors,
 
       // tabs
-      tabs: {
-        data: {
-          active: true,
-          error: false
-        },
-        translation: {
-          active: false,
-          error: false
-        }
-      },
+      tabs: newsTabs,
 
       // model
-      news: {
-        title: {
-          de: null,
-          en: null,
-        },
-        text: {
-          de: null,
-          en: null,
-        },
-        subtitle: {
-          de: null,
-          en: null,
-        },
-        publish: 0,
-        sticky: 0,
-        date_end: null
-      },
+      news: newsModel,
 
       // tinymce config
       tinyConfig: tinyConfig

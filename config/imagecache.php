@@ -54,6 +54,7 @@ return array(
 
     'templates' => array(
         'thumbnail' => 'App\Filters\Image\Template\Thumbnail',
+        'tiny'      => 'App\Filters\Image\Template\Tiny',
         'small'     => 'App\Filters\Image\Template\Small',
         'large'     => 'App\Filters\Image\Template\Large'
     ),

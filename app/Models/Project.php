@@ -32,4 +32,19 @@ class Project extends Model
 		'order',
 		'publish',
 	];
+
+	public function images()
+	{
+		return $this->hasMany('App\Models\ProjectImage', 'project_id', 'id');
+	}
+
+	public function documents()
+	{
+		return $this->hasMany('App\Models\ProjectDocument', 'project_id', 'id');
+	}
+
+	public function grids()
+	{
+		return $this->hasMany('App\Models\Grid', 'project_id', 'id');
+	}
 }

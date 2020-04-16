@@ -1,0 +1,63 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: modules/grid-image-selector
+ * -----------------------------------------------------------------------------
+ *
+ */
+
+.grid-image-selector {
+  .select-wrapper {
+    &:after {
+      background-color: $color-medium-grey;
+    }
+  }
+
+  select {
+    border: 2px solid $color-medium-grey;
+  }
+}
+
+.grid-image-selector__item {
+
+  &.is-multi {
+    @include responsive-prop('margin-bottom', $space-sm);
+    @include responsive-prop('padding-top', $space-xs);
+  }
+
+  h2 {
+    @include font-size($fs-sm);
+    @include font-bold();
+  }
+
+  .grid-image-selector__media {
+
+    figure {
+      display: inline-block;
+      line-height: 1 !important;
+      margin-bottom: 8px;
+      margin-right: 16px;
+      position: relative;
+
+      a {
+        display: block;
+      }
+
+      img {
+        background-color: $color-medium-grey;
+        padding: 1px;
+        display: block;
+        height: 100%;
+        width: auto;
+        opacity: 1;
+        transition: background-color .1s ease-out;
+      }
+
+      &:hover {
+        img {
+          background-color: $color-white;
+          transition: background-color .1s ease-out;
+        }
+      }
+    }
+  }
+}

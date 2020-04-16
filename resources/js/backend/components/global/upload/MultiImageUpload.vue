@@ -81,7 +81,7 @@
 <script>
 import vue2Dropzone from "vue2-dropzone";
 import draggable from 'vuedraggable';
-import dropzoneConfig from "@/config/dropzoneconfig.js";
+import dropzoneConfig from "@/config/dz-image.js";
 
 export default {
 

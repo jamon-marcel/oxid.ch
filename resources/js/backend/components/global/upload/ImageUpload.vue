@@ -34,7 +34,7 @@
 </template>
 <script>
 import vue2Dropzone from "vue2-dropzone";
-import dropzoneConfig from "@/config/dropzoneconfig.js";
+import dropzoneConfig from "@/config/dz-image.js";
 
 export default {
   components: {

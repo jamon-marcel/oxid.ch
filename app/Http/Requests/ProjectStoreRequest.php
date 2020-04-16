@@ -25,7 +25,7 @@ class ProjectStoreRequest extends FormRequest
       'title.de' => 'required|string',
       'title_short.de' => 'required|string',
       'location.de' => 'required|string',
-      'year.de' => 'required|string',
+      'year' => 'required|string',
     ];
   }
 
@@ -40,7 +40,7 @@ class ProjectStoreRequest extends FormRequest
       'title.de.required' => 'Title is required!',
       'title_short.de.required' => 'Title short is required!',
       'location.de.required' => 'Location is required!',
-      'year.de.required' => 'Year is required!',
+      'year.required' => 'Year is required!',
     ];
   }
 }

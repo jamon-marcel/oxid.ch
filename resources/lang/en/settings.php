@@ -23,4 +23,14 @@ return [
   // Filter
   'wood'  => 'Wood',
   'reuse' => 'Reusage',
+
+  // Discoure categories
+  'research' => 'Research',
+  'events' => 'Events',
+  'publications' => 'Publications',
+
+  // Team categories
+  'partner' => 'Partner',
+  'employee' => 'Employee',
+  'alumni' => 'Alumni',
 ];

@@ -14,10 +14,21 @@ import NewsEdit from '@/components/home/news/Edit.vue';
 // Home - Images
 import ImagesIndex from '@/components/home/images/Index.vue';
 
-// Home - News
+// Projects
 import ProjectIndex from '@/components/projects/Index.vue';
 import ProjectCreate from '@/components/projects/Create.vue';
 import ProjectEdit from '@/components/projects/Edit.vue';
+import ProjectGrid from '@/components/projects/grid/Index.vue';
+
+// Discourse
+import DiscourseIndex from '@/components/discourses/Index.vue';
+import DiscourseCreate from '@/components/discourses/Create.vue';
+import DiscourseEdit from '@/components/discourses/Edit.vue';
+
+// Team
+import TeamIndex from '@/components/team/Index.vue';
+import TeamCreate from '@/components/team/Create.vue';
+import TeamEdit from '@/components/team/Edit.vue';
 
 const routes = [
   {
@@ -92,6 +103,52 @@ const routes = [
     name: 'project-edit',
     path: '/admin/project/edit/:id',
     component: ProjectEdit,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'project-grids',
+    path: '/admin/project/grid/:id',
+    component: ProjectGrid,
+    meta: { requiresAuth: true },
+  },
+
+  // Discourse
+  {
+    name: 'discourses',
+    path: '/admin/discourses',
+    component: DiscourseIndex,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'discourse-create',
+    path: '/admin/discourse/create',
+    component: DiscourseCreate,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'discourse-edit',
+    path: '/admin/discourse/edit/:id',
+    component: DiscourseEdit,
+    meta: { requiresAuth: true },
+  },
+
+  // Team
+  {
+    name: 'team',
+    path: '/admin/team',
+    component: TeamIndex,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'team-create',
+    path: '/admin/team/create',
+    component: TeamCreate,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'team-edit',
+    path: '/admin/team/edit/:id',
+    component: TeamEdit,
     meta: { requiresAuth: true },
   },
 ];

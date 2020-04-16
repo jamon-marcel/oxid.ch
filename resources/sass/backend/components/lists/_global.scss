@@ -8,6 +8,20 @@
 // List view
 .list-items {
     border-bottom: 2px solid $color-light-grey;
+
+    &.is-grouped {
+        border-bottom: none;
+
+        > div {
+            @include responsive-prop('margin-bottom', $space-md);
+            border-bottom: 2px solid $color-light-grey;
+        }
+
+        .list-item {
+            // border-bottom: 2px solid $color-light-grey;
+            // @include responsive-prop('padding-bottom', $space-xs);
+        }
+    }
 }
 
 .list-item {
@@ -16,11 +30,6 @@
     grid-template-columns: auto 102px;
     @include responsive-prop('padding-top', $space-xs);
     @include responsive-prop('margin-bottom', $space-xs);
-
-    // &:last-child {
-    //     border-bottom: 2px solid $color-light-grey;
-    //     @include responsive-prop('padding-bottom', $space-xs);
-    // }
 
     &[data-icons="2"] {
         grid-template-columns: auto 46px;

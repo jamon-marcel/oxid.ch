@@ -46,6 +46,25 @@ class SettingsController extends Controller
     return response()->json($this->settings['authors']);
   }
 
+  /**
+   * Get settings->discourseCategories
+   * @return \Illuminate\Http\Response
+   */
+
+  public function discourseCategories()
+  {
+    return response()->json($this->translate('discourseCategories'));
+  }
+
+  /**
+   * Get settings->teamCategories
+   * @return \Illuminate\Http\Response
+   */
+
+  public function teamCategories()
+  {
+    return response()->json($this->translate('teamCategories'));
+  }
 
   protected function translate($type)
   {

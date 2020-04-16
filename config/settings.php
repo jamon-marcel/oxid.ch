@@ -21,4 +21,16 @@ return [
     3 => 'MB/CS'
   ],
 
+  'discourseCategories' => [
+    1 => 'research',
+    2 => 'events',
+    3 => 'publications'
+  ],
+
+  'teamCategories' => [
+    1 => 'partner',
+    2 => 'employee',
+    3 => 'alumni'
+  ],
+
 ];

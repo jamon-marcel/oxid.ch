@@ -10,19 +10,18 @@
 
   // grids
   [class^='box-'] {
-    @include bp-sm() {
-      display: grid;
-    }
+    display: grid;
   }
 
-  .box-2x1fr {
-    @include bp-sm() {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .box-1fr {
+  .box-1 {
     grid-template-columns: 1fr
+  }
+
+  .box-1-1,
+  .box-2-1,
+  .box-1-2,
+  .box-2-2 {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   // box types
@@ -34,12 +33,6 @@
 
     > div {
       border: 2px dashed #999;
-    }
-
-    &.is-logo {
-      > div {
-        border: 2px dashed $color-red;
-      }
     }
 
     > div,
@@ -62,46 +55,17 @@
     }
 
     > div .box-wrapper,
-    > div figure,
-    > div article {
+    > div figure {
       height: 100%; 
       width: 100%;
     }
 
-    article {
-      position: relative;
-
-      .article__link {
-        margin-top: 10px;
-        a {
-          color: $color-dark;
-          @include font-bold();
-        }
-      }
-
-      > div {
-        left: 0%;
-        padding: 20px;
-        position: absolute;
-        top: 50%;
-        transform: translate(0,-50%);
-      }
-    }
-
-    article,
     figure {
       .btn-trash {
         margin: 0;
         position: absolute;
         right: 10px;
         top: 10px;
-      }
-
-      .btn-crop {
-        margin: 0;
-        position: absolute;
-        right: 10px;
-        top: 55px;
       }
     }
 
@@ -129,10 +93,10 @@
       position: absolute;
       top: 50%;
       transform: translate(-50%,-50%);
-      
     }
   }
 
+  // ratios
   .box__a {
     padding-top: 65.1162790697674%;
   }

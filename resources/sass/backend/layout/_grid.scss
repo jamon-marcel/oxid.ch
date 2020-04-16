@@ -4,20 +4,19 @@
  * -----------------------------------------------------------------------------
  */
 
-.grid-team {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 40px;
-    margin-bottom: 40px;
-
-    .form-row {
-        margin-bottom: 0 !important;
-    }
+.grid-main-sidebar {
+  display: grid;
+  grid-template-columns: auto 200px;
+  @include responsive-prop('grid-column-gap', $space-md);
 }
 
-.grid-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 40px;
-    margin-bottom: 40px;
+.column-main {}
+
+.column-sidebar {
+  > div {
+    background-color: $color-light-grey;
+    border-radius: 2px;
+    @include responsive-prop('padding', $space-xs);
+    margin-top: 30px;
+  }
 }

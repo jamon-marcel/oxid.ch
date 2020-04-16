@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api;
-use App\Services\ImageService;
 use App\Models\ProjectImage;
+use App\Http\Resources\DataCollection;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -21,14 +21,31 @@ class ProjectImageController extends Controller
     $this->projectImage = $projectImage;
   }
 
+    /**
+     * Get all images by project
+     *
+     * @param int $projectId
+     * @return \Illuminate\Http\Response
+     */
+
+    public function get($projectId = NULL)
+    {
+      $projectImages = $this->projectImage
+                            ->where('project_id', '=', $projectId)
+                            ->where('publish', '=', 1)
+                            ->get();
+      return new DataCollection($projectImages);
+    }
+
   /**
    * Update the status of the specified resource.
    *
-   * @param  ProjectImage $projectImage
+   * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function status(ProjectImage $projectImage)
+  public function status($id)
   {
+    $projectImage = $this->projectImage->findOrFail($id);
     $projectImage->publish = $projectImage->publish == 0 ? 1 : 0;
     $projectImage->save();
     return response()->json($projectImage->publish);

@@ -4,38 +4,7 @@
     <main class="content" role="main">
       <div>
         <h1>{{title}}</h1>
-        <nav class="tabs">
-          <ul>
-            <li>
-              <a
-                href="javascript:;"
-                @click="changeTab('data')"
-                :class="[tabs.data.active ? 'is-active' : '', tabs.data.error ? 'has-error' : '']"
-              >Daten</a>
-            </li>
-            <li>
-              <a
-                href="javascript:;"
-                @click="changeTab('translation')"
-                :class="[tabs.translation.active ? 'is-active' : '', tabs.translation.error ? 'has-error' : '']"
-              >Übersetzung</a>
-            </li>
-            <li>
-              <a
-                href="javascript:;"
-                @click="changeTab('images')"
-                :class="[tabs.images.active ? 'is-active' : '', tabs.images.error ? 'has-error' : '']"
-              >Bilder</a>
-            </li>
-            <li>
-              <a
-                href="javascript:;"
-                @click="changeTab('files')"
-                :class="[tabs.files.active ? 'is-active' : '', tabs.files.error ? 'has-error' : '']"
-              >Dokumente</a>
-            </li>
-          </ul>
-        </nav>
+        <tabs :tabs="tabs" :errors="errors"></tabs>
         <form @submit.prevent="submit">
           <div v-show="tabs.data.active">
             <div class="grid-main-sidebar">
@@ -47,17 +16,25 @@
                 </div>
                 <div class="form-row" :class="errors.title_short.de ? 'has-error': ''">
                   <label>Kurztitel *</label>
-                  <input type="text" @focus="removeError('title_short', 'de')" v-model="project.title_short.de">
+                  <input
+                    type="text"
+                    @focus="removeError('title_short', 'de')"
+                    v-model="project.title_short.de"
+                  >
                   <div class="is-required">Pflichtfeld</div>
                 </div>
                 <div class="form-row" :class="errors.location.de ? 'has-error': ''">
                   <label>Ort *</label>
-                  <input type="text" @focus="removeError('location', 'de')" v-model="project.location.de">
+                  <input
+                    type="text"
+                    @focus="removeError('location', 'de')"
+                    v-model="project.location.de"
+                  >
                   <div class="is-required">Pflichtfeld</div>
                 </div>
-                <div class="form-row" :class="errors.year.de ? 'has-error': ''">
+                <div class="form-row" :class="errors.year ? 'has-error': ''">
                   <label>Jahr *</label>
-                  <input type="text" @focus="removeError('year', 'de')" v-model="project.year.de">
+                  <input type="text" @focus="removeError('year')" v-model="project.year">
                   <div class="is-required">Pflichtfeld</div>
                 </div>
                 <div class="form-row">
@@ -234,12 +211,8 @@
                   <input type="text" v-model="project.title_short.en">
                 </div>
                 <div class="form-row">
-                  <label>Ort *</label>
+                  <label>Ort</label>
                   <input type="text" v-model="project.location.en">
-                </div>
-                <div class="form-row">
-                  <label>Jahr *</label>
-                  <input type="text" v-model="project.year.en">
                 </div>
                 <div class="form-row">
                   <label>Beschreibung</label>
@@ -261,22 +234,32 @@
             </div>
           </div>
           <div v-show="tabs.images.active">
-              <project-image-upload
-                :labelNew="'Upload images'"
-                :labelExisting="'Existing images'"
-                :labelRestrictions="'jpg, png | max. 8 MB'"
-                :maxFiles="99"
-                :maxFilesize="8"
-                :assets="project.images"
-                :assetType="'image'"
-                :acceptedFiles="'.png,.jpg'"
-                :uploadUrl="'/api/media/upload'"
-              ></project-image-upload>
+            <image-upload
+              :labelNew="'Upload Bilder'"
+              :labelExisting="'Existierende Bilder'"
+              :labelRestrictions="'jpg, png | max. 8 MB'"
+              :maxFiles="99"
+              :maxFilesize="8"
+              :assets="project.images"
+              :assetType="'image'"
+              :acceptedFiles="'.png,.jpg'"
+              :uploadUrl="'/api/media/upload'"
+            ></image-upload>
           </div>
           <div v-show="tabs.files.active">
-
+            <file-upload
+              :labelNew="'Upload Dokumente'"
+              :labelExisting="'Existierende Dokumente'"
+              :labelRestrictions="'pdf | max. 8 MB'"
+              :maxFiles="99"
+              :maxFilesize="8"
+              :assets="project.documents"
+              :assetType="'image'"
+              :acceptedFiles="'.pdf'"
+              :uploadUrl="'/api/media/upload'"
+            ></file-upload>
           </div>
-          <form-buttons :route="'news'"></form-buttons>
+          <form-buttons :route="'projects'"></form-buttons>
         </form>
       </div>
     </main>
@@ -285,17 +268,26 @@
 <script>
 import PageHeader from "@/layout/PageHeader.vue";
 import FormButtons from "@/components/global/buttons/FormButtons.vue";
-import ProjectImageUpload from "@/components/global/upload/ProjectImageUpload.vue";
+import Tabs from "@/components/global/tabs/Tabs.vue";
+
+import ImageUpload from "@/components/projects/upload/ImageUpload.vue";
+import FileUpload from "@/components/projects/upload/FileUpload.vue";
 import tinyConfig from "@/config/tinyconfig.js";
 import Editor from "@tinymce/tinymce-vue";
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
+import projectModel from "@/components/projects/config/model.js";
+import projectTabs from "@/components/projects/config/tabs.js";
+import projectErrors from "@/components/projects/config/errors.js";
+
 export default {
   components: {
     FormButtons: FormButtons,
     tinymceEditor: Editor,
-    ProjectImageUpload: ProjectImageUpload,
+    ImageUpload: ImageUpload,
+    FileUpload: FileUpload,
+    Tabs: Tabs,
   },
 
   props: {
@@ -307,82 +299,16 @@ export default {
   data() {
     return {
 
-      // validation
-      errors: {
-        title: {
-          de: false
-        },
-        title_short: {
-          de: false,
-        },
-        location: {
-          de: false,
-        },
-        year: {
-          de: false,
-        },
-      },
+      // project validation
+      errors: projectErrors,
 
-      // tabs
-      tabs: {
-        data: {
-          active: true,
-          error: false
-        },
-        translation: {
-          active: false,
-          error: false
-        },
-        images: {
-          active: false,
-          error: false,
-        },
-        files: {
-          active: false,
-          error: false
-        }
-      },
+      // project tabs
+      tabs: projectTabs,
 
-      // model
-      project: {
-        title: {
-          de: null,
-          en: null,
-        },
-        title_short: {
-          de: null,
-          en: null,
-        },
-        location: {
-          de: null,
-          en: null,
-        },
-        year: {
-          de: null,
-          en: null,
-        },
-        description: {
-          de: null,
-          en: null
-        },
-        info: {
-          de: null,
-          en: null,
-        },
+      // project model
+      project: projectModel,
 
-        images: [],
-
-        is_filter_wood: 0,
-        is_filter_reuse: 0,
-        is_highlight: 0,
-        has_detail: 0,
-        publish: 0,
-        program: 1,
-        state: 1,
-        author: 1,
-      },
-
-      // setttings
+      // settings
       programs: [],
       states: [],
       authors: [],
@@ -397,6 +323,7 @@ export default {
       let uri = `/api/project/edit/${this.$route.params.id}`;
       this.axios.get(uri).then(response => {
         this.project = response.data;
+        this.tabs.data.active = true;
       });
     }
 
@@ -413,17 +340,45 @@ export default {
     });
   },
 
+  mounted() {
+    this.removeErrors();
+  },
+
   methods: {
     // Validation methods
     validate() {
-      
-      if (this.project.title.de) {
+      if (
+        this.project.title.de &&
+        this.project.title_short.de &&
+        this.project.location.de &&
+        this.project.year &&
+        this.project.images.length > 0
+      ) {
         return true;
       }
 
       if (!this.project.title.de) {
         this.errors.title.de = true;
         this.tabs.data.error = true;
+      }
+
+      if (!this.project.title_short.de) {
+        this.errors.title_short.de = true;
+        this.tabs.data.error = true;
+      }
+
+      if (!this.project.location.de) {
+        this.errors.location.de = true;
+        this.tabs.data.error = true;
+      }
+
+      if (!this.project.year) {
+        this.errors.year = true;
+        this.tabs.data.error = true;
+      }
+
+      if (this.project.images.length == 0) {
+        this.tabs.images.error = true;
       }
 
       return false;
@@ -448,7 +403,7 @@ export default {
     // Store the project
     store() {
       let uri = "/api/project/create";
-      this.axios.post(uri, this.news).then(response => {
+      this.axios.post(uri, this.project).then(response => {
         this.$router.push({ name: "projects" });
         this.$notify({ type: "success", text: "Projekt erfasst!" });
       });
@@ -458,28 +413,30 @@ export default {
     update() {
       let uri = `/api/project/update/${this.$route.params.id}`;
       this.axios.post(uri, this.project).then(response => {
-        this.$router.push({ name: "project" });
+        this.$router.push({ name: "projects" });
         this.$notify({ type: "success", text: "Änderungen gespeichert!" });
       });
     },
 
-    // Upload & asset methods
-    uploadComplete(file) {
+    // Upload image callback
+    uploadImage(file) {
       if (file.status == "error" && file.accepted == false) {
         this.$notify({ type: "error", text: "Invalid format or file to big!" });
       } 
       else {
         let file_response = JSON.parse(file.xhr.response);
         file_response.id = null;
-        file_response.caption = {de: null, en: null};
+        file_response.caption = { de: null, en: null };
         file_response.order = -1;
         file_response.publish = 1;
+        file_response.is_preview_navigation = 0;
+        file_response.is_preview_works = 0;
         this.project.images.push(file_response);
       }
     },
 
-    // Delete a single file by its name
-    deleteUpload(file, event) {
+    // Delete image by its name
+    deleteImage(file, event) {
       if (confirm("Please confirm!")) {
         let uri = `/api/project/image/destroy/${file}`;
         let el = this.progress(event.target);
@@ -491,12 +448,12 @@ export default {
       }
     },
 
-    toggleAsset(asset, event) {
+    // Toggle image status
+    toggleImage(asset, event) {
       if (asset.id === null) {
         const index = this.project.images.findIndex(x => x.name === asset.name);
         this.project.images[index].publish = asset.publish == 1 ? 0 : 1;
-      } 
-      else {
+      } else {
         let uri = `/api/project/image/status/${asset.id}`;
         let el = this.progress(event.target);
         this.axios.get(uri).then(response => {
@@ -507,13 +464,55 @@ export default {
       }
     },
 
+    // Upload file callback
+    uploadFile(file) {
+      if (file.status == "error" && file.accepted == false) {
+        this.$notify({ type: "error", text: "Invalid format or file to big!" });
+      } 
+      else {
+        let file_response = JSON.parse(file.xhr.response);
+        file_response.id = null;
+        file_response.caption = { de: null, en: null };
+        file_response.publish = 1;
+        this.project.documents.push(file_response);
+      }
+    },
+
+    // Delete file by its name
+    deleteFile(file, event) {
+      if (confirm("Please confirm!")) {
+        let uri = `/api/project/document/destroy/${file}`;
+        let el = this.progress(event.target);
+        this.axios.delete(uri).then(response => {
+          const index = this.project.documents.findIndex(x => x.name === file);
+          this.project.documents.splice(index, 1);
+          this.progress(el);
+        });
+      }
+    },
+
+    // Toggle file status
+    toggleFile(asset, event) {
+      if (asset.id === null) {
+        const index = this.project.documents.findIndex(x => x.name === asset.name);
+        this.project.documents[index].publish = asset.publish == 1 ? 0 : 1;
+      } else {
+        let uri = `/api/project/document/status/${asset.id}`;
+        let el = this.progress(event.target);
+        this.axios.get(uri).then(response => {
+          const index = this.project.documents.findIndex(x => x.id === asset.id);
+          this.project.documents[index].publish = response.data;
+          this.progress(el);
+        });
+      }
+    }
   },
 
   computed: {
     title: function() {
-      return this.$props.type == "edit" 
-      ? "Projekt bearbeiten" 
-      : "Projekt hinzufügen";
+      return this.$props.type == "edit"
+        ? "Projekt bearbeiten"
+        : "Projekt hinzufügen";
     }
   }
 };

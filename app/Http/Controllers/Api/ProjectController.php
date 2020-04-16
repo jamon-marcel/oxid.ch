@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Api;
 use App\Models\Project;
+use App\Models\ProjectImage;
+use App\Models\ProjectDocument;
 use App\Http\Resources\DataCollection;
 use App\Http\Requests\ProjectStoreRequest;
 use App\Http\Controllers\Controller;
@@ -9,6 +11,8 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
   protected $project;
+  protected $projectImage;
+  protected $projectDocument;
   
   /**
    * Constructor
@@ -16,9 +20,11 @@ class ProjectController extends Controller
    * @param Project $project
    */
 
-  public function __construct(Project $project)
+  public function __construct(Project $project, ProjectImage $projectImage, ProjectDocument $projectDocument)
   {
     $this->project = $project;
+    $this->projectImage = $projectImage;
+    $this->projectDocument = $projectDocument;
   }
 
   /**
@@ -29,7 +35,19 @@ class ProjectController extends Controller
 
   public function get()
   {
-    return new DataCollection($this->project->get());
+    return new DataCollection($this->project->with('images')->with('documents')->get());
+  }
+
+  /**
+   * Fetch one record
+   *
+   * @param Project $project
+   * @return \Illuminate\Http\Response
+   */
+
+  public function getOne(Project $project)
+  {
+    return response()->json($project);
   }
 
   /**
@@ -39,10 +57,79 @@ class ProjectController extends Controller
    * @return \Illuminate\Http\Response
    */
   
-  public function store(ProjectStoreRequest $request)
+  public function store(Request $request)
   {   
-    $project = new Project($request->all());
+    $project = new Project([
+      'title' => [
+        'de' => $request->input('title.de'),
+        'en' => $request->input('title.en'),
+      ],
+      'title_short' => [
+        'de' => $request->input('title_short.de'),
+        'en' => $request->input('title_short.en'),
+      ],
+      'location' => [
+        'de' => $request->input('location.de'),
+        'en' => $request->input('location.en'),
+      ],
+      'description' => [
+        'de' => $request->input('description.de'),
+        'en' => $request->input('description.en'),
+      ],
+      'info' => [
+        'de' => $request->input('info.de'),
+        'en' => $request->input('info.en'),
+      ],
+      'year'            => $request->input('year'),
+      'program'         => $request->input('program'),
+      'state'           => $request->input('state'),
+      'author'          => $request->input('author'),
+      'is_filter_wood'  => $request->input('is_filter_wood'),
+      'is_filter_reuse' => $request->input('is_filter_reuse'),
+      'has_detail'      => $request->input('has_detail'),
+      'is_highlight'    => $request->input('is_highlight'),
+      'publish'         => $request->input('publish'),
+    ]);
     $project->save();
+    
+    // Images
+    if (!empty($request->images))
+    {
+      foreach($request->images as $i)
+      {
+        $image = new ProjectImage([
+          'project_id'  => $project->id,
+          'name'        => $i['name'],
+          'caption' => [
+            'de' => $i['caption']['de'],
+            'en' => $i['caption']['en'],    
+          ],
+          'is_preview_navigation' => $i['is_preview_navigation'],
+          'is_preview_works'      => $i['is_preview_works'],
+          'publish'               => $i['publish'],
+        ]);
+        $image->save();
+      }
+    }
+
+    // Documents
+    if (!empty($request->documents))
+    {
+      foreach($request->documents as $i)
+      {
+        $document = new ProjectDocument([
+          'project_id'  => $project->id,
+          'name'        => $i['name'],
+          'caption' => [
+            'de' => $i['caption']['de'],
+            'en' => $i['caption']['en'],    
+          ],
+          'publish' => $i['publish'],
+        ]);
+        $document->save();
+      }
+    }
+
     return response()->json(['projectId' => $project->id]);
   }
 
@@ -54,6 +141,7 @@ class ProjectController extends Controller
    */
   public function edit(Project $project)
   {
+    $project = $this->project->with('images')->with('documents')->findOrFail($project->id);
     return response()->json($project);
   }
 
@@ -66,7 +154,75 @@ class ProjectController extends Controller
    */
   public function update(Project $project, ProjectStoreRequest $request)
   {
-    $project->update($request->all());
+    $project = $this->project->findOrFail($project->id);
+    
+    // German
+    $project->setTranslation('title', 'de', $request->input('title.de'));
+    $project->setTranslation('title_short', 'de', $request->input('title_short.de'));
+    $project->setTranslation('location', 'de', $request->input('location.de'));
+    $project->setTranslation('description', 'de', $request->input('description.de'));
+    $project->setTranslation('info', 'de', $request->input('info.de'));
+
+    // English
+    $project->setTranslation('title', 'en', $request->input('title.en'));
+    $project->setTranslation('title_short', 'en', $request->input('title_short.en'));
+    $project->setTranslation('location', 'en', $request->input('location.en'));
+    $project->setTranslation('description', 'en', $request->input('description.en'));
+    $project->setTranslation('info', 'en', $request->input('info.en'));
+
+    $project->year              = $request->input('year');
+    $project->program           = $request->input('program');
+    $project->state             = $request->input('state');
+    $project->author            = $request->input('author');
+    $project->is_filter_wood    = $request->input('is_filter_wood');
+    $project->is_filter_reuse   = $request->input('is_filter_reuse');
+    $project->has_detail        = $request->input('has_detail');
+    $project->is_highlight      = $request->input('is_highlight');
+    $project->publish           = $request->input('publish');
+    $project->save();
+
+    // Images
+    if (!empty($request->images))
+    {
+      foreach($request->images as $i)
+      {
+        $image = ProjectImage::updateOrCreate(
+          ['id' => $i['id']], 
+          [
+            'project_id' => $project->id,
+            'name' => $i['name'],
+            'caption' => [
+              'de' => $i['caption']['de'],
+              'en' => $i['caption']['en']
+            ],
+            'publish' => $i['publish'] ? $i['publish'] : 0,
+            'is_preview_navigation'   => $i['is_preview_navigation'] ? $i['is_preview_navigation'] : 0,
+            'is_preview_works'        => $i['is_preview_works'] ? $i['is_preview_works'] : 0
+          ]
+        );
+      }
+    }
+    
+    // Documents
+    if (!empty($request->documents))
+    {
+      foreach($request->documents as $i)
+      {
+        $document = ProjectDocument::updateOrCreate(
+          ['id' => $i['id']], 
+          [
+            'project_id' => $project->id,
+            'name' => $i['name'],
+            'caption' => [
+              'de' => $i['caption']['de'],
+              'en' => $i['caption']['en']
+            ],
+            'publish' => $i['publish'] ? $i['publish'] : 0,
+          ]
+        );
+      }
+    }
+
     return response()->json('successfully updated');
   }
 
@@ -85,6 +241,8 @@ class ProjectController extends Controller
 
   /**
    * Remove the specified resource from storage.
+   *
+   * \Observers\ProjectObserver observes and deletes child elements (images, documents, grids).
    *
    * @param  Project $project
    * @return \Illuminate\Http\Response
