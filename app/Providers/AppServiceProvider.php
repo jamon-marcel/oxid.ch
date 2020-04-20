@@ -3,9 +3,11 @@ namespace App\Providers;
 use App\Models\Project;
 use App\Models\Discourse;
 use App\Models\Team;
+use App\Models\Job;
 use App\Observers\ProjectObserver;
 use App\Observers\DiscourseObserver;
 use App\Observers\TeamObserver;
+use App\Observers\JobObserver;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -36,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
         Project::observe(ProjectObserver::class);
         Discourse::observe(DiscourseObserver::class);
         Team::observe(TeamObserver::class);
+        Job::observe(JobObserver::class);
 
     }
 }

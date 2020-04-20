@@ -127,7 +127,6 @@ export default {
   methods: {
 
     uploadImage(asset) {
-      console.log(asset);
       this.$refs.dropzone.removeFile(asset);
       this.$parent.uploadImage(asset);
     },
@@ -156,7 +155,6 @@ export default {
         return asset;
       });
 
-      console.log(assets);
       return;
 
       // if (this.debounce) return;

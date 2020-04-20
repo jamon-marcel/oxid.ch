@@ -1,0 +1,47 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: layout/header
+ * -----------------------------------------------------------------------------
+ */
+
+header.site-header {
+  align-items: center;
+  background-color: $color-white;
+  display: flex;
+  @include responsive-prop('height', $header-height);
+  left: 0;
+  padding: 0 $space-sm;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+
+  @include bp-sm() {
+    width: 50%;
+  }
+
+  @include bp-md() {
+    padding: 0 $space-md;
+  }
+}
+
+header.menu-header {
+  align-items: center;
+  background-color: $color-white;
+  display: flex;
+  @include responsive-prop('height', $header-height);
+  left: 0;
+  padding: 0 $space-sm;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+
+  @include bp-sm() {
+    width: 50%;
+  }
+
+  @include bp-md() {
+    padding: 0 $space-md;
+  }
+}

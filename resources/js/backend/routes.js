@@ -12,7 +12,7 @@ import NewsCreate from '@/components/home/news/Create.vue';
 import NewsEdit from '@/components/home/news/Edit.vue';
 
 // Home - Images
-import ImagesIndex from '@/components/home/images/Index.vue';
+import HomeImagesIndex from '@/components/home/images/Index.vue';
 
 // Projects
 import ProjectIndex from '@/components/projects/Index.vue';
@@ -26,9 +26,15 @@ import DiscourseCreate from '@/components/discourses/Create.vue';
 import DiscourseEdit from '@/components/discourses/Edit.vue';
 
 // Team
-import TeamIndex from '@/components/team/Index.vue';
-import TeamCreate from '@/components/team/Create.vue';
-import TeamEdit from '@/components/team/Edit.vue';
+import TeamIndex from '@/components/team/team/Index.vue';
+import TeamCreate from '@/components/team/team/Create.vue';
+import TeamEdit from '@/components/team/team/Edit.vue';
+import TeamImagesIndex from '@/components/team/images/Index.vue';
+
+// Jobs
+import JobIndex from '@/components/jobs/Index.vue';
+import JobCreate from '@/components/jobs/Create.vue';
+import JobEdit from '@/components/jobs/Edit.vue';
 
 const routes = [
   {
@@ -61,28 +67,28 @@ const routes = [
   // Home - News
   {
     name: 'news',
-    path: '/admin/news',
+    path: '/admin/home/news',
     component: NewsIndex,
     meta: { requiresAuth: true },
   },
   {
     name: 'news-create',
-    path: '/admin/news/create',
+    path: '/admin/home/news/create',
     component: NewsCreate,
     meta: { requiresAuth: true },
   },
   {
     name: 'news-edit',
-    path: '/admin/news/edit/:id',
+    path: '/admin/home/news/edit/:id',
     component: NewsEdit,
     meta: { requiresAuth: true },
   },
 
   // Home - Images
   {
-    name: 'images',
-    path: '/admin/images',
-    component: ImagesIndex,
+    name: 'home-images',
+    path: '/admin/home/images',
+    component: HomeImagesIndex,
     meta: { requiresAuth: true },
   },
 
@@ -149,6 +155,34 @@ const routes = [
     name: 'team-edit',
     path: '/admin/team/edit/:id',
     component: TeamEdit,
+    meta: { requiresAuth: true },
+  },
+
+  // Team - Images
+  {
+    name: 'team-images',
+    path: '/admin/team/images',
+    component: TeamImagesIndex,
+    meta: { requiresAuth: true },
+  },
+
+  // Job
+  {
+    name: 'jobs',
+    path: '/admin/job',
+    component: JobIndex,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'job-create',
+    path: '/admin/job/create',
+    component: JobCreate,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'job-edit',
+    path: '/admin/job/edit/:id',
+    component: JobEdit,
     meta: { requiresAuth: true },
   },
 ];

@@ -29,7 +29,7 @@
               v-model="grids" 
               @end="updateOrder"
               ghost-class="draggable-ghost"
-              draggable=".grid-layout-row ">
+              draggable=".grid-layout-row">
               <div class="grid-layout-row  is-list is-draggable" v-for="grid in grids" :key="grid.id">
                 <span class="icon-grid-list">
                   <img :src="'/assets/backend/img/icons/grid-' + grid.layout.key + '.svg'" height="172" width="126">
@@ -37,7 +37,7 @@
               </div>
             </draggable>
           </div>
-          <footer class="form-footer">
+          <footer class="site-footer">
             <div>
               <a
                 :href="'/projekt/' + projectId"

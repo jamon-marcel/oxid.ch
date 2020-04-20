@@ -1,0 +1,21 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: layout/navigation/home
+ * -----------------------------------------------------------------------------
+ */
+
+nav.menu-home {
+  @extend %menu;
+  bottom: 0;
+  height: 100%;
+  transform: translateY(100%);
+
+  @include bp-sm() {
+    transform: translateY(0);
+  }
+
+  &.is-visible {
+    transition: transform .16s ease-out;
+    transform: translateY(0);
+  }
+}

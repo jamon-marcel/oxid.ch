@@ -20,7 +20,7 @@
 							<router-link :to="{ name: 'news' }">News</router-link>
 						</li>
 						<li>
-							<router-link :to="{ name: 'images' }">Bilder</router-link>
+							<router-link :to="{ name: 'home-images' }">Bilder</router-link>
 						</li>
 					</ul>
 				</li>
@@ -31,7 +31,18 @@
 					<router-link :to="{ name: 'discourses' }">Diskurs</router-link>
 				</li>
 				<li>
-					<router-link :to="{ name: 'team' }">Team</router-link>
+					<span>Team</span>
+					<ul>
+						<li>
+							<router-link :to="{ name: 'team' }">Mitarbeiter</router-link>
+						</li>
+						<li>
+							<router-link :to="{ name: 'team-images' }">Bilder</router-link>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<router-link :to="{ name: 'jobs' }">Jobs</router-link>
 				</li>
 			</ul>
 			<router-link :to="{ name: 'logout' }" class="icon-logout">Logout</router-link>

@@ -1,0 +1,64 @@
+/**
+* -----------------------------------------------------------------------------
+* File: vendor/fancybox/fancybox-custom
+* -----------------------------------------------------------------------------
+*/
+
+
+.fancybox-bg {
+  background: $color-white;
+}
+
+.btn-fancybox-close,
+.btn-fancybox-nav {
+  @include background-default();
+  background-position: center center;
+  display: block;
+  position: fixed;
+  z-index: 99999;    
+}
+
+.btn-fancybox-close {
+  background-image: url($url-icons + 'lightbox-close.svg');
+  height: 20px;
+  right: $space-lg;
+  top: $space-md;
+  width: 20px; 
+
+  @include bp-sm() {
+      top: $space-lg;
+  }
+}
+
+.btn-fancybox-nav {
+  height: 28px;
+  top: calc(50% - 14px);
+  width: 36px;
+
+  &.is-prev {
+    background-image: url($url-icons + 'lightbox-prev-dark.svg');
+    left: $space-lg;
+  }
+
+  &.is-next {
+    background-image: url($url-icons + 'lightbox-next-dark.svg');
+    right: $space-lg;
+  }    
+}
+
+.fancybox-infobar {
+  @include font-regular();
+  font-size: 32px;
+  line-height: 1;
+  font-weight: normal;
+  height: auto;
+  left: auto;
+  mix-blend-mode: normal;
+  right: 70px;
+  opacity: 1;
+  padding: 0;
+  top: calc(50% - 18px);
+  width: auto;
+  z-index: 99999;
+  transition: none !important;
+}

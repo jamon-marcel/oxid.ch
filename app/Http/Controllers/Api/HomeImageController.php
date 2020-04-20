@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\HomeImage;
 use App\Http\Resources\DataCollection;
 use App\Http\Requests\HomeImageStoreRequest;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -92,6 +93,10 @@ class HomeImageController extends Controller
   public function destroy(HomeImage $image)
   {
     $image->delete();
-    return response()->json('successfully deleted');
+    $directories = Storage::allDirectories('public');
+    foreach($directories as $d)
+    {
+      Storage::delete($d . '/'. $image->name);
+    }
   }
 }

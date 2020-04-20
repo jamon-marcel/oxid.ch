@@ -1,5 +1,5 @@
 <template>
-  <footer class="form-footer">
+  <footer class="site-footer">
     <div>
       <button type="submit" class="btn-secondary">Speichern</button>
       <router-link :to="{name: route, params: { id: param }}">Zurück</router-link>

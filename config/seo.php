@@ -11,7 +11,7 @@ return [
   |
   */
 
-  'title' => 'WBG AG - VISUELLE KOMMUNIKATION',
+  'title' => 'Oxid Architektur GmbH',
 
   /*
   |--------------------------------------------------------------------------
@@ -22,6 +22,6 @@ return [
   |
   */
 
-  'description' => 'WBG AG - VISUELLE KOMMUNIKATION - Zürich',   
+  'description' => 'Oxid Architektur GmbH - Zürich',   
 
 ];

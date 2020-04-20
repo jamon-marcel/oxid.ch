@@ -5,7 +5,7 @@
     <div class="container">
       <main class="content" role="main">
         <div>
-          <h1>News</h1>
+          <h1>Home - News</h1>
           <router-link :to="{ name: 'news-create' }" class="btn-add">
             <span>Hinzufügen</span>
           </router-link>

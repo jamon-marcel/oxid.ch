@@ -1,0 +1,35 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/logo
+ * -----------------------------------------------------------------------------
+ */
+
+.logo {
+  display: block;
+  
+  img {
+    display: block;
+    height: 67px;
+    width: 175px;
+
+    @include bp-md() {
+      height: 70px;
+      width: 186px;
+    }
+
+    @include bp-lg() {
+      height: 90px;
+      width: 235px;
+    }
+  }
+}
+
+.logo-byline {
+  text-align: right;
+  width: 100%;
+  img {
+    display: inline-block;
+    height: 35px;
+    width: 226px;
+  }
+}

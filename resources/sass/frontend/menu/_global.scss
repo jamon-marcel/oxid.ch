@@ -1,0 +1,86 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: layout/navigation/global
+ * -----------------------------------------------------------------------------
+ */
+
+%menu {
+  background-color: $color-white;
+  left: 0;
+  overflow: auto;
+  padding: $header-height-sm + 20 $space-sm $footer-height-sm $space-sm;
+  position: fixed;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+
+  @include bp-sm() {
+    background-color: transparent;
+    bottom: auto;
+    display: flex;
+    @include responsive-prop('height', $header-height);
+    left: 190px;
+    overflow: hidden;
+    padding: $space-sm 0 0 0;
+    top: 0;
+    transition: transform 0 ease-out;
+    transform: translateY(0);
+    width: auto;
+    z-index: 200;
+  }
+
+  @include bp-md() {
+    left: 206px; // logo width + padding (sm)
+  }
+
+  @include bp-lg() {
+    left: 255px;  // logo width + padding (md)
+  }
+
+  ul {
+
+    @include bp-sm() {
+      margin-left: $space-md;
+      position: relative;
+      top: -5px;
+
+      ul {
+        display: none !important;
+      }
+    }
+
+    @include bp-md() {
+      margin-left: $space-lg;
+      top: 1px;
+    }
+
+    @include bp-lg() {
+      margin-left: $space-xl;
+    }
+  }
+
+  li {
+    display: block;
+    margin-bottom: $space-xxs;
+
+    @include bp-sm() {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    color: $color-black;
+    @include font-size($fs-nav);
+
+    &.is-active,
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  ul.language {
+    a {
+      display: inline;
+      @include font-size($fs-nav-sm);
+    }
+  }
+}

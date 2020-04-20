@@ -17,7 +17,7 @@
               data-icons="4"
             >
               <div class="list-item-body">
-                <strong>{{ p.title.de }}</strong>
+                <strong>{{ p.title_short.de }}</strong>, {{ p.location.de }}
               </div>
               <div class="list-item-action" data-icons="4">
                 <router-link

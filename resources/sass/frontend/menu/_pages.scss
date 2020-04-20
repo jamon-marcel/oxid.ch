@@ -1,0 +1,24 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: layout/navigation/site
+ * -----------------------------------------------------------------------------
+ */
+
+.menu-wrapper {
+  height: 100%;
+  position: fixed;
+  transform: translateY(100%);
+  width: 100%;
+  z-index: 90;
+
+  &.is-visible {
+    transition: transform .16s ease-out;
+    transform: translateY(0);
+  }
+}
+
+nav.menu-site {
+  @extend %menu;
+  transform: translateY(0);
+  top: 0;
+}

@@ -1,0 +1,44 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: component/anchors
+ * -----------------------------------------------------------------------------
+ *
+ *
+ */
+
+%anchor,
+.anchor {
+  color: $color-blue;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+%anchor-external,
+.anchor-external {
+  @extend %anchor;
+  @include background-default();
+  background-image: url($url-images + 'arrow-blue.svg');
+  background-position: bottom 3px right;
+  background-size: 11px auto;
+  display: inline-block;
+  padding-right: 17px;
+
+  @include bp-sm() {
+    background-position: bottom 4px right;
+    background-size: 12px auto;
+    padding-right: 19px;
+  }
+
+  @include bp-md() {
+    background-size: 14px auto;
+    background-position: bottom 4px right;
+    padding-right: 22px;
+  }
+
+  @include bp-lg() {
+    background-size: 15px auto;
+    background-position: bottom 5px right;
+  }
+}

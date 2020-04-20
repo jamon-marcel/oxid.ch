@@ -32,21 +32,31 @@
                   >
                   <div class="is-required">Pflichtfeld</div>
                 </div>
-                <div class="form-row">
-                  <label>Kurzbeschreibung</label>
+                <div
+                  class="form-row"
+                  :class="errors.description_short.de ? 'has-error': ''"
+                  @mouseenter="removeError('description_short', 'de')"
+                >
+                  <label>Kurzbeschreibung *</label>
                   <tinymce-editor
                     api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
                     :init="tinyConfig"
                     v-model="discourse.description_short.de"
                   ></tinymce-editor>
+                  <div class="is-required">Pflichtfeld</div>
                 </div>
-                <div class="form-row">
-                  <label>Beschreibung</label>
+                <div
+                  class="form-row"
+                  :class="errors.description.de ? 'has-error': ''"
+                  @mouseenter="removeError('description', 'de')"
+                >
+                  <label>Beschreibung *</label>
                   <tinymce-editor
                     api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
                     :init="tinyConfig"
                     v-model="discourse.description.de"
                   ></tinymce-editor>
+                  <div class="is-required">Pflichtfeld</div>
                 </div>
                 <div class="form-row is-last">
                   <label>Info</label>

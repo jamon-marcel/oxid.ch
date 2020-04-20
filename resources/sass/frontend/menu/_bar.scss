@@ -1,0 +1,70 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: navigation/menu-bar
+ * -----------------------------------------------------------------------------
+ */
+
+.menu-bar {
+  background-color: $color-white;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+
+  .menu-bar__open,
+  .menu-bar__close {
+    align-items: center;
+    background-color: $color-white;
+    bottom: 0;
+    display: flex;
+    height: $footer-height-sm;
+    left: inherit;
+    padding: 0 $space-sm;
+    position: inherit;
+    width: inherit;
+
+    &.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+}
+
+// Home
+.menu-bar.is-home {
+  @include bp-sm() {
+    width: 50%;
+
+    .menu-bar__open {
+      width: inherit;
+      &.is-hidden {
+        opacity: 1;
+      }
+      .menu-icon {
+        display: none;
+      }
+    }
+
+    .menu-bar__close {
+      display: none;
+    }
+  }
+}
+
+// Pages
+.menu-bar.is-pages {
+
+  .menu-bar__close {
+    @include bp-sm() {
+      width: 50%;
+    }
+  }
+
+  .menu-bar__open.is-hidden {
+    background-color: green;
+    display: flex;
+    opacity: .7;
+    pointer-events: all;
+  }
+}

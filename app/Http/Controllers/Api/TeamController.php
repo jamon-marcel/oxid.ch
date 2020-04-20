@@ -32,9 +32,8 @@ class TeamController extends Controller
 
   public function get()
   {
-    $team = $this->team->get();
-    $grouped = $team->groupBy('category');
-    return response()->json($grouped);
+    $team = $this->team->orderBy('order', 'ASC')->get();
+    return response()->json($team->groupBy('category'));
   }
 
   /**
@@ -168,6 +167,25 @@ class TeamController extends Controller
     $team->publish = $team->publish == 0 ? 1 : 0;
     $team->save();
     return response()->json($team->publish);
+  }
+
+  /**
+   * Update the order of the resources.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+
+  public function order(Request $request)
+  {
+    $teams = $request->get('teams');
+    foreach($teams as $team)
+    {
+      $t = $this->team->find($team['id']);
+      $t->order = $team['order'];
+      $t->save(); 
+    }
+    return response()->json('successfully updated');
   }
 
   /**

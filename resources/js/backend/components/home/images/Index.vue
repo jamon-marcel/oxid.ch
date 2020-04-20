@@ -5,7 +5,7 @@
     <div class="container">
       <main class="content" role="main">
         <div>
-          <h1>Bilder</h1>
+          <h1>Home - Bilder</h1>
           <div class="form-row" v-if="images.length">
             <label>Existierende Bilder</label>
             <div class="has-images dropzone-existing-assets">
@@ -119,7 +119,7 @@ export default {
 
   methods: {
     fetch() {
-      let uri = "/api/images/get";
+      let uri = "/api/home/images/get";
       this.axios.get(uri).then(response => {
         this.images = response.data.data;
       });
@@ -138,7 +138,7 @@ export default {
 
     // Save image
     storeAsset(image) {
-      let uri = "/api/image/create";
+      let uri = "/api/home/image/create";
       let data = {
         name: image.name,
         caption: {
@@ -157,7 +157,7 @@ export default {
 
     deleteAsset(image, event) {
       if (confirm("Please confirm!")) {
-        let uri = `/api/image/destroy/${image.id}`;
+        let uri = `/api/home/image/destroy/${image.id}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {
           const index = this.images.findIndex(x => x.name === image.name);
@@ -168,7 +168,7 @@ export default {
     },
 
     toggleAsset(asset, event) {
-      let uri = `/api/image/status/${asset.id}`;
+      let uri = `/api/home/image/status/${asset.id}`;
       let el = this.progress(event.target);
       this.axios.get(uri).then(response => {
         const index = this.images.findIndex(x => x.id === asset.id);
@@ -178,7 +178,7 @@ export default {
     },
 
     updateAsset(asset, event) {
-      let uri = `/api/image/update/${asset.id}`;
+      let uri = `/api/home/image/update/${asset.id}`;
       this.axios.post(uri, asset).then(response => {
         this.hideAssetEdit(event);
         this.$notify({ type: "success", text: "Änderungen gespeichert!" });

@@ -15,6 +15,10 @@
         > div {
             @include responsive-prop('margin-bottom', $space-md);
             border-bottom: 2px solid $color-light-grey;
+
+            &.is-hidden {
+                display: none;
+            }
         }
 
         .list-item {
@@ -53,9 +57,16 @@
         }
     }
 
-    &.is-sortable {
+    &.is-draggable {
         cursor: move;
+        margin-bottom: 0 !important;
+        @include responsive-prop('padding-bottom', $space-xs);
     }
+}
+
+.list-item-header {
+    color: $color-medium-grey;
+    @include font-size($fs-xs);
 }
 
 .list-item-body {

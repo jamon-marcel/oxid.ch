@@ -566,7 +566,7 @@ p {
  * Alignment using flexbox
  *
  */
-header.site-header > div, footer.form-footer > div, .container-auth, nav.site-nav > div, .pagination a, .btn-add,
+header.site-header > div, footer.site-footer > div, .container-auth, nav.site-nav > div, .pagination a, .btn-add,
 .v-center {
   display: flex !important;
   align-items: center;
@@ -1031,7 +1031,7 @@ p {
  * -----------------------------------------------------------------------------
  *
  */
-header.site-header > div, main.content > div, footer.form-footer > div, nav.site-nav > div, .overlay-asset > div,
+header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-asset > div,
 .overlay > div,
 .page-block {
   margin-left: auto;
@@ -1042,21 +1042,21 @@ header.site-header > div, main.content > div, footer.form-footer > div, nav.site
   max-width: 640px;
 }
 @media screen and (min-width: 768px) {
-  header.site-header > div, main.content > div, footer.form-footer > div, nav.site-nav > div, .overlay-asset > div,
+  header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-asset > div,
 .overlay > div,
 .page-block {
     max-width: 728px;
   }
 }
 @media screen and (min-width: 1024px) {
-  header.site-header > div, main.content > div, footer.form-footer > div, nav.site-nav > div, .overlay-asset > div,
+  header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-asset > div,
 .overlay > div,
 .page-block {
     max-width: 860px;
   }
 }
 @media screen and (min-width: 1280px) {
-  header.site-header > div, main.content > div, footer.form-footer > div, nav.site-nav > div, .overlay-asset > div,
+  header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-asset > div,
 .overlay > div,
 .page-block {
     max-width: 1100px;
@@ -1252,7 +1252,7 @@ header.site-header > div, main.content > div, footer.form-footer > div, nav.site
   transition: background-color 0.1s ease-out 0.2s ease-in-out;
 }
 
-.btn-trash, .btn-toggle-layout, .btn-crop, .btn-add-article, .btn-add-media-highlight, .btn-add-media, .btn-add, .btn-secondary, .btn-primary, .btn-preview,
+.btn-trash, .btn-toggle-layout, .btn-crop, .btn-add-article, .btn-add-media-highlight, .btn-add-media, .btn-add, .btn-secondary, .btn-primary, .btn-preview, .btn-filter,
 .btn-ib {
   border-radius: 2px;
   display: inline-block;
@@ -1357,6 +1357,49 @@ header.site-header > div, main.content > div, footer.form-footer > div, nav.site
   background-color: #5bc0de;
   border: 2px solid color--info;
   color: #f9f9f9;
+}
+
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/buttons/filter
+ * -----------------------------------------------------------------------------
+ */
+.btn-filter {
+  background-color: #eeeeee;
+  border-radius: 2px;
+  border: none;
+  color: #222222;
+  font-size: 15px;
+  line-height: 1.25;
+  font-family: "EuclidCircularA-Regular-WebS", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif, sans-serif;
+  font-display: auto;
+  font-style: normal;
+  font-stretch: normal;
+  font-weight: 400;
+  padding: 12px 24px;
+  width: auto;
+  transition: background-color 0.16s ease-out 0.2s ease-in-out;
+}
+@media screen and (min-width: 768px) {
+  .btn-filter {
+    font-size: 15px;
+    line-height: 1.25;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .btn-filter {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .btn-filter {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+}
+.btn-filter:hover {
+  background-color: #d5d5d5;
 }
 
 /**
@@ -1760,6 +1803,11 @@ h2 {
  * -----------------------------------------------------------------------------
  */
 h3 {
+  font-family: "EuclidCircularA-Medium-WebS", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif, sans-serif;
+  font-display: auto;
+  font-style: normal;
+  font-stretch: normal;
+  font-weight: 400;
   margin-bottom: 5px;
 }
 
@@ -2159,6 +2207,9 @@ h3 {
     margin-bottom: 35px;
   }
 }
+.list-items.is-grouped > div.is-hidden {
+  display: none;
+}
 .list-item {
   border-top: 2px solid #eeeeee;
   display: grid;
@@ -2211,8 +2262,49 @@ h3 {
 .list-item.is-disabled * {
   opacity: 0.7;
 }
-.list-item.is-sortable {
+.list-item.is-draggable {
   cursor: move;
+  margin-bottom: 0 !important;
+  padding-bottom: 10px;
+}
+@media screen and (min-width: 768px) {
+  .list-item.is-draggable {
+    padding-bottom: 10px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .list-item.is-draggable {
+    padding-bottom: 15px;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .list-item.is-draggable {
+    padding-bottom: 15px;
+  }
+}
+
+.list-item-header {
+  color: #666666;
+  font-size: 14px;
+  line-height: 1.25;
+}
+@media screen and (min-width: 768px) {
+  .list-item-header {
+    font-size: 14px;
+    line-height: 1.25;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .list-item-header {
+    font-size: 15px;
+    line-height: 1.25;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .list-item-header {
+    font-size: 15px;
+    line-height: 1.25;
+  }
 }
 
 .list-item-body {
@@ -3594,7 +3686,7 @@ body {
  * File: layout/footer
  * -----------------------------------------------------------------------------
  */
-footer.form-footer {
+footer.site-footer {
   background-color: #ffffff;
   box-shadow: 0 6px 9px rgba(100, 100, 100, 0.8);
   bottom: 0;
@@ -3607,111 +3699,78 @@ footer.form-footer {
   transition: transform 0.16s ease-out;
 }
 @media screen and (min-width: 768px) {
-  footer.form-footer {
+  footer.site-footer {
     height: 60px;
   }
 }
 @media screen and (min-width: 1024px) {
-  footer.form-footer {
+  footer.site-footer {
     height: 90px;
   }
 }
 @media screen and (min-width: 1280px) {
-  footer.form-footer {
+  footer.site-footer {
     height: 90px;
   }
 }
-footer.form-footer.is-hidden {
+footer.site-footer.is-hidden {
   transform: translateY(100%);
   transition: transform 0.16s ease-out;
 }
-footer.form-footer > div {
+footer.site-footer > div {
   height: 60px;
 }
 @media screen and (min-width: 768px) {
-  footer.form-footer > div {
+  footer.site-footer > div {
     height: 60px;
   }
 }
 @media screen and (min-width: 1024px) {
-  footer.form-footer > div {
+  footer.site-footer > div {
     height: 90px;
   }
 }
 @media screen and (min-width: 1280px) {
-  footer.form-footer > div {
+  footer.site-footer > div {
     height: 90px;
   }
 }
-footer.form-footer.is-warning > div {
-  display: grid !important;
-  grid-template-columns: 1fr auto auto;
-  grid-gap: 20px;
-}
-footer.form-footer a:not(.btn-preview) {
+footer.site-footer a:not(.btn-preview) {
   color: #222222;
   margin-left: 15px;
   text-decoration: underline;
 }
 @media screen and (min-width: 768px) {
-  footer.form-footer a:not(.btn-preview) {
+  footer.site-footer a:not(.btn-preview) {
     margin-left: 20px;
   }
 }
 @media screen and (min-width: 1024px) {
-  footer.form-footer a:not(.btn-preview) {
+  footer.site-footer a:not(.btn-preview) {
     margin-left: 30px;
   }
 }
 @media screen and (min-width: 1280px) {
-  footer.form-footer a:not(.btn-preview) {
+  footer.site-footer a:not(.btn-preview) {
     margin-left: 35px;
   }
 }
-footer.form-footer a:not(.btn-preview):hover {
+footer.site-footer a:not(.btn-preview):hover {
   text-decoration: none;
 }
-footer.form-footer .filter {
+footer.site-footer .filter {
   align-items: center;
-  display: grid;
-  grid-template-columns: auto 100px auto;
-  grid-gap: 20px;
+  display: flex;
+  justify-content: flex-start;
 }
-footer.form-footer .filter .select-wrapper {
-  width: 100%;
+footer.site-footer .filter .btn-filter {
+  margin-right: 15px;
 }
-footer.form-footer .filter a {
-  color: #222222;
-  font-size: 14px;
-  line-height: 1.25;
-  text-decoration: underline;
-}
-@media screen and (min-width: 768px) {
-  footer.form-footer .filter a {
-    font-size: 14px;
-    line-height: 1.25;
-  }
-}
-@media screen and (min-width: 1024px) {
-  footer.form-footer .filter a {
-    font-size: 15px;
-    line-height: 1.25;
-  }
-}
-@media screen and (min-width: 1280px) {
-  footer.form-footer .filter a {
-    font-size: 15px;
-    line-height: 1.25;
-  }
-}
-footer.form-footer .filter a:hover {
-  text-decoration: none;
-}
-footer.form-footer .search-wrapper {
+footer.site-footer .search-wrapper {
   position: relative;
   width: 100%;
 }
-footer.form-footer .search-wrapper .icon-delete {
+footer.site-footer .search-wrapper .icon-delete {
   background-repeat: no-repeat;
   background-size: 100%;
   background-position: top left;
@@ -3725,8 +3784,8 @@ footer.form-footer .search-wrapper .icon-delete {
   width: 46px;
   z-index: 10;
 }
-footer.form-footer input[type=text].search {
-  border: 2px solid #666666;
+footer.site-footer input[type=text].search {
+  border: 2px solid #eeeeee;
 }
 
 /**
@@ -4142,7 +4201,6 @@ aside.sidebar > div {
   border-top: 2px solid #eeeeee;
 }
 .grid-layout-row.is-list:hover {
-  background-color: #eee;
   cursor: move;
 }
 
@@ -4736,14 +4794,7 @@ aside.sidebar > div {
  * File: admin/vendor/draggable
  * -----------------------------------------------------------------------------
  */
-.draggable-ghost,
-.draggable-ghost-list {
+.draggable-ghost {
   opacity: 0.6;
-  background: #f9f9f9;
-  border: 2px dashed #222222;
-  padding: 5px;
-}
-
-.draggable-ghost-list {
-  padding: 0;
+  background-color: #eeeeee;
 }

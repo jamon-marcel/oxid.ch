@@ -35,7 +35,8 @@ class DiscourseController extends Controller
 
   public function get()
   {
-    return new DataCollection($this->discourse->with('images')->with('documents')->get());
+    $discourses = $this->discourse->orderBy('order', 'ASC')->get();
+    return response()->json($discourses->groupBy('category'));
   }
 
   /**
@@ -227,6 +228,25 @@ class DiscourseController extends Controller
     $discourse->publish = $discourse->publish == 0 ? 1 : 0;
     $discourse->save();
     return response()->json($discourse->publish);
+  }
+
+  /**
+   * Update the order of the resources.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+
+  public function order(Request $request)
+  {
+    $discourses = $request->get('discourses');
+    foreach($discourses as $discourse)
+    {
+      $d = $this->discourse->find($discourse['id']);
+      $d->order = $discourse['order'];
+      $d->save(); 
+    }
+    return response()->json('successfully updated');
   }
 
   /**

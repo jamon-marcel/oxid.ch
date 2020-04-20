@@ -1,0 +1,29 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/icons/menu
+ * -----------------------------------------------------------------------------
+ */
+
+// Icon wrapper
+.menu-icon {
+  flex: 0 0 44px;
+}
+
+.icon-menu {
+  @extend %icon;
+  display: block;
+
+  svg {
+    display: block;
+
+    &.icon-menu__open {
+      height: 26px;
+      width: 44px;
+    }
+    
+    &.icon-menu__close {
+      height: 44px;
+      width: 44px;
+    }
+  }
+}

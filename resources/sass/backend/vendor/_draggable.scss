@@ -4,14 +4,7 @@
  * -----------------------------------------------------------------------------
  */
 
-.draggable-ghost,
-.draggable-ghost-list {
-    opacity: .6;
-    background: #f9f9f9;
-    border: 2px dashed #222222;
-    padding: 5px;
-}
-
-.draggable-ghost-list {
-    padding: 0;
+.draggable-ghost {
+  opacity: .6;
+  background-color:$color-light-grey;
 }

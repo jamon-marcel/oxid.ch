@@ -1,0 +1,134 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: component/boxes/ratio
+ * -----------------------------------------------------------------------------
+ */
+
+.ratio-boxes {
+  position: relative;
+  top: 1px;
+  width: calc(100% + #{$space-md});
+
+  // box types
+  [class^='box__'] {
+    height: 0;
+    overflow: hidden;
+    background: white;
+    position: relative;
+
+    > div {
+      background-color: $color-white;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width:calc(100% - #{$space-md});
+      height: calc(100% - #{$space-md});
+      
+      
+      img {
+        display: block;
+        height: 100%;
+        -o-object-fit: cover;
+        object-fit: cover;
+        width: 100%;        
+      }
+
+      article {
+        height: 100%;
+        padding: $space-md $space-md $space-md 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        h2 {
+          @include font-bold();
+          margin-bottom: $space-md;
+        }
+
+        p {
+          margin-bottom: $space-md;
+        }
+      }
+    }
+  }
+
+  .box__a {
+    padding-top: 65.1162790697674%;
+  }
+
+  .box__b {
+    padding-top: 130.232558139535%;
+  }
+
+  .box__c {
+    padding-top: 65.1162790697674%;
+  }
+
+  .box__d {
+    padding-top: 32.5581395348837%;
+  }
+
+  .box__e {
+    padding-top: 130.232558139535%;
+  }
+
+}
+
+.cssgrid {
+  
+  [class^='box-'] {
+    @include bp-sm() {
+      display: grid;
+    }
+  }
+
+  .box-2x1fr {
+    @include bp-sm() {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .box-1fr {
+    grid-template-columns: 1fr
+  }
+}
+
+.no-cssgrid {
+  .ratio-boxes {
+  
+    // grids
+    [class^='box-'] {
+      @extend %clearfix;
+      > div {
+        float: left;
+        width: 100%;
+      }
+    }
+
+    [class^='box__'] {
+      margin-bottom: $space-md;
+      @include bp-sm() {
+        margin-bottom: 0;
+      }
+    }
+  
+    .box-1fr {
+      > div {
+        width: 100%;
+      }
+    }
+
+    .box-2x1fr {
+      @include bp-sm() {
+        > div {
+          width: 50%;
+        }
+
+        .box__b,
+        .box__e {
+          padding-top: 65.1162790697674%;
+        }
+      }
+    }
+  }
+}

@@ -36,12 +36,12 @@ Route::middleware('auth:api')->group(function() {
   /**
    * Home image routes
    */
-  Route::get('images/get', 'Api\HomeImageController@get');
-  Route::post('image/create', 'Api\HomeImageController@store');
-  Route::get('image/edit/{image}', 'Api\HomeImageController@edit');
-  Route::post('image/update/{image}', 'Api\HomeImageController@update');
-  Route::get('image/status/{image}', 'Api\HomeImageController@status');
-  Route::delete('image/destroy/{image}', 'Api\HomeImageController@destroy');
+  Route::get('home/images/get', 'Api\HomeImageController@get');
+  Route::post('home/image/create', 'Api\HomeImageController@store');
+  Route::get('home/image/edit/{image}', 'Api\HomeImageController@edit');
+  Route::post('home/image/update/{image}', 'Api\HomeImageController@update');
+  Route::get('home/image/status/{image}', 'Api\HomeImageController@status');
+  Route::delete('home/image/destroy/{image}', 'Api\HomeImageController@destroy');
 
   /**
    * Upload routes
@@ -136,6 +136,34 @@ Route::middleware('auth:api')->group(function() {
    */
   Route::get('team/document/status/{id}', 'Api\TeamDocumentController@status');
   Route::delete('team/document/destroy/{teamFile}', 'Api\TeamDocumentController@destroy');
+
+  /**
+   * TeamImage routes
+   */
+  Route::get('team/images/get', 'Api\TeamImageController@get');
+  Route::post('team/image/create', 'Api\TeamImageController@store');
+  Route::get('team/image/edit/{image}', 'Api\TeamImageController@edit');
+  Route::post('team/image/update/{image}', 'Api\TeamImageController@update');
+  Route::get('team/image/status/{image}', 'Api\TeamImageController@status');
+  Route::delete('team/image/destroy/{image}', 'Api\TeamImageController@destroy');
+
+  /**
+   * Job routes
+   */
+  Route::get('jobs/get', 'Api\JobController@get');
+  Route::get('job/get/{job}', 'Api\JobController@getOne');
+  Route::post('job/create', 'Api\JobController@store');
+  Route::get('job/edit/{job}', 'Api\JobController@edit');
+  Route::post('job/update/{job}', 'Api\JobController@update');
+  Route::get('job/status/{job}', 'Api\JobController@status');
+  Route::post('job/order', 'Api\JobController@order');
+  Route::delete('job/destroy/{job}', 'Api\JobController@destroy');
+
+  /**
+   * JobDocument routes
+   */
+  Route::get('job/document/status/{id}', 'Api\JobDocumentController@status');
+  Route::delete('job/document/destroy/{jobFile}', 'Api\jobDocumentController@destroy');
 
 });
 

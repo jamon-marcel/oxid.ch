@@ -12,6 +12,10 @@
     border-radius: 2px;
 }
 
+.has-error .tox-tinymce {
+    border-color: #d9534f;
+}
+
 .tox:not([dir=rtl]) .tox-toolbar__group:not(:last-of-type) {
     border-right: 2px solid #eeeeee;
 }

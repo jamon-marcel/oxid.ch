@@ -1,0 +1,58 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: views/home
+ * -----------------------------------------------------------------------------
+ */
+
+section.content-home {
+  padding-bottom: $footer-height-sm;
+  @include responsive-prop('padding-top', $header-height);
+  
+  @include bp-sm() {
+    padding-bottom: 0;
+    padding-top: 0 !important;
+  }
+}
+
+.news-listing {
+  padding: $space-sm;
+  
+  @include bp-sm() {
+    margin-top: 55px;
+    @include responsive-prop('padding-top', $header-height);
+  }
+
+  @include bp-lg() {
+    margin-top: 65px;
+  }
+  
+  @include bp-lg() {
+    margin-top: 75px;
+  }
+
+  article {
+    margin-bottom: $space-lg;
+    max-width: 700px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    h2 {
+      @include font-size($fs-xl);
+      text-decoration: underline;
+    }
+
+    h3 {
+      @include font-size($fs-xl);
+    }
+
+    p {
+      margin-bottom: $space-sm;
+    }
+
+    a {
+      @extend %anchor-external;
+    }
+  }
+}

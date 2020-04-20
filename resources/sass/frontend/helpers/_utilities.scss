@@ -1,0 +1,34 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/utilities
+ * -----------------------------------------------------------------------------
+ */
+
+.hide-sm {
+	display: none;
+	@include bp-md() {
+		display: block;
+	}
+}
+
+.hide-md {
+	display: block;
+	@include bp-sm() {
+		display: none;
+	}
+}
+
+.hide-above-sm {
+	display: block !important;
+	@include bp-sm() {
+		display: none !important;
+	}
+}
+
+.hide-below-sm {
+	display: none !important;
+	@include bp-sm() {
+		display: block !important;
+	}
+}
+

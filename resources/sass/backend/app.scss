@@ -29,10 +29,14 @@
 // Components
 @import 'components/animations';
 @import 'components/blocks';
+
 @import 'components/boxes/global';
 @import 'components/boxes/ratio';
+
 @import 'components/bubbles/global';
+
 @import 'components/buttons/global';
+@import 'components/buttons/filter';
 @import 'components/buttons/preview';
 @import 'components/buttons/primary';
 @import 'components/buttons/secondary';
@@ -43,12 +47,15 @@
 @import 'components/buttons/crop';
 @import 'components/buttons/toggle-layout';
 @import 'components/buttons/trash';
+
 @import 'components/cards/global';
 @import 'components/cards/post';
+
 @import 'components/headings/global';
 @import 'components/headings/h1';
 @import 'components/headings/h2';
 @import 'components/headings/h3';
+
 @import 'components/icons/global';
 @import 'components/icons/menu';
 @import 'components/icons/close';
@@ -63,8 +70,8 @@
 @import 'components/icons/star';
 @import 'components/icons/sticky';
 @import 'components/icons/trash';
-@import 'components/lists/global';
 
+@import 'components/lists/global';
 @import 'components/overlay/global';
 @import 'components/images';
 @import 'components/tables/global';

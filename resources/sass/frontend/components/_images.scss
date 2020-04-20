@@ -1,0 +1,31 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/images
+ * -----------------------------------------------------------------------------
+ *
+ * Various classes for image elements
+ */
+
+%is-responsive,
+.is-responsive {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+%object-fit-cover,
+.object-fit-cover {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.visual {
+  height: calc(100vh - (#{$header-height-sm} + #{$footer-height-sm}));
+
+  @include bp-sm() {
+    height: 100vh;
+  }
+}
