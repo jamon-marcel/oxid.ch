@@ -1,0 +1,68 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: views/discourse
+ * -----------------------------------------------------------------------------
+ */
+
+.discourse {
+  padding: $space-sm;
+  
+  @include bp-md() {
+    padding: $space-md;
+  }
+
+  .discourse__grid {
+    @include bp-sm() {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: $grid-gap-sm;
+      grid-row-gap: $grid-gap-lg;
+    }
+  }
+
+  .discourse-item {
+    margin-bottom: $space-xxl;
+  }
+
+  .discourse-item__header {
+    border-bottom: 1px solid $color-black;
+    margin-bottom: $space-sm;
+
+    span {
+      display: block;
+      @include font-size($fs-sm);
+    }
+
+    h2 {
+      @include font-size($fs-md);
+      padding-bottom: $space-xs;
+    }
+  }
+
+  .discourse-item__body {
+    > div {
+      @include font-size($fs-sm);
+      padding-top: $space-sm;
+
+      @include bp-sm() {
+        padding-top: 0;
+      }
+      
+      a {
+        @extend %anchor-external-sm;
+      }
+    }
+
+    figure {
+      img {
+        @extend %is-responsive;
+      }
+    }
+
+    @include bp-sm() {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: $grid-gap-md;
+    }
+  }
+}

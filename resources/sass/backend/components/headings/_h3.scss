@@ -7,4 +7,9 @@
 h3 {
     @include font-bold();
     margin-bottom: 5px;
+
+    &.is-label {
+        @include font-regular();
+        margin-bottom: 15px;
+    }
 }

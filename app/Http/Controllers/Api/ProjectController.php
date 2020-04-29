@@ -81,11 +81,15 @@ class ProjectController extends Controller
         'en' => $request->input('info.en'),
       ],
       'year'            => $request->input('year'),
+      'year_works'      => $request->input('year_works'),
+      'client_works'    => $request->input('client_works'),
+      'principal_works' => $request->input('principal_works'),
       'program'         => $request->input('program'),
       'state'           => $request->input('state'),
       'author'          => $request->input('author'),
       'is_filter_wood'  => $request->input('is_filter_wood'),
       'is_filter_reuse' => $request->input('is_filter_reuse'),
+      'is_filter_area'  => $request->input('is_filter_area'),
       'has_detail'      => $request->input('has_detail'),
       'is_highlight'    => $request->input('is_highlight'),
       'publish'         => $request->input('publish'),
@@ -174,8 +178,12 @@ class ProjectController extends Controller
     $project->program           = $request->input('program');
     $project->state             = $request->input('state');
     $project->author            = $request->input('author');
+    $project->year_works        = $request->input('year_works');
+    $project->client_works      = $request->input('client_works');
+    $project->principal_works   = $request->input('principal_works');
     $project->is_filter_wood    = $request->input('is_filter_wood');
     $project->is_filter_reuse   = $request->input('is_filter_reuse');
+    $project->is_filter_area    = $request->input('is_filter_area');
     $project->has_detail        = $request->input('has_detail');
     $project->is_highlight      = $request->input('is_highlight');
     $project->publish           = $request->input('publish');

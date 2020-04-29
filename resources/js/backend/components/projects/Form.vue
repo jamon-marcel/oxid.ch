@@ -45,7 +45,7 @@
                     v-model="project.description.de"
                   ></tinymce-editor>
                 </div>
-                <div class="form-row is-last">
+                <div class="form-row">
                   <label>Info</label>
                   <tinymce-editor
                     api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
@@ -53,6 +53,21 @@
                     v-model="project.info.de"
                   ></tinymce-editor>
                 </div>
+                <h3 class="is-label">Infos Werkliste</h3>
+                <div class="form-row">
+                  <label>Jahr</label>
+                  <input type="text" v-model="project.year_works">
+                </div>
+                <div class="form-row">
+                  <label>Auftraggeber</label>
+                  <input type="text" v-model="project.client_works">
+                </div>
+                <div class="form-row is-last">
+                  <label>Bauherrschaft</label>
+                  <input type="text" v-model="project.principal_works">
+                </div>
+
+
               </div>
               <div class="column-sidebar">
                 <div>
@@ -170,6 +185,29 @@
                         class="visually-hidden"
                       >
                       <label for="is_filter_reuse_0" class="form-control">Nein</label>
+                    </div>
+                  </div>
+                  <div class="form-row is-sm">
+                    <label class="is-sm">Filter - Areal?</label>
+                    <div class="form-radio">
+                      <input
+                        v-model="project.is_filter_area"
+                        type="radio"
+                        name="is_filter_area_1"
+                        id="is_filter_area_1"
+                        value="1"
+                        class="visually-hidden"
+                      >
+                      <label for="is_filter_area_1" class="form-control">Ja</label>
+                      <input
+                        v-model="project.is_filter_area"
+                        type="radio"
+                        name="is_filter_area_0"
+                        id="is_filter_area_0"
+                        value="0"
+                        class="visually-hidden"
+                      >
+                      <label for="is_filter_area_0" class="form-control">Nein</label>
                     </div>
                   </div>
                   <div class="form-row is-sm is-last">

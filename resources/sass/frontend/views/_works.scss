@@ -1,0 +1,117 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: views/works
+ * -----------------------------------------------------------------------------
+ */
+
+.works {
+  padding: $space-sm;
+  
+  @include bp-md() {
+    padding: $space-md;
+  }
+
+  .works__heading {
+    align-items: center;
+    border-top: 1px solid $color-black;
+    display: flex;
+  }
+
+  .works__authors {
+    border-bottom: 1px solid $color-black;
+    border-top: 1px solid $color-black;
+    display: block;
+    @include font-size($fs-xs);
+    margin-bottom: $space-sm;
+    padding: $space-xs 0;
+    @include bp-sm() {
+      border: none;
+      margin-bottom: $space-md;
+      padding: $space-xxs 0 0 0;
+    }
+  }
+
+  .works__grid {
+
+    @include bp-sm() {
+      > div {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: $grid-gap-sm;
+      }
+    }
+
+    @include bp-md() {
+      > div {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: $grid-gap-sm;
+      }
+    }
+
+    @include bp-lg() {
+      > div {
+        grid-template-columns: repeat(5, 1fr)
+      }
+    }
+  }
+
+  .works__items {
+    margin-bottom: $space-xxl;
+    @include bp-sm() {
+      margin-bottom: $space-xxl;
+    }
+    
+    &.is-last {
+      margin-bottom: 0 !important;
+    }
+
+    h2 {
+      margin-bottom: $space-xxs;
+    }
+
+    .work-item__info {
+      @include font-size($fs-xs);
+    }
+  }
+
+  h1 {
+    @include font-size($fs-fix-lg);
+    width: 100%;
+
+    .btn-collapsible {
+      @include font-size($fs-fix-lg);
+    }
+  }
+
+  article {
+    margin-bottom: $grid-gap-sm;
+    
+    @include bp-sm() {
+      margin-bottom: 0;
+    }
+
+    h2 {
+      @include font-size($fs-fix-md);
+      padding: 2px 0;
+    }
+
+    a {
+      align-items: center;
+      color: $color-blue;
+      display: flex;
+      @include font-size($fs-fix-md);
+      svg {
+        display: inline-block;
+        height: 11px;
+        padding-top: 1px;
+        margin-left: $space-xxs;
+        width: auto;
+      }
+    }
+  }
+
+  img {
+    @extend %is-responsive;
+  }
+}

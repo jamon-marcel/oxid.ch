@@ -1,9 +1,10 @@
 <?php
 namespace App\Models;
+use App\Models\Base;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
-class Project extends Model
+class Project extends Base
 {
 	use HasTranslations;
 
@@ -22,11 +23,15 @@ class Project extends Model
 		'year',
 		'description',
 		'info',
+		'year_works',
+		'client_works',
+		'principal_works',
 		'program',
 		'state',
 		'author',
 		'is_filter_wood',
 		'is_filter_reuse',
+		'is_filter_area',
 		'has_detail',
 		'is_highlight',
 		'order',
@@ -43,8 +48,25 @@ class Project extends Model
 		return $this->hasMany('App\Models\ProjectDocument', 'project_id', 'id');
 	}
 
+	public function publishedDocuments()
+	{
+		return $this->hasMany('App\Models\ProjectDocument', 'project_id', 'id')->where('publish', '=', 1);
+	}
+
+	public function workImage()
+	{
+		return $this->hasMany('App\Models\ProjectImage', 'project_id', 'id')->where('is_preview_works', '=', 1);
+	}
+
+
 	public function grids()
 	{
 		return $this->hasMany('App\Models\Grid', 'project_id', 'id');
 	}
+
+	public function scopeHighlight($query)
+	{
+		return $query->where('publish', '=', '1')->where('is_highlight', '=', '1');
+	}
+
 }

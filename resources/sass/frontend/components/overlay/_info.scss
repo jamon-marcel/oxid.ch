@@ -1,0 +1,21 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: component/overlay/info
+ * -----------------------------------------------------------------------------
+ *
+ */
+
+.overlay-info {
+ @extend %overlay;
+
+  h1, h2 {
+    @include font-size($fs-xl);
+    margin-bottom: $space-xl;
+  }
+
+  h3 {
+    @extend %underline-sm;
+    @include font-size($fs-sm);
+    margin-bottom: $space-md;
+  }
+}

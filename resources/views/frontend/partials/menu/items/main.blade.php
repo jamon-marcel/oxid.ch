@@ -1,26 +1,24 @@
 <ul>
   <li>
-    <a href="">Projekte</a>
+    <a href="{{ route('page.projects') }}" 
+       class="{{request()->routeIs('page.project*') ? 'is-active' : ''}} js-menu-parent">
+     Projekte
+    </a>
+    @include('frontend.partials.menu.items.projects')
   </li>
   <li>
-    <a href="">Werkliste</a>
-    <ul>
-      <li>
-        <a href="">Autorenschaft</a>
-      </li>
-      <li>
-        <a href="">Jahr</a>
-      </li>
-      <li>
-        <a href="">Programm</a>
-      </li>
-      <li>
-        <a href="">Status</a>
-      </li>
-    </ul>
+    <a href="{{ route('page.works.authors') }}" 
+       class="{{request()->routeIs('page.works*') ? 'is-active' : ''}} js-menu-parent">
+       Werkliste
+    </a>
+    @include('frontend.partials.menu.items.works')
   </li>
   <li>
-    <a href="">Diskurs</a>
+    <a href="{{ route('page.discourse') }}" 
+       class="{{request()->routeIs('page.discourse*') ? 'is-active' : ''}} js-menu-parent">
+       Diskurs
+    </a>
+    @include('frontend.partials.menu.items.discourse')
   </li>
 </ul>
 <ul>
@@ -28,7 +26,11 @@
     <a href="">Geschichte</a>
   </li>
   <li>
-    <a href="{{ route('page.team') }}">Büro</a>
+    <a href="{{ route('page.office.team') }}" 
+       class="{{request()->routeIs('page.office*') ? 'is-active' : ''}} js-menu-parent">
+     Büro
+    </a>
+    @include('frontend.partials.menu.items.office')
   </li>
   <li>
     <a href="">Kontakt</a>

@@ -11,6 +11,8 @@ nav.menu-home {
   transform: translateY(100%);
 
   @include bp-sm() {
+    bottom: auto;
+    height: auto;
     transform: translateY(0);
   }
 

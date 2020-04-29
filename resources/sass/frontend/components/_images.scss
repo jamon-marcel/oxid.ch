@@ -22,10 +22,73 @@
   width: 100%;
 }
 
+/**
+ * Image lists
+ */
+
+.visual-list {
+  .visual-fit {
+    margin-bottom: $space-sm;
+    
+    @include bp-sm() {
+      margin-bottom: 0;
+    }
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+/**
+ * Responsive images
+ */
+
 .visual {
-  height: calc(100vh - (#{$header-height-sm} + #{$footer-height-sm}));
+  @extend %is-responsive;
+  img {
+    @extend %is-responsive;
+  }
+}
+
+/**
+ * Object fitting images
+ */
+
+.visual-fit {
+  width: 100%;
 
   @include bp-sm() {
-    height: 100vh;
+    height: calc(100vh - #{$footer-height});
+  }
+  
+  img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    width: 100%;
+
+    @include bp-sm() {
+      display: block;
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
+    }
+  }
+
+  &.is-half {
+    @include bp-sm() {
+      height: calc(50vh - #{$footer-height}/2 - #{$grid-gap-sm}/2);
+    }
+  }
+
+  &.is-home {
+    height: calc(100vh - (#{$header-height-sm} + #{$footer-height}));
+    @include bp-sm() {
+      height: 100vh;
+    }
+
+    img {
+      @extend %object-fit-cover;
+    }
   }
 }

@@ -1,0 +1,37 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/underline/global
+ * -----------------------------------------------------------------------------
+ */
+
+%underline,
+.underline {
+  display: inline-block;
+  position: relative;
+  width: auto;
+
+  &:after {
+    background-color: $color-black;
+    content: '';
+    bottom: 0;
+    display: block;
+    height: 2px;
+    line-height: 1 !important;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+}
+
+%underline-sm,
+.underline-sm {
+  @extend %underline;
+
+  &:after {
+    height: 1px;
+
+    @include bp-sm() {
+      height: 2px;
+    }
+  }
+}

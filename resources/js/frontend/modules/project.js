@@ -2,140 +2,73 @@ function debounce(a,b,c){var d;return function(){var e=this,f=arguments;clearTim
 
 var Projects = (function() {
 
-    /* --------------------------------------------------------------
-     * VARIABLES
-     * ------------------------------------------------------------ */
-	
-	// selectors
-	var selectors = {
-        html:      'html',
-        body:      'body',
-        header:    '.js-header',
-        footer:    '.js-footer',
-        menu:      '.js-menu',
-        relations: '.js-project-relations',
-	};
+  // selectors
+  var selectors = {
+    html:      'html',
+    body:      'body',
+    grids:     '.js-project-grids',
+    grid:      '.js-project-grid',
+    btnScroll: '.js-btn-scroll',
+    index:     '.js-project-idx'
+  };
 
-    // media queries
-    var mq = {
-        sm: window.matchMedia("(min-width: 720px)"),
-        md: window.matchMedia("(min-width: 1024px)"),
-        lg: window.matchMedia("(min-width: 1168px)")
-    };
+  // media queries
+  var mq = {
+    sm: window.matchMedia("(min-width: 720px)"),
+    md: window.matchMedia("(min-width: 1024px)"),
+    lg: window.matchMedia("(min-width: 1168px)")
+  };
 
-    var winHeight = $(window).height();
+  var footerHeight = 60;
+  var gridGap      = 12;
+  var index        = 0;
+  var max          = $(selectors.grids).find(selectors.grid).length;
+  var min          = 1;
    
+  var _initialize = function() {
+    _bind();
+  };
 
-    /* --------------------------------------------------------------
-     * METHODS
-     * ------------------------------------------------------------ */
-    
-    // Init
-	var _initialize = function() {
-        _bind();
-    };
+  var _bind = function() {
+    $(selectors.body).on('click', selectors.btnScroll, function(){
+      _scroll();
+    });
 
-    // Bind events
-    var _bind = function() {
+    // $(selectors.grid).each(function () {
+    //   new Waypoint.Inview({
+    //     element: this,
+    //     entered: function(direction) {
+    //       _updateIndex(direction);
+    //     },
+    //     offset: 0
+    //   });
+    // });
+  };
 
-        // Check for hash and scroll to it
-        var hash = document.location.hash;
-        if (hash.length) {
-            _scrollTo(hash);
-        }
+  var _scroll = function(){
+    var distance = $(window).height() - footerHeight + gridGap;
+    $.scrollTo('+=' + distance, 400);
+  };
 
-        // Resize height on load
-        if (mq.sm.matches) {
-            if ($(selectors.relations).length) {
-                _resize(true);
-            }
-        }
+  var _updateIndex = function(direction) {
 
-        // Observe height to adjust project info box
-        $(window).resize(function(event){
-            if (mq.sm.matches && $(selectors.relations).length) {
-                _resize(false);
-            }
-        });
-    };
+    if (direction == 'down' && index < max) {
+      index++;
+    }
+    else if (direction == 'up' && index >= min) {
+      index--;
+    }
+    $(selectors.index).html(index);
+  };
 
-    /**
-     * Scrolls to a certain project based on the given hash
-     * @param string hash 
-     */
-
-    var _scrollTo = function(hash){
-        var project = hash.substr(1, hash.length), 
-            header = $(selectors.header),
-            target = $('[data-scroll="' + project + '"]');
-
-        if (target.length)
-        {
-            var offsetTop = target.offset().top - header.height() - 80;
-            if (mq.sm.matches) {
-                offsetTop = target.offset().top - header.height() - 24;
-            }
-            $.scrollTo(offsetTop, 400);
-        }
-    };
-
-    /**
-     * Handle position of project info box on resize
-     */
-
-    var _resize = debounce(function(init){
-
-        // get all heights
-        var heights = {
-            window: $(window).height(),
-            header: $(selectors.header).height(),
-            footer: $(selectors.footer).outerHeight(),
-            menu:   $(selectors.menu).outerHeight(),
-            box:    $(selectors.relations).outerHeight(),
-        };
-
-        var margin = 48,
-            minHeight = heights.window - (heights.menu + margin),
-            offset = heights.menu + heights.header + margin,
-            treshold = heights.menu + heights.header + 120;
-
-        if (init) {
-            $(selectors.relations).css('top', offset);
-            $(selectors.relations).show();
-
-            if (treshold >= minHeight) {
-                $(selectors.relations).find('figure').hide();
-            }
-        }
-        else {
-            if (heights.window > winHeight) {
-                if (treshold < minHeight) {
-                    $(selectors.relations).find('figure').show();
-                }
-            }
-            else {
-                if (treshold >= minHeight) {
-                    $(selectors.relations).find('figure').hide();
-                }
-            }
-        }
-        winHeight = heights.window;
-
-    }, 10);
-
-
-    /* --------------------------------------------------------------
-     * RETURN PUBLIC METHODS
-     * ------------------------------------------------------------ */
-
-    return {
-        init:  _initialize,
-	};
+  return {
+    init:  _initialize,
+  };
 	
 })();
 
 // Initialize
 $(function() {
-    Projects.init();
+  Projects.init();
 });
 

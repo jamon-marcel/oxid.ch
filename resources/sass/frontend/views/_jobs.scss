@@ -1,0 +1,21 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: views/jobs
+ * -----------------------------------------------------------------------------
+ */
+
+.job {
+  margin-bottom: $space-huge;
+  
+  .job__description {
+    margin-bottom: $space-sm;
+  }
+  
+  .job__info {
+    @include font-size($fs-fix-md);
+
+    a {
+      color: $color-blue;
+      }
+  }
+}

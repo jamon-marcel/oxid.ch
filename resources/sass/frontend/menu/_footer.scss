@@ -1,0 +1,173 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: navigation/menu-footer
+ * -----------------------------------------------------------------------------
+ */
+
+.menu-footer {
+  @include font-size($fs-fix-lg);
+
+  h1, h2 {
+    @include font-size($fs-fix-lg);
+     margin-left: $space-sm;
+    @include bp-md() {
+      margin-left: $space-md;
+    }
+  }
+}
+
+.menu-footer__nav {
+  display: none;
+  @include bp-sm() {
+    display: block;
+  }
+
+  ul {
+    display: flex;
+  }
+
+  li {
+    display: block;
+    margin-right: $space-lg;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
+
+.menu-footer__info {
+  a {
+    display: inline-block;
+    margin-right: $space-md;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
+
+/**
+ * Page: Project
+ */
+
+.menu-footer--projects {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  > div:first-of-type {
+    display: none;
+    @include bp-sm() {
+      display: flex;
+    }
+  }
+
+  .menu-footer__project-info {
+    display: flex;
+
+    h1 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: calc(100vw - 140px);
+      white-space: nowrap;
+
+      @include bp-sm() {
+        width: auto;
+        white-space: normal;
+      }
+    }
+
+    span {
+      display: none;
+      @include bp-sm() {
+        display: block;
+      }
+    }
+  }
+
+  .icon-document {
+    display: none;
+    @include bp-sm() {
+      display: inline-block;
+    }
+  }
+}
+
+.menu-footer__browse {
+  align-items: center;
+  display: flex;
+  margin-left: $space-sm;
+}
+
+/**
+ * Page: Works
+ */
+
+.menu-footer--works {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  h1 {
+    display: none;
+    @include bp-md() {
+      display: block;
+    }
+  }
+
+  .menu-footer__nav {
+    display: flex;
+
+    .works-filter {
+      display: none;
+      margin-left: 60px;
+      
+      @include bp-md() {
+        display: flex;
+      }
+      
+      @include bp-lg() {
+        margin-left: 90px;
+      }
+
+      li {
+        margin-right: $space-md;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      a {
+        @include font-size($fs-fix-md);
+      }
+    }
+  }
+}
+
+/**
+ * Pages: Discourse
+ */
+
+.menu-footer--discourse {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/**
+ * Pages: Office (Team, Profile, Jobs)
+ */
+
+.menu-footer--office {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  .menu-footer__nav {
+    li {
+      margin-right: $space-xl;
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+}

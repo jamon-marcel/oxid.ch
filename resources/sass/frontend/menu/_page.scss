@@ -1,0 +1,35 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: layout/navigation/page
+ * -----------------------------------------------------------------------------
+ */
+
+nav.menu-page {
+  display: none;
+  padding: 0 $space-md;
+  position: relative;
+
+  @include bp-sm() {
+    display: block;
+    top: calc(100px + #{$header-height-sm});
+  }
+
+  @include bp-md() {
+    top: calc(100px + #{$header-height-md});
+  }
+
+  @include bp-lg() {
+    top: calc(100px + #{$header-height-lg});
+  }
+
+  li {
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  a {
+    color: $color-black;
+    @include font-size($fs-menu);
+  }
+
+}

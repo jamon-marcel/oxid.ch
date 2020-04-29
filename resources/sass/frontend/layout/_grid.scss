@@ -5,7 +5,7 @@
  *
  */
 
-.grid-2x1 {
+.grid-home {
   @include bp-sm() {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -16,6 +16,32 @@
 
     .span:nth-child(2) {
       order: 1;
+    }
+  }
+}
+
+.grid-team {
+  margin-bottom: $space-xxl;
+
+  &.is-last {
+    margin-bottom: 0;
+  }
+
+  .span {
+    margin-bottom: $space-lg;
+    &.is-last {
+      margin-bottom: 0;
+    }
+  }
+
+  @include bp-sm() {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: $space-md;
+    grid-row-gap: $space-lg;
+    margin-bottom: $space-lg;
+    .span {
+      margin-bottom: 0;
     }
   }
 }

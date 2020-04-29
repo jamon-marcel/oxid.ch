@@ -1,5 +1,6 @@
 <?php
 namespace App\Helpers;
+use Illuminate\Support\Str;
 
 class AppHelper
 {
@@ -9,11 +10,11 @@ class AppHelper
      */
     public static function addScheme($url, $scheme = 'http://')
     {
-        if (empty($url))
-        {
-            return $url;
-        }
-        return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
+      if (empty($url))
+      {
+        return $url;
+      }
+      return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;
     }
 
     /**
@@ -23,14 +24,14 @@ class AppHelper
      */
     public static function linkTarget($url)
     {
-        if (strpos($url, 'oxid.ch') !== false)
-        {
-            return 'rel="canonical"';
-        }
-        else
-        {
-            return 'target="_blank"';
-        }
+      if (strpos($url, 'oxid.ch') !== false)
+      {
+        return 'rel="canonical"';
+      }
+      else
+      {
+        return 'target="_blank"';
+      }
     }
     
     /**
@@ -44,45 +45,36 @@ class AppHelper
      */
     public static function sanitizeFilename($string, $force_lowercase = true, $anal = false)
     {
-        $strip = array("~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "=", "+", "[", "{", "]", "}", "\\", "|", ";", ":", "\"", "'", "&#8216;", "&#8217;", "&#8220;", "&#8221;", "&#8211;", "&#8212;", "â€”", "â€“", ",", "<", ">", "/", "?");
-        $clean = trim(str_replace($strip, "", strip_tags($string)));
-        $clean = preg_replace('/\s+/', "-", $clean);
-        $clean = ($anal) ? preg_replace("/[^a-zA-Z0-9]/", "", $clean) : $clean ;
-        
-        return ($force_lowercase) ? (function_exists('mb_strtolower')) ? mb_strtolower($clean, 'UTF-8') : strtolower($clean) : $clean;
+      $strip = array("~", "`", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "=", "+", "[", "{", "]", "}", "\\", "|", ";", ":", "\"", "'", "&#8216;", "&#8217;", "&#8220;", "&#8221;", "&#8211;", "&#8212;", "â€”", "â€“", ",", "<", ">", "/", "?");
+      $clean = trim(str_replace($strip, "", strip_tags($string)));
+      $clean = preg_replace('/\s+/', "-", $clean);
+      $clean = ($anal) ? preg_replace("/[^a-zA-Z0-9]/", "", $clean) : $clean ;
+      return ($force_lowercase) ? (function_exists('mb_strtolower')) ? mb_strtolower($clean, 'UTF-8') : strtolower($clean) : $clean;
     }
 
     public static function transliterate($string = NULL)
     {
-        $search = array(
-            'ä', 'ö', 'ü', 'é', 'è', 'â', 'à', 'ç',
-        );
+      $search = array(
+        'ä', 'ö', 'ü', 'é', 'è', 'â', 'à', 'ç',
+      );
 
-        $replace = array(
-            'ae', 'oe', 'ue', 'e', 'e', 'a', 'a', 'c',
-        );
+      $replace = array(
+        'ae', 'oe', 'ue', 'e', 'e', 'a', 'a', 'c',
+      );
         
-        return (string) str_replace($search, $replace, mb_strtolower($string, 'UTF-8'));
+      return (string) str_replace($search, $replace, mb_strtolower($string, 'UTF-8'));
     }
 
     public static function slug($project = NULL)
     {
-        $slug = '';
-
-        if (is_array($project))
-        {
-        }
-        else
-        {
-            $slug = $project->id .'/'. str_slug(AppHelper::transliterate($project->name), '-');
-        }
-        
-        return $slug;
+      $slug = '';
+      $slug = Str::slug(AppHelper::transliterate($project->title_short), '-');
+      return $slug;
     }
 
     public static function nl2p($string = NULL)
     {
-        $string = nl2br($string, false);
-        return '<p>' . preg_replace('#(<br>[\r\n\s]+){2}#', '</p><p>', $string) . '</p>';
+      $string = nl2br($string, false);
+      return '<p>' . preg_replace('#(<br>[\r\n\s]+){2}#', '</p><p>', $string) . '</p>';
     }
 }

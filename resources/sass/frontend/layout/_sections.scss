@@ -5,9 +5,15 @@
  */
 
 %section-content {
-  padding: $space-sm;
 } 
 
 section.content {
   @extend %section-content;
+  padding-bottom: $footer-height;
+
+  &.content--works,
+  &.content--discourse {
+    background-color: $color-light;
+    min-height: calc(100vh - #{$footer-height});
+  }
 }

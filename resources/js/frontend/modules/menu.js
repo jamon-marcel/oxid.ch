@@ -7,6 +7,7 @@ var Menu = (function() {
     menuBtn:        '.js-menu-btn',
     menuBar:        '.js-menu-bar',
     menu:           '.js-menu',
+    menuParent:     '.js-menu-parent'
 	};
 
   // css classes
@@ -21,9 +22,8 @@ var Menu = (function() {
 
   // media queries
   var mq = {
-    sm: window.matchMedia("(min-width: 600px)"),
-    md: window.matchMedia("(min-width: 900px)"),
-    lg: window.matchMedia("(min-width: 1200px)")
+    xs: window.matchMedia("(max-width: 959px)"),
+    sm: window.matchMedia("(min-width: 960px)"),
   };
 
   // Init
@@ -36,12 +36,24 @@ var Menu = (function() {
     $(selectors.body).on('click', selectors.menuBtn, function(){
       _toggle($(this));
     });
+
+    $(selectors.body).on('click', selectors.menuParent, function(e){
+      if (mq.xs.matches) {
+        e.preventDefault();
+        _toggleSub($(this));
+      }
+    });
+
   };
 
   var _toggle = function(btn) {
     $(selectors.menu).toggleClass(classes.visible);
     $(selectors.menuBar).toggleClass(classes.hidden);
     $(selectors.html).toggleClass(classes.hasMenu);
+  };
+
+  var _toggleSub = function(btn) {
+    btn.next('ul').toggleClass(classes.visible);
   };
 
   /* --------------------------------------------------------------

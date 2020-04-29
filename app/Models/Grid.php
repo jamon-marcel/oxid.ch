@@ -1,8 +1,9 @@
 <?php
 namespace App\Models;
+use App\Models\Base;
 use Illuminate\Database\Eloquent\Model;
 
-class Grid extends Model
+class Grid extends Base
 {
 	protected $fillable = [
 		'order',

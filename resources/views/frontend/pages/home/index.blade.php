@@ -2,9 +2,9 @@
 @section('seo_title', 'Home')
 @section('seo_description', '')
 @section('content')
-<section class="content-home grid-2x1">
-  <figure class="span visual">
-    <img src="/image/large/{{$image->name}}" class="object-fit-cover" height="800" width="400">
+<section class="content-home grid-home">
+  <figure class="span visual-fit is-home">
+    <img src="/image/large/{{$image->name}}" height="400" width="800">
   </figure>
   <div class="span news-listing">
     @if ($news)

@@ -76,13 +76,13 @@ $header-heights: (
 );
 
 $footer-height:     60px;
-$footer-height-sm:  60px;
+$footer-height:  60px;
 $footer-height-md:  90px;
 $footer-height-lg:  90px;
 
 $footer-heights: (
   null:  $footer-height,
-  sm:    $footer-height-sm,
+  sm:    $footer-height,
   md:    $footer-height-md,
   lg:    $footer-height-lg
 );

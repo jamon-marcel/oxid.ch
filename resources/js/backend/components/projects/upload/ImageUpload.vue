@@ -125,7 +125,6 @@ export default {
   methods: {
 
     uploadImage(asset) {
-      console.log(asset);
       this.$refs.dropzone.removeFile(asset);
       this.$parent.uploadImage(asset);
     },
@@ -153,7 +152,6 @@ export default {
         asset.order = index;
         return asset;
       });
-
       console.log(assets);
       return;
 

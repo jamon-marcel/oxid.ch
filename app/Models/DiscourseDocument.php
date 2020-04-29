@@ -1,9 +1,10 @@
 <?php
 namespace App\Models;
+use App\Models\Base;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
-class DiscourseDocument extends Model
+class DiscourseDocument extends Base
 {
   use HasTranslations;
 

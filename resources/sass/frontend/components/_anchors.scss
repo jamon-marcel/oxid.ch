@@ -3,8 +3,17 @@
  * File: component/anchors
  * -----------------------------------------------------------------------------
  *
- *
  */
+
+a, 
+a:hover {
+  color: $color-black;
+
+  &.is-active,
+  &:hover {
+    text-decoration: underline;
+  }
+}
 
 %anchor,
 .anchor {
@@ -12,6 +21,14 @@
   text-decoration: none;
   &:hover {
     text-decoration: underline;
+  }
+}
+
+%anchor-ul,
+.anchor-ul {
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none !important;
   }
 }
 
@@ -41,4 +58,11 @@
     background-size: 15px auto;
     background-position: bottom 5px right;
   }
+}
+
+%anchor-external-sm {
+  @extend %anchor-external;
+  background-size: 10px auto;
+  background-position: center right;
+  padding-right: 15px;
 }

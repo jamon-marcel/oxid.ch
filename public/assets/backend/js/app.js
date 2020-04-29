@@ -5000,6 +5000,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5088,6 +5089,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_projects_config_model_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/components/projects/config/model.js */ "./resources/js/backend/components/projects/config/model.js");
 /* harmony import */ var _components_projects_config_tabs_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/components/projects/config/tabs.js */ "./resources/js/backend/components/projects/config/tabs.js");
 /* harmony import */ var _components_projects_config_errors_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @/components/projects/config/errors.js */ "./resources/js/backend/components/projects/config/errors.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6551,7 +6590,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     uploadImage: function uploadImage(asset) {
-      console.log(asset);
       this.$refs.dropzone.removeFile(asset);
       this.$parent.uploadImage(asset);
     },
@@ -49192,8 +49230,11 @@ var render = function() {
                           _c("div", { staticClass: "list-item-body" }, [
                             _c("strong", [_vm._v(_vm._s(p.title_short.de))]),
                             _vm._v(
-                              ", " + _vm._s(p.location.de) + "\n            "
-                            )
+                              ", " + _vm._s(p.location.de) + "\n              "
+                            ),
+                            p.is_highlight
+                              ? _c("em", { staticClass: "icon-sticky" })
+                              : _vm._e()
                           ]),
                           _vm._v(" "),
                           _c(
@@ -49533,7 +49574,7 @@ var render = function() {
                         _vm._v(" "),
                         _c(
                           "div",
-                          { staticClass: "form-row is-last" },
+                          { staticClass: "form-row" },
                           [
                             _c("label", [_vm._v("Info")]),
                             _vm._v(" "),
@@ -49553,7 +49594,98 @@ var render = function() {
                             })
                           ],
                           1
-                        )
+                        ),
+                        _vm._v(" "),
+                        _c("h3", { staticClass: "is-label" }, [
+                          _vm._v("Infos Werkliste")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-row" }, [
+                          _c("label", [_vm._v("Jahr")]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.project.year_works,
+                                expression: "project.year_works"
+                              }
+                            ],
+                            attrs: { type: "text" },
+                            domProps: { value: _vm.project.year_works },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.project,
+                                  "year_works",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-row" }, [
+                          _c("label", [_vm._v("Auftraggeber")]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.project.client_works,
+                                expression: "project.client_works"
+                              }
+                            ],
+                            attrs: { type: "text" },
+                            domProps: { value: _vm.project.client_works },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.project,
+                                  "client_works",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-row is-last" }, [
+                          _c("label", [_vm._v("Bauherrschaft")]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.project.principal_works,
+                                expression: "project.principal_works"
+                              }
+                            ],
+                            attrs: { type: "text" },
+                            domProps: { value: _vm.project.principal_works },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.project,
+                                  "principal_works",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "column-sidebar" }, [
@@ -50082,6 +50214,98 @@ var render = function() {
                                 {
                                   staticClass: "form-control",
                                   attrs: { for: "is_filter_reuse_0" }
+                                },
+                                [_vm._v("Nein")]
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-row is-sm" }, [
+                            _c("label", { staticClass: "is-sm" }, [
+                              _vm._v("Filter - Areal?")
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-radio" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.project.is_filter_area,
+                                    expression: "project.is_filter_area"
+                                  }
+                                ],
+                                staticClass: "visually-hidden",
+                                attrs: {
+                                  type: "radio",
+                                  name: "is_filter_area_1",
+                                  id: "is_filter_area_1",
+                                  value: "1"
+                                },
+                                domProps: {
+                                  checked: _vm._q(
+                                    _vm.project.is_filter_area,
+                                    "1"
+                                  )
+                                },
+                                on: {
+                                  change: function($event) {
+                                    return _vm.$set(
+                                      _vm.project,
+                                      "is_filter_area",
+                                      "1"
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "form-control",
+                                  attrs: { for: "is_filter_area_1" }
+                                },
+                                [_vm._v("Ja")]
+                              ),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.project.is_filter_area,
+                                    expression: "project.is_filter_area"
+                                  }
+                                ],
+                                staticClass: "visually-hidden",
+                                attrs: {
+                                  type: "radio",
+                                  name: "is_filter_area_0",
+                                  id: "is_filter_area_0",
+                                  value: "0"
+                                },
+                                domProps: {
+                                  checked: _vm._q(
+                                    _vm.project.is_filter_area,
+                                    "0"
+                                  )
+                                },
+                                on: {
+                                  change: function($event) {
+                                    return _vm.$set(
+                                      _vm.project,
+                                      "is_filter_area",
+                                      "0"
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "form-control",
+                                  attrs: { for: "is_filter_area_0" }
                                 },
                                 [_vm._v("Nein")]
                               )
@@ -80712,10 +80936,14 @@ __webpack_require__.r(__webpack_exports__);
     en: null
   },
   year: null,
+  year_works: null,
+  client_works: null,
+  principal_works: null,
   images: [],
   documents: [],
   is_filter_wood: 0,
   is_filter_reuse: 0,
+  is_filter_area: 0,
   is_highlight: 0,
   has_detail: 0,
   publish: 0,

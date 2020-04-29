@@ -1,0 +1,47 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: component/overlay/global
+ * -----------------------------------------------------------------------------
+ *
+ */
+
+%overlay,
+.overlay {
+  background-color: $color-white;
+  height: calc(100% - #{$footer-height});
+  overflow-y: auto;
+  padding: $space-sm;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transform: translateY(100%);
+  transition: transform .16s ease-out;
+  width: 100%;
+  z-index: 100;
+  -webkit-overflow-scrolling: touch;
+
+  .btn-info {
+    opacity: 0;
+    transition: opacity .16s 0 ease-in;
+  }
+
+  &.is-visible {
+    transform: translateY(0);
+    .btn-info {
+      opacity: 1;
+      transition: opacity .16s .36s ease-in;
+    }
+  }
+
+  @include bp-sm() {
+    width: calc(50% + (#{$grid-gap-sm}/2));
+  }
+
+  @include bp-md() {
+    padding: $space-md;
+  }
+
+  > div {
+    padding: $space-sm 0;
+  }
+}

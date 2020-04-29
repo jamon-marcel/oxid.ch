@@ -33,15 +33,21 @@
 @import 'components/boxes/global';
 @import 'components/boxes/ratio';
 @import 'components/buttons/global';
+@import 'components/buttons/info';
+@import 'components/buttons/scroll';
+@import 'components/collapsible';
 @import 'components/icons/global';
+@import 'components/icons/browse';
+@import 'components/icons/document';
 @import 'components/icons/menu';
 @import 'components/headings/global';
 @import 'components/headings/h1';
 @import 'components/headings/h2';
 @import 'components/logo';
 @import 'components/images';
-
-
+@import 'components/overlay/global';
+@import 'components/overlay/info';
+@import 'components/underline/global';
 // Layout
 @import 'layout/base';
 @import 'layout/main';
@@ -54,9 +60,10 @@
 // Menu
 @import 'menu/global';
 @import 'menu/bar';
+@import 'menu/footer';
 @import 'menu/home';
 @import 'menu/pages';
-
+@import 'menu/page';
 
 // Vendor
 @import 'vendor/fancybox/fancybox';
@@ -64,4 +71,9 @@
 
 
 // Views
+@import 'views/discourse';
 @import 'views/home';
+@import 'views/jobs';
+@import 'views/project';
+@import 'views/team';
+@import 'views/works';

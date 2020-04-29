@@ -6,6 +6,8 @@
 
 html {
 	overflow-y: scroll;
+	&.has-menu {
+	}
 }
 
 html,

@@ -39,23 +39,28 @@ $breakpoints: (
   lg: $bp-lg  
 );
 
-/* Layout
+/* Header
  * -------------------- */
 
-// Page
-$page-max-width-xs: 446px;
-$page-max-width: 1142px;
+$header-height-sm:  95px;
+$header-height-md: 110px;
+$header-height-lg: 130px;
 
-// Header height
-$header-height-sm: 95px;
-
-// Header height (responsive prop)
 $header-height: (
-  null:  95px,
-  sm:    95px,
-  md:    110px,
-  lg:    130px
+  null:  $header-height-sm,
+  sm:    $header-height-sm,
+  md:    $header-height-md,
+  lg:    $header-height-lg
 );
 
-// Footer
-$footer-height-sm: 60px;
+/* Footer
+ * -------------------- */
+$footer-height: 60px;
+
+
+/* Grids
+ * -------------------- */
+$grid-gap-sm: 12px;
+$grid-gap-md: 15px;
+$grid-gap-lg: 30px;
+

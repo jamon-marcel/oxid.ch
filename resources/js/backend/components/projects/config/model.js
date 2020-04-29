@@ -19,13 +19,16 @@ export default {
     de: null,
     en: null,
   },
-  
+
   year: null,
+  year_works: null,
+  client_works: null,
+  principal_works: null,
   images: [],
   documents: [],
-
   is_filter_wood: 0,
   is_filter_reuse: 0,
+  is_filter_area: 0,
   is_highlight: 0,
   has_detail: 0,
   publish: 0,

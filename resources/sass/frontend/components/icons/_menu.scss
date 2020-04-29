@@ -7,6 +7,9 @@
 // Icon wrapper
 .menu-icon {
   flex: 0 0 44px;
+  @include bp-sm() {
+    flex: 0 0 32px;
+  }
 }
 
 .icon-menu {
@@ -19,11 +22,21 @@
     &.icon-menu__open {
       height: 26px;
       width: 44px;
+
+      @include bp-sm() {
+        height: 18px;
+        width: 32px;
+      }
     }
     
     &.icon-menu__close {
       height: 44px;
       width: 44px;
+
+      @include bp-sm() {
+        height: 32px;
+        width: 32px;
+      }
     }
   }
 }

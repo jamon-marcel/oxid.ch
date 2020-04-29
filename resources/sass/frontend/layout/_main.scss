@@ -5,7 +5,7 @@
  */
 
 main.site-content-home {
-  padding-bottom: $footer-height-sm;
+  padding-bottom: $footer-height;
   @include responsive-prop('padding-top', $header-height);
   
   @include bp-sm() {

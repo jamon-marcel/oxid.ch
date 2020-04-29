@@ -10,8 +10,4 @@
   margin-left: auto;
   margin-right: auto;
   position: relative;
-
-  @include bp-sm() {
-    max-width: $page-max-width;
-  }
 }

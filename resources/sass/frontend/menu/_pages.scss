@@ -1,6 +1,6 @@
 /**
  * -----------------------------------------------------------------------------
- * File: layout/navigation/site
+ * File: layout/navigation/pages
  * -----------------------------------------------------------------------------
  */
 
@@ -9,15 +9,20 @@
   position: fixed;
   transform: translateY(100%);
   width: 100%;
-  z-index: 90;
+  z-index: 200;
 
   &.is-visible {
     transition: transform .16s ease-out;
     transform: translateY(0);
   }
+
+  @include bp-sm() {
+    background-color: $color-white;
+    width: calc(50% + (#{$grid-gap-sm}/2));
+  }
 }
 
-nav.menu-site {
+nav.menu-pages {
   @extend %menu;
   transform: translateY(0);
   top: 0;

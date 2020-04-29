@@ -27,9 +27,15 @@
 .logo-byline {
   text-align: right;
   width: 100%;
+
   img {
     display: inline-block;
     height: 35px;
     width: 226px;
+
+    @include bp-md() {
+      height: 44px;
+      width: 300px;
+    }
   }
 }

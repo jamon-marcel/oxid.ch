@@ -5,8 +5,8 @@ return [
   'program' => [
     1 => 'living',
     2 => 'industry',
-    3 => 'area',
-    4 => 'hybrid',
+    3 => 'hybrid',
+    4 => 'public',
   ],
 
   'state' => [

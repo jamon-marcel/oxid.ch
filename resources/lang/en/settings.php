@@ -11,8 +11,8 @@ return [
 
   // Programm
   'living'    => 'Living',
-  'industry'  => 'Industry',
-  'area'      => 'Area',
+  'industry'  => 'Industry/Office',
+  'public'    => 'Public',
   'hybrid'    => 'Hybrid',
 
   // Status
@@ -23,6 +23,7 @@ return [
   // Filter
   'wood'  => 'Wood',
   'reuse' => 'Reusage',
+  'area'  => 'Area',
 
   // Discoure categories
   'research' => 'Research',

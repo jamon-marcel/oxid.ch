@@ -7,9 +7,31 @@
 |
 */
 
-// Page routes
+// Home routes
 Route::get('/', 'HomeController@index')->name('page.home');
-Route::get('/team', 'TeamController@index')->name('page.team');
+
+// Project routes
+Route::get('/projekte', 'ProjectController@index')->name('page.projects');
+Route::get('/projekt/{project}/{slug?}', 'ProjectController@show')->name('page.project');
+
+// Works routes
+Route::get('/werkliste', 'WorksController@index')->name('page.works');
+Route::get('/werkliste/autorenschaft', 'WorksController@authors')->name('page.works.authors');
+Route::get('/werkliste/jahr', 'WorksController@year')->name('page.works.year');
+Route::get('/werkliste/programm', 'WorksController@program')->name('page.works.program');
+Route::get('/werkliste/status', 'WorksController@state')->name('page.works.state');
+
+// Discourse routes
+Route::get('/diskurs', 'DiscourseController@index')->name('page.discourse');
+Route::get('/diskurs/recherche', 'DiscourseController@research')->name('page.discourse.research');
+Route::get('/diskurs/veranstaltungen', 'DiscourseController@events')->name('page.discourse.events');
+Route::get('/diskurs/publikationen', 'DiscourseController@publications')->name('page.discourse.publications');
+
+// Office
+Route::get('/buero/team', 'TeamController@index')->name('page.office.team');
+Route::get('/buero/profil', 'ProfileController@index')->name('page.office.profile');
+Route::get('/buero/jobs', 'JobController@index')->name('page.office.jobs');
+
 
 // Admin routes
 Route::view('admin', 'backend.app');

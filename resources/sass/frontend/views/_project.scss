@@ -1,0 +1,93 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: views/project
+ * -----------------------------------------------------------------------------
+ */
+
+.project {
+
+  h1,
+  p {
+    @include bp-md() {
+      max-width: 80%;
+    }
+  }
+
+  .project__info {
+    @include font-size($fs-sm);
+    margin-top: $space-md;
+
+    @include bp-md() {
+      margin-top: $space-xl;
+    }
+  }
+
+  a[href*="//"]:not([href*="oxid.ch"]) {
+    @extend %anchor-external-sm;
+  }
+
+  .icon-document {
+    display: none;
+    @include bp-md() {
+      display: inline-block;
+    }
+  }
+}
+
+.project-grids {
+  position: relative;
+
+  [class^='project-grid-'] {
+
+    figure {
+      margin-bottom: $grid-gap-sm;
+      @include bp-sm() {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  @include bp-sm() {
+
+    [class^='project-grid-'] {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: $grid-gap-sm;
+      margin-bottom: $grid-gap-sm;
+  
+      &:last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    .project-grid-1 {
+      grid-template-columns: 1fr;
+    }
+  
+    .project-grid__stack {
+      display: grid;
+      grid-row-gap: $grid-gap-sm;
+    }
+
+  }
+}
+
+// Project filter
+nav {
+
+  li.project-filter {
+    display: flex;
+    margin-bottom: $space-md;
+
+    a {
+      display: block;
+      @include font-size($fs-fix-lg);
+      line-height: 1 !important;
+      margin-right: $space-sm;
+
+      @include bp-md() {
+        @include font-size($fs-fix-md);
+      }
+    }
+  }
+}

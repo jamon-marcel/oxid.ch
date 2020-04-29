@@ -18,6 +18,7 @@
             >
               <div class="list-item-body">
                 <strong>{{ p.title_short.de }}</strong>, {{ p.location.de }}
+                <em v-if="p.is_highlight" class="icon-sticky"></em>
               </div>
               <div class="list-item-action" data-icons="4">
                 <router-link

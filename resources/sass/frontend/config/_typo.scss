@@ -6,6 +6,21 @@
  *
  */
 
+// Responsiv font sizes
+$fs-xs: (
+  null: (12px,1.4),
+  sm:   (12px,1.4),
+  md:   (14px,1.4),
+  lg:   (14px,1.4)  
+);
+
+$fs-sm: (
+  null: (14px,1.4),
+  sm:   (15px,1.4),
+  md:   (16px,1.4),
+  lg:   (17px,1.4)  
+);
+
 $fs-md: (
   null: (17px,1.2),
   sm:   (20px,1.2),
@@ -20,35 +35,31 @@ $fs-xl: (
   lg:   (34px,1.2)  
 );
 
-
-
-$fs-nav: (
+$fs-menu: (
   null: (34px,1.2),
   sm:   (20px,1.25),
   md:   (23px,1.172),
   lg:   (28px,1.2)  
 );
 
-$fs-nav-sm: (
+$fs-menu-sm: (
   null: (20px,1.2),
   sm:   (14px,1.2),
   md:   (15px,1.2),
   lg:   (17px,1.2)  
 );
 
-
-
-$fs-sm: (
-  null: (14px,1.35),
-  sm:   (14px,1.35),
-  md:   (14px,1.35),
-  lg:   (14px,1.35)  
+$fs-fix-lg: (
+  null: (25px,1.2),
+  sm:   (25px,1.2),
+  md:   (25px,1.2),
+  lg:   (25px,1.2)  
 );
 
-
-$fs-lg: (
-  null: (21px,1.428),
-  sm:   (21px,1.428),
-  md:   (24px,1.428),
-  lg:   (24px,1.428)  
+$fs-fix-md: (
+  null: (17px,1.4),
+  sm:   (17px,1.4),
+  md:   (17px,1.4),
+  lg:   (17px,1.4)  
 );
+

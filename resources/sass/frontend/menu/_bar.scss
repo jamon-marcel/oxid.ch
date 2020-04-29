@@ -10,7 +10,7 @@
   left: 0;
   position: fixed;
   width: 100%;
-  z-index: 100;
+  z-index: 300;
 
   .menu-bar__open,
   .menu-bar__close {
@@ -18,11 +18,15 @@
     background-color: $color-white;
     bottom: 0;
     display: flex;
-    height: $footer-height-sm;
+    height: $footer-height;
     left: inherit;
     padding: 0 $space-sm;
     position: inherit;
     width: inherit;
+
+    @include bp-md() {
+      padding: 0 $space-md;
+    }
 
     &.is-hidden {
       opacity: 0;
@@ -60,11 +64,17 @@
       width: 50%;
     }
   }
-
+  
   .menu-bar__open.is-hidden {
-    background-color: green;
+    background-color: $color-light;
     display: flex;
-    opacity: .7;
+    opacity: 1;
     pointer-events: all;
+
+    > * {
+      opacity: .4;
+      pointer-events: none;
+      transition: opacity .08s ease-out;
+    }
   }
 }

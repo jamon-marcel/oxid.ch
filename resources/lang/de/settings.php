@@ -11,8 +11,8 @@ return [
 
   // Programm
   'living'    => 'Wohnen',
-  'industry'  => 'Gewerbe',
-  'area'      => 'Areal',
+  'industry'  => 'Gewerbe/Büro',
+  'public'    => 'Öffentlich',
   'hybrid'    => 'Hybrid',
 
   // State
@@ -23,6 +23,7 @@ return [
   // Filter
   'wood'  => 'Holz',
   'reuse' => 'Umnutzung',
+  'area'  => 'Areal',
 
   // Discoure categories
   'research' => 'Recherche',

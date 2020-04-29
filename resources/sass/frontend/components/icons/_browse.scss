@@ -1,0 +1,24 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/icons/document
+ * -----------------------------------------------------------------------------
+ */
+
+%icon-browse {
+  @extend %icon;
+  @extend %icon-bg;
+  background-size: 100%;
+  height: 21px;
+  width: 32px;
+}
+
+.icon-browse-next {
+  @extend %icon-browse;
+  background-image: url($url-images + 'arrow-next.svg');
+}
+
+.icon-browse-prev {
+  @extend %icon-browse;
+  background-image: url($url-images + 'arrow-prev.svg');
+  margin-right: $space-sm;
+}

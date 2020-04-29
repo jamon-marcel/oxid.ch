@@ -1,0 +1,27 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/buttons/scroll
+ * -----------------------------------------------------------------------------
+ */
+
+.btn-scroll {
+  @extend %btn;
+  @extend %btn-bg;
+  bottom: 80px;
+  display: none;
+  background-image: url($url-images + 'chevron-down.svg');
+  background-size: 100%;
+  height: 40px;
+  position: fixed;
+  left: calc(50% - 38px);
+  transition: transform .1s ease-out;
+  width: 76px;
+
+  &:hover {
+    transform: translateY(2px)
+  }
+
+  @include bp-sm() {
+    display: block;
+  }
+}

@@ -1,9 +1,10 @@
 <?php
 namespace App\Models;
+use App\Models\Base;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
-class DiscourseImage extends Model
+class DiscourseImage extends Base
 {
 	use HasTranslations;
 
@@ -23,4 +24,5 @@ class DiscourseImage extends Model
   {
     return $this->belongsTo('App\Models\Discourse');
   }
+
 }
