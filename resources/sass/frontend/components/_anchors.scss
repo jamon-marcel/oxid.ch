@@ -66,3 +66,22 @@ a:hover {
   background-position: center right;
   padding-right: 15px;
 }
+
+%anchor-arrow-inline {
+  display: inline-block;
+  color: $color-blue;
+  @include font-size($fs-fix-md);
+
+  @include bp-sm() {
+    align-items: center;
+    display: flex;
+  }
+
+  svg {
+    display: inline-block;
+    height: 11px;
+    padding-top: 1px;
+    margin-left: $space-xxs;
+    width: auto;
+  }
+}

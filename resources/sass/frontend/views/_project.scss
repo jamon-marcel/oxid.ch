@@ -72,6 +72,38 @@
   }
 }
 
+// Project teaser (mobile only)
+.project-teaser {
+  border-top: 1px solid $color-black;
+  margin: $space-xl $space-md $space-md $space-md;
+  padding-top: $space-xs;
+
+  @include bp-sm() {
+    display: none;
+  }
+
+  a {
+    @extend %anchor-arrow-inline;
+    margin-top: $space-xxs;
+  }
+
+  figure {
+    display: block;
+    max-width: 60%;
+    margin-top: $space-xs;
+    width: 100%;
+
+    a {
+      margin-top: 0;
+    }
+  }
+
+  img {
+    @extend %is-responsive;
+  }
+
+}
+
 // Project filter
 nav {
 

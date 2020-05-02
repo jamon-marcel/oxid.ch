@@ -109,7 +109,7 @@
 
   h1 {
     display: none;
-    @include bp-md() {
+    @include bp-sm() {
       display: block;
     }
   }

@@ -11,24 +11,22 @@
         </figure>
       @endforeach
     </div>
-  @else
-    <div class="visual-list">
-      <figure class="visual-fit">
-        <img src="/assets/media/dummy.jpg" height="400" width="800">
-      </figure>
-    </div>
   @endif
 </section>
-<div class="overlay-info js-info">
+<div class="overlay-info js-info" data-visible-onload="1">
   <a href="javascript:;" class="btn-info js-btn-info"></a>
   <div>
-    @foreach($jobs as $j)
-      <article class="job">
-        <h1>{{$j->title}}</h1>
-        <div class="job__description">{!! $j->description !!}</div>
-        <div class="job__info">{!! $j->info !!}</div>
-      </article>
-    @endforeach
+    @if (count($jobs) > 0)
+      @foreach($jobs as $j)
+        <article class="job">
+          <h1>{{$j->title}}</h1>
+          <div class="job__description">{!! $j->description !!}</div>
+          <div class="job__info">{!! $j->info !!}</div>
+        </article>
+      @endforeach
+    @else
+      <p>Zur Zeit sind alle unsere Stellen besetzt.</p>
+    @endif
   </div>
 </div>
 @endsection

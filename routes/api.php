@@ -74,6 +74,7 @@ Route::middleware('auth:api')->group(function() {
    */
   Route::get('project/image/get/{projectId}', 'Api\ProjectImageController@get');
   Route::get('project/image/status/{id}', 'Api\ProjectImageController@status');
+  Route::post('project/image/coords/{projectImage}', 'Api\ProjectImageController@coords');
   Route::delete('project/image/destroy/{projectImage}', 'Api\ProjectImageController@destroy');
 
   /**
@@ -164,6 +165,44 @@ Route::middleware('auth:api')->group(function() {
    */
   Route::get('job/document/status/{id}', 'Api\JobDocumentController@status');
   Route::delete('job/document/destroy/{jobFile}', 'Api\jobDocumentController@destroy');
+
+  /**
+   * JobImage routes
+   */
+  Route::get('job/images/get', 'Api\JobImageController@get');
+  Route::post('job/image/create', 'Api\JobImageController@store');
+  Route::get('job/image/edit/{image}', 'Api\JobImageController@edit');
+  Route::post('job/image/update/{image}', 'Api\JobImageController@update');
+  Route::get('job/image/status/{image}', 'Api\JobImageController@status');
+  Route::delete('job/image/destroy/{image}', 'Api\JobImageController@destroy');
+
+
+  /**
+   * Profile routes
+   */
+  Route::get('profile/get', 'Api\ProfileController@get');
+  Route::post('profile/create', 'Api\ProfileController@store');
+  Route::get('profile/edit/{profile}', 'Api\ProfileController@edit');
+  Route::post('profile/update/{profile}', 'Api\ProfileController@update');
+  Route::get('profile/status/{profile}', 'Api\ProfileController@status');
+
+  /**
+   * ProfileImage routes
+   */
+  Route::get('profile/images/get', 'Api\ProfileImageController@get');
+  Route::post('profile/image/create', 'Api\ProfileImageController@store');
+  Route::get('profile/image/edit/{image}', 'Api\ProfileImageController@edit');
+  Route::post('profile/image/update/{image}', 'Api\ProfileImageController@update');
+  Route::get('profile/image/status/{image}', 'Api\ProfileImageController@status');
+  Route::delete('profile/image/destroy/{image}', 'Api\ProfileImageController@destroy');
+
+  /**
+   * Contact routes
+   */
+  Route::get('contact/get', 'Api\ContactController@get');
+  Route::post('contact/create', 'Api\ContactController@store');
+  Route::get('contact/edit/{contact}', 'Api\ContactController@edit');
+  Route::post('contact/update/{contact}', 'Api\ContactController@update');
 
 });
 

@@ -1,0 +1,75 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: views/contact
+ * -----------------------------------------------------------------------------
+ */
+
+.contact {
+  height: calc(100vh - #{$footer-height});
+  overflow: hidden;
+
+  .contact__info {
+    height: 100vh;
+    overflow-y: auto;
+    padding: $space-sm $space-sm ($footer-height + $space-sm) $space-sm;
+    @include bp-md() {
+      padding: $space-md $space-md ($footer-height + $space-md) $space-md;
+    }
+
+    a {
+      color: $color-blue;
+      &[href*="//"]:not([href*="oxid.ch"]) {
+        @extend %anchor-external-sm;
+      } 
+    }
+
+    address {
+      @include font-size($fs-xl);
+
+      a[href*="mailto"] {
+        color: $color-black;
+      }
+
+      a[href*="//"]:not([href*="oxid.ch"]) {
+        @include font-size($fs-fix-md);
+        @include bp-sm() {
+          display: none;
+        }
+      }
+    }
+
+    > div {
+      @include font-size($fs-sm);
+      
+      &:first-of-type {
+        margin-top: $space-huge;
+        margin-bottom: $space-xl;
+        @include bp-sm() {
+          margin-top: 30vh;
+          margin-bottom: $space-huge;
+        }
+      }
+
+      &:last-of-type {
+        > div {
+          margin-top: $space-md;
+          @include bp-md() {
+            margin-top: $space-xl;
+          }
+        }
+      }
+      
+      h3 {
+        @include font-size($fs-sm);
+      }
+    }
+  }
+
+  .contact__map {
+    display: none;
+    @include bp-sm() {
+      height: calc(100vh - #{$footer-height});
+      display: block;
+    }
+  }
+}

@@ -56,7 +56,8 @@ return array(
         'thumbnail' => 'App\Filters\Image\Template\Thumbnail',
         'tiny'      => 'App\Filters\Image\Template\Tiny',
         'small'     => 'App\Filters\Image\Template\Small',
-        'large'     => 'App\Filters\Image\Template\Large'
+        'large'     => 'App\Filters\Image\Template\Large',
+        'crop'     => 'App\Filters\Image\Template\Crop',
     ),
 
     /*

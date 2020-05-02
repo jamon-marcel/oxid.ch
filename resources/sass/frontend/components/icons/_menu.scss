@@ -6,9 +6,11 @@
 
 // Icon wrapper
 .menu-icon {
-  flex: 0 0 44px;
+  flex: 0 0 $icon-menu-width;
+  position: relative;
+  z-index: 200;
   @include bp-sm() {
-    flex: 0 0 32px;
+    flex: 0 0 $icon-menu-width-sm;
   }
 }
 
@@ -21,21 +23,21 @@
 
     &.icon-menu__open {
       height: 26px;
-      width: 44px;
+      width: $icon-menu-width;
 
       @include bp-sm() {
         height: 18px;
-        width: 32px;
+        width: $icon-menu-width-sm;
       }
     }
     
     &.icon-menu__close {
       height: 44px;
-      width: 44px;
+      width: $icon-menu-width;
 
       @include bp-sm() {
         height: 32px;
-        width: 32px;
+        width: $icon-menu-width-sm;
       }
     }
   }

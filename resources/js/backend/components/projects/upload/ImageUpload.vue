@@ -43,8 +43,9 @@
                 class="icon-trash icon-mini"
                 @click.prevent="deleteImage(asset.name,$event)">
               </a>
+              <a href @click.prevent="showCropper(asset)">Crop</a>
             </div>
-            <div :class="[asset.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'overlay-asset']">
+            <div class="overlay-asset">
               <div>
                 <div class="overlay-grid">
                   <div>
@@ -78,6 +79,35 @@
                 </div>
               </div>
             </div>
+            <div class="overlay-crop" :data-cropper="asset.name">
+              <a href="javascript:;"
+                  @click.prevent="hideCropper()"
+                  class="icon-close-overlay">
+              </a>
+              <div>
+                <span class="cropper-info">Neue Grösse:<br>{{ cropW }}px x {{ cropH }}px</span>
+                <div v-if="loader">Loading image...</div>
+                <cropper
+                  :src="cropImg"
+                  :defaultPosition="defaultPosition"
+                  :defaultSize="defaultSize"
+                  :stencilProps="{
+                    aspectRatio: 4/3,
+                    linesClassnames: {
+                      default: 'line',
+                    },
+                    handlersClassnames: {
+                      default: 'handler'
+                    }
+                  }"
+                  @change="change"
+                ></cropper>
+                <div class="form-buttons">
+                  <a href="javascript:;" class="btn-secondary" @click.prevent="saveCoords(asset)">Speichern</a>
+                  <a href @click.prevent="hideCropper(asset.name)">Abbrechen</a>
+                </div>
+              </div>
+            </div>
           </figure>
         </div>
       </div>
@@ -88,12 +118,14 @@
 import vue2Dropzone from "vue2-dropzone";
 import draggable from 'vuedraggable';
 import dropzoneConfig from "@/config/dz-image.js";
+import { Cropper } from "vue-advanced-cropper";
 
 export default {
 
   components: {
     vueDropzone: vue2Dropzone,
     draggable: draggable,
+    Cropper
   },
 
   props: {
@@ -111,7 +143,17 @@ export default {
 
   data() {
     return {
+      coords: {},
+      cropW: null,
+      cropH: null,
+      cropImg: null,
+      hasCropper: false,
+      loader: false,
+
       dropzoneConfig: dropzoneConfig,
+
+      currentAsset: null,
+
     };
   },
 
@@ -122,7 +164,28 @@ export default {
     this.dropzoneConfig.maxFilesize = this.maxFilesize;
   },
 
+  mounted() {
+  },
+
   methods: {
+
+    change({ coordinates, canvas }) {
+      this.coords.h = coordinates.height;
+      this.coords.w = coordinates.width;
+      this.coords.y = coordinates.top;
+      this.coords.x = coordinates.left;
+      this.cropW = Math.floor(coordinates.width);
+      this.cropH = Math.floor(coordinates.height);
+    },
+
+    saveCoords(asset) {
+      asset.coords_w = this.coords.w;
+      asset.coords_h = this.coords.h;
+      asset.coords_x = this.coords.x;
+      asset.coords_y = this.coords.y;
+      this.$parent.saveImageCoords(asset);
+      this.hideCropper(asset.name);
+    },
 
     uploadImage(asset) {
       this.$refs.dropzone.removeFile(asset);
@@ -147,16 +210,28 @@ export default {
       editForm.classList.remove('is-visible');
     },
 
+    showCropper(asset) {
+      this.currentAsset = asset;
+      this.$el.querySelector('[data-cropper="'+asset.name+'"]').classList.add('is-visible');
+      this.loader = true;
+      this.axios.get(this.getSource(asset.name, 'original')).then(response => {
+        this.cropImg = this.getSource(asset.name, 'original');
+        this.loader = false;
+      });
+    },
+
+    hideCropper(img) {
+      this.$el.querySelector('[data-cropper="'+img+'"]').classList.remove('is-visible');
+      this.cropImg = null;  
+    },
+
     updateOrder() {
       let assets = this.assets.map(function(asset, index) {
         asset.order = index;
         return asset;
       });
-      console.log(assets);
       return;
-
       // if (this.debounce) return;
-
       // this.debounce = setTimeout(function(categories) {
       //   this.debounce = false 
       //   let uri = `/api/category/order`;
@@ -167,9 +242,49 @@ export default {
       // this.$notify({type: 'success', text: 'Reihenfolge angepasst'});
     },
 
+    defaultPosition() {
+      let x = this.currentAsset.coords_x || 100;
+      let y = this.currentAsset.coords_y || 100;
+      return {
+				left: x,
+				top: y,
+			}
+    },
+
+    defaultSize() {
+      let w = this.currentAsset.coords_w || 400;
+      let h = this.currentAsset.coords_h || 300;
+      return {
+        width: w,
+				height: h,
+			}
+    },
+
     getSource(asset, size) {
       return `/image/${size}/${asset}`;
     }
   }
 };
 </script>
+<style>
+.cropper {
+  max-height: 700px;
+  background: transparent;
+  padding-top: 80px;
+}
+.cropper-info {
+  display: block; 
+  margin-bottom: 10px; 
+  text-align: left;
+}
+.line {
+	border-style: dashed;
+	border-color: #5cb85c;
+}
+.handler {
+  background-color: #5cb85c;
+}
+.vue-advanced-cropper__image {
+  opacity: 0.5 !important;
+}
+</style>

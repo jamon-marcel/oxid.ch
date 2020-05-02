@@ -5,35 +5,42 @@
     <div class="container">
       <main class="content" role="main">
         <div>
-          <h1>Diskurs</h1>
+          <h1>Jobs</h1>
           <router-link :to="{ name: 'job-create' }" class="btn-add">
             <span>Hinzufügen</span>
           </router-link>
           <div class="list-items" v-if="jobs.length">
-            <div
-              :class="[j.publish == 0 ? 'is-disabled' : '', 'list-item']"
-              v-for="j in jobs"
-              :key="j.id"
-              data-icons="3"
-            >
-              <div class="list-item-body">{{ j.title.de }}</div>
-              <div class="list-item-action" data-icons="3">
-                <a
-                  href="javascript:;"
-                  :class="[j.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
-                  @click.prevent="toggle(j.id,$event)"
-                ></a>
-                <router-link
-                  :to="{name: 'job-edit', params: { id: j.id }}"
-                  class="icon-edit icon-mini"
-                ></router-link>
-                <a
-                  href="javascript:;"
-                  class="icon-trash icon-mini"
-                  @click.prevent="destroy(j.id,$event)"
-                ></a>
+            <draggable 
+              :disabled="false"
+              v-model="jobs" 
+              @end="order()"
+              ghost-class="draggable-ghost"
+              draggable=".list-item">
+              <div
+                :class="[j.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
+                v-for="j in jobs"
+                :key="j.id"
+                data-icons="3"
+              >
+                <div class="list-item-body">{{ j.title.de }}</div>
+                <div class="list-item-action" data-icons="3">
+                  <a
+                    href="javascript:;"
+                    :class="[j.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
+                    @click.prevent="toggle(j.id,$event)"
+                  ></a>
+                  <router-link
+                    :to="{name: 'job-edit', params: { id: j.id }}"
+                    class="icon-edit icon-mini"
+                  ></router-link>
+                  <a
+                    href="javascript:;"
+                    class="icon-trash icon-mini"
+                    @click.prevent="destroy(j.id,$event)"
+                  ></a>
+                </div>
               </div>
-            </div>
+            </draggable>
           </div>
           <div v-else>
             <p>Es sind noch keine Jobs vorhanden...</p>
@@ -46,10 +53,12 @@
 <script>
 import PageHeader from "@/layout/PageHeader.vue";
 import Progress from "@/mixins/progress";
+import draggable from 'vuedraggable';
 
 export default {
   components: {
-    PageHeader: PageHeader
+    PageHeader: PageHeader,
+    draggable,
   },
 
   mixins: [Progress],
@@ -91,7 +100,22 @@ export default {
         this.$notify({ type: "success", text: "Status geändert" });
         this.progress(el);
       });
-    }
+    },
+
+    order() {
+      let jobs = this.jobs.map(function(job, index) {
+          job.order = index;
+          return job;
+      });
+
+      if (this.debounce) return;
+      this.debounce = setTimeout(function() {
+        this.debounce = false 
+        this.axios.post(`/api/job/order`, {jobs: jobs}).then((response) => {
+          this.$notify({type: 'success', text: 'Reihenfolge angepasst'});
+        });
+      }.bind(this, jobs), 500);
+    },
   }
 };
 </script>

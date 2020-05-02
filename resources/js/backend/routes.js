@@ -35,6 +35,19 @@ import TeamImagesIndex from '@/components/team/images/Index.vue';
 import JobIndex from '@/components/jobs/Index.vue';
 import JobCreate from '@/components/jobs/Create.vue';
 import JobEdit from '@/components/jobs/Edit.vue';
+import JobImagesIndex from '@/components/jobs/images/Index.vue';
+
+
+// Profile
+import ProfileIndex from '@/components/profile/text/Index.vue';
+import ProfileCreate from '@/components/profile/text/Create.vue';
+import ProfileEdit from '@/components/profile/text/Edit.vue';
+import ProfileImagesIndex from '@/components/profile/images/Index.vue';
+
+// Contact
+import ContactIndex from '@/components/contact/Index.vue';
+import ContactCreate from '@/components/contact/Create.vue';
+import ContactEdit from '@/components/contact/Edit.vue';
 
 const routes = [
   {
@@ -183,6 +196,62 @@ const routes = [
     name: 'job-edit',
     path: '/admin/job/edit/:id',
     component: JobEdit,
+    meta: { requiresAuth: true },
+  },
+
+  // Job - Images
+  {
+    name: 'job-images',
+    path: '/admin/job/images',
+    component: JobImagesIndex,
+    meta: { requiresAuth: true },
+  },
+
+  // Profile
+  {
+    name: 'profile',
+    path: '/admin/profile',
+    component: ProfileIndex,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'profile-create',
+    path: '/admin/profile/create',
+    component: ProfileCreate,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'profile-edit',
+    path: '/admin/profile/edit/:id',
+    component: ProfileEdit,
+    meta: { requiresAuth: true },
+  },
+
+  // Profile - Images
+  {
+    name: 'profile-images',
+    path: '/admin/profile/images',
+    component: ProfileImagesIndex,
+    meta: { requiresAuth: true },
+  },
+
+  // Contact
+  {
+    name: 'contact',
+    path: '/admin/contact',
+    component: ContactIndex,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'contact-create',
+    path: '/admin/contact/create',
+    component: ContactCreate,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'contact-edit',
+    path: '/admin/contact/edit/:id',
+    component: ContactEdit,
     meta: { requiresAuth: true },
   },
 ];

@@ -18,6 +18,10 @@ class ProjectImage extends Base
     'is_preview_navigation',
     'is_preview_works',
     'is_grid',
+    'coords_w',
+    'coords_h',
+    'coords_x',
+    'coords_y',
     'publish',
     'project_id',
 	];

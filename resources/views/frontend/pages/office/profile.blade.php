@@ -11,20 +11,19 @@
         </figure>
       @endforeach
     </div>
-  @else
-    <div class="visual-list">
-      <figure class="visual-fit">
-        <img src="/assets/media/dummy.jpg" height="400" width="800">
-      </figure>
-    </div>
   @endif
 </section>
-<div class="overlay-info js-info">
+<div class="overlay-info js-info" data-visible-onload="1">
   <a href="javascript:;" class="btn-info js-btn-info"></a>
   <div>
-    <h1>Büroprofil</h1>
-    <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-    <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+    @if ($profile)
+      @if ($profile->title)
+        <h1>{{$profile->title}}</h1>
+      @endif
+      @if ($profile->description)
+        {!! $profile->description !!}
+      @endif
+    @endif
   </div>
 </div>
 @endsection

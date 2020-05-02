@@ -1,0 +1,58 @@
+/**
+ * Dropdown
+ * -----------------------------------------------------------------------------
+ */
+
+nav.menu-footer__dropdown {
+  bottom: 0;
+  background-color: $color-white;
+  height: $footer-height;
+  left: 0;
+  padding-left: calc(#{$icon-menu-width} + #{$space-sm});
+  padding-right: $space-sm;
+  position: absolute;
+  transition: height .1s ease-out;
+  width: 100%;
+  z-index: 100;
+  
+  @include bp-sm() {
+    display: none;
+  }
+
+  &.is-open {
+    bottom: -2px;
+    height: auto;
+    transition: height .1s ease-out;
+
+    li {
+      display: block;
+    }
+  }
+
+  ul {
+    align-content: center;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    min-height: $footer-height;
+    padding-left: $space-md;
+    padding-bottom: 12px;
+    padding-top: 12px;
+  }
+
+  li {
+    display: none;
+    align-items: center;
+    padding: 4px 0;
+    order: 1;
+
+    &.is-visible {
+      display: flex;
+      order: 2;
+    }
+
+    a {
+      @include font-size($fs-fix-lg);
+    }
+  }
+}

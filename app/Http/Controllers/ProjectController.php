@@ -78,6 +78,7 @@ class ProjectController extends BaseController
     // Build project nav
     $projects = $this->project->published()->get();
     $keys     = [];
+    $items    = [];
     
     foreach($projects as $p)
     {
@@ -89,25 +90,25 @@ class ProjectController extends BaseController
 
     if ($key == 0)
     {
-        $prevId = end($keys);
-        $nextId = $keys[$key+1];
+      $prevId = end($keys);
+      $nextId = $keys[$key+1];
     }
     else if ($key == count($keys) - 1)
     {
-        $prevId = $keys[$key-1];
-        $nextId = $keys[0];
+      $prevId = $keys[$key-1];
+      $nextId = $keys[0];
     }
     else
     {
-        $prevId = $keys[$key-1];
-        $nextId = $keys[$key+1];
+      $prevId = $keys[$key-1];
+      $nextId = $keys[$key+1];
     }
 
-    $project_browse = [
+    $items = [
       'prev' => $this->project->find($prevId),
       'next' => $this->project->find($nextId),
     ];
 
-    return $project_browse;
+    return $items;
   }
 }

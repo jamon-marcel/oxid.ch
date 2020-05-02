@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use App\Models\Job;
+use App\Models\JobImage;
 use Illuminate\Http\Request;
 
 class JobController extends BaseController
@@ -10,18 +11,19 @@ class JobController extends BaseController
   protected $viewPath   = 'frontend.pages.office.job';
 
   // Models
-  protected $images;
   protected $job;
+  protected $jobImage;
 
   /**
    * Constructor
    * 
    */
 
-  public function __construct(Job $job)
+  public function __construct(Job $job, JobImage $jobImage)
   {
     parent::__construct();
     $this->job = $job;
+    $this->jobImage = $jobImage;
   }
 
   /**
@@ -35,7 +37,8 @@ class JobController extends BaseController
     return 
       view($this->viewPath, 
         [
-          'jobs' => $this->job->with('documents')->published()->get(),
+          'images'  => $this->jobImage->published()->get(),
+          'jobs' => $this->job->orderBy('order', 'ASC')->with('documents')->published()->get(),
           'pageFooter' => $this->pageFooter,
         ]
     );

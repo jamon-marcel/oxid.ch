@@ -465,6 +465,10 @@ export default {
         let file_response = JSON.parse(file.xhr.response);
         file_response.id = null;
         file_response.caption = { de: null, en: null };
+        file_response.coords_w = null;
+        file_response.coords_h = null;
+        file_response.coords_x = null;
+        file_response.coords_y = null;
         file_response.order = -1;
         file_response.publish = 1;
         file_response.is_preview_navigation = 0;
@@ -502,6 +506,21 @@ export default {
       }
     },
 
+    // Save asset coords
+    saveImageCoords(asset) {
+      if (asset.id === null) {
+        const index = this.project.images.findIndex(x => x.name === asset.name);
+        this.project.images[index].coords = asset.coords;
+      } 
+      else {
+        let uri = `/api/project/image/coords/${asset.id}`;
+        this.axios.post(uri, asset).then(response => {
+          this.$notify({ type: "success", text: "Änderungen gespeichert!" });
+        });
+      }
+    },
+
+
     // Upload file callback
     uploadFile(file) {
       if (file.status == "error" && file.accepted == false) {
@@ -516,7 +535,7 @@ export default {
       }
     },
 
-    // Delete file by its name
+    // Delete asset by its name
     deleteFile(file, event) {
       if (confirm("Please confirm!")) {
         let uri = `/api/project/document/destroy/${file}`;
@@ -529,7 +548,7 @@ export default {
       }
     },
 
-    // Toggle file status
+    // Toggle asset status
     toggleFile(asset, event) {
       if (asset.id === null) {
         const index = this.project.documents.findIndex(x => x.name === asset.name);

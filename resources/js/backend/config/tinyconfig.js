@@ -8,7 +8,7 @@ export default {
     },
     toolbar: 'undo redo | bold | link | superscript | removeformat | styleselect',
     paste_as_text: true,
-    height : "240px",
+    height: "320px",
     style_formats_merge: false,
     style_formats: [{
         title: 'Text',
@@ -16,6 +16,7 @@ export default {
             { title: 'Worttrennung deaktivieren', inline: 'span', styles: { "white-space": 'nowrap' } },
             { title: 'Überschrift 1', block : 'h1'},
             { title: 'Überschrift 2', block : 'h2'},
+            { title: 'Überschrift 3', block : 'h3'},
         ],
     }]
 }

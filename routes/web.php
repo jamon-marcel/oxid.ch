@@ -32,6 +32,9 @@ Route::get('/buero/team', 'TeamController@index')->name('page.office.team');
 Route::get('/buero/profil', 'ProfileController@index')->name('page.office.profile');
 Route::get('/buero/jobs', 'JobController@index')->name('page.office.jobs');
 
+// Contact
+Route::get('/kontakt', 'ContactController@index')->name('page.contact');
+
 
 // Admin routes
 Route::view('admin', 'backend.app');

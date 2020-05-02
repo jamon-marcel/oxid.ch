@@ -33,7 +33,10 @@
     @include('frontend.partials.menu.items.office')
   </li>
   <li>
-    <a href="">Kontakt</a>
+    <a href="{{ route('page.contact') }}" 
+       class="{{request()->routeIs('page.contact') ? 'is-active' : ''}}">
+     Kontakt
+    </a>
   </li>
 </ul>
 <ul class="language">

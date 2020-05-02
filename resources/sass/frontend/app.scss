@@ -33,6 +33,7 @@
 @import 'components/boxes/global';
 @import 'components/boxes/ratio';
 @import 'components/buttons/global';
+@import 'components/buttons/dropdown';
 @import 'components/buttons/info';
 @import 'components/buttons/scroll';
 @import 'components/collapsible';
@@ -60,6 +61,7 @@
 // Menu
 @import 'menu/global';
 @import 'menu/bar';
+@import 'menu/dropdown';
 @import 'menu/footer';
 @import 'menu/home';
 @import 'menu/pages';
@@ -71,6 +73,7 @@
 
 
 // Views
+@import 'views/contact';
 @import 'views/discourse';
 @import 'views/home';
 @import 'views/jobs';

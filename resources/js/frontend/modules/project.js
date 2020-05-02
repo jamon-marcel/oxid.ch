@@ -14,16 +14,12 @@ var Projects = (function() {
 
   // media queries
   var mq = {
-    sm: window.matchMedia("(min-width: 720px)"),
-    md: window.matchMedia("(min-width: 1024px)"),
-    lg: window.matchMedia("(min-width: 1168px)")
+    sm: window.matchMedia("(min-width: 960px)"),
   };
 
   var footerHeight = 60;
   var gridGap      = 12;
-  var index        = 0;
-  var max          = $(selectors.grids).find(selectors.grid).length;
-  var min          = 1;
+  var totalGrids   = $(selectors.grids).find(selectors.grid).length;
    
   var _initialize = function() {
     _bind();
@@ -31,34 +27,55 @@ var Projects = (function() {
 
   var _bind = function() {
     $(selectors.body).on('click', selectors.btnScroll, function(){
-      _scroll();
+      _scrollTo();
     });
 
-    // $(selectors.grid).each(function () {
-    //   new Waypoint.Inview({
-    //     element: this,
-    //     entered: function(direction) {
-    //       _updateIndex(direction);
-    //     },
-    //     offset: 0
-    //   });
-    // });
+    if (mq.sm.matches) {
+      _scroll();
+    }
+
+    $(window).scroll(function(event){
+      if (mq.sm.matches) {
+        _scroll();
+      }
+    });
   };
 
-  var _scroll = function(){
+  var _scrollTo = function(){
     var distance = $(window).height() - footerHeight + gridGap;
     $.scrollTo('+=' + distance, 400);
   };
 
-  var _updateIndex = function(direction) {
+  var _scroll = debounce(function(){
 
-    if (direction == 'down' && index < max) {
-      index++;
+    // get scroll position from top
+    var posY = _getScrollPosition()[1];
+
+    // get total height
+    var documentHeight = $(document).height();
+
+    // get height per grid (= section)
+    var gridHeight = documentHeight/totalGrids;
+
+    // set offset to 1/2 so the index changes in the middle of two sections
+    var offset = gridHeight/2;
+
+    // set current index
+    var currentIndex = Math.floor((posY + offset) / gridHeight) + 1;
+    $(selectors.index).html(currentIndex);
+
+  }, 10);
+
+  var _getScrollPosition = function() {
+    if (window.pageYOffset != undefined) {
+      return [pageXOffset, pageYOffset];
+    } 
+    else {
+      var sx, sy, d = document, r = d.documentElement, b = d.body;
+      sx = r.scrollLeft || b.scrollLeft || 0;
+      sy = r.scrollTop || b.scrollTop || 0;
+      return [sx, sy];
     }
-    else if (direction == 'up' && index >= min) {
-      index--;
-    }
-    $(selectors.index).html(index);
   };
 
   return {

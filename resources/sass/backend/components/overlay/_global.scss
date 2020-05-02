@@ -103,3 +103,28 @@ html.has-overlay {
         margin-top: 40px;
     }
 }
+
+.overlay-crop {
+    @extend %overlay;
+
+    img {
+        background-color: transparent;
+        padding: 0 !important;
+    }
+
+    .form-buttons {
+        padding-top: 40px;
+        text-align: left;
+
+        .btn-secondary {
+            @extend %btn-loading;
+        }
+
+        a:not(.btn-secondary) {
+            margin-left: 20px;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

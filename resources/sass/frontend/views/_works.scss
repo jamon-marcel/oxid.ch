@@ -97,17 +97,7 @@
     }
 
     a {
-      align-items: center;
-      color: $color-blue;
-      display: flex;
-      @include font-size($fs-fix-md);
-      svg {
-        display: inline-block;
-        height: 11px;
-        padding-top: 1px;
-        margin-left: $space-xxs;
-        width: auto;
-      }
+      @extend %anchor-arrow-inline;
     }
   }
 

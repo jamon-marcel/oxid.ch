@@ -6,7 +6,7 @@
     @include('frontend.partials.menu.items.main')
   </nav>
   <nav class="menu-page">
-    @if ($pageFooter)
+    @if ($pageFooter && $pageFooter != 'contact')
       @include('frontend.partials.menu.items.' . $pageFooter)
     @endif
   </nav>

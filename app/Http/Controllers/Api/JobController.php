@@ -32,7 +32,7 @@ class JobController extends Controller
 
   public function get()
   {
-    return new DataCollection($this->job->get());
+    return new DataCollection($this->job->orderBy('order', 'ASC')->get());
   }
 
   /**
@@ -164,6 +164,25 @@ class JobController extends Controller
     $job->publish = $job->publish == 0 ? 1 : 0;
     $job->save();
     return response()->json($job->publish);
+  }
+
+  /**
+   * Update the order of the resources.
+   *
+   * @param  \Illuminate\Http\Request $request
+   * @return \Illuminate\Http\Response
+   */
+
+  public function order(Request $request)
+  {
+    $jobs = $request->get('jobs');
+    foreach($jobs as $job)
+    {
+      $j = $this->job->find($job['id']);
+      $j->order = $job['order'];
+      $j->save(); 
+    }
+    return response()->json('successfully updated');
   }
 
   /**

@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><polygon style="fill:#3259a1;" points="3.8 0 3.8 1.8 11.6 1.8 0 13.3 1.3 14.6 12.9 3 12.9 10.8 14.6 10.8 14.6 0 3.8 0"/></svg>

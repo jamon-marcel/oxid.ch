@@ -1031,7 +1031,7 @@ p {
  * -----------------------------------------------------------------------------
  *
  */
-header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-asset > div,
+header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-crop > div, .overlay-asset > div,
 .overlay > div,
 .page-block {
   margin-left: auto;
@@ -1042,21 +1042,21 @@ header.site-header > div, main.content > div, footer.site-footer > div, nav.site
   max-width: 640px;
 }
 @media screen and (min-width: 768px) {
-  header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-asset > div,
+  header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-crop > div, .overlay-asset > div,
 .overlay > div,
 .page-block {
     max-width: 728px;
   }
 }
 @media screen and (min-width: 1024px) {
-  header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-asset > div,
+  header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-crop > div, .overlay-asset > div,
 .overlay > div,
 .page-block {
     max-width: 860px;
   }
 }
 @media screen and (min-width: 1280px) {
-  header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-asset > div,
+  header.site-header > div, main.content > div, footer.site-footer > div, nav.site-nav > div, .overlay-crop > div, .overlay-asset > div,
 .overlay > div,
 .page-block {
     max-width: 1100px;
@@ -1312,11 +1312,11 @@ header.site-header > div, main.content > div, footer.site-footer > div, nav.site
   }
 }
 
-.btn-trash-mini, .btn-trash, .btn-crop,
+.overlay-crop .form-buttons .btn-secondary, .btn-trash-mini, .btn-trash, .btn-crop,
 .btn-loading {
   position: relative;
 }
-.is-loading.btn-trash-mini:after, .is-loading.btn-trash:after, .is-loading.btn-crop:after,
+.overlay-crop .form-buttons .is-loading.btn-secondary:after, .is-loading.btn-trash-mini:after, .is-loading.btn-trash:after, .is-loading.btn-crop:after,
 .btn-loading.is-loading:after {
   background-color: #343E3D;
   border-radius: 0;
@@ -2527,7 +2527,7 @@ html.has-overlay {
   overflow: hidden;
 }
 
-.overlay-asset,
+.overlay-crop, .overlay-asset,
 .overlay {
   background-color: black;
   color: #222222;
@@ -2543,14 +2543,14 @@ html.has-overlay {
   width: 100%;
   z-index: -1;
 }
-.is-visible.overlay-asset,
+.is-visible.overlay-crop, .is-visible.overlay-asset,
 .overlay.is-visible {
   opacity: 1;
   pointer-events: all;
   z-index: 101;
   transition: opacity 0.24s ease-out;
 }
-.overlay-asset *,
+.overlay-crop *, .overlay-asset *,
 .overlay * {
   color: #ffffff;
 }
@@ -2604,6 +2604,21 @@ html.has-overlay {
 }
 .overlay-asset .form-row-button {
   margin-top: 40px;
+}
+
+.overlay-crop img {
+  background-color: transparent;
+  padding: 0 !important;
+}
+.overlay-crop .form-buttons {
+  padding-top: 40px;
+  text-align: left;
+}
+.overlay-crop .form-buttons a:not(.btn-secondary) {
+  margin-left: 20px;
+}
+.overlay-crop .form-buttons a:not(.btn-secondary):hover {
+  text-decoration: underline;
 }
 
 /**

@@ -42,7 +42,29 @@
 					</ul>
 				</li>
 				<li>
-					<router-link :to="{ name: 'jobs' }">Jobs</router-link>
+					<span>Jobs</span>
+					<ul>
+						<li>
+							<router-link :to="{ name: 'jobs' }">Inserate</router-link>
+						</li>
+						<li>
+							<router-link :to="{ name: 'job-images' }">Bilder</router-link>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<span>Profil</span>
+					<ul>
+						<li>
+							<router-link :to="{ name: 'profile' }">Text</router-link>
+						</li>
+						<li>
+							<router-link :to="{ name: 'profile-images' }">Bilder</router-link>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<router-link :to="{ name: 'contact' }">Kontakt</router-link>
 				</li>
 			</ul>
 			<router-link :to="{ name: 'logout' }" class="icon-logout">Logout</router-link>

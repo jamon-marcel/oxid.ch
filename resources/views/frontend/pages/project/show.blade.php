@@ -20,6 +20,21 @@
       @endif
     @endforeach
   </div>
+
+  <div class="project-teaser">
+    Nächstes Projekt
+    <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
+      {{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}
+      @include('frontend.partials.icons.arrow-external-blue')
+    </a>
+    @if ($navBrowse['next']->teaserImage)
+      <figure>
+        <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
+          <img src="/image/small/{{$navBrowse['next']->teaserImage->name}}" height="400" width="800">
+        </a>
+      </figure>
+    @endif
+  </div>
 </section>
 <div class="overlay-info overlay-info js-info">
   <a href="javascript:;" class="btn-info js-btn-info"></a>

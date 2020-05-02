@@ -35,7 +35,7 @@ class ProjectController extends Controller
 
   public function get()
   {
-    return new DataCollection($this->project->with('images')->with('documents')->get());
+    return new DataCollection($this->project->with('images')->with('documents')->orderBy('is_highlight', 'DESC')->get());
   }
 
   /**
@@ -110,6 +110,10 @@ class ProjectController extends Controller
           ],
           'is_preview_navigation' => $i['is_preview_navigation'],
           'is_preview_works'      => $i['is_preview_works'],
+          'coords_w'              => $i['coords_w'],
+          'coords_h'              => $i['coords_h'],
+          'coords_x'              => $i['coords_x'],
+          'coords_y'              => $i['coords_y'],
           'publish'               => $i['publish'],
         ]);
         $image->save();
@@ -193,7 +197,7 @@ class ProjectController extends Controller
     if (!empty($request->images))
     {
       foreach($request->images as $i)
-      {
+      { 
         $image = ProjectImage::updateOrCreate(
           ['id' => $i['id']], 
           [
@@ -203,9 +207,13 @@ class ProjectController extends Controller
               'de' => $i['caption']['de'],
               'en' => $i['caption']['en']
             ],
-            'publish' => $i['publish'] ? $i['publish'] : 0,
+            'publish'                 => $i['publish'] ? $i['publish'] : 0,
             'is_preview_navigation'   => $i['is_preview_navigation'] ? $i['is_preview_navigation'] : 0,
-            'is_preview_works'        => $i['is_preview_works'] ? $i['is_preview_works'] : 0
+            'is_preview_works'        => $i['is_preview_works'] ? $i['is_preview_works'] : 0,
+            'coords_w'                => $i['coords_w'] ? $i['coords_w'] : NULL,
+            'coords_h'                => $i['coords_h'] ? $i['coords_h'] : NULL,
+            'coords_x'                => $i['coords_x'] ? $i['coords_x'] : NULL,
+            'coords_y'                => $i['coords_y'] ? $i['coords_y'] : NULL,
           ]
         );
       }

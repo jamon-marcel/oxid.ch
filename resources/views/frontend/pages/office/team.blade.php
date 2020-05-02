@@ -13,7 +13,7 @@
     </div>
   @endif
 </section>
-<div class="overlay-info js-info">
+<div class="overlay-info js-info" data-visible-onload="1">
   <a href="javascript:;" class="btn-info js-btn-info"></a>
   <div>
     @if ($team['partner'])

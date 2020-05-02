@@ -18,5 +18,7 @@ require('./modules/menu.js');
 require('./modules/overlay.js');
 require('./modules/works.js');
 require('./modules/project.js');
+require('./modules/contact.js');
+require('./modules/dropdown.js');
 
 require('./modules/fancybox.js');

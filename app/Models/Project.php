@@ -53,6 +53,11 @@ class Project extends Base
 		return $this->hasMany('App\Models\ProjectDocument', 'project_id', 'id')->where('publish', '=', 1);
 	}
 
+	public function teaserImage()
+	{
+		return $this->hasOne('App\Models\ProjectImage', 'project_id', 'id')->where('is_preview_navigation', '=', 1);
+	}
+
 	public function workImage()
 	{
 		return $this->hasMany('App\Models\ProjectImage', 'project_id', 'id')->where('is_preview_works', '=', 1);

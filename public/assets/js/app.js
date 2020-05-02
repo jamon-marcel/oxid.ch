@@ -12723,6 +12723,10 @@ __webpack_require__(/*! ./modules/works.js */ "./resources/js/frontend/modules/w
 
 __webpack_require__(/*! ./modules/project.js */ "./resources/js/frontend/modules/project.js");
 
+__webpack_require__(/*! ./modules/contact.js */ "./resources/js/frontend/modules/contact.js");
+
+__webpack_require__(/*! ./modules/dropdown.js */ "./resources/js/frontend/modules/dropdown.js");
+
 __webpack_require__(/*! ./modules/fancybox.js */ "./resources/js/frontend/modules/fancybox.js");
 
 /***/ }),
@@ -12832,6 +12836,85 @@ var Collapsible = function () {
 
 Collapsible.init();
 /* harmony default export */ __webpack_exports__["default"] = (Collapsible);
+
+/***/ }),
+
+/***/ "./resources/js/frontend/modules/contact.js":
+/*!**************************************************!*\
+  !*** ./resources/js/frontend/modules/contact.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var Contact = function () {
+  var selectors = {
+    html: 'html',
+    body: 'body',
+    btnImprint: '.js-btn-imprint'
+  };
+
+  var _initialize = function _initialize() {
+    _bind();
+  };
+
+  var _bind = function _bind() {
+    $(selectors.body).on('click', selectors.btnImprint, function () {
+      $(this).next('div').toggle();
+    });
+  };
+
+  return {
+    init: _initialize
+  };
+}(); // Initialize
+
+
+$(function () {
+  Contact.init();
+});
+
+/***/ }),
+
+/***/ "./resources/js/frontend/modules/dropdown.js":
+/*!***************************************************!*\
+  !*** ./resources/js/frontend/modules/dropdown.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var Dropdown = function () {
+  var selectors = {
+    html: 'html',
+    body: 'body',
+    wrapper: '.js-dropdown',
+    btn: '.js-btn-dropdown'
+  }; // css classes
+
+  var classes = {
+    active: 'is-active',
+    open: 'is-open'
+  };
+
+  var _initialize = function _initialize() {
+    _bind();
+  };
+
+  var _bind = function _bind() {
+    $(selectors.body).on('click', selectors.btn, function () {
+      $(this).toggleClass(classes.active);
+      $(selectors.wrapper).toggleClass(classes.open);
+    });
+  };
+
+  return {
+    init: _initialize
+  };
+}(); // Initialize
+
+
+$(function () {
+  Dropdown.init();
+});
 
 /***/ }),
 
@@ -12987,6 +13070,10 @@ var Overlay = function () {
     open: 'is-open',
     parent: 'is-parent',
     hasMenu: 'has-menu'
+  }; // media queries
+
+  var mq = {
+    sm: window.matchMedia("(min-width: 960px)")
   }; // Init
 
   var _initialize = function _initialize() {
@@ -12998,6 +13085,14 @@ var Overlay = function () {
     $(selectors.body).on('click', selectors.btnInfo, function () {
       _toggle($(this));
     });
+
+    if (mq.sm.matches) {
+      if ($(selectors.body).find(selectors.wrapper).length) {
+        if ($(selectors.wrapper).data('visibleOnload')) {
+          $(selectors.wrapper).addClass(classes.visible);
+        }
+      }
+    }
   };
 
   var _toggle = function _toggle(btn) {
@@ -13051,15 +13146,11 @@ var Projects = function () {
   }; // media queries
 
   var mq = {
-    sm: window.matchMedia("(min-width: 720px)"),
-    md: window.matchMedia("(min-width: 1024px)"),
-    lg: window.matchMedia("(min-width: 1168px)")
+    sm: window.matchMedia("(min-width: 960px)")
   };
   var footerHeight = 60;
   var gridGap = 12;
-  var index = 0;
-  var max = $(selectors.grids).find(selectors.grid).length;
-  var min = 1;
+  var totalGrids = $(selectors.grids).find(selectors.grid).length;
 
   var _initialize = function _initialize() {
     _bind();
@@ -13067,31 +13158,53 @@ var Projects = function () {
 
   var _bind = function _bind() {
     $(selectors.body).on('click', selectors.btnScroll, function () {
+      _scrollTo();
+    });
+
+    if (mq.sm.matches) {
       _scroll();
-    }); // $(selectors.grid).each(function () {
-    //   new Waypoint.Inview({
-    //     element: this,
-    //     entered: function(direction) {
-    //       _updateIndex(direction);
-    //     },
-    //     offset: 0
-    //   });
-    // });
+    }
+
+    $(window).scroll(function (event) {
+      if (mq.sm.matches) {
+        _scroll();
+      }
+    });
   };
 
-  var _scroll = function _scroll() {
+  var _scrollTo = function _scrollTo() {
     var distance = $(window).height() - footerHeight + gridGap;
     $.scrollTo('+=' + distance, 400);
   };
 
-  var _updateIndex = function _updateIndex(direction) {
-    if (direction == 'down' && index < max) {
-      index++;
-    } else if (direction == 'up' && index >= min) {
-      index--;
-    }
+  var _scroll = debounce(function () {
+    // get scroll position from top
+    var posY = _getScrollPosition()[1]; // get total height
 
-    $(selectors.index).html(index);
+
+    var documentHeight = $(document).height(); // get height per grid (= section)
+
+    var gridHeight = documentHeight / totalGrids; // set offset to 1/2 so the index changes in the middle of two sections
+
+    var offset = gridHeight / 2; // set current index
+
+    var currentIndex = Math.floor((posY + offset) / gridHeight) + 1;
+    $(selectors.index).html(currentIndex);
+  }, 10);
+
+  var _getScrollPosition = function _getScrollPosition() {
+    if (window.pageYOffset != undefined) {
+      return [pageXOffset, pageYOffset];
+    } else {
+      var sx,
+          sy,
+          d = document,
+          r = d.documentElement,
+          b = d.body;
+      sx = r.scrollLeft || b.scrollLeft || 0;
+      sy = r.scrollTop || b.scrollTop || 0;
+      return [sx, sy];
+    }
   };
 
   return {
