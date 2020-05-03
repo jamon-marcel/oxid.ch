@@ -27,6 +27,10 @@ nav.menu-page {
     margin-bottom: 3px;
   }
 
+  label {
+    display: block;
+  }
+
   a {
     color: $color-black;
     @include font-size($fs-menu);

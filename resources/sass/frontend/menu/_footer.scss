@@ -147,10 +147,41 @@
  * Pages: Discourse
  */
 
-.menu-footer--discourse {
+.menu-footer--discourse,
+.menu-footer--discourse-show {
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+.menu-footer--discourse-show {
+
+  .menu-footer__heading {
+    display: none;
+  }
+
+  @include bp-sm() {
+    .menu-footer__heading {
+      display: block;
+    }
+  }
+  h1,
+  h2 {
+    margin-left: 0;
+  }
+
+  h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: calc(100vw - 140px);
+    white-space: nowrap;
+
+    @include bp-sm() {
+      width: auto;
+      white-space: normal;
+    }
+  }
+
 }
 
 /**
@@ -170,4 +201,14 @@
       }
     }
   }
+}
+
+/**
+ * Pages: History
+ */
+
+.menu-footer--history {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }

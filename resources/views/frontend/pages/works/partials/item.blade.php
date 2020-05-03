@@ -3,10 +3,12 @@
   data-filter-reuse="{{$p->is_filter_reuse}}" 
   data-filter-wood="{{$p->is_filter_wood}}"
   data-filter-area="{{$p->is_filter_area}}">
-  <img src="/image/small/{{$p->workImage[0]->name}}" height="400" width="800">
+  @if ($p->workImage)
+  <img src="/image/clsmd/{{$p->workImage->name}}" width="1000" height="680" alt="{{$p->title_short}}">
+  @endif
   @if ($p->has_detail)
     <h2>
-      <a href="{{ route('page.project', ['slug' => AppHelper::slug($p), 'project' => $p->id]) }}" title="{{$p->title_short}}, {{$p->location}}">
+      <a href="{{ route('page.project', ['slug' => AppHelper::slug($p->title_short), 'project' => $p->id]) }}" title="{{$p->title_short}}, {{$p->location}}">
         {{$p->title_short}}, {{$p->location}}
         @include('frontend.partials.icons.arrow-external-blue')
       </a>

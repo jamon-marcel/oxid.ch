@@ -26,6 +26,7 @@ Route::get('/diskurs', 'DiscourseController@index')->name('page.discourse');
 Route::get('/diskurs/recherche', 'DiscourseController@research')->name('page.discourse.research');
 Route::get('/diskurs/veranstaltungen', 'DiscourseController@events')->name('page.discourse.events');
 Route::get('/diskurs/publikationen', 'DiscourseController@publications')->name('page.discourse.publications');
+Route::get('/diskurs/{discourse}/{slug?}', 'DiscourseController@show')->name('page.discourse.detail');
 
 // Office
 Route::get('/buero/team', 'TeamController@index')->name('page.office.team');
@@ -34,6 +35,10 @@ Route::get('/buero/jobs', 'JobController@index')->name('page.office.jobs');
 
 // Contact
 Route::get('/kontakt', 'ContactController@index')->name('page.contact');
+
+// History
+Route::get('/geschichte', 'HistoryController@index')->name('page.history');
+
 
 
 // Admin routes

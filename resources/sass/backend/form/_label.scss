@@ -35,10 +35,7 @@ label {
         @include transition(background-color .1s ease-out);
 
         &.is-auto {
-            @include font-size($fs-xxs);
-            line-height: 1 !important;
             padding: 8px;
-            margin-right: 8px;
             width: auto;
         }
     }

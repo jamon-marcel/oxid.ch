@@ -65,10 +65,10 @@ class AppHelper
       return (string) str_replace($search, $replace, mb_strtolower($string, 'UTF-8'));
     }
 
-    public static function slug($project = NULL)
+    public static function slug($str = NULL)
     {
       $slug = '';
-      $slug = Str::slug(AppHelper::transliterate($project->title_short), '-');
+      $slug = Str::slug(AppHelper::transliterate($str), '-');
       return $slug;
     }
 

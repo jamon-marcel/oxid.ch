@@ -67,9 +67,9 @@ class WorksController extends BaseController
     // Filter out projects without preview image
     foreach($projects as $key => $project)
     {
-      foreach($project as $p) {
-
-        if ($p->workImage->count() > 0)
+      foreach($project as $p)
+      {
+        if ($p->workImage)
         {
           $data[$key][] = $p;
         }
@@ -80,7 +80,7 @@ class WorksController extends BaseController
       view($this->viewPath . 'years', 
         [
           'pageFooter' => $this->pageFooter,
-          'projects'   => $data
+          'projects'   => $projects
         ]
     );
   }

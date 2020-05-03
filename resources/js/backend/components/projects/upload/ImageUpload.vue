@@ -26,31 +26,39 @@
               <a
                 href="javascript:;"
                 :class="[asset.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
-                @click.prevent="toggleImage(asset,$event)">
-              </a>
+                @click.prevent="toggleImage(asset,$event)"
+              ></a>
               <a
                 href="javascript:;"
                 class="icon-edit icon-mini"
                 @click.prevent="showAssetEdit($event)"
               ></a>
-              <a 
-                :href="getSource(asset.name, 'large')" 
-                target="_blank" 
-                class="icon-external-link icon-mini">
-              </a>
+              <a
+                :href="getSource(asset.name, 'large')"
+                target="_blank"
+                class="icon-external-link icon-mini"
+              ></a>
               <a
                 href="javascript:;"
-                class="icon-trash icon-mini"
-                @click.prevent="deleteImage(asset.name,$event)">
-              </a>
-              <a href @click.prevent="showCropper(asset)">Crop</a>
+                :class="[asset.is_grid == 1 ? 'icon-disabled' : '', 'icon-trash icon-mini']"
+                @click.prevent="deleteImage(asset.name,$event)"
+              ></a>
+              <a
+                href="javascript:;"
+                class="icon-crop icon-mini"
+                @click.prevent="showCropper(asset)"
+              ></a>
             </div>
             <div class="overlay-asset">
               <div>
                 <div class="overlay-grid">
                   <div>
                     <img :src="getSource(asset.name, 'large')" height="300" width="300">
-                    <figcaption>{{asset.caption.de}}<br>{{asset.caption.en}}</figcaption>
+                    <figcaption>
+                      {{asset.caption.de}}
+                      <br>
+                      {{asset.caption.en}}
+                    </figcaption>
                   </div>
                   <div>
                     <div class="form-row">
@@ -63,10 +71,46 @@
                     </div>
                     <div class="form-row">
                       <label>Vorschaubild für:</label>
-                      <input type="checkbox" class="visually-hidden" v-model="asset.is_preview_navigation" name="is_preview_navigation" :id="'is_preview_navigation_'+index">
+                      <input
+                        type="checkbox"
+                        class="visually-hidden"
+                        v-model="asset.is_preview_navigation"
+                        name="is_preview_navigation"
+                        :id="'is_preview_navigation_'+index"
+                      >
                       <label :for="'is_preview_navigation_'+index" class="form-control is-auto">Navigation</label>
-                      <input type="checkbox" class="visually-hidden" v-model="asset.is_preview_works" name="is_preview_works" :id="'is_preview_works_'+index">
+                      <input
+                        type="checkbox"
+                        class="visually-hidden"
+                        v-model="asset.is_preview_works"
+                        name="is_preview_works"
+                        :id="'is_preview_works_'+index"
+                      >
                       <label :for="'is_preview_works_'+index" class="form-control is-auto">Werkliste</label>
+                    </div>
+                    <div class="form-row">
+
+                      <label class="is-sm">Plan?</label>
+                      <div class="form-radio">
+                        <input
+                          v-model="asset.is_plan"
+                          type="radio"
+                          :name="'is_plan_1_'+index"
+                          :id="'is_plan_1_'+index"
+                          value="1"
+                          class="visually-hidden"
+                        >
+                        <label :for="'is_plan_1_'+index" class="form-control">Ja</label>
+                        <input
+                          v-model="asset.is_plan"
+                          type="radio"
+                          :name="'is_plan_0_'+index"
+                          :id="'is_plan_0_'+index"
+                          value="0"
+                          class="visually-hidden"
+                        >
+                        <label :for="'is_plan_0_'+index" class="form-control">Nein</label>
+                      </div>
                     </div>
                     <div class="form-row-button">
                       <a
@@ -80,12 +124,13 @@
               </div>
             </div>
             <div class="overlay-crop" :data-cropper="asset.name">
-              <a href="javascript:;"
-                  @click.prevent="hideCropper()"
-                  class="icon-close-overlay">
-              </a>
+              <a href="javascript:;" @click.prevent="hideCropper()" class="icon-close-overlay"></a>
               <div>
-                <span class="cropper-info">Neue Grösse:<br>{{ cropW }}px x {{ cropH }}px</span>
+                <span class="cropper-info">
+                  Neue Grösse:
+                  <br>
+                  {{ cropW }}px x {{ cropH }}px
+                </span>
                 <div v-if="loader">Loading image...</div>
                 <cropper
                   :src="cropImg"
@@ -103,7 +148,11 @@
                   @change="change"
                 ></cropper>
                 <div class="form-buttons">
-                  <a href="javascript:;" class="btn-secondary" @click.prevent="saveCoords(asset)">Speichern</a>
+                  <a
+                    href="javascript:;"
+                    class="btn-secondary"
+                    @click.prevent="saveCoords(asset)"
+                  >Speichern</a>
                   <a href @click.prevent="hideCropper(asset.name)">Abbrechen</a>
                 </div>
               </div>
@@ -116,12 +165,11 @@
 </template>
 <script>
 import vue2Dropzone from "vue2-dropzone";
-import draggable from 'vuedraggable';
+import draggable from "vuedraggable";
 import dropzoneConfig from "@/config/dz-image.js";
 import { Cropper } from "vue-advanced-cropper";
 
 export default {
-
   components: {
     vueDropzone: vue2Dropzone,
     draggable: draggable,
@@ -138,7 +186,7 @@ export default {
     maxFiles: Number,
     maxFilesize: Number,
     uploadUrl: String,
-    sortable: Boolean,
+    sortable: Boolean
   },
 
   data() {
@@ -152,8 +200,7 @@ export default {
 
       dropzoneConfig: dropzoneConfig,
 
-      currentAsset: null,
-
+      currentAsset: null
     };
   },
 
@@ -164,11 +211,9 @@ export default {
     this.dropzoneConfig.maxFilesize = this.maxFilesize;
   },
 
-  mounted() {
-  },
+  mounted() {},
 
   methods: {
-
     change({ coordinates, canvas }) {
       this.coords.h = coordinates.height;
       this.coords.w = coordinates.width;
@@ -192,37 +237,42 @@ export default {
       this.$parent.uploadImage(asset);
     },
 
-    deleteImage(asset,event) {
-      this.$parent.deleteImage(asset,event);
+    deleteImage(asset, event) {
+      this.$parent.deleteImage(asset, event);
     },
 
-    toggleImage(asset,event) {
-      this.$parent.toggleImage(asset,event);
+    toggleImage(asset, event) {
+      this.$parent.toggleImage(asset, event);
     },
 
     showAssetEdit(e) {
       let editForm = e.target.parentNode.nextElementSibling;
-      editForm.classList.toggle('is-visible');
+      editForm.classList.toggle("is-visible");
     },
 
     hideAssetEdit(e) {
-      let editForm= e.target.parentNode.parentNode.parentNode.parentNode.parentNode;
-      editForm.classList.remove('is-visible');
+      let editForm =
+        e.target.parentNode.parentNode.parentNode.parentNode.parentNode;
+      editForm.classList.remove("is-visible");
     },
 
     showCropper(asset) {
       this.currentAsset = asset;
-      this.$el.querySelector('[data-cropper="'+asset.name+'"]').classList.add('is-visible');
+      this.$el
+        .querySelector('[data-cropper="' + asset.name + '"]')
+        .classList.add("is-visible");
       this.loader = true;
-      this.axios.get(this.getSource(asset.name, 'original')).then(response => {
-        this.cropImg = this.getSource(asset.name, 'original');
+      this.axios.get(this.getSource(asset.name, "original")).then(response => {
+        this.cropImg = this.getSource(asset.name, "original");
         this.loader = false;
       });
     },
 
     hideCropper(img) {
-      this.$el.querySelector('[data-cropper="'+img+'"]').classList.remove('is-visible');
-      this.cropImg = null;  
+      this.$el
+        .querySelector('[data-cropper="' + img + '"]')
+        .classList.remove("is-visible");
+      this.cropImg = null;
     },
 
     updateOrder() {
@@ -233,7 +283,7 @@ export default {
       return;
       // if (this.debounce) return;
       // this.debounce = setTimeout(function(categories) {
-      //   this.debounce = false 
+      //   this.debounce = false
       //   let uri = `/api/category/order`;
       //   this.axios.post(uri, {categories: categories}).then((response) => {
       //     this.$router.push({name: 'categories'});
@@ -246,9 +296,9 @@ export default {
       let x = this.currentAsset.coords_x || 100;
       let y = this.currentAsset.coords_y || 100;
       return {
-				left: x,
-				top: y,
-			}
+        left: x,
+        top: y
+      };
     },
 
     defaultSize() {
@@ -256,8 +306,8 @@ export default {
       let h = this.currentAsset.coords_h || 300;
       return {
         width: w,
-				height: h,
-			}
+        height: h
+      };
     },
 
     getSource(asset, size) {
@@ -273,13 +323,13 @@ export default {
   padding-top: 80px;
 }
 .cropper-info {
-  display: block; 
-  margin-bottom: 10px; 
+  display: block;
+  margin-bottom: 10px;
   text-align: left;
 }
 .line {
-	border-style: dashed;
-	border-color: #5cb85c;
+  border-style: dashed;
+  border-color: #5cb85c;
 }
 .handler {
   background-color: #5cb85c;

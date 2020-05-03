@@ -27,8 +27,13 @@ var Collapsible = (function() {
   };
 
   var _toggle = function(el) {
-    el.parents(selectors.wrapper).toggleClass(classes.expanded);
-    el.parents(selectors.wrapper).find(selectors.content).toggle();
+    var wrapper = el.parents(selectors.wrapper);
+    if (!wrapper.hasClass(classes.expanded)) {
+      var distance = wrapper.offset().top - 15;
+      $.scrollTo(distance, 400);
+    }
+    wrapper.toggleClass(classes.expanded);
+    wrapper.find(selectors.content).toggle();
   };
 
   var _hide = function(el) {

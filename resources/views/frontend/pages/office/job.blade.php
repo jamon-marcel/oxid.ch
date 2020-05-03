@@ -14,7 +14,7 @@
   @endif
 </section>
 <div class="overlay-info js-info" data-visible-onload="1">
-  <a href="javascript:;" class="btn-info js-btn-info"></a>
+  <a href="javascript:;" class="btn-close js-btn-info"></a>
   <div>
     @if (count($jobs) > 0)
       @foreach($jobs as $j)

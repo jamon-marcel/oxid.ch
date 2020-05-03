@@ -3,5 +3,7 @@
 <main role="main">
   @yield('content')
 </main>
-@include('frontend.partials.menu.bar.pages')
+@if (!request()->routeIs('page.discourse.detail'))
+  @include('frontend.partials.menu.bar.pages')
+@endif
 @include('frontend.partials.footer')

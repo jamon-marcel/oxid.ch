@@ -58,6 +58,9 @@ return array(
         'small'     => 'App\Filters\Image\Template\Small',
         'large'     => 'App\Filters\Image\Template\Large',
         'crop'     => 'App\Filters\Image\Template\Crop',
+
+        // cropped landscape images (medium)
+        'clsmd' => 'App\Filters\Image\Template\CropLandscapeMedium',
     ),
 
     /*

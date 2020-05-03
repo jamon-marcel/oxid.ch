@@ -13,9 +13,14 @@ section.content {
 
   &.content--contact,
   &.content--works,
-  &.content--discourse {
+  &.content--history,
+  &.content--discourse,
+  &.content--discourse-listing {
     background-color: $color-light;
     min-height: calc(100vh - #{$footer-height});
   }
 
+  &.content--discourse {
+    padding-bottom: 0;
+  }
 }

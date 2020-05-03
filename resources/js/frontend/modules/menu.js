@@ -7,7 +7,8 @@ var Menu = (function() {
     menuBtn:        '.js-menu-btn',
     menuBar:        '.js-menu-bar',
     menu:           '.js-menu',
-    menuParent:     '.js-menu-parent'
+    menuParent:     '.js-menu-parent',
+    menuFilterBtn:  '.js-menu-filter-btn',
 	};
 
   // css classes

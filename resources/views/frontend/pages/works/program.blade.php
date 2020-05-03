@@ -17,7 +17,7 @@
           <div class="works__grid collapsible__content js-clpsbl-body" style="{{ $loop->first ? 'display: block' : 'display: none'}}">
             <div class="works__items js-filter-items">
               @foreach($group as $p)
-                @if (isset($p->workImage[0]))
+                @if (isset($p->workImage))
                   @include('frontend.pages.works.partials.item')
                 @endif
               @endforeach

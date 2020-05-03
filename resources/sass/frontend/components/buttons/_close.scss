@@ -1,10 +1,10 @@
 /**
  * -----------------------------------------------------------------------------
- * File: components/buttons/info
+ * File: components/buttons/close
  * -----------------------------------------------------------------------------
  */
-
-.btn-info {
+ 
+.btn-close {
   @extend %btn;
   @extend %btn-bg;
   display: none;
@@ -15,8 +15,21 @@
   right: $space-md;
   top: $space-md;
   width: 44px;
-
+  z-index: 1000;
+  
   @include bp-sm() {
     display: block;
+  }
+
+  &.is-sm {
+    display: block;
+    height: 32px;
+    position: relative;
+    right: 0;
+    top: 0;
+    width: 32px;
+    @include bp-sm() {
+      display: none;
+    }
   }
 }

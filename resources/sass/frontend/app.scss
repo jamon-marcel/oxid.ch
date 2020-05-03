@@ -34,7 +34,7 @@
 @import 'components/boxes/ratio';
 @import 'components/buttons/global';
 @import 'components/buttons/dropdown';
-@import 'components/buttons/info';
+@import 'components/buttons/close';
 @import 'components/buttons/scroll';
 @import 'components/collapsible';
 @import 'components/icons/global';
@@ -49,6 +49,8 @@
 @import 'components/overlay/global';
 @import 'components/overlay/info';
 @import 'components/underline/global';
+
+
 // Layout
 @import 'layout/base';
 @import 'layout/main';
@@ -67,14 +69,18 @@
 @import 'menu/pages';
 @import 'menu/page';
 
+
 // Vendor
-@import 'vendor/fancybox/fancybox';
-@import 'vendor/fancybox/fancybox-custom';
+// @import 'vendor/fancybox/fancybox';
+// @import 'vendor/fancybox/fancybox-custom';
+@import 'vendor/swiper/swiper';
+@import 'vendor/swiper/swiper-custom';
 
 
 // Views
 @import 'views/contact';
 @import 'views/discourse';
+@import 'views/history';
 @import 'views/home';
 @import 'views/jobs';
 @import 'views/project';

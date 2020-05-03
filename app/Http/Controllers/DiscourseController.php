@@ -31,7 +31,7 @@ class DiscourseController extends BaseController
 
   public function index()
   {
-    $discourse = $this->discourse->with('publishedImages')->published()->orderBy('category')->orderBy('order')->get();
+    $discourse = $this->discourse->with('previewImage')->published()->orderBy('category')->orderBy('order')->get();
     return 
       view($this->viewPath . 'index', 
         [
@@ -39,7 +39,7 @@ class DiscourseController extends BaseController
           'pageTitle'  => '',
           'discourse'  => $discourse
         ]
-  );
+    );
   }
 
   /**
@@ -96,6 +96,26 @@ class DiscourseController extends BaseController
           'pageTitle'  => 'Publikationen',
           'discourse'  => $discourse
         ]
+    );
+  }
+
+  /**
+   * Show a discourse item
+   *
+   * @param String $slug
+   * @param Project $project
+   * @return \Illuminate\Http\Response
+   */
+
+  public function show(Discourse $discourse, $slug = NULL)
+  {
+    $discourse = $this->discourse->with('publishedImages')->findOrFail($discourse->id);
+    return 
+      view($this->viewPath . 'show',
+      [
+        'pageFooter'   => FALSE,
+        'discourse'    => $discourse,
+      ]
     );
   }
 

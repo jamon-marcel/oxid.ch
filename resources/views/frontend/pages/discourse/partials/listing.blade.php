@@ -6,14 +6,14 @@
         <h2>{{$d->title}}</h2>
       </header>
       <div class="discourse-item__body">
-        @if (isset($d->publishedImages[0]))
+        @if (isset($d->previewImage))
           <figure>
-            <img src="/image/small/{{$d->publishedImages[0]->name}}" height="400" width="800">
+            <a href="{{ route('page.discourse.detail', ['slug' => AppHelper::slug($d->title), 'discourse' => $d->id]) }}">
+              <img src="/image/clsmd/{{$d->previewImage->name}}" width="1000" height="680" alt="{{$d->title}}">
+            </a>
           </figure>
         @endif
-        <div>
-          {!! $d->description_short !!}
-        </div>
+        <div>{!! $d->description_short !!}</div>
       </div>
     </article>
   @endforeach

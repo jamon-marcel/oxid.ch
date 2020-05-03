@@ -60,9 +60,8 @@ class Project extends Base
 
 	public function workImage()
 	{
-		return $this->hasMany('App\Models\ProjectImage', 'project_id', 'id')->where('is_preview_works', '=', 1);
+		return $this->hasOne('App\Models\ProjectImage', 'project_id', 'id')->where('is_preview_works', '=', 1);
 	}
-
 
 	public function grids()
 	{

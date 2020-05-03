@@ -17,9 +17,8 @@ var Projects = (function() {
     sm: window.matchMedia("(min-width: 960px)"),
   };
 
-  var footerHeight = 60;
-  var gridGap      = 12;
   var totalGrids   = $(selectors.grids).find(selectors.grid).length;
+  var currentIndex = 1;
    
   var _initialize = function() {
     _bind();
@@ -42,8 +41,7 @@ var Projects = (function() {
   };
 
   var _scrollTo = function(){
-    var distance = $(window).height() - footerHeight + gridGap;
-    $.scrollTo('+=' + distance, 400);
+    $.scrollTo('.js-project-grid:eq('+currentIndex+')', 400);
   };
 
   var _scroll = debounce(function(){
@@ -61,7 +59,7 @@ var Projects = (function() {
     var offset = gridHeight/2;
 
     // set current index
-    var currentIndex = Math.floor((posY + offset) / gridHeight) + 1;
+    currentIndex = Math.floor((posY + offset) / gridHeight) + 1;
     $(selectors.index).html(currentIndex);
 
   }, 10);

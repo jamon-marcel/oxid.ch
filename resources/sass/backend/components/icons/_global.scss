@@ -124,3 +124,8 @@
         animation: loadingIcon 1s infinite;
     }
 }
+
+.icon-disabled {
+    opacity: .4;
+    pointer-events: none;
+}

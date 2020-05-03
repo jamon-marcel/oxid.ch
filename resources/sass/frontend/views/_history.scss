@@ -1,0 +1,95 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: views/history
+ * -----------------------------------------------------------------------------
+ */
+
+nav.menu-page {
+
+  .menu-history {
+
+    h2, a {
+      @include font-size($fs-xl);
+    }
+
+    h2 {
+      margin-bottom: $space-lg;
+      text-decoration: underline;
+    }
+
+    label {
+      @include font-size($fs-sm);
+    }
+
+    li {
+      margin-bottom: $space-xl;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+
+  }
+}
+
+.history {
+  padding: $space-sm;
+  
+  @include bp-md() {
+    padding: $space-md;
+  }
+
+  .history__period {
+    margin-bottom: 60px;
+    
+    @include bp-sm() {
+      margin-bottom: 180px;
+    }
+  } 
+
+  h2 {
+    @include font-size($fs-xl);
+    margin-bottom: $space-sm;
+    @include bp-md() {
+      margin-bottom: $space-lg;
+      max-width: 50%;
+    }
+  }
+
+  h3 {
+    border-bottom: 1px solid $color-black;
+    @include font-size($fs-md);
+    margin-bottom: $space-sm;
+    padding-bottom: $space-xs;
+    @include bp-md() {
+      margin-bottom: $space-lg;
+    }
+  }
+
+  article {
+    @include bp-sm() {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: $grid-gap-sm;
+    }    
+  }
+
+
+
+  // images
+  figure {
+    figcaption {
+      border-bottom: 1px solid $color-dark;
+      display: flex;
+      padding: $space-xs 0;
+    }
+  }
+  figure.portrait {
+    margin-top: $space-huge;
+    width: 50%;
+  }
+
+  figure.landscape {
+    margin-top: $space-gigantic;
+  }
+
+}

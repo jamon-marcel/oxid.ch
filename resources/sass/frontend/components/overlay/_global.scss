@@ -20,14 +20,14 @@
   z-index: 100;
   -webkit-overflow-scrolling: touch;
 
-  .btn-info {
+  .btn-close {
     opacity: 0;
     transition: opacity .16s 0 ease-in;
   }
 
   &.is-visible {
     transform: translateY(0);
-    .btn-info {
+    .btn-close {
       opacity: 1;
       transition: opacity .16s .36s ease-in;
     }

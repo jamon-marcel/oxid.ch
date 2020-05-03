@@ -9,16 +9,14 @@ require('./bootstrap');
 // Plugins
 require('./vendor/lazysizes.js');
 require('./vendor/scrollTo.js');
-require('./vendor/fancybox.js');
-require('./vendor/waypoints.js');
 
 // Modules
 require('./modules/collapsible.js');
 require('./modules/menu.js');
 require('./modules/overlay.js');
-require('./modules/works.js');
+require('./modules/filter.js');
 require('./modules/project.js');
 require('./modules/contact.js');
 require('./modules/dropdown.js');
+require('./modules/swiper.js');
 
-require('./modules/fancybox.js');

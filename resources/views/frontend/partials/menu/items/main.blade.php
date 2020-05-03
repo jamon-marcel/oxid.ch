@@ -23,7 +23,10 @@
 </ul>
 <ul>
   <li>
-    <a href="">Geschichte</a>
+    <a href="{{ route('page.history') }}" 
+        class="{{request()->routeIs('page.history') ? 'is-active' : ''}}">
+        Geschichte
+    </a>
   </li>
   <li>
     <a href="{{ route('page.office.team') }}" 
@@ -39,8 +42,8 @@
     </a>
   </li>
 </ul>
-<ul class="language">
+{{-- <ul class="language">
   <li>
     <a href="">De</a>/<a href="">En</a>
   </li>
-</ul>
+</ul> --}}

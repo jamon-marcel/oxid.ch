@@ -34,6 +34,11 @@ class Discourse extends Base
 		return $this->hasMany('App\Models\DiscourseImage', 'discourse_id', 'id');
 	}
 
+	public function previewImage()
+	{
+		return $this->hasOne('App\Models\DiscourseImage', 'discourse_id', 'id')->where('publish', '=', 1)->where('is_preview', '=', 1);
+	}
+
 	public function publishedImages()
 	{
 		return $this->hasMany('App\Models\DiscourseImage', 'discourse_id', 'id')->where('publish', '=', 1);

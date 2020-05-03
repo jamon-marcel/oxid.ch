@@ -85,7 +85,7 @@
   }
 
   article {
-    margin-bottom: $grid-gap-sm;
+    margin-bottom: $space-xl;
     
     @include bp-sm() {
       margin-bottom: 0;
@@ -93,7 +93,10 @@
 
     h2 {
       @include font-size($fs-fix-md);
-      padding: 2px 0;
+      margin-top: $space-sm;
+      @include bp-sm() {
+        margin-top: $space-xxs;
+      }
     }
 
     a {

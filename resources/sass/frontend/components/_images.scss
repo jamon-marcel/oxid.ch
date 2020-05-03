@@ -75,6 +75,14 @@
     }
   }
 
+  &.is-plan {
+    img {
+      @include bp-sm() {
+        object-fit: contain;
+      }
+    }
+  }
+
   &.is-half {
     @include bp-sm() {
       height: calc(50vh - #{$footer-height}/2 - #{$grid-gap-sm}/2);

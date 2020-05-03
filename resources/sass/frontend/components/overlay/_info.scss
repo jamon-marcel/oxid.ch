@@ -6,7 +6,11 @@
  */
 
 .overlay-info {
- @extend %overlay;
+  @extend %overlay;
+
+  &.is-discourse {
+    z-index: 1001;
+  }
 
   // @include bp-sm() {
   //   &[data-visible-onload].is-visible {

@@ -18,6 +18,7 @@ class ProjectImage extends Base
     'is_preview_navigation',
     'is_preview_works',
     'is_grid',
+    'is_plan',
     'coords_w',
     'coords_h',
     'coords_x',

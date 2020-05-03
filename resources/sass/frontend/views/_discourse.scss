@@ -4,6 +4,10 @@
  * -----------------------------------------------------------------------------
  */
 
+/**
+ * Listing
+ */
+
 .discourse {
   padding: $space-sm;
   
@@ -22,6 +26,14 @@
 
   .discourse-item {
     margin-bottom: $space-xxl;
+    
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    @include bp-sm() {
+      margin-bottom: 0;
+    }
   }
 
   .discourse-item__header {
@@ -64,5 +76,28 @@
       grid-template-columns: repeat(2, 1fr);
       grid-gap: $grid-gap-md;
     }
+  }
+}
+
+/**
+ * Detail
+ */
+.discourse-detail {
+
+  @include bp-xl() {
+    max-width: 90%;
+  }
+  
+  .discourse-detail__info {
+    @include font-size($fs-sm);
+    margin-top: $space-md;
+
+    @include bp-md() {
+      margin-top: $space-xl;
+    }
+  }
+
+  a[href*="//"]:not([href*="oxid.ch"]) {
+    @extend %anchor-external-sm;
   }
 }

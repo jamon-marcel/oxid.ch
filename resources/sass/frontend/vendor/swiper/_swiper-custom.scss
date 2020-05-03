@@ -1,0 +1,66 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: vendor/swiper/swiper-custom
+ * -----------------------------------------------------------------------------
+ */
+
+.swiper-wrapper {
+  display: block;
+  @include bp-sm() {
+    display: flex;
+  }
+}
+
+.swiper-slide {
+  @include bp-sm() {
+    height: calc(100vh - #{$footer-height});
+  }
+
+  .visual-fit {
+    margin-bottom: $grid-gap-sm;
+    @include bp-sm() {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.swiper-btn-next,
+.swiper-btn-prev {
+  @extend %btn-bg;
+  background-size: 100%;
+  background-position: center center;
+  display: none;
+  height: 80px;
+  position: absolute;
+  top: calc(50% - 40px);
+  width: 40px;
+  z-index: 999;
+  transition: transform .1s ease-out;
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @include bp-sm() {
+    display: block;
+  }
+}
+
+.swiper-btn-next {
+  background-image: url($url-images + 'chevron-next.svg');
+  right: 20px;
+  &:hover {
+    transform: translateX(2px)
+  }
+}
+
+.swiper-btn-prev {
+  background-image: url($url-images + 'chevron-prev.svg');
+  left: 20px;
+  &:hover {
+    transform: translateX(-2px)
+  }
+}

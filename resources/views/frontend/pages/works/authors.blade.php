@@ -18,7 +18,7 @@
             <span class="works__authors">{!! __('content.author_description_' . $key) !!}</span>
             <div class="works__items {{$loop->last ? 'is-last' : ''}} js-filter-items">
               @foreach($group as $p)
-                @if (isset($p->workImage[0]))
+                @if (isset($p->workImage))
                   @include('frontend.pages.works.partials.item')
                 @endif
               @endforeach

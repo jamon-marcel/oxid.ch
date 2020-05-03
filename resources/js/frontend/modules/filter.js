@@ -1,6 +1,6 @@
 import Collapsible from './collapsible';
 
-var Works = (function() {
+var Filter = (function() {
 	
 	// selectors
 	var selectors = {
@@ -23,10 +23,17 @@ var Works = (function() {
   var _bind = function() {
     $(selectors.body).on('click', selectors.btnFilter, function(){
       _filter($(this));
-    })
+    });
   };
 
   var _filter = function(btn) {
+
+    var type = btn.data('filter');
+    
+    if (type == 'all') {
+      $(selectors.item).show();
+      return;
+    }
 
     // Set button state
     $(selectors.btnFilter).removeClass(classes.active);
@@ -36,7 +43,7 @@ var Works = (function() {
     $(selectors.item).hide();
 
     // Show matching items
-    $('[data-filter-'+ btn.data('filter') +'="'+ 1 +'"]').show();
+    $('[data-filter-'+ type +'="'+ 1 +'"]').show();
 
     // Expand all
     Collapsible.expandAll();
@@ -58,6 +65,6 @@ var Works = (function() {
 
 // Initialize
 $(function() {
-  Works.init();
+  Filter.init();
 });
 

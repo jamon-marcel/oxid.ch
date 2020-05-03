@@ -29,6 +29,9 @@ var Fancybox = (function() {
         arrowLeft:  '<a href="javascript:;" class="btn-fancybox-nav is-prev" data-fancybox-prev></a>',
         arrowRight: '<a href="javascript:;" class="btn-fancybox-nav is-next" data-fancybox-next></a>',
         close: '<a href="javascript:;" data-fancybox-close class="btn-fancybox-close"></a>',
+      },
+      fullScreen : {
+        autoStart : true
       }           
     });
   };

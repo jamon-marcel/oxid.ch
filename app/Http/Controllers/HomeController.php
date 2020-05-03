@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 class HomeController extends BaseController
 {
+  protected $viewPath = 'frontend.pages.home.index';
+  
+  // Models
   protected $image;
   protected $news;
 
@@ -36,7 +39,7 @@ class HomeController extends BaseController
     $news   = $this->news->published()->orderBy('sticky', 'DESC')->get();
     
     return 
-      view('frontend.pages.home.index', 
+      view($this->viewPath, 
         [
           'image'     => $images[mt_rand(1, count($images)-1)],
           'news'      => $news

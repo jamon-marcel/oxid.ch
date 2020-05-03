@@ -46,13 +46,18 @@ nav.menu-footer__dropdown {
     padding: 4px 0;
     order: 1;
 
-    &.is-visible {
+    &.is-selected {
       display: flex;
       order: 2;
+
+      a:hover {
+        text-decoration: none;
+      }
     }
 
     a {
       @include font-size($fs-fix-lg);
+      display: block;
     }
   }
 }

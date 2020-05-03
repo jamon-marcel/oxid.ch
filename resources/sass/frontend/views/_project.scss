@@ -5,12 +5,8 @@
  */
 
 .project {
-
-  h1,
-  p {
-    @include bp-md() {
-      max-width: 80%;
-    }
+  @include bp-xl() {
+    max-width: 90%;
   }
 
   .project__info {

@@ -15,13 +15,12 @@
           <div class="works__grid collapsible__content js-clpsbl-body" style="display: block">
             <div class="works__items js-filter-items">
               @foreach($group as $p)
-                @if (isset($p->workImage[0]))
-                  @include('frontend.pages.works.partials.item')
-                @endif
+                @include('frontend.pages.works.partials.item')
               @endforeach
             </div>
           </div>
         </div>
+
       @endforeach
    </div>
   @endif
