@@ -8,7 +8,8 @@ var Projects = (function() {
     body:      'body',
     grids:     '.js-project-grids',
     grid:      '.js-project-grid',
-    btnScroll: '.js-btn-scroll',
+    btnNext:   '.js-btn-scroll-next',
+    btnPrev:   '.js-btn-scroll-prev',
     index:     '.js-project-idx'
   };
 
@@ -18,15 +19,19 @@ var Projects = (function() {
   };
 
   var totalGrids   = $(selectors.grids).find(selectors.grid).length;
-  var currentIndex = 1;
+  var index = 1;
    
   var _initialize = function() {
     _bind();
   };
 
   var _bind = function() {
-    $(selectors.body).on('click', selectors.btnScroll, function(){
-      _scrollTo();
+    $(selectors.body).on('click', selectors.btnNext, function(){
+      _scrollToNext();
+    });
+
+    $(selectors.body).on('click', selectors.btnPrev, function(){
+      _scrollToPrev();
     });
 
     if (mq.sm.matches) {
@@ -40,10 +45,15 @@ var Projects = (function() {
     });
   };
 
-  var _scrollTo = function(){
-    $.scrollTo('.js-project-grid:eq('+currentIndex+')', 400);
+  var _scrollToNext = function(){
+    $.scrollTo('.js-project-grid:eq('+index+')', 400);
   };
 
+  var _scrollToPrev = function(){
+    var idx = index-2;
+    if (idx > -1) $.scrollTo('.js-project-grid:eq('+idx+')', 400);
+  };
+  
   var _scroll = debounce(function(){
 
     // get scroll position from top
@@ -59,10 +69,29 @@ var Projects = (function() {
     var offset = gridHeight/2;
 
     // set current index
-    currentIndex = Math.floor((posY + offset) / gridHeight) + 1;
-    $(selectors.index).html(currentIndex);
+    index = Math.floor((posY + offset) / gridHeight) + 1;
+    $(selectors.index).html(index);
 
-  }, 10);
+    // control btn visibility
+    _watchBtns();
+
+  }, 50);
+
+  var _watchBtns = function() {
+    if (index == totalGrids) {
+      $(selectors.btnNext).hide();
+    }
+    else {
+      $(selectors.btnNext).show()
+    }
+
+    if (index == 1) {
+      $(selectors.btnPrev).hide();
+    }
+    else {
+      $(selectors.btnPrev).show();
+    }
+  };
 
   var _getScrollPosition = function() {
     if (window.pageYOffset != undefined) {

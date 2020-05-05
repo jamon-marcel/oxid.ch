@@ -7,9 +7,7 @@
 .btn-scroll {
   @extend %btn;
   @extend %btn-bg;
-  bottom: 80px;
   display: none;
-  background-image: url($url-images + 'chevron-down.svg');
   background-size: 100%;
   height: 40px;
   position: fixed;
@@ -17,11 +15,23 @@
   transition: transform .1s ease-out;
   width: 76px;
 
-  &:hover {
-    transform: translateY(2px)
-  }
-
   @include bp-sm() {
     display: block;
+  }
+
+  &.is-prev {
+    background-image: url($url-images + 'chevron-up.svg');
+    top: 20px;
+    &:hover {
+      transform: translateY(-2px)
+    }
+  }
+
+  &.is-next {
+    background-image: url($url-images + 'chevron-down.svg');
+    bottom: 80px;
+    &:hover {
+      transform: translateY(2px)
+    }
   }
 }

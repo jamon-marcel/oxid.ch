@@ -5,7 +5,7 @@
 <section class="content">
   @if (isset($images))
     <div class="visual-list">
-      @foreach($images as $image)
+      @foreach($images->shuffle() as $image)
         <figure class="visual-fit">
           <img src="/image/large/{{$image->name}}" height="400" width="800">
         </figure>

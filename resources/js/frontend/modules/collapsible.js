@@ -1,8 +1,5 @@
 var Collapsible = (function() {
-
-  // this 
-  var _self;
-  
+ 
   // selectors 	
   var selectors = {
     body:  		'body',
@@ -29,7 +26,7 @@ var Collapsible = (function() {
   var _toggle = function(el) {
     var wrapper = el.parents(selectors.wrapper);
     if (!wrapper.hasClass(classes.expanded)) {
-      var distance = wrapper.offset().top - 15;
+      var distance = wrapper.offset().top - 20;
       $.scrollTo(distance, 400);
     }
     wrapper.toggleClass(classes.expanded);
@@ -37,8 +34,9 @@ var Collapsible = (function() {
   };
 
   var _hide = function(el) {
-    el.parents(selectors.wrapper).removeClass(classes.expanded);
-    el.parents(selectors.wrapper).find(selectors.content).hide();
+    var wrapper = el.parents(selectors.wrapper);
+    wrapper.removeClass(classes.expanded);
+    wrapper.find(selectors.content).hide();
   };
 
   var _expandAll = function() {
@@ -47,26 +45,18 @@ var Collapsible = (function() {
       $(this).find(selectors.content).show();
     });
   };
-
-  var _collapseAll = function() {
-
-  };
-
-  /* --------------------------------------------------------------
-   * RETURN PUBLIC METHODS
-   * ------------------------------------------------------------ */
        
-return {
-  init: _initialize,
-  hide: _hide,
-  expandAll: _expandAll,
-  collapseAll: _collapseAll,
-};
+  return {
+    init: _initialize,
+    hide: _hide,
+    expandAll: _expandAll,
+  };
 
 })();
 
-// Initialize
-Collapsible.init();
+$(function() {
+  Collapsible.init();
+});
 
 export default Collapsible;
 

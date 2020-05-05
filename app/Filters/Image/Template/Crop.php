@@ -21,11 +21,13 @@ class Crop implements FilterInterface
     $this->image = new \App\Models\ProjectImage;
     $img = $this->image->where('name', '=', $image->basename)->get()->first();
     
-    if ($img->coords_w && $img->coords_h) {
+    // Crop the image if coords are set
+    if ($img && $img->coords_w && $img->coords_h)
+    {
       return $image->crop(floor($img->coords_w), floor($img->coords_h), floor($img->coords_x), floor($img->coords_y));
     }
 
-    // Get width and height
+    // Otherwise just resize the image
     $width  = $image->getWidth();
     $height = $image->getHeight();
 

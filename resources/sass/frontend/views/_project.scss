@@ -109,13 +109,9 @@ nav {
 
     a {
       display: block;
-      @include font-size($fs-fix-lg);
+      @include font-size($fs-menu);
       line-height: 1 !important;
       margin-right: $space-sm;
-
-      @include bp-md() {
-        @include font-size($fs-fix-md);
-      }
     }
   }
 }

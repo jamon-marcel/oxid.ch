@@ -37,9 +37,9 @@ class JobController extends BaseController
     return 
       view($this->viewPath, 
         [
-          'images'  => $this->jobImage->published()->get(),
-          'jobs' => $this->job->orderBy('order', 'ASC')->with('documents')->published()->get(),
-          'pageFooter' => $this->pageFooter,
+          'images'      => $this->jobImage->published()->get(),
+          'jobs'        => $this->job->orderBy('order', 'ASC')->with('documents')->published()->get(),
+          'pageFooter'  => $this->pageFooter,
         ]
     );
   }

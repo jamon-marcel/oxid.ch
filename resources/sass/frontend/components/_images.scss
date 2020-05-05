@@ -76,6 +76,7 @@
   }
 
   &.is-plan {
+    background-color: $color-light;
     img {
       @include bp-sm() {
         object-fit: contain;

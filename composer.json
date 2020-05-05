@@ -12,6 +12,7 @@
         "barryvdh/laravel-dompdf": "^0.8.5",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
+        "htmlmin/htmlmin": "^7.0",
         "intervention/image": "^2.5",
         "intervention/imagecache": "^2.4",
         "jenssegers/agent": "^2.6",

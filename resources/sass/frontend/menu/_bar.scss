@@ -61,12 +61,12 @@
 
   .menu-bar__close {
     @include bp-sm() {
-      width: 50%;
+      width: calc(50% + 6px);
     }
   }
   
   .menu-bar__open.is-hidden {
-    background-color: $color-light;
+    background-color: #ddd;
     display: flex;
     opacity: 1;
     pointer-events: all;
