@@ -45,7 +45,7 @@
                 @click.prevent="deleteUpload(asset.name,$event)">
               </a>
             </div>
-            <div :class="[asset.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'overlay-asset']">
+            <div class="overlay-asset">
               <div>
                 <div class="overlay-grid">
                   <div>

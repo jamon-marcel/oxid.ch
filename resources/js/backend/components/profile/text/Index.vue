@@ -68,7 +68,7 @@ export default {
 
     destroy(id,event) {
       if (confirm("Bitte löschen bestätigen!")) {
-        let el = this.progress(evenp.target);
+        let el = this.progress(event.target);
         this.axios.delete(`/api/profile/destroy/${id}`).then(response => {
           this.fetch();
           this.$notify({ type: "success", text: "Eintrag gelöscht" });

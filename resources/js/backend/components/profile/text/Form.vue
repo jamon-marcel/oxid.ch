@@ -17,7 +17,7 @@
                 <div class="form-row">
                   <label>Text</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="profile.description.de"
                   ></tinymce-editor>
@@ -62,7 +62,7 @@
                 <div class="form-row">
                   <label>Text *</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="profile.description.en"
                   ></tinymce-editor>
@@ -70,32 +70,40 @@
               </div>
             </div>
           </div>
-          <form-buttons :route="'profile'"></form-buttons>
+          <form-footer :route="'profile'"></form-footer>
         </form>
       </div>
     </main>
   </div>
 </template>
 <script>
+// Layout
 import PageHeader from "@/layout/PageHeader.vue";
-import FormButtons from "@/components/global/buttons/FormButtons.vue";
+
+// Form elements
+import FormFooter from "@/components/global/form/Footer.vue";
+
+// Tabs
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
-import Editor from "@tinymce/tinymce-vue";
+// Editor
+import TinymceEditor from "@tinymce/tinymce-vue";
 import tinyConfig from "@/config/tinyconfig.js";
 
+// Mixins
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
+// Config
 import profileModel from "@/components/profile/text/config/model.js";
 import profileTabs from "@/components/profile/text/config/tabs.js";
 import profileErrors from "@/components/profile/text/config/errors.js";
 
 export default {
   components: {
-    FormButtons: FormButtons,
-    tinymceEditor: Editor,
-    Tabs: Tabs,
+    FormFooter,
+    TinymceEditor,
+    Tabs,
   },
 
   props: {
@@ -117,7 +125,8 @@ export default {
       profile: profileModel,
 
       // tinymce config
-      tinyConfig: tinyConfig
+      tinyConfig: tinyConfig,
+      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
     };
   },
 

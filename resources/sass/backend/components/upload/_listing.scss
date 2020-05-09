@@ -1,0 +1,74 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/upload/listing
+ * -----------------------------------------------------------------------------
+ */
+
+.upload-listing {
+  background-color: transparent;
+  
+  > div {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 15px;
+  }
+
+  &.is-files {
+    > div {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      grid-gap: 15px;
+    }
+  }
+
+  .upload-item {
+    border: 2px solid $color-light-grey;
+    border-radius: 2px;
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    min-height: 100px;
+    width: 100%;
+
+    img {
+      background-color: $color-white;
+      display: block;
+      height: auto;
+      padding: 10px;
+      opacity: 1;
+      width: 100%;
+      transition: opacity .12s ease-out;
+    }
+
+    &.is-file {
+      img {
+        padding: 0;
+      }
+    }
+
+    &.is-disabled {
+      img {
+        opacity: 0.6;
+      }
+    }
+
+    .upload__preview {
+      display: block;
+      text-decoration: none;
+      position: relative;
+      width: 100%;
+    }
+
+    .upload__actions {
+      background-color: $color-white;
+      line-height: 1;
+      padding: 10px;
+
+      > div {
+        display: grid;
+        grid-template-columns: repeat(5, 18px);
+        grid-gap: 10px;
+      }
+    }
+  }
+}

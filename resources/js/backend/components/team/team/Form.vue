@@ -97,42 +97,54 @@
             </div>
           </div>
           <div v-show="tabs.files.active">
-            <file-upload
-              :labelNew="'Upload Dokumente'"
-              :labelExisting="'Existierende Dokumente'"
-              :labelRestrictions="'pdf | max. 8 MB'"
-              :maxFiles="2"
-              :maxFilesize="8"
-              :assets="team.documents"
-              :assetType="'file'"
-              :acceptedFiles="'.pdf'"
-              :uploadUrl="'/api/media/upload'"
-            ></file-upload>
+            <div class="form-row">
+              <file-upload
+                :restrictions="'pdf | max. 8 MB'"
+                :maxFiles="99"
+                :maxFilesize="8"
+                :acceptedFiles="'.pdf'"
+              ></file-upload>
+            </div>
+            <div class="form-row">
+              <file-listing 
+                :files="team.documents"
+              ></file-listing>
+            </div>
           </div>
-          <form-buttons :route="'team'"></form-buttons>
+          <form-footer :route="'team'"></form-footer>
         </form>
       </div>
     </main>
   </div>
 </template>
 <script>
+// Layout
 import PageHeader from "@/layout/PageHeader.vue";
-import FormButtons from "@/components/global/buttons/FormButtons.vue";
+
+// Form elements
+import FormFooter from "@/components/global/form/Footer.vue";
+
+// Tabs
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
-import FileUpload from "@/components/team/team/upload/FileUpload.vue";
+// Upload
+import FileUpload from "@/components/global/files/Upload.vue";
+import FileListing from "@/components/team/files/Listing.vue";
+
+// Mixins
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
-import teamModel from "@/components/team/team/config/model.js";
+// Config
 import teamTabs from "@/components/team/team/config/tabs.js";
 import teamErrors from "@/components/team/team/config/errors.js";
 
 export default {
   components: {
-    FormButtons: FormButtons,
-    FileUpload: FileUpload,
-    Tabs: Tabs,
+    FormFooter,
+    FileUpload,
+    FileListing,
+    Tabs
   },
 
   props: {
@@ -151,7 +163,22 @@ export default {
       tabs: teamTabs,
 
       // team model
-      team: teamModel,
+      team: {
+        firstname: null,
+        name: null,
+        email: null,
+        role: {
+          de: null,
+          en: null,
+        },
+        position: {
+          de: null,
+          en: null,
+        },
+        documents: [],
+        publish: 0,
+        category: 1,
+      },
 
       // settings
       categories: [],
@@ -233,23 +260,20 @@ export default {
       });
     },
 
-    // Upload file callback
-    uploadFile(file) {
-      if (file.status == "error" && file.accepted == false) {
-        this.$notify({ type: "error", text: "Invalid format or file to big!" });
-      } 
-      else {
-        let file_response = JSON.parse(file.xhr.response);
-        file_response.id = null;
-        file_response.caption = { de: null, en: null };
-        file_response.language = 0;
-        file_response.publish = 1;
-        this.team.documents.push(file_response);
+    // Store uploaded file
+    storeFile(upload) {
+      let file = {
+        id: null,
+        name: upload.name,
+        caption: { de: null, en: null },
+        language: 0,
+        publish: 1,
       }
+      this.team.documents.push(file);
     },
 
-    // Delete file by its name
-    deleteFile(file, event) {
+    // Delete by name
+    destroyFile(file, event) {
       if (confirm("Please confirm!")) {
         let uri = `/api/team/document/destroy/${file}`;
         let el = this.progress(event.target);
@@ -261,21 +285,21 @@ export default {
       }
     },
 
-    // Toggle file status
-    toggleFile(asset, event) {
-      if (asset.id === null) {
-        const index = this.team.documents.findIndex(x => x.name === asset.name);
-        this.team.documents[index].publish = asset.publish == 1 ? 0 : 1;
+    // Toggle status
+    toggleFile(file, event) {
+      if (file.id === null) {
+        const index = this.team.documents.findIndex(x => x.name === file.name);
+        this.team.documents[index].publish = file.publish == 1 ? 0 : 1;
       } else {
-        let uri = `/api/team/document/status/${asset.id}`;
+        let uri = `/api/team/document/status/${file.id}`;
         let el = this.progress(event.target);
         this.axios.get(uri).then(response => {
-          const index = this.team.documents.findIndex(x => x.id === asset.id);
+          const index = this.team.documents.findIndex(x => x.id === file.id);
           this.team.documents[index].publish = response.data;
           this.progress(el);
         });
       }
-    }
+    },
   },
 
   computed: {

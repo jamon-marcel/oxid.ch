@@ -112,7 +112,7 @@
               </div>
             </div>
           </div>
-          <form-buttons :route="'news'"></form-buttons>
+          <form-footer :route="'news'"></form-footer>
         </form>
       </div>
     </main>
@@ -120,7 +120,7 @@
 </template>
 <script>
 import PageHeader from "@/layout/PageHeader.vue";
-import FormButtons from "@/components/global/buttons/FormButtons.vue";
+import FormFooter from "@/components/global/form/Footer.vue";
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
 import { TheMask } from "vue-the-mask";
@@ -135,7 +135,7 @@ import newsErrors from "@/components/home/news/config/errors.js";
 
 export default {
   components: {
-    FormButtons: FormButtons,
+    FormFooter,
     Tabs: Tabs,
     tinymceEditor: Editor,
     TheMask

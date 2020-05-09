@@ -12,7 +12,7 @@
                 <div class="form-row">
                   <label>Adresse</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="contact.address.de"
                   ></tinymce-editor>
@@ -20,7 +20,7 @@
                 <div class="form-row">
                   <label>Info</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="contact.info.de"
                   ></tinymce-editor>
@@ -28,7 +28,7 @@
                 <div class="form-row">
                   <label>Impressum</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="contact.imprint.de"
                   ></tinymce-editor>
@@ -42,7 +42,7 @@
                 <div class="form-row">
                   <label>Adresse</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="contact.address.en"
                   ></tinymce-editor>
@@ -50,7 +50,7 @@
                 <div class="form-row">
                   <label>Info</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="contact.info.en"
                   ></tinymce-editor>
@@ -58,7 +58,7 @@
                 <div class="form-row">
                   <label>Impressum</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="contact.imprint.en"
                   ></tinymce-editor>
@@ -66,32 +66,40 @@
               </div>
             </div>
           </div>
-          <form-buttons :route="'contact'"></form-buttons>
+          <form-footer :route="'contact'"></form-footer>
         </form>
       </div>
     </main>
   </div>
 </template>
 <script>
+// Layout
 import PageHeader from "@/layout/PageHeader.vue";
-import FormButtons from "@/components/global/buttons/FormButtons.vue";
+
+// Form elements
+import FormFooter from "@/components/global/form/Footer.vue";
+
+// Tabs
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
-import Editor from "@tinymce/tinymce-vue";
+// Editor
+import TinymceEditor from "@tinymce/tinymce-vue";
 import tinyConfig from "@/config/tinyconfig.js";
 
+// Utils
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
+// config
 import contactModel from "@/components/contact/config/model.js";
 import contactTabs from "@/components/contact/config/tabs.js";
 import contactErrors from "@/components/contact/config/errors.js";
 
 export default {
   components: {
-    FormButtons: FormButtons,
-    tinymceEditor: Editor,
-    Tabs: Tabs,
+    FormFooter,
+    TinymceEditor,
+    Tabs,
   },
 
   props: {
@@ -111,9 +119,10 @@ export default {
 
       // contact model
       contact: contactModel,
-
-      // tinymce config
-      tinyConfig: tinyConfig
+      
+      // TinyMCE
+      tinyConfig: tinyConfig,
+      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
     };
   },
 

@@ -87,17 +87,28 @@ class JobImageController extends Controller
   /**
    * Remove the specified resource from storage.
    *
-   * @param  JobImage $image
+   * @param  string $image
    * @return \Illuminate\Http\Response
    */
-  public function destroy(JobImage $image)
+  
+  public function destroy($image)
   {
-    $image->delete();
+    // Delete image from database
+    $image = $this->image->where('name', '=', $image)->first();
+    
+    if ($image)
+    {
+      $image->delete();
+    }
+
+    // Delete file from storage
     $directories = Storage::allDirectories('public');
     foreach($directories as $d)
     {
       Storage::delete($d . '/'. $image->name);
     }
+    
     return response()->json('successfully deleted');
   }
+
 }

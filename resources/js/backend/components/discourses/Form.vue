@@ -39,7 +39,7 @@
                 >
                   <label>Kurzbeschreibung *</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="discourse.description_short.de"
                   ></tinymce-editor>
@@ -52,7 +52,7 @@
                 >
                   <label>Beschreibung *</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="discourse.description.de"
                   ></tinymce-editor>
@@ -61,7 +61,7 @@
                 <div class="form-row is-last">
                   <label>Info</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="discourse.info.de"
                   ></tinymce-editor>
@@ -122,7 +122,7 @@
                 <div class="form-row">
                   <label>Kurzbeschreibung</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="discourse.description_short.en"
                   ></tinymce-editor>
@@ -130,7 +130,7 @@
                 <div class="form-row">
                   <label>Beschreibung</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="discourse.description.en"
                   ></tinymce-editor>
@@ -138,7 +138,7 @@
                 <div class="form-row is-last">
                   <label>Info</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="discourse.info.en"
                   ></tinymce-editor>
@@ -147,60 +147,78 @@
             </div>
           </div>
           <div v-show="tabs.images.active">
-            <image-upload
-              :labelNew="'Upload Bilder'"
-              :labelExisting="'Existierende Bilder'"
-              :labelRestrictions="'jpg, png | max. 8 MB'"
-              :maxFiles="99"
-              :maxFilesize="8"
-              :assets="discourse.images"
-              :assetType="'image'"
-              :acceptedFiles="'.png,.jpg'"
-              :uploadUrl="'/api/media/upload'"
-            ></image-upload>
+            <div class="form-row">
+              <image-upload
+                :restrictions="'jpg, png | max. 8 MB'"
+                :maxFiles="99"
+                :maxFilesize="8"
+                :acceptedFiles="'.png,.jpg'"
+              ></image-upload>
+            </div>
+            <div class="form-row" v-if="discourse.images.length">
+              <image-listing 
+                :images="discourse.images"
+              ></image-listing>
+            </div>
           </div>
           <div v-show="tabs.files.active">
-            <file-upload
-              :labelNew="'Upload Dokumente'"
-              :labelExisting="'Existierende Dokumente'"
-              :labelRestrictions="'pdf | max. 8 MB'"
-              :maxFiles="99"
-              :maxFilesize="8"
-              :assets="discourse.documents"
-              :assetType="'file'"
-              :acceptedFiles="'.pdf'"
-              :uploadUrl="'/api/media/upload'"
-            ></file-upload>
+            <div class="form-row">
+              <file-upload
+                :restrictions="'pdf | max. 8 MB'"
+                :maxFiles="99"
+                :maxFilesize="8"
+                :acceptedFiles="'.pdf'"
+              ></file-upload>
+            </div>
+            <div class="form-row" v-if="discourse.documents.length">
+              <file-listing 
+                :files="discourse.documents"
+              ></file-listing>
+            </div>
           </div>
-          <form-buttons :route="'discourses'"></form-buttons>
+          <form-footer :route="'discourses'"></form-footer>
         </form>
       </div>
     </main>
   </div>
 </template>
 <script>
+// Layout
 import PageHeader from "@/layout/PageHeader.vue";
-import FormButtons from "@/components/global/buttons/FormButtons.vue";
+
+// Form elements
+import FormFooter from "@/components/global/form/Footer.vue";
+
+// Tabs
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
-import ImageUpload from "@/components/discourses/upload/ImageUpload.vue";
-import FileUpload from "@/components/discourses/upload/FileUpload.vue";
+// Upload
+import ImageUpload from "@/components/global/images/Upload.vue";
+import ImageListing from "@/components/discourses/images/Listing.vue";
+import FileUpload from "@/components/global/files/Upload.vue";
+import FileListing from "@/components/global/files/Listing.vue";
+
+// TinyMCE
 import tinyConfig from "@/config/tinyconfig.js";
-import Editor from "@tinymce/tinymce-vue";
+import TinymceEditor from "@tinymce/tinymce-vue";
+
+// Mixins
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
-import discourseModel from "@/components/discourses/config/model.js";
+// Config
 import discourseTabs from "@/components/discourses/config/tabs.js";
 import discourseErrors from "@/components/discourses/config/errors.js";
 
 export default {
   components: {
-    FormButtons: FormButtons,
-    tinymceEditor: Editor,
-    ImageUpload: ImageUpload,
-    FileUpload: FileUpload,
-    Tabs: Tabs,
+    FormFooter,
+    TinymceEditor,
+    FileUpload,
+    FileListing,
+    ImageUpload,
+    ImageListing,
+    Tabs
   },
 
   props: {
@@ -219,13 +237,43 @@ export default {
       tabs: discourseTabs,
 
       // discourse model
-      discourse: discourseModel,
+      discourse: {
+        heading: {
+          de: null,
+          en: null,
+        },
+        date: {
+          de: null,
+          en: null,
+        },
+        title: {
+          de: null,
+          en: null,
+        },
+        description_short: {
+          de: null,
+          en: null
+        },
+        description: {
+          de: null,
+          en: null
+        },
+        info: {
+          de: null,
+          en: null,
+        },
+        images: [],
+        documents: [],
+        publish: 0,
+        category: 1,
+      },
 
       // settings
       categories: [],
 
-      // tinymce config
-      tinyConfig: tinyConfig
+      // TinyMCE
+      tinyConfig: tinyConfig,
+      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
     };
   },
 
@@ -328,29 +376,25 @@ export default {
       });
     },
 
-    // Upload image callback
-    uploadImage(file) {
-      if (file.status == "error" && file.accepted == false) {
-        this.$notify({ type: "error", text: "Invalid format or file to big!" });
-      } 
-      else {
-        let file_response = JSON.parse(file.xhr.response);
-        file_response.id = null;
-        file_response.caption = { de: null, en: null };
-        file_response.order = -1;
-        file_response.is_preview = 0;
-        file_response.publish = 1;
-        this.discourse.images.push(file_response);
+    // Store uploaded image
+    storeImage(upload) {
+      let image = {
+        id: null,
+        name: upload.name,
+        caption: { de: null, en: null },
+        is_preview: 0,
+        publish: 1,
       }
+      this.discourse.images.push(image);
     },
 
-    // Delete image by its name
-    deleteImage(file, event) {
+    // Delete by name
+    destroyImage(image, event) {
       if (confirm("Please confirm!")) {
-        let uri = `/api/discourse/image/destroy/${file}`;
+        let uri = `/api/discourse/image/destroy/${image}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {
-          const index = this.discourse.images.findIndex(x => x.name === file);
+          const index = this.discourse.images.findIndex(x => x.name === image);
           this.discourse.images.splice(index, 1);
           this.progress(el);
         });
@@ -358,37 +402,34 @@ export default {
     },
 
     // Toggle image status
-    toggleImage(asset, event) {
-      if (asset.id === null) {
-        const index = this.discourse.images.findIndex(x => x.name === asset.name);
-        this.discourse.images[index].publish = asset.publish == 1 ? 0 : 1;
+    toggleImage(image, event) {
+      if (image.id === null) {
+        const index = this.discourse.images.findIndex(x => x.name === image.name);
+        this.discourse.images[index].publish = image.publish == 1 ? 0 : 1;
       } else {
-        let uri = `/api/discourse/image/status/${asset.id}`;
+        let uri = `/api/discourse/image/status/${image.id}`;
         let el = this.progress(event.target);
         this.axios.get(uri).then(response => {
-          const index = this.discourse.images.findIndex(x => x.id === asset.id);
+          const index = this.discourse.images.findIndex(x => x.id === image.id);
           this.discourse.images[index].publish = response.data;
           this.progress(el);
         });
       }
     },
 
-    // Upload file callback
-    uploadFile(file) {
-      if (file.status == "error" && file.accepted == false) {
-        this.$notify({ type: "error", text: "Invalid format or file to big!" });
-      } 
-      else {
-        let file_response = JSON.parse(file.xhr.response);
-        file_response.id = null;
-        file_response.caption = { de: null, en: null };
-        file_response.publish = 1;
-        this.discourse.documents.push(file_response);
+    // Store uploaded file
+    storeFile(upload) {
+      let file = {
+        id: null,
+        name: upload.name,
+        caption: { de: null, en: null },
+        publish: 1,
       }
+      this.discourse.documents.push(file);
     },
 
-    // Delete file by its name
-    deleteFile(file, event) {
+    // Delete by name
+    destroyFile(file, event) {
       if (confirm("Please confirm!")) {
         let uri = `/api/discourse/document/destroy/${file}`;
         let el = this.progress(event.target);
@@ -401,20 +442,20 @@ export default {
     },
 
     // Toggle file status
-    toggleFile(asset, event) {
-      if (asset.id === null) {
-        const index = this.discourse.documents.findIndex(x => x.name === asset.name);
-        this.discourse.documents[index].publish = asset.publish == 1 ? 0 : 1;
+    toggleFile(file, event) {
+      if (file.id === null) {
+        const index = this.discourse.documents.findIndex(x => x.name === file.name);
+        this.discourse.documents[index].publish = file.publish == 1 ? 0 : 1;
       } else {
-        let uri = `/api/discourse/document/status/${asset.id}`;
+        let uri = `/api/discourse/document/status/${file.id}`;
         let el = this.progress(event.target);
         this.axios.get(uri).then(response => {
-          const index = this.discourse.documents.findIndex(x => x.id === asset.id);
+          const index = this.discourse.documents.findIndex(x => x.id === file.id);
           this.discourse.documents[index].publish = response.data;
           this.progress(el);
         });
       }
-    }
+    },
   },
 
   computed: {

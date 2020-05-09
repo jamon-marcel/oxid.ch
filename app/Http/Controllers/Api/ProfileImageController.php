@@ -89,18 +89,27 @@ class ProfileImageController extends Controller
   /**
    * Remove the specified resource from storage.
    *
-   * @param  ProfileImage $image
+   * @param  string $image
    * @return \Illuminate\Http\Response
    */
   
-  public function destroy(ProfileImage $image)
+  public function destroy($image)
   {
-    $image->delete();
+    // Delete image from database
+    $record = $this->image->where('name', '=', $image)->first();
+    
+    if ($record)
+    {
+      $record->delete();
+    }
+
+    // Delete file from storage
     $directories = Storage::allDirectories('public');
     foreach($directories as $d)
     {
-      Storage::delete($d . '/'. $image->name);
+      Storage::delete($d . '/'. $image);
     }
+    
     return response()->json('successfully deleted');
   }
 }

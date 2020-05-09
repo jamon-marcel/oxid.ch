@@ -52,22 +52,23 @@ class DiscourseImageController extends Controller
   }
 
   /**
-   * Remove a specified resource.
+   * Remove the specified resource from storage.
    *
    * @param  string $image
    * @return \Illuminate\Http\Response
    */
+  
   public function destroy($image)
   {
     // Delete image from database
-    $discourseImage = $this->discourseImage->where('name', '=', $image)->first();
+    $record = $this->discourseImage->where('name', '=', $image)->first();
     
-    if ($discourseImage)
+    if ($record)
     {
-      $discourseImage->delete();
+      $record->delete();
     }
 
-    // Delete image from storage
+    // Delete file from storage
     $directories = Storage::allDirectories('public');
     foreach($directories as $d)
     {

@@ -21,7 +21,7 @@
                 >
                   <label>Beschreibung *</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="job.description.de"
                   ></tinymce-editor>
@@ -34,7 +34,7 @@
                 >
                   <label>Info *</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="job.info.de"
                   ></tinymce-editor>
@@ -80,7 +80,7 @@
                 <div class="form-row">
                   <label>Beschreibung</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="job.description.en"
                   ></tinymce-editor>
@@ -88,7 +88,7 @@
                 <div class="form-row is-last">
                   <label>Info</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="job.info.en"
                   ></tinymce-editor>
@@ -97,45 +97,59 @@
             </div>
           </div>
           <div v-show="tabs.files.active">
-            <file-upload
-              :labelNew="'Upload Dokumente'"
-              :labelExisting="'Existierende Dokumente'"
-              :labelRestrictions="'pdf | max. 8 MB'"
-              :maxFiles="99"
-              :maxFilesize="8"
-              :assets="job.documents"
-              :assetType="'file'"
-              :acceptedFiles="'.pdf'"
-              :uploadUrl="'/api/media/upload'"
-            ></file-upload>
+            <div class="form-row">
+              <file-upload
+                :restrictions="'pdf | max. 8 MB'"
+                :maxFiles="99"
+                :maxFilesize="8"
+                :acceptedFiles="'.pdf'"
+              ></file-upload>
+            </div>
+            <div class="form-row">
+              <file-listing 
+                :files="job.documents"
+              ></file-listing>
+            </div>
           </div>
-          <form-buttons :route="'jobs'"></form-buttons>
+          <form-footer :route="'jobs'"></form-footer>
         </form>
       </div>
     </main>
   </div>
 </template>
 <script>
+// Layout
 import PageHeader from "@/layout/PageHeader.vue";
-import FormButtons from "@/components/global/buttons/FormButtons.vue";
+
+// Form elements
+import FormFooter from "@/components/global/form/Footer.vue";
+
+// Tabs
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
-import FileUpload from "@/components/jobs/upload/FileUpload.vue";
+// Upload
+import FileUpload from "@/components/global/files/Upload.vue";
+import FileListing from "@/components/global/files/Listing.vue";
+
+// TinyMCE
 import tinyConfig from "@/config/tinyconfig.js";
-import Editor from "@tinymce/tinymce-vue";
+import TinymceEditor from "@tinymce/tinymce-vue";
+
+// Mixins
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
-import jobModel from "@/components/jobs/config/model.js";
+// Config
 import jobTabs from "@/components/jobs/config/tabs.js";
 import jobErrors from "@/components/jobs/config/errors.js";
 
 export default {
   components: {
-    FormButtons: FormButtons,
-    tinymceEditor: Editor,
-    FileUpload: FileUpload,
-    Tabs: Tabs
+    FormFooter,
+    TinymceEditor,
+    FileUpload,
+    FileListing,
+    Tabs
   },
 
   props: {
@@ -153,13 +167,29 @@ export default {
       tabs: jobTabs,
 
       // job model
-      job: jobModel,
+      job: {
+        title: {
+          de: null,
+          en: null,
+        },
+        description: {
+          de: null,
+          en: null
+        },
+        info: {
+          de: null,
+          en: null,
+        },
+        documents: [],
+        publish: 0,
+      },
 
       // settings
       categories: [],
 
-      // tinymce config
-      tinyConfig: tinyConfig
+      // TinyMCE
+      tinyConfig: tinyConfig,
+      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
     };
   },
 
@@ -236,21 +266,19 @@ export default {
       });
     },
 
-    // Upload file callback
-    uploadFile(file) {
-      if (file.status == "error" && file.accepted == false) {
-        this.$notify({ type: "error", text: "Invalid format or file to big!" });
-      } else {
-        let file_response = JSON.parse(file.xhr.response);
-        file_response.id = null;
-        file_response.caption = { de: null, en: null };
-        file_response.publish = 1;
-        this.job.documents.push(file_response);
+    // Store uploaded file
+    storeFile(upload) {
+      let file = {
+        id: null,
+        name: upload.name,
+        caption: { de: null, en: null },
+        publish: 1,
       }
+      this.job.documents.push(file);
     },
 
-    // Delete file by its name
-    deleteFile(file, event) {
+    // Delete by name
+    destroyFile(file, event) {
       if (confirm("Please confirm!")) {
         let uri = `/api/job/document/destroy/${file}`;
         let el = this.progress(event.target);
@@ -262,21 +290,21 @@ export default {
       }
     },
 
-    // Toggle file status
-    toggleFile(asset, event) {
-      if (asset.id === null) {
-        const index = this.job.documents.findIndex(x => x.name === asset.name);
-        this.job.documents[index].publish = asset.publish == 1 ? 0 : 1;
+    // Toggle status
+    toggleFile(file, event) {
+      if (file.id === null) {
+        const index = this.job.documents.findIndex(x => x.name === file.name);
+        this.job.documents[index].publish = file.publish == 1 ? 0 : 1;
       } else {
-        let uri = `/api/job/document/status/${asset.id}`;
+        let uri = `/api/job/document/status/${file.id}`;
         let el = this.progress(event.target);
         this.axios.get(uri).then(response => {
-          const index = this.job.documents.findIndex(x => x.id === asset.id);
+          const index = this.job.documents.findIndex(x => x.id === file.id);
           this.job.documents[index].publish = response.data;
           this.progress(el);
         });
       }
-    }
+    },
   },
 
   computed: {

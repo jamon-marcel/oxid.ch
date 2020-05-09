@@ -83,21 +83,31 @@ class TeamImageController extends Controller
     $image->save();
     return response()->json($image->publish);
   }
-
+  
   /**
    * Remove the specified resource from storage.
    *
-   * @param  TeamImage $image
+   * @param  string $image
    * @return \Illuminate\Http\Response
    */
-  public function destroy(TeamImage $image)
+  
+  public function destroy($image)
   {
-    $image->delete();
+    // Delete image from database
+    $image = $this->image->where('name', '=', $image)->first();
+    
+    if ($image)
+    {
+      $image->delete();
+    }
+
+    // Delete file from storage
     $directories = Storage::allDirectories('public');
     foreach($directories as $d)
     {
       Storage::delete($d . '/'. $image->name);
     }
+    
     return response()->json('successfully deleted');
   }
 }

@@ -40,7 +40,7 @@
                 <div class="form-row">
                   <label>Beschreibung</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="project.description.de"
                   ></tinymce-editor>
@@ -48,7 +48,7 @@
                 <div class="form-row">
                   <label>Info</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="project.info.de"
                   ></tinymce-editor>
@@ -255,7 +255,7 @@
                 <div class="form-row">
                   <label>Beschreibung</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="project.description.en"
                   ></tinymce-editor>
@@ -263,7 +263,7 @@
                 <div class="form-row is-last">
                   <label>Info</label>
                   <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
+                    :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="project.info.en"
                   ></tinymce-editor>
@@ -272,7 +272,7 @@
             </div>
           </div>
           <div v-show="tabs.images.active">
-            <image-upload
+            <!-- <image-upload
               :labelNew="'Upload Bilder'"
               :labelExisting="'Existierende Bilder'"
               :labelRestrictions="'jpg, png | max. 8 MB'"
@@ -282,50 +282,80 @@
               :assetType="'image'"
               :acceptedFiles="'.png,.jpg'"
               :uploadUrl="'/api/media/upload'"
-            ></image-upload>
+            ></image-upload> -->
+
+            <div class="form-row">
+              <image-upload
+                :restrictions="'jpg, png | max. 8 MB'"
+                :maxFiles="99"
+                :maxFilesize="8"
+                :acceptedFiles="'.png,.jpg'"
+              ></image-upload>
+            </div>
+            <div class="form-row" v-if="project.images.length">
+              <image-listing 
+                :images="project.images"
+              ></image-listing>
+            </div>
           </div>
           <div v-show="tabs.files.active">
-            <file-upload
-              :labelNew="'Upload Dokumente'"
-              :labelExisting="'Existierende Dokumente'"
-              :labelRestrictions="'pdf | max. 8 MB'"
-              :maxFiles="99"
-              :maxFilesize="8"
-              :assets="project.documents"
-              :assetType="'image'"
-              :acceptedFiles="'.pdf'"
-              :uploadUrl="'/api/media/upload'"
-            ></file-upload>
+            <div class="form-row">
+              <file-upload
+                :restrictions="'pdf | max. 8 MB'"
+                :maxFiles="99"
+                :maxFilesize="8"
+                :acceptedFiles="'.pdf'"
+              ></file-upload>
+            </div>
+            <div class="form-row" v-if="project.documents.length">
+              <file-listing 
+                :files="project.documents"
+              ></file-listing>
+            </div>
           </div>
-          <form-buttons :route="'projects'"></form-buttons>
+          <form-footer :route="'projects'"></form-footer>
         </form>
       </div>
     </main>
   </div>
 </template>
 <script>
+// Layout
 import PageHeader from "@/layout/PageHeader.vue";
-import FormButtons from "@/components/global/buttons/FormButtons.vue";
+
+// Form elements
+import FormFooter from "@/components/global/form/Footer.vue";
+
+// Tabs
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
-import ImageUpload from "@/components/projects/upload/ImageUpload.vue";
-import FileUpload from "@/components/projects/upload/FileUpload.vue";
+// Upload
+import ImageUpload from "@/components/global/images/Upload.vue";
+import ImageListing from "@/components/projects/images/Listing.vue";
+import FileUpload from "@/components/global/files/Upload.vue";
+import FileListing from "@/components/global/files/Listing.vue";
+
+// TinyMCE
 import tinyConfig from "@/config/tinyconfig.js";
-import Editor from "@tinymce/tinymce-vue";
+import TinymceEditor from "@tinymce/tinymce-vue";
+
+// Mixins
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
-import projectModel from "@/components/projects/config/model.js";
+// Config
 import projectTabs from "@/components/projects/config/tabs.js";
 import projectErrors from "@/components/projects/config/errors.js";
 
 export default {
   components: {
-    FormButtons: FormButtons,
-    tinymceEditor: Editor,
-    ImageUpload: ImageUpload,
-    FileUpload: FileUpload,
-    Tabs: Tabs,
+    FormFooter,
+    TinymceEditor,
+    FileUpload,
+    FileListing,
+    ImageUpload,
+    ImageListing,
+    Tabs,
   },
 
   props: {
@@ -344,15 +374,53 @@ export default {
       tabs: projectTabs,
 
       // project model
-      project: projectModel,
+      project: {
+        title: {
+          de: null,
+          en: null,
+        },
+        title_short: {
+          de: null,
+          en: null,
+        },
+        location: {
+          de: null,
+          en: null,
+        },
+        description: {
+          de: null,
+          en: null
+        },
+        info: {
+          de: null,
+          en: null,
+        },
+
+        year: null,
+        year_works: null,
+        client_works: null,
+        principal_works: null,
+        images: [],
+        documents: [],
+        is_filter_wood: 0,
+        is_filter_reuse: 0,
+        is_filter_area: 0,
+        is_highlight: 0,
+        has_detail: 0,
+        publish: 0,
+        program: 1,
+        state: 1,
+        author: 1,
+      },
 
       // settings
       programs: [],
       states: [],
       authors: [],
 
-      // tinymce config
-      tinyConfig: tinyConfig
+      // TinyMCE
+      tinyConfig: tinyConfig,
+      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
     };
   },
 
@@ -456,34 +524,31 @@ export default {
       });
     },
 
-    // Upload image callback
-    uploadImage(file) {
-      if (file.status == "error" && file.accepted == false) {
-        this.$notify({ type: "error", text: "Invalid format or file to big!" });
-      } 
-      else {
-        let file_response = JSON.parse(file.xhr.response);
-        file_response.id = null;
-        file_response.caption = { de: null, en: null };
-        file_response.coords_w = null;
-        file_response.coords_h = null;
-        file_response.coords_x = null;
-        file_response.coords_y = null;
-        file_response.order = -1;
-        file_response.publish = 1;
-        file_response.is_preview_navigation = 0;
-        file_response.is_preview_works = 0;
-        this.project.images.push(file_response);
+    // Store uploaded image
+    storeImage(upload) {
+      let image = {
+        id: null,
+        name: upload.name,
+        caption: { de: null, en: null },
+        is_preview_navigation: 0,
+        is_preview_works: 0,
+        coords_w: 0,
+        coords_h: 0,
+        coords_x: 0,
+        coords_y: 0,
+        order: -1,
+        publish: 1,
       }
+      this.project.images.push(image);
     },
 
-    // Delete image by its name
-    deleteImage(file, event) {
+    // Delete by name
+    destroyImage(image, event) {
       if (confirm("Please confirm!")) {
-        let uri = `/api/project/image/destroy/${file}`;
+        let uri = `/api/project/image/destroy/${image}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {
-          const index = this.project.images.findIndex(x => x.name === file);
+          const index = this.project.images.findIndex(x => x.name === image);
           this.project.images.splice(index, 1);
           this.progress(el);
         });
@@ -491,15 +556,15 @@ export default {
     },
 
     // Toggle image status
-    toggleImage(asset, event) {
-      if (asset.id === null) {
-        const index = this.project.images.findIndex(x => x.name === asset.name);
-        this.project.images[index].publish = asset.publish == 1 ? 0 : 1;
+    toggleImage(image, event) {
+      if (image.id === null) {
+        const index = this.project.images.findIndex(x => x.name === image.name);
+        this.project.images[index].publish = image.publish == 1 ? 0 : 1;
       } else {
-        let uri = `/api/project/image/status/${asset.id}`;
+        let uri = `/api/project/image/status/${image.id}`;
         let el = this.progress(event.target);
         this.axios.get(uri).then(response => {
-          const index = this.project.images.findIndex(x => x.id === asset.id);
+          const index = this.project.images.findIndex(x => x.id === image.id);
           this.project.images[index].publish = response.data;
           this.progress(el);
         });
@@ -507,36 +572,32 @@ export default {
     },
 
     // Save asset coords
-    saveImageCoords(asset) {
-      if (asset.id === null) {
-        const index = this.project.images.findIndex(x => x.name === asset.name);
-        this.project.images[index].coords = asset.coords;
+    saveImageCoords(image) {
+      if (image.id === null) {
+        const index = this.project.images.findIndex(x => x.name === image.name);
+        this.project.images[index].coords = image.coords;
       } 
       else {
-        let uri = `/api/project/image/coords/${asset.id}`;
-        this.axios.post(uri, asset).then(response => {
+        let uri = `/api/project/image/coords/${image.id}`;
+        this.axios.post(uri, image).then(response => {
           this.$notify({ type: "success", text: "Änderungen gespeichert!" });
         });
       }
     },
 
-
-    // Upload file callback
-    uploadFile(file) {
-      if (file.status == "error" && file.accepted == false) {
-        this.$notify({ type: "error", text: "Invalid format or file to big!" });
-      } 
-      else {
-        let file_response = JSON.parse(file.xhr.response);
-        file_response.id = null;
-        file_response.caption = { de: null, en: null };
-        file_response.publish = 1;
-        this.project.documents.push(file_response);
+    // Store uploaded file
+    storeFile(upload) {
+      let file = {
+        id: null,
+        name: upload.name,
+        caption: { de: null, en: null },
+        publish: 1,
       }
+      this.project.documents.push(file);
     },
 
-    // Delete asset by its name
-    deleteFile(file, event) {
+    // Delete by name
+    destroyFile(file, event) {
       if (confirm("Please confirm!")) {
         let uri = `/api/project/document/destroy/${file}`;
         let el = this.progress(event.target);
@@ -548,21 +609,22 @@ export default {
       }
     },
 
-    // Toggle asset status
-    toggleFile(asset, event) {
-      if (asset.id === null) {
-        const index = this.project.documents.findIndex(x => x.name === asset.name);
-        this.project.documents[index].publish = asset.publish == 1 ? 0 : 1;
+    // Toggle file status
+    toggleFile(file, event) {
+      if (file.id === null) {
+        const index = this.project.documents.findIndex(x => x.name === file.name);
+        this.project.documents[index].publish = file.publish == 1 ? 0 : 1;
       } else {
-        let uri = `/api/project/document/status/${asset.id}`;
+        let uri = `/api/project/document/status/${file.id}`;
         let el = this.progress(event.target);
         this.axios.get(uri).then(response => {
-          const index = this.project.documents.findIndex(x => x.id === asset.id);
+          const index = this.project.documents.findIndex(x => x.id === file.id);
           this.project.documents[index].publish = response.data;
           this.progress(el);
         });
       }
-    }
+    },
+
   },
 
   computed: {
