@@ -4,7 +4,7 @@
   data-filter-wood="{{$p->is_filter_wood}}"
   data-filter-area="{{$p->is_filter_area}}">
   @if ($p->workImage)
-  <img src="/image/clsmd/{{$p->workImage->name}}" width="1000" height="680" alt="{{$p->title_short}}">
+  <img src="/image/work/{{$p->workImage->name}}" width="1000" height="680" alt="{{$p->title_short}}">
   @endif
   @if ($p->has_detail)
     <h2>

@@ -91,7 +91,6 @@ import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
 // config
-import contactModel from "@/components/contact/config/model.js";
 import contactTabs from "@/components/contact/config/tabs.js";
 import contactErrors from "@/components/contact/config/errors.js";
 
@@ -118,7 +117,20 @@ export default {
       tabs: contactTabs,
 
       // contact model
-      contact: contactModel,
+      contact: {
+        address: {
+          de: null,
+          en: null,
+        },
+        info: {
+          de: null,
+          en: null,
+        },
+        imprint: {
+          de: null,
+          en: null,
+        },
+      },
       
       // TinyMCE
       tinyConfig: tinyConfig,

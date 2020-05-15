@@ -10,7 +10,7 @@
         @foreach($discourse->publishedImages as $img)
           <div class="swiper-slide">
             <figure class="visual-fit">
-              <img src="/image/large/{{$img->name}}" height="400" width="800">
+              <img src="/image/discourse/{{$img->name}}" width="1600" height="1000" alt="{{$img->title}}">
             </figure>
           </div>
         @endforeach

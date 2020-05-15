@@ -16,15 +16,15 @@
         </figure>
       </div>
     </div>
-    <div :class="[hasOverlay ? 'is-visible' : '', 'upload-overlay']">
+    <div :class="[hasOverlayEdit ? 'is-visible' : '', 'upload-overlay-edit']">
       <div>
         <a
           href="javascript:;"
           class="icon-close-overlay"
-          @click.prevent="hideOverlay()"
+          @click.prevent="hideEdit()"
         ></a>
         <div>
-          <figure v-if="hasOverlay">
+          <figure v-if="hasOverlayEdit">
             <img :src="getSource(overlayItem.name, 'large')" height="300" width="300">
             <figcaption v-if="overlayItem.caption.de || overlayItem.caption.en">
               <span v-if="overlayItem.caption.de">{{overlayItem.caption.de}}</span>
@@ -64,8 +64,44 @@
             <a
               href="javascript:;"
               class="btn-secondary"
-              @click.prevent="hideOverlay()"
+              @click.prevent="hideEdit()"
             >Schliessen</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div :class="[hasOverlayCropper ? 'is-visible' : '', 'upload-overlay-cropper']">
+      <div class="loader" v-if="isLoading">Bild wird geladen...</div>
+      <div v-if="!isLoading">
+        <a
+          href="javascript:;"
+          class="icon-close-overlay"
+          @click.prevent="hideCropper()"
+        ></a>
+        <div>
+          <span class="cropper-info">Neue Grösse:<br>{{ cropW }} x {{ cropH }}px</span>
+          <cropper
+            :src="cropImage"
+            :defaultPosition="defaultPosition"
+            :defaultSize="defaultSize"
+            :stencilProps="{
+              aspectRatio: this.$props.cropRatioW/this.$props.cropRatioH,
+              linesClassnames: {
+                default: 'line',
+              },
+              handlersClassnames: {
+                default: 'handler'
+              }
+            }"
+            @change="change"
+          ></cropper>
+          <div class="form-buttons">
+            <a
+              href="javascript:;"
+              class="btn-secondary"
+              @click.prevent="saveCoords(overlayItem)"
+            >Speichern</a>
+            <a href @click.prevent="hideCropper()">Abbrechen</a>
           </div>
         </div>
       </div>
@@ -73,9 +109,19 @@
   </div>
 </template>
 <script>
+
+// Global mixins
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
+
+// Image mixin
+import ImageCrop from "@/mixins/images/crop";
+import ImageList from "@/mixins/images/listing";
+
+// Action bar
 import ImageActions from "@/components/global/images/Actions.vue";
+
+// Form elements
 import FormText from "@/components/global/input/Text.vue"
 
 export default {
@@ -84,8 +130,29 @@ export default {
     FormText,
   },
 
+  data() {
+    return {
+      defaults: {
+        w: 400,
+        h: 300,
+        x: 100,
+        y: 100
+      }
+    };
+  },
+
   props: {
     images: Array,
+
+    cropRatioW: {
+      type: Number,
+      default: 16,
+    },
+
+    cropRatioH: {
+      type: Number,
+      default: 10,
+    },
 
     updateOnChange: {
       type: Boolean,
@@ -98,11 +165,10 @@ export default {
     }
   },
 
-  mixins: [Utils, Progress],
+  mixins: [Utils, Progress, ImageCrop, ImageList],
 
   data() {
     return {
-      hasOverlay: false,
 
       overlayItem: {
         name: '',
@@ -117,38 +183,5 @@ export default {
       }
     };
   },
-
-  mounted() {
-    window.addEventListener("keyup", event => {
-      if (event.which === 27) {
-        this.hideOverlay();
-      }
-    });
-  },
-
-  methods: {
-    toggle(image, $event) {
-      this.$parent.toggleImage(image, $event)
-    },
-
-    destroy(image, $event) {
-      this.$parent.destroyImage(image, $event)
-    },
-
-    update(image, $event) {
-      this.$parent.updateImage(image, $event)
-      this.hideOverlay();
-    },
-
-    showOverlay(image, $event) {
-      this.hasOverlay = true;
-      this.overlayItem = image;
-    },
-
-    hideOverlay() {
-      this.hasOverlay = false;
-      this.overlayItem = this.defaults.item;
-    }
-  }
 };
 </script>

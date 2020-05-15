@@ -8,7 +8,7 @@
     <a
       href="javascript:;"
       class="icon-edit icon-mini"
-      @click.prevent="showOverlay(image,$event)"
+      @click.prevent="showEdit(image)"
     ></a>
     <a 
       :href="getSource(image.name, 'large')" 
@@ -17,9 +17,14 @@
     </a>
     <a
       href="javascript:;"
-      class="icon-trash icon-mini"
+      :class="[grid == 1 ? 'icon-disabled' : '', 'icon-trash icon-mini']"
       @click.prevent="destroy(image,$event)">
     </a>
+    <a
+      href="javascript:;"
+      class="icon-crop icon-mini"
+      @click.prevent="showCropper(image)"
+    ></a>
   </div>
 </template>
 
@@ -30,6 +35,10 @@ export default {
   props: {
     image: Object,
     publish: Number,
+    grid: {
+      type: Number,
+      default: 0
+    }
   },
 
   mixins: [Utils],
@@ -44,8 +53,12 @@ export default {
       this.$parent.destroy(image.name,$event);
     },
 
-    showOverlay(image, $event) {
-      this.$parent.showOverlay(image, $event);
+    showEdit(image) {
+      this.$parent.showEdit(image);
+    },
+
+    showCropper(image) {
+      this.$parent.showCropper(image);
     },
   }
 }

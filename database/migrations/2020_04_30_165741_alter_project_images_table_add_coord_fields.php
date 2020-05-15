@@ -19,7 +19,6 @@ class AlterProjectImagesTableAddCoordFields extends Migration
             $table->double('coords_h', 24, 20)->nullable();
             $table->double('coords_x', 24, 20)->nullable();
             $table->double('coords_y', 24, 20)->nullable();
-
         });
     }
 

@@ -8,7 +8,7 @@
     <a
       href="javascript:;"
       class="icon-edit icon-mini"
-      @click.prevent="showOverlay(file,$event)"
+      @click.prevent="showEdit(file,$event)"
     ></a>
     <a 
       :href="`/storage/uploads/${file.name}`" 
@@ -44,8 +44,8 @@ export default {
       this.$parent.destroy(file.name,$event);
     },
 
-    showOverlay(file, $event) {
-      this.$parent.showOverlay(file, $event);
+    showEdit(file) {
+      this.$parent.showEdit(file);
     },
   }
 }

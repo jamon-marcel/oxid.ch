@@ -23,20 +23,22 @@
       @endforeach
     </div>
   @endif
-  <div class="project-teaser">
-    Nächstes Projekt
-    <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
-      {{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}
-      @include('frontend.partials.icons.arrow-external-blue')
-    </a>
-    @if ($navBrowse['next']->teaserImage)
-      <figure>
-        <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
-          <img src="/image/small/{{$navBrowse['next']->teaserImage->name}}" height="400" width="800">
-        </a>
-      </figure>
-    @endif
-  </div>
+  @if ($navBrowse['next'])
+    <div class="project-teaser">
+      Nächstes Projekt
+      <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
+        {{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}
+        @include('frontend.partials.icons.arrow-external-blue')
+      </a>
+      @if ($navBrowse['next']->teaserImage)
+        <figure>
+          <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
+            <img src="/image/small/{{$navBrowse['next']->teaserImage->name}}" height="400" width="800">
+          </a>
+        </figure>
+      @endif
+    </div>
+  @endif
 </section>
 <div class="overlay-info overlay-info js-info">
   <a href="javascript:;" class="btn-close js-btn-info"></a>

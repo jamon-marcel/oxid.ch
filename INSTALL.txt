@@ -18,7 +18,7 @@ DEPLOYING
 1)
 
 npm run production &&
-tar --exclude="INSTALL.txt" --exclude="*.DS_Store" --exclude="storage/app/public/uploads/" --exclude="node_modules/" --exclude=".git*" --exclude=".env" --exclude=".editorconfig" --exclude="public/storage/" --exclude="public/.htaccess" -cvzf app.tar.gz * &&
+tar --exclude="INSTALL.txt" --exclude="*.DS_Store" --exclude="storage/" --exclude="node_modules/" --exclude=".git*" --exclude=".env" --exclude=".editorconfig" --exclude="public/storage/" --exclude="public/.htaccess" -cvzf app.tar.gz * &&
 scp app.tar.gz www-data@silverfish02.nine.ch:/home/www-data/marceli.to/oxid-arch.ch/ &&
 ssh www-data@silverfish02.nine.ch
 

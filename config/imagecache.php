@@ -53,14 +53,32 @@ return array(
     */
 
     'templates' => array(
+        // General
         'thumbnail' => 'App\Filters\Image\Template\Thumbnail',
         'tiny'      => 'App\Filters\Image\Template\Tiny',
         'small'     => 'App\Filters\Image\Template\Small',
         'large'     => 'App\Filters\Image\Template\Large',
-        'crop'     => 'App\Filters\Image\Template\Crop',
 
-        // cropped landscape images (medium)
-        'clsmd' => 'App\Filters\Image\Template\CropLandscapeMedium',
+        // Profile
+        'profile' => 'App\Filters\Image\Template\Profile',
+
+        // Team
+        'team' => 'App\Filters\Image\Template\Team',
+
+        // Jobs
+        'jobs' => 'App\Filters\Image\Template\Jobs',
+
+        // Home
+        'home' => 'App\Filters\Image\Template\Home',
+
+        // Discourse
+        'discourse' => 'App\Filters\Image\Template\Discourse',
+
+        // Work
+        'work' => 'App\Filters\Image\Template\Work',
+
+        // Project
+        'project' => 'App\Filters\Image\Template\Project',
     ),
 
     /*

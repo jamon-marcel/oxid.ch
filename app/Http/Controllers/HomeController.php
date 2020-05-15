@@ -38,10 +38,17 @@ class HomeController extends BaseController
     $images = $this->image->published()->get();
     $news   = $this->news->published()->orderBy('sticky', 'DESC')->get();
     
+    $image = null;
+    if (count($images) > 0)
+    {
+      $random = count($images) > 1 ? mt_rand(0, count($images)-1) : 0;
+      $image  = $images[$random];
+    }
+
     return 
       view($this->viewPath, 
         [
-          'image'     => $images[mt_rand(1, count($images)-1)],
+          'image'     => $image,
           'news'      => $news
         ]
     );

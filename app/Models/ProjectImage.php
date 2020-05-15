@@ -23,6 +23,7 @@ class ProjectImage extends Base
     'coords_h',
     'coords_x',
     'coords_y',
+    'orientation',
     'publish',
     'project_id',
 	];

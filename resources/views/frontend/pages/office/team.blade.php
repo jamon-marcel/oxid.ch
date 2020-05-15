@@ -7,7 +7,7 @@
     <div class="visual-list">
       @foreach($images->shuffle() as $image)
         <figure class="visual-fit">
-          <img src="/image/large/{{$image->name}}" height="400" width="800">
+          <img src="/image/team/{{$image->name}}" height="1000" width="1600" alt="{{$image->caption}}">
         </figure>
       @endforeach
     </div>

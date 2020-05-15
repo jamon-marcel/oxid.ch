@@ -78,6 +78,7 @@ export default {
           de: null,
           en: null,
         },
+        coords: null,
         publish: 0
       };
 
@@ -89,7 +90,7 @@ export default {
     },
 
     destroyImage(image, event) {
-      if (confirm("Please confirm!")) {
+      if (confirm("Bitte löschen bestätigen!")) {
         let uri = `/api/profile/image/destroy/${image}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {
@@ -115,6 +116,19 @@ export default {
       this.axios.post(uri, image).then(response => {
         this.$notify({ type: "success", text: "Änderungen gespeichert!" });
       });
+    },
+
+    saveImageCoords(image) {
+      if (image.id === null) {
+        const index = this.images.findIndex(x => x.name === image.name);
+        this.images[index].coords = image.coords;
+      } 
+      else {
+        let uri = `/api/profile/image/coords/${image.id}`;
+        this.axios.post(uri, image).then(response => {
+          this.$notify({ type: "success", text: "Änderungen gespeichert!" });
+        });
+      }
     },
   },
 };

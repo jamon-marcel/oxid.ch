@@ -91,7 +91,7 @@ class ProjectController extends BaseController
     if ($key == 0)
     {
       $prevId = end($keys);
-      $nextId = $keys[$key+1];
+      $nextId = isset($keys[$key+1]) ? $keys[$key+1] : NULL;
     }
     else if ($key == count($keys) - 1)
     {

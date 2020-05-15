@@ -1,6 +1,6 @@
 <template>
   <div class="box-wrapper">
-    <figure :style="{ backgroundImage: 'url(' + getSource(img.name, 'large') + ')' }">
+    <figure :style="{ backgroundImage: 'url(/image/project/'+img.name+')' }">
       <a
         href="javascript:;"
         class="btn-trash is-mini"
@@ -22,8 +22,6 @@ export default {
 
   props: {
     element: Object,
-    ratioW: Number,
-    ratioH: Number
   },
 
   mixins: [Utils],

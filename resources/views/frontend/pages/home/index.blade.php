@@ -3,9 +3,11 @@
 @section('seo_description', '')
 @section('content')
 <section class="content-home grid-home">
-  <figure class="span visual-fit is-home">
-    <img src="/image/large/{{$image->name}}" height="400" width="800">
-  </figure>
+  @if ($image)
+    <figure class="span visual-fit is-home">
+      <img src="/image/home/{{$image->name}}" height="400" width="800">
+    </figure>
+  @endif
   <div class="span news-listing">
     @if ($news)
       @foreach($news as $n)

@@ -72,7 +72,7 @@ export default {
       pageTitle: null,
       projectId: null,
       debounce: false,
-      hasOverlay: false,
+      hasOverlayEdit: false,
       layout: 'grid',
     };
   },

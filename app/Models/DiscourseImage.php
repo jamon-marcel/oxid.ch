@@ -16,6 +16,10 @@ class DiscourseImage extends Base
 		'name',
     'caption',
     'is_preview',
+		'coords_w',
+    'coords_h',
+    'coords_x',
+    'coords_y',
     'publish',
     'discourse_id',
 	];

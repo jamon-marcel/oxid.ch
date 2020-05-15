@@ -279,7 +279,7 @@ export default {
 
     // Delete by name
     destroyFile(file, event) {
-      if (confirm("Please confirm!")) {
+      if (confirm("Bitte löschen bestätigen!")) {
         let uri = `/api/job/document/destroy/${file}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {

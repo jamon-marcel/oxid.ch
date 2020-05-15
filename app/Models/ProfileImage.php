@@ -15,6 +15,10 @@ class ProfileImage extends Base
 	protected $fillable = [
 		'name',
 		'caption',
+    'coords_w',
+    'coords_h',
+    'coords_x',
+    'coords_y',
 		'publish',
 	];
 }

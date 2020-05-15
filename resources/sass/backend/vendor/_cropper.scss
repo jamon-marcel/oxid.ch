@@ -1,0 +1,36 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: vendor/cropper
+ * Package: vue-advanced-cropper
+ * -----------------------------------------------------------------------------
+ *
+ */
+
+.cropper {
+  max-height: 700px;
+  background: transparent;
+  padding-top: 80px;
+}
+
+.cropper-info {
+  display: block;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.is-p {
+  max-width: 700px !important;
+}
+
+.line {
+  border-style: dashed;
+  border-color: $color-green;
+}
+
+.handler {
+  background-color: $color-green;
+}
+
+.vue-advanced-cropper__image {
+  opacity: 0.5 !important;
+}

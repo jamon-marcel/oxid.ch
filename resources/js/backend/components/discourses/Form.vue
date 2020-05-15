@@ -390,7 +390,7 @@ export default {
 
     // Delete by name
     destroyImage(image, event) {
-      if (confirm("Please confirm!")) {
+      if (confirm("Bitte löschen bestätigen!")) {
         let uri = `/api/discourse/image/destroy/${image}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {
@@ -430,7 +430,7 @@ export default {
 
     // Delete by name
     destroyFile(file, event) {
-      if (confirm("Please confirm!")) {
+      if (confirm("Bitte löschen bestätigen!")) {
         let uri = `/api/discourse/document/destroy/${file}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {
@@ -453,6 +453,20 @@ export default {
           const index = this.discourse.documents.findIndex(x => x.id === file.id);
           this.discourse.documents[index].publish = response.data;
           this.progress(el);
+        });
+      }
+    },
+
+    // Save coords
+    saveImageCoords(image) {
+      if (image.id === null) {
+        const index = this.discourse.images.findIndex(x => x.name === image.name);
+        this.discourse.images[index].coords = image.coords;
+      } 
+      else {
+        let uri = `/api/discourse/image/coords/${image.id}`;
+        this.axios.post(uri, image).then(response => {
+          this.$notify({ type: "success", text: "Änderungen gespeichert!" });
         });
       }
     },

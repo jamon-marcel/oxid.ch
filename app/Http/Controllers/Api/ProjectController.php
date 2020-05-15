@@ -115,6 +115,7 @@ class ProjectController extends Controller
           'coords_h'              => $i['coords_h'],
           'coords_x'              => $i['coords_x'],
           'coords_y'              => $i['coords_y'],
+          'orientation'           => $i['orientation'],
           'publish'               => $i['publish'],
         ]);
         $image->save();
@@ -216,6 +217,7 @@ class ProjectController extends Controller
             'coords_h'                => $i['coords_h'] ? $i['coords_h'] : NULL,
             'coords_x'                => $i['coords_x'] ? $i['coords_x'] : NULL,
             'coords_y'                => $i['coords_y'] ? $i['coords_y'] : NULL,
+            'orientation'             => $i['orientation'] ? $i['orientation'] : NULL,
           ]
         );
       }

@@ -5,29 +5,29 @@
 <section class="content content--contact">
   <div class="contact">
     <div class="grid-contact">
-      <div class="contact__info">
-        @if ($contact->address)
-          <address>
-            {!! $contact->address !!}
-          </address>
-        @endif
-        <div>
-          @if ($contact->info)
-            {!! $contact->info !!}
+      @if ($contact)
+        <div class="contact__info">
+          @if ($contact->address)
+            <address>
+              {!! $contact->address !!}
+            </address>
           @endif
-        </div>
-        <div>
-          <a href="javascript:;" class="js-btn-imprint">Impressum</a>
-          <div style="display:none">
-            @if ($contact->imprint)
-              {!! $contact->imprint !!}
+          <div>
+            @if ($contact->info)
+              {!! $contact->info !!}
             @endif
           </div>
+          <div>
+            <a href="javascript:;" class="js-btn-imprint">Impressum</a>
+            <div style="display:none">
+              @if ($contact->imprint)
+                {!! $contact->imprint !!}
+              @endif
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="contact__map" id="js-maps">
-        [google maps]
-      </div>
+      @endif
+      <div class="contact__map" id="js-maps"></div>
     </div>
   </div>
 </section>

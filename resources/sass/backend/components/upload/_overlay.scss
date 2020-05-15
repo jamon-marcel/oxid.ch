@@ -3,8 +3,8 @@
  * File: components/upload/overlay
  * -----------------------------------------------------------------------------
  */
- 
-.upload-overlay {
+
+%overlay {
   background-color: rgba(255,255,255,.98);
   color: $color-dark;
   display: block;
@@ -31,6 +31,14 @@
     color: $color-dark;
   }
 
+  .btn-secondary {
+    color: $color-white;
+  }
+}
+
+.upload-overlay-edit {
+  @extend %overlay;
+
   > div {
     @extend %page-block;
     display: grid;
@@ -47,7 +55,6 @@
 
     figcaption {
       padding: 0 10px 10px 10px;
-
       span {
         display: block;
       }
@@ -61,8 +68,30 @@
       width: 100% !important;
     }
   }
+}
 
-  .btn-secondary {
-    color: $color-white;
+.upload-overlay-cropper {
+  @extend %overlay;
+
+  
+  img {
+    background-color: $color-white;
+    padding: 0 !important;
+  }
+
+  .form-buttons {
+    padding-top: 40px;
+    text-align: left;
+
+    .btn-secondary {
+      @extend %btn-loading;
+    }
+
+    a:not(.btn-secondary) {
+      margin-left: 20px;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }

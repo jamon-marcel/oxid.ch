@@ -42,11 +42,23 @@ var Overlay = (function() {
         }
       }
     }
+
+    $(document).keyup(function(event){
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if (keycode == 27) {
+        _hide();
+      }  
+    });
   };
 
   var _toggle = function(btn) {
     btn.toggleClass(classes.active);
     $(selectors.wrapper).toggleClass(classes.visible);
+  };
+
+  var _hide = function() {
+    $(selectors.btnInfo).removeClass(classes.active);
+    $(selectors.wrapper).removeClass(classes.visible);
   };
 
   /* --------------------------------------------------------------

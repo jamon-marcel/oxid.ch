@@ -4,6 +4,7 @@ use App\Models\JobImage;
 use App\Http\Resources\DataCollection;
 use App\Http\Requests\JobImageStoreRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -85,6 +86,27 @@ class JobImageController extends Controller
   }
 
   /**
+   * Update the cropping coords of the specified resource.
+   *
+   * @param JobImage $jobImage
+   * @param  \Illuminate\Http\Request $request
+   * @return \Illuminate\Http\Response
+   */
+  public function coords(JobImage $jobImage, Request $request)
+  {
+    $image = $this->image->findOrFail($jobImage->id);
+    $image->coords_w = round($request->input('coords_w'), 12);
+    $image->coords_h = round($request->input('coords_h'), 12);
+    $image->coords_x = round($request->input('coords_x'), 12);
+    $image->coords_y = round($request->input('coords_y'), 12);
+    $image->save();
+
+    $this->removeCachedImage($image);
+
+    return response()->json('successfully updated');
+  }
+
+  /**
    * Remove the specified resource from storage.
    *
    * @param  string $image
@@ -111,4 +133,22 @@ class JobImageController extends Controller
     return response()->json('successfully deleted');
   }
 
+  /**
+   * Remove cached version of the image
+   *
+   * @param JobImage $jobImage
+   * @param  \Illuminate\Http\Request $request
+   * @return \Illuminate\Http\Response
+   */
+  private function removeCachedImage(JobImage $image)
+  {
+    // Get an instance of the ImageCache class
+    $imageCache = new \Intervention\Image\ImageCache();
+
+    // Get a cached image from it and apply all of your templates / methods
+    $image = $imageCache->make(storage_path('app/public/uploads/') . $image->name)->filter(new \App\Filters\Image\Template\Jobs);
+
+    // Remove the image from the cache by using its internal checksum
+    Cache::forget($image->checksum());
+  }
 }

@@ -164,7 +164,7 @@
         </div>
       </div>
     </div>
-    <div :class="[hasOverlay ? 'is-visible': '', 'overlay']">
+    <div :class="[hasOverlayEdit ? 'is-visible': '', 'overlay']">
       <a href="javascript:;" @click.prevent="toggleOverlay()" class="icon-close-overlay"></a>
       <div>
         <div v-if="showMedia">
@@ -200,7 +200,7 @@ export default {
 
   data() {
     return {
-      hasOverlay: false,
+      hasOverlayEdit: false,
       showMedia: false,
       tmpGridId: null,
       tmpPosition: null,
@@ -295,7 +295,7 @@ export default {
     toggleOverlay() {
       let html = document.querySelector("html");
       html.classList.toggle("has-overlay");
-      this.hasOverlay = this.hasOverlay ? false : true;
+      this.hasOverlayEdit = this.hasOverlayEdit ? false : true;
     }
   }
 };

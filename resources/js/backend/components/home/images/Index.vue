@@ -18,6 +18,8 @@
             <image-listing 
               :images="images"
               :updateOnChange="true"
+              :cropRatioW="3"
+              :cropRatioH="4"
             ></image-listing>
           </div>
         </div>
@@ -89,7 +91,7 @@ export default {
     },
 
     destroyImage(image, event) {
-      if (confirm("Please confirm!")) {
+      if (confirm("Bitte löschen bestätigen!")) {
         let uri = `/api/home/image/destroy/${image}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {
@@ -115,6 +117,19 @@ export default {
       this.axios.post(uri, image).then(response => {
         this.$notify({ type: "success", text: "Änderungen gespeichert!" });
       });
+    },
+
+    saveImageCoords(image) {
+      if (image.id === null) {
+        const index = this.images.findIndex(x => x.name === image.name);
+        this.images[index].coords = image.coords;
+      } 
+      else {
+        let uri = `/api/home/image/coords/${image.id}`;
+        this.axios.post(uri, image).then(response => {
+          this.$notify({ type: "success", text: "Änderungen gespeichert!" });
+        });
+      }
     },
   },
 };

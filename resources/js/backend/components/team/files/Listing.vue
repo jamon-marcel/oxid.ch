@@ -16,15 +16,15 @@
         </figure>
       </div>
     </div>
-    <div :class="[hasOverlay ? 'is-visible' : '', 'upload-overlay']">
+    <div :class="[hasOverlayEdit ? 'is-visible' : '', 'upload-overlay-edit']">
       <div>
         <a
           href="javascript:;"
           class="icon-close-overlay"
-          @click.prevent="hideOverlay()"
+          @click.prevent="hideEdit()"
         ></a>
         <div>
-          <figure v-if="hasOverlay">
+          <figure v-if="hasOverlayEdit">
             <img src="/assets/backend/img/icons/file.svg" height="100" width="100">
             <figcaption v-if="overlayItem.caption.de || overlayItem.caption.en">
               <span v-if="overlayItem.caption.de">{{overlayItem.caption.de}}</span>
@@ -69,7 +69,7 @@
             <a
               href="javascript:;"
               class="btn-secondary"
-              @click.prevent="hideOverlay()"
+              @click.prevent="hideEdit()"
             >Schliessen</a>
           </div>
         </div>
@@ -113,7 +113,7 @@ export default {
 
   data() {
     return {
-      hasOverlay: false,
+      hasOverlayEdit: false,
 
       overlayItem: {
         name: '',
@@ -134,7 +134,7 @@ export default {
   mounted() {
     window.addEventListener("keyup", event => {
       if (event.which === 27) {
-        this.hideOverlay();
+        this.hideEdit();
       }
     });
   },
@@ -150,16 +150,16 @@ export default {
 
     update(file, $event) {
       this.$parent.updateFile(file, $event)
-      this.hideOverlay();
+      this.hideEdit();
     },
 
-    showOverlay(file, $event) {
-      this.hasOverlay = true;
+    showEdit(file) {
+      this.hasOverlayEdit = true;
       this.overlayItem = file;
     },
 
-    hideOverlay() {
-      this.hasOverlay = false;
+    hideEdit() {
+      this.hasOverlayEdit = false;
       this.overlayItem = this.defaults.item;
     },
   }

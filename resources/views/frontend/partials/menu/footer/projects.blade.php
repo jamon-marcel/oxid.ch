@@ -2,8 +2,12 @@
   <div>
     <h2 class="menu-footer__heading">Projekte</h2>
     <nav class="menu-footer__browse">
-      <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['prev']->title_short), 'project' => $navBrowse['prev']->id]) }}" class="icon-browse-prev"></a>
-      <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" class="icon-browse-next"></a>
+      @if ($navBrowse['prev'])
+        <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['prev']->title_short), 'project' => $navBrowse['prev']->id]) }}" class="icon-browse-prev"></a>
+      @endif
+      @if ($navBrowse['next'])
+        <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" class="icon-browse-next"></a>
+      @endif
     </nav>
   </div>
   <div class="menu-footer__project-info">

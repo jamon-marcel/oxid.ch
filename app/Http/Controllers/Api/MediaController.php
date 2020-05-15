@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Image;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
@@ -27,7 +28,7 @@ class MediaController extends Controller
   }
 
   /**
-   * Image upload
+   * File upload
    * 
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
@@ -39,7 +40,15 @@ class MediaController extends Controller
     $name = $this->prefix . '-' . uniqid()  . '_' . $name;
     $file->move($this->upload_path, $name);
     $filetype = \File::extension($this->upload_path . $name);
-    return response()->json(['name' => $name, 'filetype' => $filetype], 200);
+    
+    $image_types = ['jpg', 'jpeg', 'png'];
+    $orientation = '';
+    if (in_array($filetype, $image_types))
+    {
+      $img = \Image::make(storage_path('app/public/uploads/') . $name);
+      $orientation = $img->width() >= $img->height() ? 'l' : 'p';
+    }
+    return response()->json(['name' => $name, 'filetype' => $filetype, 'orientation' => $orientation], 200);
   }
 
   /**

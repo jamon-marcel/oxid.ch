@@ -41,6 +41,7 @@ Route::middleware('auth:api')->group(function() {
   Route::get('home/image/edit/{image}', 'Api\HomeImageController@edit');
   Route::post('home/image/update/{image}', 'Api\HomeImageController@update');
   Route::get('home/image/status/{image}', 'Api\HomeImageController@status');
+  Route::post('home/image/coords/{homeImage}', 'Api\HomeImageController@coords');
   Route::delete('home/image/destroy/{image}', 'Api\HomeImageController@destroy');
 
   /**
@@ -112,6 +113,7 @@ Route::middleware('auth:api')->group(function() {
    */
   Route::get('discourse/image/get/{discourseId}', 'Api\DiscourseImageController@get');
   Route::get('discourse/image/status/{id}', 'Api\DiscourseImageController@status');
+  Route::post('discourse/image/coords/{discourseImage}', 'Api\DiscourseImageController@coords');
   Route::delete('discourse/image/destroy/{discourseImage}', 'Api\DiscourseImageController@destroy');
 
   /**
@@ -146,6 +148,7 @@ Route::middleware('auth:api')->group(function() {
   Route::get('team/image/edit/{image}', 'Api\TeamImageController@edit');
   Route::post('team/image/update/{image}', 'Api\TeamImageController@update');
   Route::get('team/image/status/{image}', 'Api\TeamImageController@status');
+  Route::post('team/image/coords/{teamImage}', 'Api\TeamImageController@coords');
   Route::delete('team/image/destroy/{image}', 'Api\TeamImageController@destroy');
 
   /**
@@ -174,6 +177,7 @@ Route::middleware('auth:api')->group(function() {
   Route::get('job/image/edit/{image}', 'Api\JobImageController@edit');
   Route::post('job/image/update/{image}', 'Api\JobImageController@update');
   Route::get('job/image/status/{image}', 'Api\JobImageController@status');
+  Route::post('job/image/coords/{jobImage}', 'Api\JobImageController@coords');
   Route::delete('job/image/destroy/{image}', 'Api\JobImageController@destroy');
 
 
@@ -194,6 +198,7 @@ Route::middleware('auth:api')->group(function() {
   Route::get('profile/image/edit/{image}', 'Api\ProfileImageController@edit');
   Route::post('profile/image/update/{image}', 'Api\ProfileImageController@update');
   Route::get('profile/image/status/{image}', 'Api\ProfileImageController@status');
+  Route::post('profile/image/coords/{profileImage}', 'Api\ProfileImageController@coords');
   Route::delete('profile/image/destroy/{image}', 'Api\ProfileImageController@destroy');
 
   /**

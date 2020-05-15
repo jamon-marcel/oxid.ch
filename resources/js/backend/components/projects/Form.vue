@@ -66,8 +66,6 @@
                   <label>Bauherrschaft</label>
                   <input type="text" v-model="project.principal_works">
                 </div>
-
-
               </div>
               <div class="column-sidebar">
                 <div>
@@ -272,18 +270,6 @@
             </div>
           </div>
           <div v-show="tabs.images.active">
-            <!-- <image-upload
-              :labelNew="'Upload Bilder'"
-              :labelExisting="'Existierende Bilder'"
-              :labelRestrictions="'jpg, png | max. 8 MB'"
-              :maxFiles="99"
-              :maxFilesize="8"
-              :assets="project.images"
-              :assetType="'image'"
-              :acceptedFiles="'.png,.jpg'"
-              :uploadUrl="'/api/media/upload'"
-            ></image-upload> -->
-
             <div class="form-row">
               <image-upload
                 :restrictions="'jpg, png | max. 8 MB'"
@@ -532,10 +518,12 @@ export default {
         caption: { de: null, en: null },
         is_preview_navigation: 0,
         is_preview_works: 0,
+        is_plan: 0,
         coords_w: 0,
         coords_h: 0,
         coords_x: 0,
         coords_y: 0,
+        orientation: upload.orientation,
         order: -1,
         publish: 1,
       }
@@ -544,7 +532,7 @@ export default {
 
     // Delete by name
     destroyImage(image, event) {
-      if (confirm("Please confirm!")) {
+      if (confirm("Bitte löschen bestätigen!")) {
         let uri = `/api/project/image/destroy/${image}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {
@@ -571,11 +559,12 @@ export default {
       }
     },
 
-    // Save asset coords
+    // Save image coords
     saveImageCoords(image) {
       if (image.id === null) {
         const index = this.project.images.findIndex(x => x.name === image.name);
         this.project.images[index].coords = image.coords;
+        this.$notify({ type: "success", text: "Änderungen gespeichert!" });
       } 
       else {
         let uri = `/api/project/image/coords/${image.id}`;
@@ -598,7 +587,7 @@ export default {
 
     // Delete by name
     destroyFile(file, event) {
-      if (confirm("Please confirm!")) {
+      if (confirm("Bitte löschen bestätigen!")) {
         let uri = `/api/project/document/destroy/${file}`;
         let el = this.progress(event.target);
         this.axios.delete(uri).then(response => {
