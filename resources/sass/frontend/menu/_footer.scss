@@ -33,6 +33,10 @@
       margin-right: 0;
     }
   }
+
+  a {
+    @extend %ul-sm-hover;
+  }
 }
 
 .menu-footer__info {
@@ -64,6 +68,10 @@
   .menu-footer__project-info {
     display: flex;
 
+    @include bp-sm() {
+      transform: translateX(-30%);
+    }
+
     h1 {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -71,6 +79,7 @@
       white-space: nowrap;
 
       @include bp-sm() {
+        margin-left: 0;
         width: auto;
         white-space: normal;
       }
@@ -137,6 +146,7 @@
       }
 
       a {
+        @extend %ul-xs-hover;
         @include font-size($fs-fix-md);
       }
     }

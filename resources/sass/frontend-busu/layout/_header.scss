@@ -1,0 +1,27 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: layout/header
+ * -----------------------------------------------------------------------------
+ */
+
+header {
+  background-color: $color-white;
+  display: flex;
+  height: 180px;
+  padding: 45px 20px 0 20px;
+  justify-content: center;
+  text-align: center;
+
+  @include bp-sm() {
+    height: 200px;
+    padding-top: 30px;
+  }
+
+  div {
+    margin-bottom: $space-xxs;
+  }
+
+  p {
+    max-width: 440px;
+  }
+}

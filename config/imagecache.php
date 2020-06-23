@@ -78,7 +78,12 @@ return array(
         'work' => 'App\Filters\Image\Template\Work',
 
         // Project
-        'project' => 'App\Filters\Image\Template\Project',
+        'project'    => 'App\Filters\Image\Template\Project',
+        'project-sm' => 'App\Filters\Image\Template\ProjectSmall',
+        'project-md' => 'App\Filters\Image\Template\ProjectMedium',
+
+        'cache' => 'App\Filters\Image\Template\Cache',
+
     ),
 
     /*

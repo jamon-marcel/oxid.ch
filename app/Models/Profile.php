@@ -23,6 +23,6 @@ class Profile extends Base
 
 	public function images()
 	{
-		return $this->hasMany('App\Models\ProfileImage', 'profile_id', 'id');
+		return $this->hasMany('App\Models\ProfileImage', 'profile_id', 'id')->orderBy('order');
 	}
 }

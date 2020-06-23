@@ -49,15 +49,13 @@ nav.menu-footer__dropdown {
     &.is-selected {
       display: flex;
       order: 2;
-
-      a:hover {
-        text-decoration: none;
-      }
     }
 
     a {
+      box-shadow: none !important;
       @include font-size($fs-fix-lg);
       display: block;
+      text-decoration: none !important;
     }
   }
 }

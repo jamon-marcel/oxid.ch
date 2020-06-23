@@ -1,0 +1,26 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/typo/webfonts
+ * -----------------------------------------------------------------------------
+ *
+ * Typography - Webfonts
+ *
+ */
+
+@font-face {
+  font-family: 'EuclidCircularA-Regular-WebS';
+  src: url('fonts/EuclidCircularA-Regular-WebS.eot'); /* IE9 Compat Modes */
+  src: url('fonts/EuclidCircularA-Regular-WebS.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+      url('fonts/EuclidCircularA-Regular-WebS.woff2') format('woff2'), /* Super Modern Browsers */
+      url('fonts/EuclidCircularA-Regular-WebS.woff') format('woff'), /* Pretty Modern Browsers */
+      url('fonts/EuclidCircularA-Regular-WebS.ttf')  format('truetype'), /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: 'EuclidCircularA-Medium-WebS';
+  src: url('fonts/EuclidCircularA-Medium-WebS.eot'); /* IE9 Compat Modes */
+  src: url('fonts/EuclidCircularA-Medium-WebS.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+      url('fonts/EuclidCircularA-Medium-WebS.woff2') format('woff2'), /* Super Modern Browsers */
+      url('fonts/EuclidCircularA-Medium-WebS.woff') format('woff'), /* Pretty Modern Browsers */
+      url('fonts/EuclidCircularA-Medium-WebS.ttf')  format('truetype'), /* Safari, Android, iOS */
+}

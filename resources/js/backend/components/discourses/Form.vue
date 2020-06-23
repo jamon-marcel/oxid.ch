@@ -156,9 +156,36 @@
               ></image-upload>
             </div>
             <div class="form-row" v-if="discourse.images.length">
-              <image-listing 
-                :images="discourse.images"
-              ></image-listing>
+
+              <a href="" class="icon-view" @click.prevent="toggleView()">
+                <span v-if="view == 'grid'">Grid Ansicht</span>
+                <span v-if="view == 'list'">Listen Ansicht</span>
+              </a>
+
+              <template v-if="view == 'list'">
+                <div class="upload-listing-rows">
+                  <draggable 
+                    :disabled="false"
+                    v-model="discourse.images" 
+                    @end="order"
+                    ghost-class="draggable-ghost"
+                    draggable=".is-draggable">
+                    <div class="upload-item-row is-draggable" v-for="(image) in discourse.images" :key="image.id">
+                      <figure>
+                        <img :src="getSource(image.name, 'thumbnail')" height="300" width="300">
+                      </figure>
+                      <div>
+                        <span class="icon-move"></span>
+                      </div>
+                    </div>
+                  </draggable>
+                </div>
+              </template>
+              <template v-if="view == 'grid'">
+                <image-listing 
+                  :images="discourse.images"
+                ></image-listing>
+              </template>
             </div>
           </div>
           <div v-show="tabs.files.active">
@@ -210,6 +237,8 @@ import Progress from "@/mixins/progress";
 import discourseTabs from "@/components/discourses/config/tabs.js";
 import discourseErrors from "@/components/discourses/config/errors.js";
 
+import draggable from 'vuedraggable';
+
 export default {
   components: {
     FormFooter,
@@ -218,7 +247,8 @@ export default {
     FileListing,
     ImageUpload,
     ImageListing,
-    Tabs
+    Tabs,
+    draggable
   },
 
   props: {
@@ -274,6 +304,9 @@ export default {
       // TinyMCE
       tinyConfig: tinyConfig,
       tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
+
+      // view
+      view: 'grid',
     };
   },
 
@@ -384,6 +417,7 @@ export default {
         caption: { de: null, en: null },
         is_preview: 0,
         publish: 1,
+        theme: 0,
       }
       this.discourse.images.push(image);
     },
@@ -470,6 +504,25 @@ export default {
         });
       }
     },
+
+    order() {
+      let images = this.discourse.images.map(function(image, index) {
+        image.order = index;
+        return image;
+      });
+      if (this.debounce) return;
+      this.debounce = setTimeout(function(images) {
+        this.debounce = false 
+        let uri = `/api/discourse/image/order`;
+        this.axios.post(uri, {images: images}).then((response) => {
+          this.$notify({type: 'success', text: 'Reihenfolge angepasst'});
+        });
+      }.bind(this, images), 1000);
+    },
+
+    toggleView() {
+      this.view = this.view == 'grid' ? 'list' : 'grid';
+    }
   },
 
   computed: {

@@ -4,10 +4,12 @@
 @section('content')
 <section class="content">
   @if (isset($images))
+    <a href="javascript:;" class="btn-scroll is-prev js-btn-scroll-prev" style="display:none"></a>
+    <a href="javascript:;" class="btn-scroll is-next js-btn-scroll-next"></a>
     <div class="visual-list">
-      @foreach($images->shuffle() as $image)
-        <figure class="visual-fit">
-          <img src="/image/jobs/{{$image->name}}" height="1000" width="1600" alt="{{$image->caption}}">
+      @foreach($images as $image)
+        <figure class="visual-fit js-scroll-item">
+          {!! ImageHelper::largeImage($image, $image->title) !!}
         </figure>
       @endforeach
     </div>

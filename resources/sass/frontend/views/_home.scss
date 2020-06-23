@@ -38,9 +38,14 @@ section.content-home {
       margin-bottom: 0;
     }
 
+    header {
+      margin-bottom: $space-tiny;
+    }
+
     h2 {
+      @extend %ul-sm;
       @include font-size($fs-xl);
-      text-decoration: underline;
+      display: inline-block;
     }
 
     h3 {
@@ -52,7 +57,7 @@ section.content-home {
     }
 
     a {
-      @extend %anchor-external;
+      @extend %anchor-external-lg;
     }
   }
 }

@@ -37,7 +37,7 @@ class MediaController extends Controller
   {
     $file = $request->file('file');
     $name = $this->sanitize(trim($file->getClientOriginalName()));
-    $name = $this->prefix . '-' . uniqid()  . '_' . $name;
+    $name = uniqid()  . '_' . $name;
     $file->move($this->upload_path, $name);
     $filetype = \File::extension($this->upload_path . $name);
     

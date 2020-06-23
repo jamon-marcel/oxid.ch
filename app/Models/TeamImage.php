@@ -18,7 +18,8 @@ class TeamImage extends Base
 		'coords_w',
     'coords_h',
     'coords_x',
-    'coords_y',
+		'coords_y',
+		'order',
 		'publish',
 	];
 }

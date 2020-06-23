@@ -32,4 +32,12 @@
       display: none;
     }
   }
+
+  &.is-light {
+    background-image: url($url-images + 'cross-dark.svg');
+  }
+
+  &.is-light {
+    background-image: url($url-images + 'cross-light.svg');
+  }
 }

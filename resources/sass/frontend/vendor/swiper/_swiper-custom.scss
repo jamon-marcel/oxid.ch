@@ -50,8 +50,17 @@
 }
 
 .swiper-btn-next {
-  background-image: url($url-images + 'chevron-next.svg');
+  background-image: url($url-images + 'chevron-next-dark.svg');
   right: 20px;
+
+  &.is-dark {
+    background-image: url($url-images + 'chevron-next-dark.svg');
+  }
+
+  &.is-light {
+    background-image: url($url-images + 'chevron-next-light.svg');
+  }
+
   &:hover {
     transform: translateX(2px)
   }
@@ -60,6 +69,15 @@
 .swiper-btn-prev {
   background-image: url($url-images + 'chevron-prev.svg');
   left: 20px;
+
+  &.is-dark {
+    background-image: url($url-images + 'chevron-prev-dark.svg');
+  }
+
+  &.is-light {
+    background-image: url($url-images + 'chevron-prev-light.svg');
+  }
+
   &:hover {
     transform: translateX(-2px)
   }

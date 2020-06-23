@@ -4,7 +4,6 @@
     @include('frontend.partials.menu.items.office')
   </nav>
   <div class="menu-footer__info">
-    <a href="" class="icon-document">Pdf</a>
-    <a href="javascript:;" class="anchor-ul js-btn-info">Info</a>
+    <a href="javascript:;" class="anchor-ul is-active js-btn-info">Info</a>
   </div>
 </div>

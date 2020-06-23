@@ -35,18 +35,23 @@ class TeamController extends BaseController
   public function index()
   {
     $alumni = [];
-    foreach($this->team->with('documents')->published()->alumni()->get() as $t)
+    $alumnis = $this->team->with('documents')->published()->alumni()->get();
+
+    foreach($alumnis as $a)
     {
-      $alumni[substr(strtoupper($t->name), 0, 1)][] = $t;
+      $alumni[substr(strtoupper($a->name), 0, 1)][] = $a;
     }
+
+    $chunks = collect($alumni)->chunk(ceil(count($alumni)/2));
+
     return 
       view($this->viewPath, 
         [
-          'images'  => $this->teamImages->published()->get(),
+          'images'  => $this->teamImages->published()->orderBy('order')->get(),
           'team'    => [
             'partner'  => $this->team->with('documents')->published()->partner()->get(),
             'employee' => $this->team->with('documents')->published()->employee()->get(),
-            'alumni'   => $alumni,
+            'alumni'   => $chunks,
           ],
           'pageFooter' => $this->pageFooter,
           'showInfo' => TRUE,

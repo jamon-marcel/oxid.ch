@@ -62,6 +62,16 @@
               <label for="is_preview_0" class="form-control">Nein</label>
             </div>
           </div>
+          <div class="form-row">
+            <label>Theme?</label>
+            <div class="form-radio">
+              <input type="radio" class="visually-hidden" v-model="overlayItem.theme" value="1" id="theme_1">
+              <label for="theme_1" class="form-control">light</label>
+              <input type="radio" class="visually-hidden" v-model="overlayItem.theme" value="0" id="theme_0">
+              <label for="theme_0" class="form-control">dark</label>
+            </div>
+          </div>
+
           <div class="form-row-button" v-if="updateOnChange">
             <a
               href="javascript:;"
@@ -172,6 +182,7 @@ export default {
         name: '',
         caption: { de: null, en: null },
         is_preview: 0,
+        theme: 0,
       },
 
       defaults: {
@@ -179,6 +190,7 @@ export default {
           name: '',
           caption: { de: null, en: null},
           is_preview: 0,
+          theme: 0,
         }
       }
     };

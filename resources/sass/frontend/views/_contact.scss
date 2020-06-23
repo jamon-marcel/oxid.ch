@@ -18,8 +18,15 @@
 
     a {
       color: $color-blue;
+      text-decoration: none !important;
+
       &[href*="//"]:not([href*="oxid.ch"]) {
         @extend %anchor-external-sm;
+      }
+
+      &[href*="mailto"],
+      &[href*="javascript"], {
+        @extend %ul-xs-blue-hover;
       } 
     }
 
@@ -27,6 +34,7 @@
       @include font-size($fs-xl);
 
       a[href*="mailto"] {
+        @extend %ul-sm-hover;
         color: $color-black;
       }
 

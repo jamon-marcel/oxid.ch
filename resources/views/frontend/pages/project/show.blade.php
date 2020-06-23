@@ -26,14 +26,15 @@
   @if ($navBrowse['next'])
     <div class="project-teaser">
       Nächstes Projekt
-      <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
-        {{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}
-        @include('frontend.partials.icons.arrow-external-blue')
-      </a>
+      <div>
+        <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
+          {{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}
+        </a>
+      </div>
       @if ($navBrowse['next']->teaserImage)
         <figure>
           <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
-            <img src="/image/small/{{$navBrowse['next']->teaserImage->name}}" height="400" width="800">
+            {!! ImageHelper::previewImage($navBrowse['next']->teaserImage, $navBrowse['next']->title_short) !!}
           </a>
         </figure>
       @endif
@@ -50,4 +51,9 @@
     </div>
   </div>
 </div>
+
+@if ($project_teasers)
+  @include('frontend.pages.project.partials.teasers', ['teasers' => $project_teasers])
+@endif
+
 @endsection

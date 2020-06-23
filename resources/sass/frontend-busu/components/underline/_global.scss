@@ -1,0 +1,53 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/underline/global
+ * -----------------------------------------------------------------------------
+ */
+
+$box-shadow-xs-black: 0 0 0 0 white inset, 0 -1px 0 0 $color-black inset;
+$box-shadow-sm-black: 0 -1px 0 0 white inset, 0 -3px 0 0 $color-black inset;
+$box-shadow-md-black: 0 0 0 0 white inset, 0 -3px 0 0 $color-black inset;
+
+%ul {
+  box-shadow: none;
+  text-decoration: none !important;
+}
+
+%ul-xs {
+  @extend %ul;
+  box-shadow: $box-shadow-xs-black;
+}
+
+%ul-xs-hover {
+  @extend %ul;
+  &.is-active,
+  &:hover {
+    box-shadow: $box-shadow-xs-black;
+  }
+}
+
+%ul-sm {
+  @extend %ul;
+  box-shadow: $box-shadow-sm-black;
+}
+
+%ul-sm-hover {
+  @extend %ul;
+  &.is-active,
+  &:hover {
+    box-shadow: $box-shadow-sm-black;
+  }
+}
+
+%ul-md {
+  @extend %ul;
+  box-shadow: $box-shadow-md-black;
+}
+
+%ul-md-hover {
+  @extend %ul;
+  &.is-active,
+  &:hover {
+    box-shadow: $box-shadow-md-black;
+  }
+}

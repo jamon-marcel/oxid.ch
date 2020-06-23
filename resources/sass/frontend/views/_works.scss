@@ -70,6 +70,10 @@
       margin-bottom: $space-xxs;
     }
 
+    a {
+      @extend %anchor-external-md;
+    }
+
     .work-item__info {
       @include font-size($fs-xs);
     }

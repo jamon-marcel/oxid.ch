@@ -31,7 +31,7 @@ class TeamImageController extends Controller
 
   public function get()
   {
-    return new DataCollection($this->image->get());
+    return new DataCollection($this->image->orderBy('order')->get());
   }
 
   /**
@@ -131,6 +131,25 @@ class TeamImageController extends Controller
     }
     
     return response()->json('successfully deleted');
+  }
+
+  /**
+   * Update the order of the resources.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+
+  public function order(Request $request)
+  {
+    $images = $request->get('images');
+    foreach($images as $image)
+    {
+      $i = $this->image->find($image['id']);
+      $i->order = $image['order'];
+      $i->save(); 
+    }
+    return response()->json('successfully updated');
   }
 
   /**

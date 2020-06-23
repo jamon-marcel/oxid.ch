@@ -37,7 +37,7 @@ class ProfileController extends BaseController
     return 
       view($this->viewPath,
       [
-        'images'  => $this->profileImage->published()->get(),
+        'images'  => $this->profileImage->published()->orderBy('order')->get(),
         'profile' => $this->profile->published()->get()->first(),
         'pageFooter' => $this->pageFooter,
         'showInfo' => TRUE,

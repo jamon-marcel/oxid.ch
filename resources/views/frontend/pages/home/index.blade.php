@@ -12,7 +12,9 @@
     @if ($news)
       @foreach($news as $n)
         <article class="news">
-          <h2>{{$n->title}}</h2>
+          <header>
+            <h2>{{$n->title}}</h2>
+          </header>
           @if ($n->subtitle)
             <h3>{{$n->subtitle}}</h3>
           @endif

@@ -1,0 +1,41 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: config/global
+ * -----------------------------------------------------------------------------
+ *
+ * Global settings and variables
+ *
+ */
+ 
+/* Box shadows
+ * -------------------- */
+
+$box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+$box-shadow-sm: 0 0 2px 0 rgba(100, 100, 100, 0.3);
+
+/* Default easing
+ * -------------------- */
+
+$easing: cubic-bezier(0.980, 0.310, 0.940, 0.840);
+
+/* Urls
+ * -------------------- */
+ 
+$url-images: '../img/';
+$url-icons:  '../img/icons/';
+$url-svg:    '../img/svg/';
+
+/* Breakpoints
+ * -------------------- */
+
+$bp-xs:  500px;
+$bp-sm:  768px;
+$bp-md: 1000px;
+$bp-lg: 1440px;
+$bp-xl: 1800px;
+
+$breakpoints: (
+  sm: $bp-sm,
+  md: $bp-md,
+  lg: $bp-lg  
+);

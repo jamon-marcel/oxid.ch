@@ -4,13 +4,20 @@ var Projects = (function() {
 
   // selectors
   var selectors = {
-    html:      'html',
-    body:      'body',
-    grids:     '.js-project-grids',
-    grid:      '.js-project-grid',
-    btnNext:   '.js-btn-scroll-next',
-    btnPrev:   '.js-btn-scroll-prev',
-    index:     '.js-project-idx'
+    html:       'html',
+    body:       'body',
+    grids:      '.js-project-grids',
+    grid:       '.js-project-grid',
+    btnNext:    '.js-btn-scroll-next',
+    btnPrev:    '.js-btn-scroll-prev',
+    index:      '.js-project-idx',
+    menuItem:   '[data-project-id]',
+  };
+
+  // css classes
+  var classes = {
+    visible: 'is-visible',
+    active: 'is-active',
   };
 
   // media queries
@@ -41,6 +48,22 @@ var Projects = (function() {
     $(window).scroll(function(event){
       if (mq.sm.matches) {
         _scroll();
+      }
+    });
+
+    $(selectors.body).on('mouseover', selectors.menuItem, function(){
+      if (mq.sm.matches) {
+        var id = $(this).data('projectId');
+        if (!$(this).hasClass(classes.active) && $(selectors.body).find('[data-project-teaser="'+ id +'"]').length) {
+          $('[data-project-teaser="'+ id +'"]').addClass(classes.visible);
+        }
+      }
+    });
+
+    $(selectors.body).on('mouseleave', selectors.menuItem, function(){
+      if (mq.sm.matches) {
+        var id = $(this).data('projectId');
+        $('[data-project-teaser="'+ id +'"]').removeClass(classes.visible);
       }
     });
   };

@@ -2,7 +2,8 @@
 @if (!request()->routeIs('page.project'))
   <ul class="{{request()->routeIs('page.project*') ? 'is-visible' : ''}}">
     <li class="project-filter">
-      <a href="javascript:;" class="js-filter-btn is-active" data-filter="wood">Holz</a>
+      <a href="javascript:;" class="js-filter-btn is-active" data-filter="all">Alle</a>
+      <a href="javascript:;" class="js-filter-btn" data-filter="wood">Holz</a>
       <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
       <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
     </li>
@@ -16,7 +17,7 @@
           data-filter-reuse="{{$item->is_filter_reuse}}" 
           data-filter-wood="{{$item->is_filter_wood}}"
           data-filter-area="{{$item->is_filter_area}}"
-          style="{{$item->is_filter_wood ? 'display: block' : 'display: none'}}">
+          data-project-id="{{$item->id}}">
             {{$item->title_short}}, {{$item->location}}
           </a>
         </li>
@@ -31,6 +32,7 @@
     
     @if ($project->is_filter_wood)
       <li class="project-filter">
+        <a href="javascript:;" class="js-filter-btn" data-filter="all">Alle</a>
         <a href="javascript:;" class="js-filter-btn is-active" data-filter="wood">Holz</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
@@ -45,7 +47,8 @@
               data-filter-reuse="{{$item->is_filter_reuse}}" 
               data-filter-wood="{{$item->is_filter_wood}}"
               data-filter-area="{{$item->is_filter_area}}"
-              style="{{$item->is_filter_wood ? 'display: block' : 'display: none'}}">
+              data-project-id="{{$item->id}}"
+              style="{{$item->is_filter_wood ? 'display: inline-block' : 'display: none'}}">
               {{$item->title_short}}, {{$item->location}}
             </a>
           </li>
@@ -54,6 +57,7 @@
 
     @elseif ($project->is_filter_reuse)
       <li class="project-filter">
+        <a href="javascript:;" class="js-filter-btn" data-filter="all">Alle</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="wood">Holz</a>
         <a href="javascript:;" class="js-filter-btn is-active" data-filter="reuse">Umnutzung</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
@@ -68,7 +72,8 @@
               data-filter-reuse="{{$item->is_filter_reuse}}" 
               data-filter-wood="{{$item->is_filter_wood}}"
               data-filter-area="{{$item->is_filter_area}}"
-              style="{{$item->is_filter_reuse ? 'display: block' : 'display: none'}}">
+              data-project-id="{{$item->id}}"
+              style="{{$item->is_filter_reuse ? 'display: inline-block' : 'display: none'}}">
               {{$item->title_short}}, {{$item->location}}
             </a>
           </li>
@@ -77,6 +82,7 @@
 
     @elseif ($project->is_filter_area)
       <li class="project-filter">
+        <a href="javascript:;" class="js-filter-btn" data-filter="all">Alle</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="wood">Holz</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
         <a href="javascript:;" class="js-filter-btn is-active" data-filter="area">Areal</a>
@@ -91,7 +97,8 @@
               data-filter-reuse="{{$item->is_filter_reuse}}" 
               data-filter-wood="{{$item->is_filter_wood}}"
               data-filter-area="{{$item->is_filter_area}}"
-              style="{{$item->is_filter_area ? 'display: block' : 'display: none'}}">
+              data-project-id="{{$item->id}}"
+              style="{{$item->is_filter_area ? 'display: inline-block' : 'display: none'}}">
               {{$item->title_short}}, {{$item->location}}
             </a>
           </li>
@@ -100,6 +107,7 @@
 
     @else
       <li class="project-filter">
+        <a href="javascript:;" class="js-filter-btn" data-filter="all">Alle</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="wood">Holz</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
@@ -113,7 +121,8 @@
               class="{{ $project->id == $item->id ? 'is-active' : '' }} js-filter-item"
               data-filter-reuse="{{$item->is_filter_reuse}}" 
               data-filter-wood="{{$item->is_filter_wood}}"
-              data-filter-area="{{$item->is_filter_area}}">
+              data-filter-area="{{$item->is_filter_area}}"
+              data-project-id="{{$item->id}}">
               {{$item->title_short}}, {{$item->location}}
             </a>
           </li>

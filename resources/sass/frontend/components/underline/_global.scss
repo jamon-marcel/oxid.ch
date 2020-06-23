@@ -4,34 +4,79 @@
  * -----------------------------------------------------------------------------
  */
 
-%underline,
-.underline {
-  display: inline-block;
-  position: relative;
-  width: auto;
+$box-shadow-xs-black: 0 0 0 0 white inset, 0 -1px 0 0 $color-black inset;
+$box-shadow-xs-blue:  0 0 0 0 white inset, 0 -1px 0 0 $color-blue inset;
+$box-shadow-sm-black: 0 -1px 0 0 white inset, 0 -3px 0 0 $color-black inset;
+$box-shadow-sm-blue:  0 0 0 0 white inset, 0 -2px 0 0 $color-blue inset;
+$box-shadow-md-black: 0 0 0 0 white inset, 0 -3px 0 0 $color-black inset;
+$box-shadow-md-blue:  0 0 0 0 white inset, 0 -3px 0 0 $color-blue inset;
 
-  &:after {
-    background-color: $color-black;
-    content: '';
-    bottom: 0;
-    display: block;
-    height: 2px;
-    line-height: 1 !important;
-    left: 0;
-    position: absolute;
-    width: 100%;
+%ul {
+  box-shadow: none;
+  text-decoration: none !important;
+}
+
+%ul-xs {
+  @extend %ul;
+  box-shadow: $box-shadow-xs-black;
+}
+
+%ul-xs-blue {
+  @extend %ul;
+  box-shadow: $box-shadow-xs-blue;
+}
+
+%ul-xs-hover {
+  @extend %ul;
+  &.is-active,
+  &:hover {
+    box-shadow: $box-shadow-xs-black;
   }
 }
 
-%underline-sm,
-.underline-sm {
-  @extend %underline;
+%ul-xs-blue-hover {
+  @extend %ul;
+  &.is-active,
+  &:hover {
+    box-shadow: $box-shadow-xs-blue;
+  }
+}
 
-  &:after {
-    height: 1px;
+%ul-sm {
+  @extend %ul;
+  box-shadow: $box-shadow-sm-black;
+}
 
-    @include bp-sm() {
-      height: 2px;
-    }
+%ul-sm-blue {
+  @extend %ul;
+  box-shadow: $box-shadow-sm-blue;
+}
+
+%ul-sm-hover {
+  @extend %ul;
+  
+  &.is-active,
+  &:hover {
+    box-shadow: $box-shadow-sm-black;
+  }
+}
+
+%ul-sm-blue-hover {
+  @extend %ul;
+  &:hover {
+    box-shadow: $box-shadow-sm-blue;
+  }
+}
+
+%ul-md {
+  @extend %ul;
+  box-shadow: $box-shadow-md-black;
+}
+
+%ul-md-hover {
+  @extend %ul;
+  &.is-active,
+  &:hover {
+    box-shadow: $box-shadow-md-black;
   }
 }

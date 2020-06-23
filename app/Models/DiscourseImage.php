@@ -20,6 +20,8 @@ class DiscourseImage extends Base
     'coords_h',
     'coords_x',
     'coords_y',
+    'theme',
+    'order',
     'publish',
     'discourse_id',
 	];

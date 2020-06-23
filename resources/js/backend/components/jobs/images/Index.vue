@@ -15,10 +15,35 @@
             ></image-upload>
           </div>
           <div class="form-row" v-if="images.length">
-            <image-listing 
-              :images="images"
-              :updateOnChange="true"
-            ></image-listing>
+            <a href="" class="icon-view" @click.prevent="toggleView()">
+              <span v-if="view == 'grid'">Grid Ansicht</span>
+              <span v-if="view == 'list'">Listen Ansicht</span>
+            </a>
+            <template v-if="view == 'list'">
+              <div class="upload-listing-rows">
+                <draggable 
+                  :disabled="false"
+                  v-model="images" 
+                  @end="order"
+                  ghost-class="draggable-ghost"
+                  draggable=".is-draggable">
+                  <div class="upload-item-row is-draggable" v-for="(image) in images" :key="image.id">
+                    <figure>
+                      <img :src="getSource(image.name, 'thumbnail')" height="300" width="300">
+                    </figure>
+                    <div>
+                      <span class="icon-move"></span>
+                    </div>
+                  </div>
+                </draggable>
+              </div>
+            </template>
+            <template v-if="view == 'grid'">
+              <image-listing 
+                :images="images"
+                :updateOnChange="true"
+              ></image-listing>
+            </template>
           </div>
         </div>
       </main>
@@ -37,11 +62,14 @@ import ImageListing from "@/components/global/images/Listing.vue";
 import Utils from "@/mixins/utils";
 import Progress from "@/mixins/progress";
 
+import draggable from 'vuedraggable';
+
 export default {
   components: {
     PageHeader,
     ImageUpload,
     ImageListing,
+    draggable
   },
 
   mixins: [Utils, Progress],
@@ -49,6 +77,7 @@ export default {
   data() {
     return {
       images: [],
+      view: 'grid',
     };
   },
 
@@ -129,6 +158,25 @@ export default {
         });
       }
     },
+
+    order() {
+      let images = this.images.map(function(image, index) {
+        image.order = index;
+        return image;
+      });
+      if (this.debounce) return;
+      this.debounce = setTimeout(function(images) {
+        this.debounce = false 
+        let uri = `/api/job/image/order`;
+        this.axios.post(uri, {images: images}).then((response) => {
+          this.$notify({type: 'success', text: 'Reihenfolge angepasst'});
+        });
+      }.bind(this, images), 1000);
+    },
+
+    toggleView() {
+      this.view = this.view == 'grid' ? 'list' : 'grid';
+    }
   },
 };
 </script>

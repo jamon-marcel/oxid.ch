@@ -129,24 +129,24 @@
               </div>
             </div>
             <div class="box__a">
-              <div v-if="elements[1] && elements[1].position == '1'">
-                <grid-media :ratioW="43" :ratioH="28" :element="elements[1]"></grid-media>
-              </div>
-              <div v-else>
-                <div class="box-buttons">
-                  <button-add :gridId="gridId" :gridPosition="1"></button-add>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="box__a">
               <div v-if="elements[2] && elements[2].position == '2'">
                 <grid-media :ratioW="43" :ratioH="28" :element="elements[2]"></grid-media>
               </div>
               <div v-else>
                 <div class="box-buttons">
                   <button-add :gridId="gridId" :gridPosition="2"></button-add>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="box__a">
+              <div v-if="elements[1] && elements[1].position == '1'">
+                <grid-media :ratioW="43" :ratioH="28" :element="elements[1]"></grid-media>
+              </div>
+              <div v-else>
+                <div class="box-buttons">
+                  <button-add :gridId="gridId" :gridPosition="1"></button-add>
                 </div>
               </div>
             </div>
@@ -165,8 +165,8 @@
       </div>
     </div>
     <div :class="[hasOverlayEdit ? 'is-visible': '', 'overlay']">
-      <a href="javascript:;" @click.prevent="toggleOverlay()" class="icon-close-overlay"></a>
       <div>
+        <a href="javascript:;" @click.prevent="toggleOverlay()" class="icon-close-overlay"></a>
         <div v-if="showMedia">
           <h1>Projektbild auswählen</h1>
           <div class="grid-image-selector">

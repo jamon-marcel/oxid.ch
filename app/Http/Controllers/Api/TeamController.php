@@ -61,6 +61,7 @@ class TeamController extends Controller
       'firstname' => $request->input('firstname'),
       'name' => $request->input('name'),
       'email' => $request->input('email'),
+      'phone' => $request->input('phone'),
       'role' => [
         'de' => $request->input('role.de'),
         'en' => $request->input('role.en'),
@@ -121,6 +122,7 @@ class TeamController extends Controller
     $team->firstname = $request->input('firstname');
     $team->name = $request->input('name');
     $team->email = $request->input('email');
+    $team->phone = $request->input('phone');
 
     // Translations
     $team->setTranslation('role', 'de', $request->input('role.de'));

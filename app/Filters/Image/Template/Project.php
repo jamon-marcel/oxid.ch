@@ -18,10 +18,13 @@ class Project implements FilterInterface
     if ($img && $img->coords_w && $img->coords_h)
     {
       $image->crop(floor($img->coords_w), floor($img->coords_h), floor($img->coords_x), floor($img->coords_y))
+            ->encode('jpg', 100)
             ->resize($this->max_width, null, function ($constraint) {
         return $constraint->aspectRatio();
       });
     }
+
+    return $image;
 
     // Otherwise just resize the image
     $width  = $image->getWidth();

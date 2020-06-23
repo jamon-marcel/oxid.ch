@@ -12,20 +12,15 @@
     z-index: 1001;
   }
 
-  // @include bp-sm() {
-  //   &[data-visible-onload].is-visible {
-  //     transition: transform 0s ease-out !important;
-  //   }
-  // }
-
   h1, h2 {
     @include font-size($fs-xl);
     margin-bottom: $space-xl;
   }
 
   h3 {
-    @extend %underline-sm;
+    @extend %ul-sm;
     @include font-size($fs-sm);
+    display: inline-block;
     margin-bottom: $space-md;
   }
 }

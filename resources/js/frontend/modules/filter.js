@@ -29,21 +29,21 @@ var Filter = (function() {
   var _filter = function(btn) {
 
     var type = btn.data('filter');
-    
-    if (type == 'all') {
-      $(selectors.item).show();
-      return;
-    }
 
     // Set button state
     $(selectors.btnFilter).removeClass(classes.active);
     btn.addClass(classes.active);
-    
+
+    if (type == 'all') {
+      $(selectors.item).css('display', 'inline-block');
+      return;
+    }
+
     // Hide all items
-    $(selectors.item).hide();
+    $(selectors.item).css('display', 'none');
 
     // Show matching items
-    $('[data-filter-'+ type +'="'+ 1 +'"]').show();
+    $('[data-filter-'+ type +'="'+ 1 +'"]').css('display', 'inline-block');
 
     // Expand all
     Collapsible.expandAll();

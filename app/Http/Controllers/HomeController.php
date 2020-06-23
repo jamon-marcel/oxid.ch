@@ -23,8 +23,8 @@ class HomeController extends BaseController
     News $news)
   {
     parent::__construct();
-    $this->image = $image;
-    $this->news  = $news;
+    $this->image   = $image;
+    $this->news    = $news;
   }
 
   /**
@@ -36,8 +36,8 @@ class HomeController extends BaseController
   public function index()
   {
     $images = $this->image->published()->get();
-    $news   = $this->news->published()->orderBy('sticky', 'DESC')->get();
-    
+    $news = $this->news->published()->orderBy('sticky', 'DESC')->get();
+   
     $image = null;
     if (count($images) > 0)
     {
@@ -49,7 +49,7 @@ class HomeController extends BaseController
       view($this->viewPath, 
         [
           'image'     => $image,
-          'news'      => $news
+          'news'      => $news,
         ]
     );
   }

@@ -84,6 +84,7 @@ class ProjectController extends Controller
       'year_works'      => $request->input('year_works'),
       'client_works'    => $request->input('client_works'),
       'principal_works' => $request->input('principal_works'),
+      'author_works'    => $request->input('author_works'),
       'program'         => $request->input('program'),
       'state'           => $request->input('state'),
       'author'          => $request->input('author'),
@@ -187,6 +188,7 @@ class ProjectController extends Controller
     $project->year_works        = $request->input('year_works');
     $project->client_works      = $request->input('client_works');
     $project->principal_works   = $request->input('principal_works');
+    $project->author_works      = $request->input('author_works');
     $project->is_filter_wood    = $request->input('is_filter_wood');
     $project->is_filter_reuse   = $request->input('is_filter_reuse');
     $project->is_filter_area    = $request->input('is_filter_area');

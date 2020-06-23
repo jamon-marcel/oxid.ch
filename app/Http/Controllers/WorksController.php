@@ -42,7 +42,7 @@ class WorksController extends BaseController
 
   public function authors()
   {
-    $projects = $this->project->with('workImage')->published()->orderBy('author')->get();
+    $projects = $this->project->with('workImage')->published()->orderBy('author', 'DESC')->get();
     return 
       view($this->viewPath . 'authors', 
         [

@@ -104,6 +104,7 @@ class DiscourseController extends Controller
           ],
           'is_preview' => $i['is_preview'],
           'publish' => $i['publish'],
+          'theme' => $i['theme'],
         ]);
         $image->save();
       }
@@ -189,6 +190,7 @@ class DiscourseController extends Controller
             ],
             'is_preview' => $i['is_preview'] ? $i['is_preview'] : 0,
             'publish' => $i['publish'] ? $i['publish'] : 0,
+            'theme' => $i['theme'] ? $i['theme'] : 0,
           ]
         );
       }

@@ -8,9 +8,7 @@
       <li><a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a></li>
     </ul>
   </nav>
-  <div class="menu-footer__info">
-    <a href="" class="icon-document" target="_blank" title="">Pdf</a>
-  </div>
+  <div class="menu-footer__info">&nbsp;</div>
 </div>
 <nav class="menu-footer__dropdown js-dropdown">
   <ul>

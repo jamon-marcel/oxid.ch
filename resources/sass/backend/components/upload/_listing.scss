@@ -72,3 +72,33 @@
     }
   }
 }
+
+.upload-listing-rows {
+  border-top: 2px solid $color-light-grey;
+
+  margin-bottom: 50px;
+  
+  .upload-item-row {
+    align-items: center;
+    border-bottom: 2px solid $color-light-grey;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0 5px 2px;
+
+    figure {
+
+      img {
+        background-color: $color-light-grey;
+        display: inline-block;
+        display: block;
+        height: auto;
+        width: 50px;
+      }
+    }
+
+    div {
+
+    }
+  }
+}

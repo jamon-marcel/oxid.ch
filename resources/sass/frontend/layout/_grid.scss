@@ -27,7 +27,8 @@
     margin-bottom: 0;
   }
 
-  .span {
+  .span,
+  .span-alumni {
     margin-bottom: $space-lg;
     &.is-last {
       margin-bottom: 0;
@@ -40,7 +41,7 @@
     grid-column-gap: $space-md;
     grid-row-gap: $space-lg;
     margin-bottom: $space-lg;
-    .span {
+    .span:not(.span-alumni) {
       margin-bottom: 0;
     }
   }

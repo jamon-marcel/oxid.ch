@@ -59,12 +59,16 @@
                   <input type="text" v-model="project.year_works">
                 </div>
                 <div class="form-row">
-                  <label>Auftraggeber</label>
+                  <label>Auftrag</label>
                   <input type="text" v-model="project.client_works">
                 </div>
-                <div class="form-row is-last">
+                <div class="form-row">
                   <label>Bauherrschaft</label>
                   <input type="text" v-model="project.principal_works">
+                </div>
+                <div class="form-row is-last">
+                  <label>Autorenschaft</label>
+                  <input type="text" v-model="project.author_works">
                 </div>
               </div>
               <div class="column-sidebar">
@@ -386,6 +390,7 @@ export default {
         year_works: null,
         client_works: null,
         principal_works: null,
+        author_works: null,
         images: [],
         documents: [],
         is_filter_wood: 0,

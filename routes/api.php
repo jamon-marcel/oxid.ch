@@ -114,6 +114,7 @@ Route::middleware('auth:api')->group(function() {
   Route::get('discourse/image/get/{discourseId}', 'Api\DiscourseImageController@get');
   Route::get('discourse/image/status/{id}', 'Api\DiscourseImageController@status');
   Route::post('discourse/image/coords/{discourseImage}', 'Api\DiscourseImageController@coords');
+  Route::post('discourse/image/order', 'Api\DiscourseImageController@order');
   Route::delete('discourse/image/destroy/{discourseImage}', 'Api\DiscourseImageController@destroy');
 
   /**
@@ -149,6 +150,7 @@ Route::middleware('auth:api')->group(function() {
   Route::post('team/image/update/{image}', 'Api\TeamImageController@update');
   Route::get('team/image/status/{image}', 'Api\TeamImageController@status');
   Route::post('team/image/coords/{teamImage}', 'Api\TeamImageController@coords');
+  Route::post('team/image/order', 'Api\TeamImageController@order');
   Route::delete('team/image/destroy/{image}', 'Api\TeamImageController@destroy');
 
   /**
@@ -178,6 +180,7 @@ Route::middleware('auth:api')->group(function() {
   Route::post('job/image/update/{image}', 'Api\JobImageController@update');
   Route::get('job/image/status/{image}', 'Api\JobImageController@status');
   Route::post('job/image/coords/{jobImage}', 'Api\JobImageController@coords');
+  Route::post('job/image/order', 'Api\JobImageController@order');
   Route::delete('job/image/destroy/{image}', 'Api\JobImageController@destroy');
 
 
@@ -199,6 +202,7 @@ Route::middleware('auth:api')->group(function() {
   Route::post('profile/image/update/{image}', 'Api\ProfileImageController@update');
   Route::get('profile/image/status/{image}', 'Api\ProfileImageController@status');
   Route::post('profile/image/coords/{profileImage}', 'Api\ProfileImageController@coords');
+  Route::post('profile/image/order', 'Api\ProfileImageController@order');
   Route::delete('profile/image/destroy/{image}', 'Api\ProfileImageController@destroy');
 
   /**

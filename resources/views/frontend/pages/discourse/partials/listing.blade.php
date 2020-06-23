@@ -9,7 +9,7 @@
         @if (isset($d->previewImage))
           <figure>
             <a href="{{ route('page.discourse.detail', ['slug' => AppHelper::slug($d->title), 'discourse' => $d->id]) }}">
-              <img src="/image/discourse/{{$d->previewImage->name}}" width="1600" height="1000" alt="{{$d->title}}">
+              {!! ImageHelper::previewImage($d->previewImage, $d->title) !!}
             </a>
           </figure>
         @endif

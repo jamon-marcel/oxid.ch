@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 18"><defs><style>.doc-blue-1{fill:#fff;stroke:#335aa1;stroke-width:1.44px;}.doc-blue-2{fill:#335aa1;}</style></defs><path class="doc-blue-1" d="M.7.7V17.3H12.8V6.6L6.5.7Z"/><polygon class="doc-blue-2" points="6 7 13.5 7 6 0 6 7"/></svg>

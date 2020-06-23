@@ -3,10 +3,12 @@ namespace App\Models;
 use App\Models\Base;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
+use Laravel\Scout\Searchable;
 
 class Project extends Base
 {
 	use HasTranslations;
+	use Searchable;
 
 	public $translatable = [
 		'title',
@@ -26,6 +28,7 @@ class Project extends Base
 		'year_works',
 		'client_works',
 		'principal_works',
+		'author_works',
 		'program',
 		'state',
 		'author',
@@ -37,6 +40,11 @@ class Project extends Base
 		'order',
 		'publish',
 	];
+
+  public function searchableAs()
+	{
+    return 'projects';
+	}
 
 	public function images()
 	{
@@ -71,6 +79,11 @@ class Project extends Base
 	public function scopeHighlight($query)
 	{
 		return $query->where('publish', '=', '1')->where('is_highlight', '=', '1');
+	}
+
+	public function scopeHasDetail($query)
+	{
+		return $query->where('publish', '=', '1')->where('has_detail', '=', '1');
 	}
 
 }

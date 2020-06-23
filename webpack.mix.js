@@ -29,3 +29,7 @@ mix.sass('resources/sass/backend/app.scss', 'public/assets/backend/css').options
 mix.js('resources/js/frontend/app.js', 'public/assets/js').version();
 mix.js('resources/js/frontend/maps.js', 'public/assets/js').version();
 mix.sass('resources/sass/frontend/app.scss', 'public/assets/css').options({processCssUrls: false}).version();
+
+// Frontend - Busu
+mix.sass('resources/sass/frontend-busu/busu.scss', 'public/assets/css').options({processCssUrls: false}).version();
+

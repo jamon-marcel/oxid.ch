@@ -39,6 +39,11 @@
     width: calc(100% - 255px);
   }
 
+  a {
+    @extend %ul-sm-hover;
+    text-decoration: none !important;
+  }
+
   ul {
 
     @include bp-sm() {
@@ -90,7 +95,7 @@
 
     &.is-active,
     &:hover {
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 

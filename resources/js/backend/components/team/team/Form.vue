@@ -44,6 +44,13 @@
                     v-model="team.email"
                   >
                 </div>
+                <div class="form-row">
+                  <label>Telefon</label>
+                  <input
+                    type="text"
+                    v-model="team.phone"
+                  >
+                </div>
               </div>
               <div class="column-sidebar">
                 <div>
@@ -167,6 +174,7 @@ export default {
         firstname: null,
         name: null,
         email: null,
+        phone: null,
         role: {
           de: null,
           en: null,

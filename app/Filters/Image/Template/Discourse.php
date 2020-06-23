@@ -17,10 +17,12 @@ class Discourse implements FilterInterface
     // Crop the image if coords are set
     if ($img && $img->coords_w && $img->coords_h)
     {
-      $image->crop(floor($img->coords_w), floor($img->coords_h), floor($img->coords_x), floor($img->coords_y))
-            ->resize($this->max_width, null, function ($constraint) {
-        return $constraint->aspectRatio();
-      });
+      return 
+        $image->crop(floor($img->coords_w), floor($img->coords_h), floor($img->coords_x), floor($img->coords_y))
+              ->resize($this->max_width, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+              });
     }
 
     // Otherwise just resize the image

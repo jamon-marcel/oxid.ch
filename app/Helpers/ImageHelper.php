@@ -7,46 +7,39 @@ use Illuminate\Support\Facades\Cache;
 
 class ImageHelper
 {
-  static function get($image = NULL, $size = 'sm')
+  static function largeImage($image, $caption = NULL)
   {
-   
-    // Set default image uri
-    $src = '/media/' . $image . '/' . $size;
-
-    // Overwrite image uri if file already exists
-    if (File::exists(storage_path('app/public/media/images/processed/' . $size . '/') . $image))
+    $coords = '';
+    if ($image->coords_w && $image->coords_h)
     {
-      $src = '/storage/media/images/processed/' . $size . '/' . $image;
+      $coords = floor($image->coords_w) . ',' .  floor($image->coords_h) . ',' .  floor($image->coords_x) . ',' .  floor($image->coords_y);
+      return '<img srcset="/img/cache/'.$image->name.'/1200/750/'.$coords.' 900w, /img/cache/'.$image->name.'/2400/1500/'.$coords.' 2400w" src="/img/cache/'.$image->name.'/900/562/'.$coords.'" width="1600" height="1000" alt="'. $caption.'">';
     }
-
-    return $src;
+    
+    return '<img srcset="/img/cache/'.$image->name.'/1200/750 900w, /img/cache/'.$image->name.'/2400/1500 2400w" src="/img/cache/'.$image->name.'/900/562" width="1600" height="1000" alt="'. $caption.'">';
   }
 
-  static function preview($image = NULL)
+  static function previewImage($image, $caption = NULL)
   {
-    // Set default image uri
-    $src = '/media/preview/' . $image;
-
-    // Overwrite image uri if file already exists
-    if (File::exists(storage_path('app/public/media/images/processed/preview/') . $image))
+    $coords = '';
+    if ($image->coords_w && $image->coords_h)
     {
-      $src = '/storage/media/images/processed/preview/' . $image;
+      $coords = floor($image->coords_w) . ',' .  floor($image->coords_h) . ',' .  floor($image->coords_x) . ',' .  floor($image->coords_y);
+      return '<img src="/img/cache/'.$image->name.'/900/562/'.$coords.'" width="1600" height="1000" alt="'. $caption.'">';
     }
-
-    return $src;
+    
+    return '<img src="/img/cache/'.$image->name.'/900/562" width="1600" height="1000" alt="'. $caption.'">';
   }
 
-  static function related($image = NULL)
+  static function teaserImage($image, $caption = NULL)
   {
-    // Set default image uri
-    $src = '/media/related/' . $image;
-
-    // Overwrite image uri if file already exists
-    if (File::exists(storage_path('app/public/media/images/processed/related/') . $image))
+    $coords = '';
+    if ($image->coords_w && $image->coords_h)
     {
-      $src = '/storage/media/images/processed/related/' . $image;
+      $coords = floor($image->coords_w) . ',' .  floor($image->coords_h) . ',' .  floor($image->coords_x) . ',' .  floor($image->coords_y);
+      return '<img src="/img/cache/'.$image->name.'/1600/1000/'.$coords.'" width="1000" height="1600" alt="'. $caption.'">';
     }
-
-    return $src;
+    
+    return '<img src="/img/cache/'.$image->name.'/1600/1000" width="1000" height="1600" alt="'. $caption.'">';
   }
 }

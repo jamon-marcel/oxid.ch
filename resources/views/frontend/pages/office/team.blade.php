@@ -4,10 +4,12 @@
 @section('content')
 <section class="content">
   @if ($images)
+    <a href="javascript:;" class="btn-scroll is-prev js-btn-scroll-prev" style="display:none"></a>
+    <a href="javascript:;" class="btn-scroll is-next js-btn-scroll-next"></a>
     <div class="visual-list">
-      @foreach($images->shuffle() as $image)
-        <figure class="visual-fit">
-          <img src="/image/team/{{$image->name}}" height="1000" width="1600" alt="{{$image->caption}}">
+      @foreach($images as $image)
+        <figure class="visual-fit js-scroll-item">
+          {!! ImageHelper::largeImage($image, $image->title) !!}
         </figure>
       @endforeach
     </div>
@@ -26,12 +28,15 @@
               @if ($t->position) {{$t->position}}<br>@endif
               @if ($t->role) {{$t->role}}<br>@endif
               @if ($t->email)<a href="mailto:{{$t->email}}">{{$t->email}}</a>@endif
+              @if ($t->phone)<br>{{$t->phone}}@endif
               @if ($t->documents)
                 @foreach($t->documents as $d)
                   <br>
                   <a href="{{asset('storage/uploads/' . $d->name)}}" class="icon-document-blue" target="_blank" title="Download Lebenslauf">
-                    {{__('content.cv')}}
+                    @include('frontend.partials.icons.document-blue')
+                    <div><span>{{__('content.cv')}}</span></div>
                   </a>
+                  </div>
                 @endforeach
               @endif
             </div>
@@ -56,16 +61,30 @@
     @if ($team['alumni'])
       <h3>{{__('settings.alumni')}}</h3>
       <div class="grid-team is-last">
-        @foreach($team['alumni'] as $k => $ta)
-          <article class="span {{ $loop->last  ? 'is-last' : '' }} team-member">
-            <div class="team-member__heading">{{$k}}</div>
-            <div class="team-member__info">
-              @foreach($ta as $t)
-                {{$t->firstname}} {{$t->name}}@if(!$loop->last),@endif
-              @endforeach
-            </div>
-          </article>
-        @endforeach
+        <div>
+          @foreach($team['alumni'][0] as $k => $ta)
+            <article class="span span-alumni {{ $loop->last  ? 'is-last' : '' }} team-member">
+              <div class="team-member__heading">{{$k}}</div>
+              <div class="team-member__info">
+                @foreach($ta as $t)
+                  {{$t->firstname}} {{$t->name}}@if(!$loop->last),@endif
+                @endforeach
+              </div>
+            </article>
+          @endforeach
+        </div>
+        <div>
+          @foreach($team['alumni'][1] as $k => $ta)
+            <article class="span span-alumni {{ $loop->last  ? 'is-last' : '' }} team-member">
+              <div class="team-member__heading">{{$k}}</div>
+              <div class="team-member__info">
+                @foreach($ta as $t)
+                  {{$t->firstname}} {{$t->name}}@if(!$loop->last),@endif
+                @endforeach
+              </div>
+            </article>
+          @endforeach
+        </div>
       </div>
     @endif
   </div>

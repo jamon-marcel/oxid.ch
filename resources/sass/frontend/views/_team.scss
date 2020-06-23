@@ -10,4 +10,8 @@
   .team-member__heading {
     @include font-size($fs-fix-lg);
   }
+
+  a[href^="mailto"] {
+    @extend %ul-xs-hover;
+  }
 }

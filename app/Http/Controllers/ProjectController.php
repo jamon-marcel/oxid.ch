@@ -33,18 +33,26 @@ class ProjectController extends BaseController
 
   public function index()
   {
+    
+    //$search = $this->project->search('Frauenfeld')->get();
+    //dd($search);
+    
+    
     // get first project
     $project      = $this->project->with('publishedDocuments')->with('grids.layout')->with('grids.elements.image')->first();
     $project_grid = $project->with('grids.layout')->with('grids.elements.image')->findOrFail($project->id);
 
+    // get teaser images
+    $projectTeasers = $this->project->published()->with('teaserImage')->get();
+
     return 
       view($this->viewPath . 'show',
       [
-        'pageFooter'    => $this->pageFooter,
-        'project'       => $project,
-        'project_grid'  => $project_grid->grids->sortBy('order'),
-        'navBrowse'     => $this->getBrowse($project->id),
-
+        'pageFooter'      => $this->pageFooter,
+        'project'         => $project,
+        'project_grid'    => $project_grid->grids->sortBy('order'),
+        'project_teasers' => $projectTeasers,
+        'navBrowse'       => $this->getBrowse($project->id),
       ]
     );
   }
@@ -62,12 +70,16 @@ class ProjectController extends BaseController
     $project      = $project->with('publishedDocuments')->findOrFail($project->id);
     $project_grid = $project->with('grids.layout')->with('grids.elements.image')->findOrFail($project->id);
     
+    // get teaser images
+    $projectTeasers = $this->project->published()->with('teaserImage')->get();
+
     return 
       view($this->viewPath . 'show',
       [
         'pageFooter'   => $this->pageFooter,
         'project'      => $project,
         'project_grid' => $project_grid->grids->sortBy('order'),
+        'project_teasers' => $projectTeasers,
         'navBrowse'    => $this->getBrowse($project->id),
       ]
     );
@@ -76,10 +88,10 @@ class ProjectController extends BaseController
   protected function getBrowse($id = NULL)
   {
     // Build project nav
-    $projects = $this->project->published()->get();
+    $projects = $this->project->hasDetail()->get();
     $keys     = [];
     $items    = [];
-    
+
     foreach($projects as $p)
     {
       $keys[] = (int) $p->id;

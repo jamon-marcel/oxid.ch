@@ -42,9 +42,11 @@
 
     .menu-bar__open {
       width: inherit;
+
       &.is-hidden {
         opacity: 1;
       }
+      
       .menu-icon {
         display: none;
       }
@@ -72,9 +74,9 @@
     pointer-events: all;
 
     > * {
-      opacity: .4;
+      opacity: 0;
       pointer-events: none;
-      transition: opacity .08s ease-out;
+      transition: opacity .02s ease-out;
     }
   }
 }

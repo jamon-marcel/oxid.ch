@@ -101,6 +101,26 @@ class DiscourseImageController extends Controller
   }
 
   /**
+   * Update the order of the resources.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+
+  public function order(Request $request)
+  {
+    $images = $request->get('images');
+    foreach($images as $image)
+    {
+      $i = $this->discourseImage->find($image['id']);
+      $i->order = $image['order'];
+      $i->save(); 
+    }
+    return response()->json('successfully updated');
+  }
+
+
+  /**
    * Remove cached version of the image
    *
    * @param DiscourseImage $discourseImage

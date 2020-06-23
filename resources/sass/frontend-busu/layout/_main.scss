@@ -1,0 +1,68 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: layout/main
+ * -----------------------------------------------------------------------------
+ */
+
+main {
+
+}
+
+section {
+
+  @include bp-sm() {
+    display: grid;
+    height: calc(100vh - 200px);
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 0;
+  }
+}
+
+a {
+  align-items: center;
+  color: $color-black;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  height: calc(50vh - 90px);
+
+  @include bp-sm() {
+    height: auto;
+  }
+
+  &.content-oxid {
+    background-color: $color-blue;
+    text-align: center;
+  }
+  &.content-busu {
+    background-color: $color-red;
+    text-align: center;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    @include bp-sm() {
+      padding: 0 20px;
+    }
+    @include bp-md() {
+      padding: 0 40px;
+    }
+  }
+
+  svg {
+    display: inline-block;
+    height: 28px;
+    margin-top: $space-md;
+    margin-left: auto;
+    margin-right: auto;
+    width: 28px;
+
+    @include bp-sm() {
+      height: 38px;
+      width: 38px;
+    }
+  }
+}

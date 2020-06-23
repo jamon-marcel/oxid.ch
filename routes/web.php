@@ -39,7 +39,21 @@ Route::get('/kontakt', 'ContactController@index')->name('page.contact');
 // History
 Route::get('/geschichte', 'HistoryController@index')->name('page.history');
 
+Route::get('/suche', 'SearchController@index')->name('page.search.index');
+Route::post('/suche/{keyword?}', 'SearchController@index')->name('page.search.index');
 
+// Url based images
+Route::get('/img/{template}/{filename}/{maxW?}/{maxH?}/{coords?}', 'ImageController@getResponse');
+
+// Data
+Route::get('/import', 'DataController@index');
+
+
+
+// Busu
+Route::get('/busu', function () {
+	return view('frontend.busu');
+});
 
 // Admin routes
 Route::view('admin', 'backend.app');

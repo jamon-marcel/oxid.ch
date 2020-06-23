@@ -8,10 +8,11 @@
 a, 
 a:hover {
   color: $color-black;
+  text-decoration: underline;
 
   &.is-active,
   &:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 }
 
@@ -19,52 +20,113 @@ a:hover {
 .anchor {
   color: $color-blue;
   text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 %anchor-ul,
 .anchor-ul {
-  text-decoration: underline;
-  &:hover {
-    text-decoration: none !important;
-  }
+  @extend %ul-sm-hover;
 }
 
-%anchor-external,
-.anchor-external {
+%anchor-external {
   @extend %anchor;
-  @include background-default();
-  background-image: url($url-images + 'arrow-blue.svg');
-  background-position: bottom 3px right;
-  background-size: 11px auto;
-  display: inline-block;
-  padding-right: 17px;
+  @extend %icon-ib;
+  color: $color-blue;
+  position: relative;
 
-  @include bp-sm() {
-    background-position: bottom 4px right;
-    background-size: 12px auto;
-    padding-right: 19px;
+  &:hover {
+    color: $color-blue;
   }
 
-  @include bp-md() {
-    background-size: 14px auto;
-    background-position: bottom 4px right;
-    padding-right: 22px;
-  }
-
-  @include bp-lg() {
-    background-size: 15px auto;
-    background-position: bottom 5px right;
+  &:after {
+    background-image: url($url-images + 'arrow-blue.svg');
+    background-position: center right;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    display: block;
+    position: absolute;
   }
 }
 
 %anchor-external-sm {
   @extend %anchor-external;
-  background-size: 10px auto;
-  background-position: center right;
-  padding-right: 15px;
+  margin-right: 14px;
+
+  @include bp-md() {
+    margin-right: 16px;
+  }
+
+  &:after {
+    height: 9px;
+    right: -14px;
+    top: 6px;
+    width: 9px;
+
+    @include bp-md() {
+      height: 10px;
+      right: -16px;
+      top: 7px;
+      width: 10px;
+    }
+  }
+}
+
+%anchor-external-md {
+  @extend %anchor-external;
+  margin-right: 16px;
+
+  &:after {
+    height: 10px;
+    right: -16px;
+    top: 8px;
+    width: 10px;
+  }
+}
+
+%anchor-external-lg {
+  @extend %anchor-external;
+  margin-right: 16px;
+
+  @include bp-sm() {
+    margin-right: 17px;
+  }
+
+  @include bp-md() {
+    margin-right: 19px;
+  }
+
+  @include bp-md() {
+    margin-right: 21px;
+  }
+
+  &:after {
+    height: 10px;
+    right: -16px;
+    top: 6px;
+    width: 10px;
+
+    @include bp-sm() {
+      height: 11px;
+      right: -17px;
+      top: 8px;
+      width: 11px;
+    }
+
+    @include bp-md() {
+      height: 12px;
+      right: -19px;
+      top: 9px;
+      width: 12px;
+    }
+
+    @include bp-lg() {
+      height: 14px;
+      right: -21px;
+      top: 10px;
+      width: 14px;
+    }
+  }
+
 }
 
 %anchor-arrow-inline {

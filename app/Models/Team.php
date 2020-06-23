@@ -21,6 +21,7 @@ class Team extends Base
 		'role',
     'position',
 		'email',
+		'phone',
     'category',
 		'order',
 		'publish',

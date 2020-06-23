@@ -29,10 +29,6 @@
 .visual-list {
   .visual-fit {
     margin-bottom: $space-sm;
-    
-    @include bp-sm() {
-      margin-bottom: 0;
-    }
     &:last-child {
       margin-bottom: 0 !important;
     }

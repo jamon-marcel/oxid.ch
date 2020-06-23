@@ -28,6 +28,10 @@
   text-align: right;
   width: 100%;
 
+  @include bp-md() {
+    margin-top: -10px;
+  }
+
   img {
     display: inline-block;
     height: 35px;

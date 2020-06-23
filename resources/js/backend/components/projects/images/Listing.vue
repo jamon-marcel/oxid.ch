@@ -213,6 +213,11 @@ export default {
         if (image.orientation == 'l') {
           this.ratio.w = 16;
           this.ratio.h = 10;
+
+          if (image.is_plan) {
+            this.ratio.w = 16;
+            this.ratio.h = 11.5;
+          }
         }
 
         if (image.orientation == 'p') {

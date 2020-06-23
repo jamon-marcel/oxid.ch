@@ -3,10 +3,12 @@ namespace App\Models;
 use App\Models\Base;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
+use Laravel\Scout\Searchable;
 
 class Discourse extends Base
 {
 	use HasTranslations;
+	use Searchable;
 
 	public $translatable = [
 		'heading',
@@ -28,10 +30,15 @@ class Discourse extends Base
 		'order',
 		'publish',
   ];
-  
+	
+	public function searchableAs()
+	{
+    return 'discourse';
+	}
+
 	public function images()
 	{
-		return $this->hasMany('App\Models\DiscourseImage', 'discourse_id', 'id');
+		return $this->hasMany('App\Models\DiscourseImage', 'discourse_id', 'id')->orderBy('order');
 	}
 
 	public function previewImage()
@@ -41,7 +48,7 @@ class Discourse extends Base
 
 	public function publishedImages()
 	{
-		return $this->hasMany('App\Models\DiscourseImage', 'discourse_id', 'id')->where('publish', '=', 1);
+		return $this->hasMany('App\Models\DiscourseImage', 'discourse_id', 'id')->where('publish', '=', 1)->orderBy('order');
 	}
 
 	public function documents()

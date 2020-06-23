@@ -32,6 +32,7 @@
   .grid-image-selector__media {
 
     figure {
+      border: 2px solid $color-light-grey;
       display: inline-block;
       line-height: 1 !important;
       margin-bottom: 8px;
@@ -43,8 +44,8 @@
       }
 
       img {
-        background-color: $color-medium-grey;
-        padding: 1px;
+        background-color: $color-white;
+        padding: 5px;
         display: block;
         height: 100%;
         width: auto;

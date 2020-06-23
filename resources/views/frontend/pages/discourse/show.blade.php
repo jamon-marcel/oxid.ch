@@ -3,22 +3,22 @@
 @section('seo_description', '')
 @section('content')
 <section class="content content--discourse">
-  <a href="javascript:;" onclick="history.go(-1)" class="btn-close"></a>
+  <a href="javascript:;" onclick="history.go(-1)" class="btn-close js-btn-close"></a>
   <div class="swiper-container">
     <div class="swiper-wrapper">
       @if ($discourse->publishedImages)
         @foreach($discourse->publishedImages as $img)
-          <div class="swiper-slide">
+          <div class="swiper-slide" data-theme="{{$img->theme}}">
             <figure class="visual-fit">
-              <img src="/image/discourse/{{$img->name}}" width="1600" height="1000" alt="{{$img->title}}">
+              {!! ImageHelper::largeImage($img, $img->title) !!}
             </figure>
           </div>
         @endforeach
       @endif
     </div>
     @if ($discourse->publishedImages->count() > 1)
-      <div class="swiper-btn-prev"></div>
-      <div class="swiper-btn-next"></div>
+      <div class="swiper-btn-prev js-btn-prev"></div>
+      <div class="swiper-btn-next js-btn-next"></div>
     @endif
   </div>
 </section>

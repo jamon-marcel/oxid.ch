@@ -15,7 +15,8 @@
     @include font-size($fs-fix-md);
 
     a {
+      @extend %ul-xs-blue-hover;
       color: $color-blue;
-      }
+    }
   }
 }

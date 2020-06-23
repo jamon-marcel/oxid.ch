@@ -8,12 +8,12 @@ class Large implements FilterInterface
   /**
    * Maximum width for large landscape images
    */    
-  protected $max_width = 1600;    
+  protected $max_width = 2000;    
 
   /**
    * Maximum height for large portrait images
    */    
-  protected $max_height = 900;
+  protected $max_height = 1250;
   
   public function applyFilter(Image $image)
   {

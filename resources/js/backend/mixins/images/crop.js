@@ -9,8 +9,8 @@ export default {
       cropImage: null,
 
       defaults: {
-        w: 600, // 16:10
-        h: 375, // 16:10
+        w: 1600, // 16:10
+        h: 1000, // 16:10
         x: 100,
         y: 100
       },

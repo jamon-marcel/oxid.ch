@@ -32,8 +32,9 @@ nav.menu-page {
   }
 
   a {
+    @extend %ul-sm-hover;
     color: $color-black;
-    @include font-size($fs-menu);
+    @include font-size($fs-menu-lg);
   }
 
 }

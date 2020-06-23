@@ -38,6 +38,19 @@ var SwiperUi = (function() {
       navigation: {
         nextEl: '.swiper-btn-next',
         prevEl: '.swiper-btn-prev'
+      },
+      on: {
+        transitionEnd: function() {
+          var themeId = $(this.slides[this.activeIndex]).data('theme');
+          if (themeId == 0) {
+            $('.js-btn-next, .js-btn-prev, .js-btn-close').removeClass('is-light');
+            $('.js-btn-next, .js-btn-prev, .js-btn-close').addClass('is-dark');
+          }
+          else {
+            $('.js-btn-next, .js-btn-prev, .js-btn-close').removeClass('is-dark');
+            $('.js-btn-next, .js-btn-prev, .js-btn-close').addClass('is-light');
+          }
+        },
       }
     });  
   };
@@ -51,7 +64,6 @@ var SwiperUi = (function() {
 // Initialize
 $(function() {
   if ($('body').find('.swiper-container').length) {
-    console.log('d');
     SwiperUi.init();
   }
 });

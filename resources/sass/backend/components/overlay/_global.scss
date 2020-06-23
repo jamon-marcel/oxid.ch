@@ -11,7 +11,7 @@ html.has-overlay {
 
 %overlay,
 .overlay {
-    background-color: rgba(0,0,0,1);
+    background-color: rgba(255,255,255,.98);
     color: $color-dark;
     display: block;
     height: 100%;
@@ -33,7 +33,7 @@ html.has-overlay {
     }
 
     * {
-        color: $color-white;
+        color: $color-dark;
     }
 
     > div {
