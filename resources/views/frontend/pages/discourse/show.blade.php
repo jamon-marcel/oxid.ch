@@ -3,7 +3,7 @@
 @section('seo_description', '')
 @section('content')
 <section class="content content--discourse">
-  <a href="javascript:;" onclick="history.go(-1)" class="btn-close js-btn-close"></a>
+  <a href="javascript:window.history.back();" class="btn-close js-btn-close"></a>
   <div class="swiper-container">
     <div class="swiper-wrapper">
       @if ($discourse->publishedImages)
@@ -35,11 +35,13 @@
 <div class="menu-bar is-pages is-discourse">
   <div class="menu-bar__open js-menu-bar">
     <div class="menu-footer menu-footer--discourse-show">
-      <a href="javascript:;" onclick="history.go(-1)" class="btn-close is-sm"></a>
+      <a href="javascript:window.history.back();" class="btn-close js-btn-close is-sm"></a>
       <h2 class="menu-footer__heading">{{$discourse->heading}}</h2>
       <h1>{{$discourse->title}}</h1>
       <div class="menu-footer__info">
-        <a href="javascript:;" class="anchor-ul js-btn-info">Info</a>
+        @if ($discourse->description || $discourse->info)
+          <a href="javascript:;" class="anchor-ul js-btn-info">Info</a>
+        @endif
       </div>
     </div>
   </div>

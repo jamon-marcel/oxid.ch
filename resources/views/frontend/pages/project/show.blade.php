@@ -5,8 +5,8 @@
 <section class="content">
   @if ($project_grid->isNotEmpty())
     <div class="project-grids js-project-grids">
-      <a href="javascript:;" class="btn-scroll is-prev js-btn-scroll-prev"></a>
-      <a href="javascript:;" class="btn-scroll is-next js-btn-scroll-next"></a>
+      <a href="javascript:;" class="btn-scroll is-prev js-btn-scroll-up"></a>
+      <a href="javascript:;" class="btn-scroll is-next js-btn-scroll-down"></a>
       @foreach($project_grid as $grid)
         @if ($grid->layout->key == '1' || $grid->layout->key == '1-1')
           @include('frontend.pages.project.partials.grid-1')

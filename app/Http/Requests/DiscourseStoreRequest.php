@@ -25,7 +25,6 @@ class DiscourseStoreRequest extends FormRequest
       'heading.de' => 'required|string',
       'date.de' => 'required|string',
       'description_short.de' => 'required|string',
-      'description.de' => 'required|string',
     ];
   }
 
@@ -40,7 +39,6 @@ class DiscourseStoreRequest extends FormRequest
       'heading.de.required' => 'Heading is required!',
       'date.de.required' => 'Title short is required!',
       'description_short.de.required' => 'Description short is required!',
-      'description.de.required' => 'Description is required!',
     ];
   }
 }

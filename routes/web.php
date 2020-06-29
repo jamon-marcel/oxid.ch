@@ -55,6 +55,11 @@ Route::get('/busu', function () {
 	return view('frontend.busu');
 });
 
+Route::get('/busu/en', function () {
+	return view('frontend.busu-en');
+});
+
+
 // Admin routes
 Route::view('admin', 'backend.app');
 Route::get('admin/{any}', function () {

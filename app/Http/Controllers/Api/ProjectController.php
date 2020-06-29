@@ -35,7 +35,7 @@ class ProjectController extends Controller
 
   public function get()
   {
-    return new DataCollection($this->project->with('images')->with('documents')->orderBy('is_highlight', 'DESC')->get());
+    return new DataCollection($this->project->with('images')->with('documents')->orderBy('order', 'ASC')->get());
   }
 
   /**
@@ -260,6 +260,26 @@ class ProjectController extends Controller
     $project->save();
     return response()->json($project->publish);
   }
+
+  /**
+   * Update the order of the resources.
+   *
+   * @param  \Illuminate\Http\Request $request
+   * @return \Illuminate\Http\Response
+   */
+
+  public function order(Request $request)
+  {
+    $projects = $request->get('projects');
+    foreach($projects as $project)
+    {
+      $p = $this->project->find($project['id']);
+      $p->order = $project['order'];
+      $p->save(); 
+    }
+    return response()->json('successfully updated');
+  }
+
 
   /**
    * Remove the specified resource from storage.

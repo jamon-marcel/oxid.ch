@@ -175,6 +175,7 @@
                 <figure v-for="image in images" :key="image.id">
                   <a href @click.prevent="storeImage(image.id)">
                     <img :src="getSource(image.name, 'tiny')" height="120" width="70">
+                    <span>{{image.name}}</span>
                   </a>
                 </figure>
               </div>

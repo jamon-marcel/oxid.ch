@@ -11,7 +11,4 @@ export default {
   description_short: {
     de: false,
   },
-  description: {
-    de: false,
-  },
 }

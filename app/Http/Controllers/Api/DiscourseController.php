@@ -36,7 +36,8 @@ class DiscourseController extends Controller
   public function get()
   {
     $discourses = $this->discourse->orderBy('order', 'ASC')->get();
-    return response()->json($discourses->groupBy('category'));
+    // return response()->json($discourses->groupBy('category'));
+    return response()->json($discourses);
   }
 
   /**

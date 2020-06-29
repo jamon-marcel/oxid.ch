@@ -7,4 +7,7 @@
 h2 {
   @include font-size($fs-xl);
   margin-bottom: $space-xxs;
+  @include bp-sm() {
+    margin-bottom: $space-xxl;  
+  }
 }

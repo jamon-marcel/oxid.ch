@@ -45,18 +45,13 @@
                   ></tinymce-editor>
                   <div class="is-required">Pflichtfeld</div>
                 </div>
-                <div
-                  class="form-row"
-                  :class="errors.description.de ? 'has-error': ''"
-                  @mouseenter="removeError('description', 'de')"
-                >
-                  <label>Beschreibung *</label>
+                <div class="form-row">
+                  <label>Beschreibung</label>
                   <tinymce-editor
                     :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="discourse.description.de"
                   ></tinymce-editor>
-                  <div class="is-required">Pflichtfeld</div>
                 </div>
                 <div class="form-row is-last">
                   <label>Info</label>
@@ -337,7 +332,6 @@ export default {
         this.discourse.date.de &&
         this.discourse.title.de &&
         this.discourse.description_short.de &&
-        this.discourse.description.de &&
         this.discourse.images.length > 0
       ) {
         return true;
@@ -360,11 +354,6 @@ export default {
 
       if (!this.discourse.description_short.de) {
         this.errors.description_short.de = true;
-        this.tabs.data.error = true;
-      }
-
-      if (!this.discourse.description.de) {
-        this.errors.description.de = true;
         this.tabs.data.error = true;
       }
 

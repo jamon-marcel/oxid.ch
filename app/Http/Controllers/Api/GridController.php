@@ -48,7 +48,7 @@ class GridController extends Controller
     $grid = new Grid([
       'project_id' => $projectId,
       'layout_id'  => $layoutId,
-      'order'      => 0,
+      'order'      => 99,
       'publish'    => 1,
     ]);
 

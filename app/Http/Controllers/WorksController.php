@@ -42,7 +42,7 @@ class WorksController extends BaseController
 
   public function authors()
   {
-    $projects = $this->project->with('workImage')->published()->orderBy('author', 'DESC')->get();
+    $projects = $this->project->with('workImage')->published()->orderBy('author', 'DESC')->orderBy('year_works', 'DESC')->get();
     return 
       view($this->viewPath . 'authors', 
         [
@@ -60,7 +60,7 @@ class WorksController extends BaseController
 
   public function year()
   {
-    $projects = $this->project->with('workImage')->published()->orderBy('year', 'DESC')->get();
+    $projects = $this->project->with('workImage')->published()->orderBy('year', 'DESC')->orderBy('year_works', 'DESC')->get();
     $projects = $projects->groupBy('year');
     $data = [];
     
@@ -93,7 +93,7 @@ class WorksController extends BaseController
 
   public function program()
   {
-    $projects = $this->project->with('workImage')->published()->orderBy('program')->get();
+    $projects = $this->project->with('workImage')->published()->orderBy('program')->orderBy('year_works', 'DESC')->get();
     return 
       view($this->viewPath . 'program', 
         [
@@ -111,7 +111,7 @@ class WorksController extends BaseController
 
   public function state()
   {
-    $projects = $this->project->with('workImage')->published()->orderBy('state')->get();
+    $projects = $this->project->with('workImage')->published()->orderBy('state')->orderBy('year_works', 'DESC')->get();
     return 
       view($this->viewPath . 'state', 
         [

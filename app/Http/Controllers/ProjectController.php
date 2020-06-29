@@ -33,13 +33,9 @@ class ProjectController extends BaseController
 
   public function index()
   {
-    
-    //$search = $this->project->search('Frauenfeld')->get();
-    //dd($search);
-    
-    
+   
     // get first project
-    $project      = $this->project->with('publishedDocuments')->with('grids.layout')->with('grids.elements.image')->first();
+    $project      = $this->project->with('publishedDocuments')->with('grids.layout')->with('grids.elements.image')->orderBy('order')->first();
     $project_grid = $project->with('grids.layout')->with('grids.elements.image')->findOrFail($project->id);
 
     // get teaser images
@@ -88,7 +84,7 @@ class ProjectController extends BaseController
   protected function getBrowse($id = NULL)
   {
     // Build project nav
-    $projects = $this->project->hasDetail()->get();
+    $projects = $this->project->hasDetail()->orderBy('order', 'ASC')->get();
     $keys     = [];
     $items    = [];
 

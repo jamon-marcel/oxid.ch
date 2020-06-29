@@ -9,53 +9,46 @@
           <router-link :to="{ name: 'discourse-create' }" class="btn-add">
             <span>Hinzufügen</span>
           </router-link>
-          <div class="list-items is-grouped" v-if="discourses">
-            <div
-              v-for="(discourse, index) in discourses"
-              :key="index"
-              :class="[hasFilter && filter != index ? 'is-hidden' : '', '']"
+          <div class="list-items" v-if="discourses">
+            <draggable
+              :disabled="false"
+              v-model="discourses"
+              @end="order()"
+              ghost-class="draggable-ghost"
+              draggable=".list-item"
             >
-              <h3 class="list-item-header">{{categories[index]}}</h3>
-              <draggable
-                :disabled="false"
-                v-model="discourses[index]"
-                @end="order(index)"
-                ghost-class="draggable-ghost"
-                draggable=".list-item"
+              <div
+                :class="[d.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
+                v-for="d in discourses"
+                :key="d.id"
+                data-icons="3"
               >
                 <div
-                  :class="[d.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
-                  v-for="d in discourse"
-                  :key="d.id"
-                  data-icons="3"
-                >
-                  <div
-                    class="list-item-body"
-                  >{{ d.title.de }} - ({{ d.heading.de }}, {{ d.date.de }})</div>
-                  <div class="list-item-action" data-icons="3">
-                    <a
-                      href="javascript:;"
-                      :class="[d.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
-                      @click.prevent="toggle(d.id,$event)"
-                    ></a>
-                    <router-link
-                      :to="{name: 'discourse-edit', params: { id: d.id }}"
-                      class="icon-edit icon-mini"
-                    ></router-link>
-                    <a
-                      href="javascript:;"
-                      class="icon-trash icon-mini"
-                      @click.prevent="destroy(d.id,$event)"
-                    ></a>
-                  </div>
+                  class="list-item-body"
+                >{{ d.title.de }} - ({{ d.heading.de }}, {{ d.date.de }}) - {{categories[d.category]}}</div>
+                <div class="list-item-action" data-icons="3">
+                  <a
+                    href="javascript:;"
+                    :class="[d.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
+                    @click.prevent="toggle(d.id,$event)"
+                  ></a>
+                  <router-link
+                    :to="{name: 'discourse-edit', params: { id: d.id }}"
+                    class="icon-edit icon-mini"
+                  ></router-link>
+                  <a
+                    href="javascript:;"
+                    class="icon-trash icon-mini"
+                    @click.prevent="destroy(d.id,$event)"
+                  ></a>
                 </div>
-              </draggable>
-            </div>
+              </div>
+            </draggable>
           </div>
           <div v-else>
             <p>Es sind noch keine Diskurs-Einträge vorhanden...</p>
           </div>
-          <footer class="site-footer">
+          <!-- <footer class="site-footer">
             <div>
               <div class="filter">
                 <button type="button" class="btn-filter" @click="filterResults(1)">Recherche</button>
@@ -63,7 +56,7 @@
                 <button type="button" class="btn-filter" @click="filterResults(3)">Publikationen</button>
               </div>
             </div>
-          </footer>
+          </footer> -->
         </div>
       </main>
     </div>
@@ -134,22 +127,18 @@ export default {
     },
 
     order(index) {
-      let discourses = this.discourses[index].map(function(discourse, idx) {
-        discourse.order = idx;
+      let discourses = this.discourses.map(function(discourse, index) {
+        discourse.order = index;
         return discourse;
       });
+
       if (this.debounce) return;
-      this.debounce = setTimeout(
-        function() {
-          this.debounce = false;
-          this.axios
-            .post(`/api/discourse/order`, { discourses: discourses })
-            .then(response => {
-              this.$notify({ type: "success", text: "Reihenfolge angepasst" });
-            });
-        }.bind(this, discourses),
-        500
-      );
+      this.debounce = setTimeout(function() {
+        this.debounce = false 
+        this.axios.post(`/api/discourse/order`, {discourses: discourses}).then((response) => {
+          this.$notify({type: 'success', text: 'Reihenfolge angepasst'});
+        });
+      }.bind(this, discourses), 500);
     },
 
     filterResults(category) {

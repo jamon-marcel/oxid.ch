@@ -4,11 +4,11 @@ var ImageScroll = (function() {
 
   // selectors
   var selectors = {
-    html:       'html',
-    body:       'body',
+    html:     'html',
+    body:     'body',
     item:     '.js-scroll-item',
-    btnNext:    '.js-btn-scroll-next',
-    btnPrev:    '.js-btn-scroll-prev',
+    btnNext:  '.js-btn-scroll-next',
+    btnPrev:  '.js-btn-scroll-prev',
   };
 
   // css classes

@@ -25,26 +25,27 @@
 </head>
 <body>
 <main role="main">
+<a href="/busu/en" class="lang">English</a>
 <header>
    <div>
       <h1>
         <span>Generationenwechsel</span>
       </h1>
-      <p>Burkhalter Sumi Architekten heisst seit 1.7.2020 Oxid Architektur.</p>
+      <p>Burkhalter Sumi Architekten heisst <span class="nobr">seit 1.7.2020</span> Oxid Architektur.</p>
   </div>
 </header>
 <section>
-  <a href="" class="content-oxid">
+  <a href="https://oxid-arch.ch" class="content-oxid">
     <div>
       <h2>Oxid Architektur</h2>
-      <p>Oxid Architektur baut auf den Werten auf, die Yves Schihin und Urs Rinklef mit Burkhalter Sumi Architekten geprägt haben.</p>
+      <p>Yves Schihin und Urs Rinklef bauen mit Oxid Architektur auf den Werten auf, die sie während der letzten 20 Jahre mit Burkhalter Sumi Archi- tekten geprägt haben.</p>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38"><path d="M38,34.7,34.7,38,4.5,7.8V28.1H0V0H28.1V4.6H7.8Z"/></svg>
     </div>
   </a>
-  <a href="" class="content-busu">
+  <a href="https://atelierburkhaltersumi.ch" class="content-busu">
     <div>
       <h2>Marianne Burkhalter Christian Sumi</h2>
-      <p>Marianne Burkhalter prof.em. und Christian Sumi prof.em. sind weiterhin im Bereich Architektur / Theorie / Ausstellungen tätig.</p>
+      <p>Marianne Burkhalter und Christian Sumi sind weiterhin im Bereich Architektur, Theorie und Ausstellungen tätig. Sie begleiten zudem Oxid Architektur in verschiedenen Arbeitsgemeinschaften.</p>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38"><path d="M3.3,38,0,34.7,30.2,4.6H9.9V0H38V28.1H33.5V7.8Z"/></svg>
     </div>
   </a>

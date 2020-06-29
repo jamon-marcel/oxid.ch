@@ -53,6 +53,7 @@
             <div class="team-member__info">
               @if ($t->role) {{$t->role}}<br>@endif
               @if ($t->email)<a href="mailto:{{$t->email}}">{{$t->email}}</a>@endif
+              @if ($t->phone)<br>{{$t->phone}}@endif
             </div>
           </article>
         @endforeach

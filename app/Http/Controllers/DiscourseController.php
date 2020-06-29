@@ -31,7 +31,7 @@ class DiscourseController extends BaseController
 
   public function index()
   {
-    $discourse = $this->discourse->with('previewImage')->published()->orderBy('category')->orderBy('order')->get();
+    $discourse = $this->discourse->with('previewImage')->published()->orderBy('order')->get();
     return 
       view($this->viewPath . 'index', 
         [

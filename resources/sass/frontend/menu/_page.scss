@@ -11,14 +11,20 @@ nav.menu-page {
 
   @include bp-sm() {
     display: block;
+    height: calc(100vh - (#{$header-height-sm} + #{$footer-height}));
+    overflow-y: auto;
+    padding-bottom: $footer-height;
     top: calc(100px + #{$header-height-sm});
+    -webkit-overflow-scrolling: touch;
   }
 
   @include bp-md() {
+    height: calc(100vh - (#{$header-height-md} + #{$footer-height}));
     top: calc(100px + #{$header-height-md});
   }
 
   @include bp-lg() {
+    height: calc(100vh - (#{$header-height-lg} + #{$footer-height}));
     top: calc(100px + #{$header-height-lg});
   }
 

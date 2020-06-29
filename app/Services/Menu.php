@@ -21,7 +21,7 @@ class Menu
   public function boot()
   {
     $data = [
-      'project' => $this->project->highlight()->get()
+      'project' => $this->project->highlight()->orderBy('order', 'ASC')->get()
     ];
     View::share('menuItems', $data);
   }

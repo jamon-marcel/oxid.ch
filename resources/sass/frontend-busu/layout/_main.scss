@@ -5,7 +5,7 @@
  */
 
 main {
-
+  position: relative;
 }
 
 section {
@@ -18,7 +18,7 @@ section {
   }
 }
 
-a {
+a:not(.lang) {
   align-items: center;
   color: $color-black;
   display: flex;
@@ -62,7 +62,23 @@ a {
 
     @include bp-sm() {
       height: 38px;
+      margin-top: $space-huge;
       width: 38px;
     }
+  }
+}
+
+a.lang {
+  color: $color-black;
+  @include font-size($fs-sm);
+  right: $space-xs;
+  position: absolute;
+  top: $space-xs;
+  text-decoration: none;
+
+  @include bp-sm() {
+    right: $space-md;
+    position: absolute;
+    top: $space-sm;
   }
 }

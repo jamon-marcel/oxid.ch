@@ -8,8 +8,8 @@ var Projects = (function() {
     body:       'body',
     grids:      '.js-project-grids',
     grid:       '.js-project-grid',
-    btnNext:    '.js-btn-scroll-next',
-    btnPrev:    '.js-btn-scroll-prev',
+    btnDown:    '.js-btn-scroll-down',
+    btnUp:      '.js-btn-scroll-up',
     index:      '.js-project-idx',
     menuItem:   '[data-project-id]',
   };
@@ -33,11 +33,11 @@ var Projects = (function() {
   };
 
   var _bind = function() {
-    $(selectors.body).on('click', selectors.btnNext, function(){
+    $(selectors.body).on('click', selectors.btnDown, function(){
       _scrollToNext();
     });
 
-    $(selectors.body).on('click', selectors.btnPrev, function(){
+    $(selectors.body).on('click', selectors.btnUp, function(){
       _scrollToPrev();
     });
 
@@ -102,17 +102,17 @@ var Projects = (function() {
 
   var _watchBtns = function() {
     if (index == totalGrids) {
-      $(selectors.btnNext).hide();
+      $(selectors.btnDown).hide();
     }
     else {
-      $(selectors.btnNext).show()
+      $(selectors.btnDown).show();
     }
 
     if (index == 1) {
-      $(selectors.btnPrev).hide();
+      $(selectors.btnUp).hide();
     }
     else {
-      $(selectors.btnPrev).show();
+      $(selectors.btnUp).show();
     }
   };
 

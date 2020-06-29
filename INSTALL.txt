@@ -31,6 +31,9 @@ cd marceli.to/oxid-arch.ch/
 tar -zxvf app.tar.gz &&
 php composer.phar install --optimize-autoloader --no-dev && 
 php artisan config:clear && 
-php artisan cache:clear && 
 php artisan view:clear &&
 rm app.tar.gz
+
+4)
+
+php artisan cache:clear

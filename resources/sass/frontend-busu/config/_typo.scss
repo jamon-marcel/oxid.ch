@@ -7,6 +7,14 @@
  */
 
 // Responsiv font sizes
+$fs-sm: (
+  null: (14px,1.2),
+  sm:   (14px,1.2),
+  md:   (17px,1.2),
+  lg:   (17px,1.2)  
+);
+
+
 $fs-md: (
   null: (17px,1.2),
   sm:   (17px,1.2),
