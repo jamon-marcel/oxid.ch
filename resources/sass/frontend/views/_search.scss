@@ -1,0 +1,123 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: views/search
+ * -----------------------------------------------------------------------------
+ */
+
+ section.content-search {
+  padding-bottom: $footer-height;
+  @include responsive-prop('padding-top', $header-height);
+  @include bp-sm() {
+    padding-bottom: 0;
+    padding-top: 0 !important;
+  }
+
+  .span-visual {
+    display: none;
+    @include bp-sm() {
+      display: block;
+    }
+  }
+}
+
+.search {
+  overflow-y: auto;
+  padding: $space-sm;
+  -webkit-overflow-scrolling: touch;
+
+  @include bp-sm() {
+    margin-top: 55px;
+    height: calc(100vh - (#{$header-height-sm} + #{$footer-height}) + 55px);
+    padding-top: $header-height-sm;
+    top: calc(100px + #{$header-height-sm});
+  }
+
+
+  @include bp-md() {
+    margin-top: 65px;
+    height: calc(100vh - (#{$header-height-md} + #{$footer-height}) + 65px);
+    top: calc(100px + #{$header-height-md});
+  }
+
+  @include bp-lg() {
+    height: calc(100vh - (#{$header-height-lg} + #{$footer-height}) + 75px);
+    margin-top: 75px;
+    top: calc(100px + #{$header-height-lg});
+  }
+
+
+  .search__results {
+    margin-top: $space-xxl;
+  }
+
+  .search__result {
+    margin-bottom: $space-md;
+
+    @include bp-md() {
+      margin-bottom: $space-xl;
+    }
+
+    @include bp-lg() {
+      margin-bottom: $space-xxl;
+    }
+
+    span {
+      display: block;
+      @include font-size($fs-sm);
+      margin-bottom: 0;
+    }
+
+    a {
+      @extend %ul-sm-hover;
+      color: $color-black;
+      @include font-size($fs-menu-lg);
+    }
+
+    .abstract {
+      margin-top: $space-tiny;
+    }
+  }
+
+  form {
+
+    input[type=text] {
+      background-color: transparent;
+      border-radius: 0;
+      border: none;
+      border-left: 2px solid $color-black;
+      color: $color-black;
+      display: block;
+      @include font-regular();
+      @include font-size($fs-menu);
+      height: 54px;
+      padding: 4px 8px 4px 12px;
+      position: relative;
+      outline: none !important;
+      width: 100%;
+      z-index: 1;
+      -webkit-appearance: none;
+      -webkit-tap-highlight-color: $color-white;
+    }
+
+    input[type=text]::-webkit-input-placeholder {
+      color: $color-grey;
+      @include font-size($fs-menu);
+    }
+    
+    input[type=text]::-moz-placeholder {
+      color: $color-grey;
+      @include font-size($fs-menu);
+    }
+    
+    input[type=text]:-ms-input-placeholder {
+      color: $color-grey;
+      @include font-size($fs-menu);
+    }
+    
+    input[type=text]:-moz-placeholder {
+      color: $color-grey;
+      @include font-size($fs-menu);
+    }
+  }
+
+}

@@ -16,7 +16,7 @@ Route::get('/projekt/{project}/{slug?}', 'ProjectController@show')->name('page.p
 
 // Works routes
 Route::get('/werkliste', 'WorksController@index')->name('page.works');
-Route::get('/werkliste/autorenschaft', 'WorksController@authors')->name('page.works.authors');
+Route::get('/werkliste/autorenschaft/{isSearch?}', 'WorksController@authors')->name('page.works.authors');
 Route::get('/werkliste/jahr', 'WorksController@year')->name('page.works.year');
 Route::get('/werkliste/programm', 'WorksController@program')->name('page.works.program');
 Route::get('/werkliste/status', 'WorksController@state')->name('page.works.state');
@@ -39,25 +39,12 @@ Route::get('/kontakt', 'ContactController@index')->name('page.contact');
 // History
 Route::get('/geschichte', 'HistoryController@index')->name('page.history');
 
+// Search
 Route::get('/suche', 'SearchController@index')->name('page.search.index');
-Route::post('/suche/{keyword?}', 'SearchController@index')->name('page.search.index');
+Route::get('/suche/{keyword?}', 'SearchController@index')->name('page.search.index');
 
 // Url based images
 Route::get('/img/{template}/{filename}/{maxW?}/{maxH?}/{coords?}', 'ImageController@getResponse');
-
-// Data
-Route::get('/import', 'DataController@index');
-
-
-
-// Busu
-Route::get('/busu', function () {
-	return view('frontend.busu');
-});
-
-Route::get('/busu/en', function () {
-	return view('frontend.busu-en');
-});
 
 
 // Admin routes

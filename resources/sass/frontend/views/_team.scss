@@ -11,7 +11,8 @@
     @include font-size($fs-fix-lg);
   }
 
-  a[href^="mailto"] {
+  a[href^="mailto"],
+  a[href^="tel"] {
     @extend %ul-xs-hover;
   }
 }

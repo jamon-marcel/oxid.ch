@@ -48,6 +48,7 @@ class ProjectController extends BaseController
         'project'         => $project,
         'project_grid'    => $project_grid->grids->sortBy('order'),
         'project_teasers' => $projectTeasers,
+        'project_og'      => $this->getOpenGraphImage($project_grid),
         'navBrowse'       => $this->getBrowse($project->id),
       ]
     );
@@ -75,6 +76,7 @@ class ProjectController extends BaseController
         'pageFooter'   => $this->pageFooter,
         'project'      => $project,
         'project_grid' => $project_grid->grids->sortBy('order'),
+        'project_og'      => $this->getOpenGraphImage($project_grid),
         'project_teasers' => $projectTeasers,
         'navBrowse'    => $this->getBrowse($project->id),
       ]
@@ -118,5 +120,10 @@ class ProjectController extends BaseController
     ];
 
     return $items;
+  }
+
+  protected function getOpenGraphImage($data)
+  {
+    return isset($data->grids[0]->elements[0]->image) ? $data->grids[0]->elements[0]->image : NULL;
   }
 }

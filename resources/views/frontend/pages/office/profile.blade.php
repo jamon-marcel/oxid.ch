@@ -1,6 +1,6 @@
 @extends('frontend.layout.pages')
 @section('seo_title', 'Profil')
-@section('seo_description', '')
+@section('seo_description', 'Team, Profil, Jobs - Yves Schihin, Urs Rinklef')
 @section('content')
 <section class="content">
   @if (isset($images))

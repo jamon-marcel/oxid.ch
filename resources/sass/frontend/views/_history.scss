@@ -13,8 +13,9 @@ nav.menu-page {
     }
 
     h2 {
+      @extend %ul-sm;
+      display: inline-block;
       margin-bottom: $space-lg;
-      text-decoration: underline;
     }
 
     label {
@@ -26,6 +27,10 @@ nav.menu-page {
       &:last-of-type {
         margin-bottom: 0;
       }
+    }
+
+    a {
+      @extend %ul-sm-hover;
     }
 
   }
@@ -40,9 +45,17 @@ nav.menu-page {
 
   .history__period {
     margin-bottom: 60px;
+
+    &.is-last {
+      margin-bottom: 20px;
+    }
     
     @include bp-sm() {
       margin-bottom: 180px;
+      &.is-last {
+        margin-bottom: 80px;
+      }
+      
     }
   } 
 
@@ -73,6 +86,55 @@ nav.menu-page {
     }    
   }
 
+  .align-right-md {
+    @include bp-sm() {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  .history__item {
+    margin-bottom: $space-lg;
+
+    p {
+      @extend %word-break;
+    }
+
+    h4 {
+      display: block;
+      @include font-size($fs-md);
+    }
+
+    .grid {
+      > div {
+        margin-bottom: $space-lg;
+      }
+
+      @include bp-sm() {
+        > div {
+          margin-bottom: 0;
+        }
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-column-gap: $space-md;
+        grid-row-gap: $space-lg;
+      }
+    }
+
+    .history__portrait {
+      @include font-size($fs-sm);
+      margin-bottom: $space-md;
+
+      p {
+        margin-bottom: $space-xs;
+
+        @include bp-sm() {
+          margin-bottom: $space-sm;
+        }
+      }
+    }
+
+  }
 
 
   // images
@@ -80,16 +142,64 @@ nav.menu-page {
     figcaption {
       border-bottom: 1px solid $color-dark;
       display: flex;
-      padding: $space-xs 0;
+      @include font-size($fs-sm);
+      padding: $space-xxs 0;
     }
   }
+
   figure.portrait {
-    margin-top: $space-huge;
-    width: 50%;
+    width: 65%;
   }
 
-  figure.landscape {
-    margin-top: $space-gigantic;
+  // spaces
+  .mb-md {
+    margin-bottom: $space-md !important;
+  }
+
+  .mt-md {
+    margin-top: $space-md;
+  }
+
+  .mt-xl {
+    @include bp-sm() {
+      margin-top: $space-xl;
+    }
+  }
+
+  .mt-xxl {
+    @include bp-sm() {
+      margin-top: $space-xxl;
+    }
+  }
+
+  .mt-huge {
+    @include bp-sm() {
+      margin-top: $space-huge;
+    }
+  }
+  
+  .mt-mega {
+    @include bp-sm() {
+      margin-top: $space-mega;
+    }
+  }
+
+  .mt-giga {
+    @include bp-sm() {
+      margin-top: $space-gigantic;
+    }
+  }
+
+  .mt-ultra {
+    @include bp-sm() {
+      margin-top: $space-ultra;
+    }
+  }
+
+  .mt-giga-neg {
+    @include bp-sm() {
+      margin-top: -$space-gigantic;
+    }
   }
 
 }

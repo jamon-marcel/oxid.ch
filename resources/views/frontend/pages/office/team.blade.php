@@ -1,6 +1,6 @@
 @extends('frontend.layout.pages')
 @section('seo_title', 'Team')
-@section('seo_description', '')
+@section('seo_description', 'Team, Profil, Jobs - Yves Schihin, Urs Rinklef')
 @section('content')
 <section class="content">
   @if ($images)
@@ -28,7 +28,7 @@
               @if ($t->position) {{$t->position}}<br>@endif
               @if ($t->role) {{$t->role}}<br>@endif
               @if ($t->email)<a href="mailto:{{$t->email}}">{{$t->email}}</a>@endif
-              @if ($t->phone)<br>{{$t->phone}}@endif
+              @if ($t->phone)<br><a href="tel:{{$t->phone}}">{{$t->phone}}</a>@endif
               @if ($t->documents)
                 @foreach($t->documents as $d)
                   <br>
@@ -53,7 +53,7 @@
             <div class="team-member__info">
               @if ($t->role) {{$t->role}}<br>@endif
               @if ($t->email)<a href="mailto:{{$t->email}}">{{$t->email}}</a>@endif
-              @if ($t->phone)<br>{{$t->phone}}@endif
+              @if ($t->phone)<br><a href="tel:{{$t->phone}}">{{$t->phone}}</a>@endif
             </div>
           </article>
         @endforeach

@@ -1,0 +1,31 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/icons/document
+ * -----------------------------------------------------------------------------
+ */
+
+.icon-magnifier {
+  @extend %icon-ib;
+  @extend %icon-bg;
+  background-image: url($url-images + 'magnifier.svg');
+  background-size: 100% auto;
+  box-shadow: none !important;
+  height: 40px;
+  width: 40px;
+  position: relative;
+
+  @include bp-sm() {
+    height: 16px;
+    width: 16px;
+  }
+
+  @include bp-md() {
+    height: 18px;
+    width: 18px;
+  }
+
+  @include bp-lg() {
+    height: 22px;
+    width: 22px;
+  }
+}

@@ -1,6 +1,9 @@
 @extends('frontend.layout.pages')
 @section('seo_title', $discourse->title . ' - Diskurs')
-@section('seo_description', '')
+@section('seo_description', substr(strip_tags($discourse->description_short),0,255))
+@if ($discourse_og)
+  @section('og_image', url('/') . ImageHelper::openGraphImage($discourse_og))
+@endif
 @section('content')
 <section class="content content--discourse">
   <a href="javascript:window.history.back();" class="btn-close js-btn-close"></a>

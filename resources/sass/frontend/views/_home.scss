@@ -16,18 +16,25 @@ section.content-home {
 
 .news-listing {
   padding: $space-sm;
-  
+  position: relative;
+
   @include bp-sm() {
-    margin-top: 55px;
-    @include responsive-prop('padding-top', $header-height);
+    display: block;
+    height: calc(100vh - (#{$header-height-sm} + #{$footer-height} + 55px));
+    overflow-y: auto;
+    padding-bottom: $footer-height;
+    top: calc(55px + #{$header-height-sm});
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @include bp-md() {
+    height: calc(100vh - (#{$header-height-md} + #{$footer-height} + 65px));
+    top: calc(65px + #{$header-height-md});
   }
 
   @include bp-lg() {
-    margin-top: 65px;
-  }
-  
-  @include bp-lg() {
-    margin-top: 75px;
+    height: calc(100vh - (#{$header-height-lg} + #{$footer-height} + 75px));
+    top: calc(75px + #{$header-height-lg});
   }
 
   article {

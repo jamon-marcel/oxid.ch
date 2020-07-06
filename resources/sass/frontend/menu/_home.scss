@@ -20,5 +20,6 @@ nav.menu-home {
   &.is-visible {
     transition: transform .16s ease-out;
     transform: translateY(0);
+    z-index: 50;
   }
 }

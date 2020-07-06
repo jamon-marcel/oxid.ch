@@ -12,12 +12,18 @@ var Projects = (function() {
     btnUp:      '.js-btn-scroll-up',
     index:      '.js-project-idx',
     menuItem:   '[data-project-id]',
+    menu:    '.js-menu',
+    menuBar: '.js-menu-bar',
   };
 
   // css classes
   var classes = {
     visible: 'is-visible',
     active: 'is-active',
+    hidden: 'is-hidden',
+    hasMenu: 'has-menu',
+    selected: 'is-selected',
+    open: 'is-open',
   };
 
   // media queries
@@ -35,10 +41,12 @@ var Projects = (function() {
   var _bind = function() {
     $(selectors.body).on('click', selectors.btnDown, function(){
       _scrollToNext();
+      _closeMenu();
     });
 
     $(selectors.body).on('click', selectors.btnUp, function(){
       _scrollToPrev();
+      _closeMenu();
     });
 
     if (mq.sm.matches) {
@@ -66,6 +74,13 @@ var Projects = (function() {
         $('[data-project-teaser="'+ id +'"]').removeClass(classes.visible);
       }
     });
+  };
+
+  var _closeMenu = function() {
+    if ($(selectors.menu).hasClass(classes.visible)) {
+      $(selectors.menu).removeClass(classes.visible);
+      $(selectors.menuBar).toggleClass(classes.hidden);
+    }
   };
 
   var _scrollToNext = function(){

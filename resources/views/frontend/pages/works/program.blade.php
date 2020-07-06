@@ -1,6 +1,6 @@
 @extends('frontend.layout.pages')
 @section('seo_title', 'Werkliste nach Programm')
-@section('seo_description', '')
+@section('seo_description', 'Forsanose, Hochhaus Weberstrasse, Wannenholz, Murgareal, Giesshübel, Sunnige Hof')
 @section('content')
 <section class="content content--works">
   @if ($projects)

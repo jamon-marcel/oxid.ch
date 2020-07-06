@@ -1,6 +1,9 @@
 @extends('frontend.layout.pages')
 @section('seo_title', $project->title . ' - Projekte')
-@section('seo_description', '')
+@section('seo_description', substr(strip_tags($project->description),0,255))
+@if ($project_og)
+  @section('og_image', url('/') . ImageHelper::openGraphImage($project_og))
+@endif
 @section('content')
 <section class="content">
   @if ($project_grid->isNotEmpty())

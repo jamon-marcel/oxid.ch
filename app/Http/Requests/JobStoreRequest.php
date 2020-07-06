@@ -24,7 +24,6 @@ class JobStoreRequest extends FormRequest
     return [
       'title.de' => 'required|string',
       'description.de' => 'required|string',
-      'info.de' => 'required|string',
     ];
   }
 
@@ -38,7 +37,6 @@ class JobStoreRequest extends FormRequest
     return [
       'title.de.required' => 'Title is required!',
       'description.de.required' => 'Description is required!',
-      'info.de.required' => 'Info is required!',
     ];
   }
 }

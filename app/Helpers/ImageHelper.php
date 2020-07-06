@@ -42,4 +42,9 @@ class ImageHelper
     
     return '<img src="/img/cache/'.$image->name.'/1600/1000" width="1000" height="1600" alt="'. $caption.'">';
   }
+
+  static function openGraphImage($image)
+  {
+    return "/img/cache/".$image->name."/1600/1000";
+  }
 }

@@ -37,17 +37,20 @@ class WorksController extends BaseController
   /**
    * Show entries by authors
    *
+   * @param Boolean search
+   * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
 
-  public function authors()
+  public function authors(Request $request, $search = false)
   {
     $projects = $this->project->with('workImage')->published()->orderBy('author', 'DESC')->orderBy('year_works', 'DESC')->get();
     return 
       view($this->viewPath . 'authors', 
         [
           'pageFooter' => $this->pageFooter,
-          'projects'   => $projects->groupBy('author')
+          'projects'   => $projects->groupBy('author'),
+          'search'   => $request->input('search')
         ]
     );
   }
@@ -80,7 +83,7 @@ class WorksController extends BaseController
       view($this->viewPath . 'years', 
         [
           'pageFooter' => $this->pageFooter,
-          'projects'   => $projects
+          'projects'   => $projects,
         ]
     );
   }

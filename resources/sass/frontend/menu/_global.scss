@@ -99,6 +99,19 @@
     }
   }
 
+  ul.meta {
+    margin-top: $space-md;
+    
+    @include bp-sm() {
+      margin-top: 4px;
+    }
+
+
+    @include bp-lg() {
+      margin-top: 7px;
+    }
+  }
+
   ul.language {
     li {
       @include font-size($fs-fix-lg);

@@ -17,6 +17,7 @@ require('./modules/overlay.js');
 require('./modules/filter.js');
 require('./modules/project.js');
 require('./modules/imagescroll.js');
+require('./modules/history.js');
 require('./modules/contact.js');
 require('./modules/dropdown.js');
 require('./modules/swiper.js');

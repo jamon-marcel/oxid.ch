@@ -11,12 +11,18 @@ DB
 
 nine: 494c93b3239a8f474bc166c685500735:ae5f2c1af3e432704b70898a0ff8de6b
 
+HOSTPOINT
+---------
+
+ssh burkhal2@oxid-arch.ch / WuDmVkC9jgZ2zxrL
 
 DEPLOYING
 ---------
 
 1)
 
+php artisan cache:clear &&
+php artisan view:clear &&
 npm run production &&
 tar --exclude="INSTALL.txt" --exclude="*.DS_Store" --exclude="storage/" --exclude="node_modules/" --exclude=".git*" --exclude=".env" --exclude=".editorconfig" --exclude="public/storage/" --exclude="public/.htaccess" -cvzf app.tar.gz * &&
 scp app.tar.gz www-data@silverfish02.nine.ch:/home/www-data/marceli.to/oxid-arch.ch/ &&

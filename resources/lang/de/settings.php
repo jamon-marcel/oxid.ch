@@ -32,7 +32,7 @@ return [
 
   // Team categories
   'partner' => 'Partner',
-  'employee' => 'Mitarbeiter',
-  'alumni' => 'Ehemalige',
+  'employee' => 'Mitarbeitende',
+  'alumni' => 'Ehemalige Mitarbeitende',
 
 ];

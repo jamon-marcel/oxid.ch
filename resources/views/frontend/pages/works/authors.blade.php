@@ -1,12 +1,12 @@
 @extends('frontend.layout.pages')
 @section('seo_title', 'Werkliste nach Autorenschaft')
-@section('seo_description', '')
+@section('seo_description', 'Forsanose, Hochhaus Weberstrasse, Wannenholz, Murgareal, Giesshübel, Sunnige Hof')
 @section('content')
 <section class="content content--works">
   @if ($projects)
     <div class="works">
       @foreach($projects as $key => $group)
-        <div class="collapsible {{ $loop->last ? 'is-expanded' : ''}} js-clpsbl">
+        <div class="collapsible {{ $loop->last || $search ? 'is-expanded' : ''}} js-clpsbl">
           <div class="works__heading">
             <h1>
               <a href="javascript:;" class="btn-collapsible js-clpsbl-btn">
@@ -14,7 +14,7 @@
               </a>
             </h1>
           </div>
-          <div class="works__grid collapsible__content js-clpsbl-body" style="{{ $loop->last ? 'display: block' : 'display: none'}}">
+          <div class="works__grid collapsible__content js-clpsbl-body" style="{{ $loop->last || $search ? 'display: block' : 'display: none'}}">
             <span class="works__authors">{!! __('content.author_description_' . $key) !!}</span>
             <div class="works__items {{$loop->last ? 'is-last' : ''}} js-filter-items">
               @foreach($group as $p)

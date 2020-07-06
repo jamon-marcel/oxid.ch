@@ -221,4 +221,10 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+
+  .menu-footer__nav {
+    @include bp-sm() {
+      margin-left: -180px;
+    }
+  }
 }

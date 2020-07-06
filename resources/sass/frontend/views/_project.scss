@@ -26,7 +26,7 @@
   }
 
   a[href*="//"]:not([href*="oxid.ch"]) {
-    //@extend %anchor-external-sm;
+    @extend %anchor-external-sm;
     @extend %ul-xs-blue-hover;
   }
 

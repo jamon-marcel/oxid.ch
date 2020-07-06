@@ -115,6 +115,7 @@ class DiscourseController extends BaseController
       [
         'pageFooter'   => FALSE,
         'discourse'    => $discourse,
+        'discourse_og' => isset($discourse->publishedImages[0]) ? $discourse->publishedImages[0] : null,
       ]
     );
   }

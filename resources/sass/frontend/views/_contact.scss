@@ -9,11 +9,13 @@
   overflow: hidden;
 
   .contact__info {
-    height: 100vh;
+    height: calc(100vh - #{$footer-height});
     overflow-y: auto;
-    padding: $space-sm $space-sm ($footer-height + $space-sm) $space-sm;
+    padding: $space-sm $space-sm 0 $space-sm;
+
     @include bp-md() {
-      padding: $space-md $space-md ($footer-height + $space-md) $space-md;
+      height: calc(100vh - #{$footer-height});
+      padding: $space-md $space-md 0 $space-md;
     }
 
     a {
@@ -33,7 +35,8 @@
     address {
       @include font-size($fs-xl);
 
-      a[href*="mailto"] {
+      a[href*="mailto"],
+      a[href*="tel"] {
         @extend %ul-sm-hover;
         color: $color-black;
       }
@@ -59,6 +62,13 @@
       }
 
       &:last-of-type {
+        p {
+          margin-bottom: $space-xl;
+          &:last-of-type {
+            margin-bottom: $space-xl !important;
+          }
+        }
+
         > div {
           margin-top: $space-md;
           @include bp-md() {
@@ -69,6 +79,7 @@
       
       h3 {
         @include font-size($fs-sm);
+        @include font-bold();
       }
     }
   }

@@ -1,6 +1,6 @@
 @extends('frontend.layout.home')
 @section('seo_title', 'Home')
-@section('seo_description', '')
+@section('seo_description', 'Burkhalter Sumi Architekten wird Oxid Architektur. Baut auf den Werten auf, die Yves Schihin und Urs Rinklef als langjährige Partner von Burkhalter Sumi Architekten mitgeprägt haben: die umsichtige Gestaltung des gemeinsamen Lebensraums. Oxid beschreibt unser neues Denken. Oxid reagiert, Oxid schafft neue und mutige Verbindungen. Oxid Architektur fokussiert auf die grossen Themen der Zeit: Klima und Gesellschaft. Wir denken  systemisch, wo immer sinnvoll in Holz (Reduce), und nutzen den Bestand (Re-Use).')
 @section('content')
 <section class="content-home grid-home">
   @if ($image)

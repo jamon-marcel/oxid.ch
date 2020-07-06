@@ -42,6 +42,11 @@
     </a>
   </li>
 </ul>
+<ul class="meta">
+  <li>
+    <a href="{{ route('page.search.index') }}" class="icon-magnifier"></a>
+  </li>
+</ul>
 {{-- <ul class="language">
   <li>
     <a href="">De</a>/<a href="">En</a>
