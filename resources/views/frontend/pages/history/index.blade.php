@@ -12,7 +12,7 @@
       <article>
         <div>
           <div class="history__item">
-            <p>1984 von Marianne Burkhalter und Christian Sumi gegründet, wurde das Büro nach 2000 mit Yves Schihin und Urs Rinklef als Partner verstärkt, um zusammen die Themen, welche das Büro seit der Gründung beschäftigt haben, im Quartett weiterzudenken (Holzbau, Re-Use, Farbe, Typologie und Wohnungsbau, Hotels). Seit 2020 haben Yves Schihin und Urs Rinklef das Büro übernommen und fokussieren neu auf die drängenden Themen unserer Zeit; Klima und Gesellschaft. In immer neuen interdisziplinären Arbeitsgemeinschaften denken sie systemisch und schaffen kollektiv an der umsichtigen Gestaltung unseres Lebensraums, wenn immer sinnstiftend mit Holz oder Bauen im Bestand.</p>
+            <p>1984 von Marianne Burkhalter und Christian Sumi gegründet, verstärken die neuen Partner Yves Schihin und Urs Rinklef das Büro nach der Jahrtausendwende. Im Quartett denken sie die Themen weiter, mit denen sich das Büro seit der Gründung beschäftigt: Holzbau, Re-Use, Farbe, Typologie, Wohnungsbau und Hotels. 2020 übernehmen Yves Schihin und Urs Rinklef das Büro und fokussieren neu auf die drängenden Themen unserer Zeit: Klima und Gesellschaft. In immer neuen interdisziplinären Arbeitsgemeinschaften denken sie systemisch und schaffen kollektiv an der umsichtigen Gestaltung unseres Lebensraums, wenn immer sinnstiftend mit Holz und Bauen im Bestand.</p>
           </div>
           <div class="history__item mt-xxl align-right-md">
             <figure class="portrait">
@@ -48,12 +48,12 @@
               <div class="history__portrait">
                 <h4>Marianne Burkhalter</h4>
                 <p>Architektin BSA, SWB, VSI</p>
-                <p>Hat ihre Lehre bei Hubacher Issler in Zürich absolviert, um dann bei Superstudio in Florenz, bei Studio Works in New York und Los Angeles zu arbeiten und an der Princeton University zu studieren. Zurück in Zürich war sie an der ETHZ Assistentin bei Klaus Vogt und Mario Campi.<br>1984 gründete sie das eigene Büro zusammen mit Christian Sumi. Es folgten Gastprofessuren an der Sci-Arc in LA und an der EPF in Lausanne.</p>
+                <p>Absolviert ihre Lehre bei Hubacher Issler in Zürich, um dann bei Superstudio in Florenz, bei Studio Works in New York und Los Angeles zu arbeiten und an der Princeton University zu studieren. Zurück in Zürich ist sie an der ETHZ Assistentin bei Klaus Vogt und <span class="nobr">Mario Campi.</span><br>1984 gründet sie das eigene Büro zusammen mit <span class="nobr">Christian Sumi</span>. Es folgen Gastprofessuren an der Sci-Arc in LA und an der EPF in Lausanne.</p>
               </div>
               <div class="history__portrait">
                 <h4>Christian Sumi</h4>
                 <p>Dipl. Architekt ETH, BSA, SIA</p>
-                <p>*1950, hat an der ETH in Zürich studiert, um dann in Rom beim deutschen archäologischen Institut, am GTA in Zürich und als Assistent bei Bruno Reichlin in Genf zu arbeiten. Zurück in Zürich war er an der ETHZ Assistent bei Mario Campi.<br>1984 gründete er das eigene Büro zusammen mit Marianne Burkhalter. Es folgten Gastprofessuren an der Universität von Genf, in Harvard, in Glasgow und an der EPF in Lausanne.</p>
+                <p>*1950, studiert an der ETH in Zürich, um dann in Rom beim Deutschen Archäologischen Institut, am GTA in Zürich und als Assistent bei Bruno Reichlin in Genf zu arbeiten. Zurück in Zürich ist er an der ETHZ Assistent bei Mario Campi.<br>1984 gründet er das eigene Büro zusammen mit Marianne Burkhalter. Es folgen Gastprofessuren an der Universität von Genf, in Harvard, in Glasgow und an der EPF in Lausanne.</p>
               </div>
             </div>
           </div>
@@ -107,22 +107,22 @@
               <div class="history__portrait">
                 <h4>Marianne Burkhalter</h4>
                 <p>Architektin BSA, SWB, VSI</p>
-                <p>Hat ihre Lehre bei Hubacher Issler in Zürich absolviert, um dann bei Superstudio in Florenz, bei Studio Works in New York und Los Angeles zu arbeiten und an der Princeton University zu studieren. Zurück in Zürich war sie an der ETHZ Assistentin bei Klaus Vogt und Mario Campi.<br>1984 gründete sie das eigene Büro zusammen mit Christian Sumi. Es folgten Gastprofessuren an der Sci-Arc in LA und an der EPF in Lausanne. Daneben war sie Mitglied der Stadtbildkommission in Zürich, Zug, Salzburg und Baden. Von 2008 bis 2018 war sie zusammen mit Christian Sumi Professorin an der Accademia di Archittectura in Mendrisio.</p>
+                <p>Absolviert ihre Lehre bei Hubacher Issler in Zürich, um dann bei Superstudio in Florenz, bei Studio Works in New York und Los Angeles zu arbeiten und an der Princeton University zu studieren. Zurück in Zürich ist sie an der ETHZ Assistentin bei Klaus Vogt und Mario Campi.<br>1984 gründet sie das eigene Büro zusammen mit <span class="nobr">Christian Sumi</span>. Es folgen Gastprofessuren an der Sci-Arc in LA und an der EPF in Lausanne. Daneben ist sie Mitglied der Stadtbildkommission in Zürich, Zug, Salzburg und Baden. Von 2008 bis 2018 ist sie zusammen mit Christian Sumi Professorin an der Accademia di Archittectura in Mendrisio.</p>
               </div>
               <div class="history__portrait">
                 <h4>Christian Sumi</h4>
                 <p>Dipl. Architekt ETH, BSA, SIA</p>
-                <p>*1950, hat an der ETH in Zürich studiert, um dann in Rom beim deutschen archäologischen Institut, am GTA in Zürich und als Assistent bei Bruno Reichlin in Genf zu arbeiten. Zurück in Zürich war er an der ETHZ Assistent bei Mario Campi.<br>1984 gründete er das eigene Büro zusammen mit Marianne Burkhalter. Es folgten Gastprofessuren an der Universität von Genf, in Harvard, in Glasgow und an der EPF in Lausanne. Daneben war er Mitglied der Stadtbildkommission in Winterthur. Von 2008 bis 2018 war er zusammen mit Marianne Burkhalter Professor an der Accademia di Archittectura in Mendrisio.</p>
+                <p>*1950, studiert an der ETH in Zürich, um dann in Rom beim Deutschen Archäologischen Institut, am GTA in Zürich und als Assistent bei Bruno Reichlin in Genf zu arbeiten. Zurück in Zürich ist er an der ETHZ Assistent bei Mario Campi.<br>1984 gründet er das eigene Büro zusammen mit Marianne Burkhalter. Es folgen Gastprofessuren an der Universität von Genf, in Harvard, in Glasgow und an der EPF in Lausanne. Daneben ist er Mitglied der Stadtbildkommission in Winterthur. Von 2008 bis 2018 ist er zusammen mit Marianne Burkhalter Professor an der Accademia di Archittectura in Mendrisio.</p>
               </div>
               <div class="history__portrait">
                 <h4>Yves Schihin</h4>
                 <p>Dipl. Architekt ETH SIA</p>
-                <p>*1970, hat seine Lehre im Atelier 5 in Bern absolviert, in Lausanne und Barcelona studiert, bei GWJ Architekten in Bern gearbeitet und ist seit 2000 bei burkhalter sumi architekten. Seit 2006 prägte er als Partner die Arbeit des Büros mit.</p>
+                <p>*1970, absolviert seine Lehre im Atelier 5 in Bern, studiert in Lausanne und Barcelona, arbeitet danach bei GWJ Architekten in Bern und ist seit 2000 bei Burkhalter Sumi Architekten. Seit 2006 prägt er als Partner die Arbeit des Büros mit.</p>
               </div>
               <div class="history__portrait">
                 <h4>Urs Rinklef</h4>
                 <p>Dipl. Architekt FH, REG A, SIA</p>
-                <p>*1966, hat seine Lehre bei Charles R. Kälin absolviert, in Winterthur studiert und bei Prof. Baumgartner Partner, Keller Bachmann Partner und Tilla Theus und Partner gearbeitet. 2010 kam er zu burkhalter sumi architekten. Seit 2012 prägte er als Partner die Arbeit des Büros mit.</p>
+                <p>*1966, absolviert seine Lehre bei Charles R. Kälin, studiert in Winterthur und arbeitet danach bei Prof. Baumgartner Partner, Keller Bachmann Partner sowie bei Tilla Theus und Partner. 2010 kommt er zu Burkhalter Sumi Architekten. Seit 2012 prägt er als Partner die Arbeit des Büros mit.</p>
               </div>
             </div>
           </div>
@@ -174,12 +174,12 @@
               <div class="history__portrait">
                 <h4>Yves Schihin</h4>
                 <p>Dipl. Architekt ETH SIA</p>
-                <p>Dipl. Arch ETH SIA, *1970, hat seine Lehre im Atelier 5 in Bern absolviert und in Lausanne und Barcelona studiert. Seit 2006 prägte er als Partner die Arbeit des Büros mit. 2020 übernimmt er zusammen mit Urs Rinklef das Büro und gründet Oxid Architektur. Experten- und Jurytätigkeit, Gastkritiken an Hochschulen und angewandte Forschung im Bereich des Holzbaus ergänzen die Arbeit im Büro.</p>
+                <p>*1970, absolviert seine Lehre im Atelier 5 in Bern und studiert in Lausanne und Barcelona. Seit 2006 prägt er als Partner die Arbeit des Büros mit. 2020 übernimmt er zusammen mit Urs Rinklef das Büro und gründet Oxid Architektur. Experten- und Jurytätigkeit, Gastkritiken an Hochschulen und angewandte Forschung im Bereich des Holzbaus ergänzen die Arbeit im Büro.</p>
               </div>
               <div class="history__portrait">
                 <h4>Urs Rinklef</h4>
                 <p>Dipl. Architekt FH, REG A, SIA</p>
-                <p>Dipl. Arch. FH/REG A/SIA, *1966, hat seine Lehre bei Charles R. Kälin absolviert, in Winterthur studiert und u.a. bei Tilla Theus und Partner gearbeitet. Seit 2012 prägte er als Partner die Arbeit des Büros mit. 2020 übernimmt er zusammen mit Yves Schihin das Büro und gründet Oxid Architektur. Daneben engagiert er sich im Vorstand von Berufsfachgruppen.</p>
+                <p>*1966, absolviert seine Lehre bei Charles R. Kälin, studiert in Winterthur und arbeitet danach u.a. bei Tilla Theus und Partner. Seit 2012 prägt er als Partner die Arbeit des Büros mit. 2020 übernimmt er zusammen mit Yves Schihin das Büro und gründet Oxid Architektur. Daneben engagiert er sich im Vorstand von Berufsfachgruppen.</p>
               </div>
             </div>
           </div>
