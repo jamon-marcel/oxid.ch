@@ -19,7 +19,7 @@ class Grid extends Base
 
 	public function elements()
 	{
-		return $this->hasMany('App\Models\GridElement', 'grid_id', 'id');
+		return $this->hasMany('App\Models\GridElement', 'grid_id', 'id')->orderBy('position');
 	}
 
 	/**

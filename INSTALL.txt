@@ -3,7 +3,7 @@ Add admin user:
 1) php artisan tinker
 2) DB::table('users')->insert(['name'=>'marcel','email'=>'m@marceli.to','password'=>Hash::make('7aq31rr')])
 3) DB::table('users')->insert(['name'=>'siri','email'=>'bachmann@bivgrafik.ch','password'=>Hash::make('sji%YXHW[rOf0Tcp945!')])
-3) DB::table('users')->insert(['name'=>'darja','email'=>'unold@bivgrafik.ch','password'=>Hash::make('oDAGOXr%1a49*kDn3&tc')])
+3) DB::table('users')->insert(['name'=>'darja','email'=>'unold@bivgrafik.ch','password'=> Hash::make('oDAGOXr%1a49*kDn3&tc')])
 
 
 DB
@@ -16,8 +16,8 @@ HOSTPOINT
 
 ssh burkhal2@oxid-arch.ch / WuDmVkC9jgZ2zxrL
 
-DEPLOYING
----------
+DEPLOYING - Staging:
+-------------------
 
 1)
 
@@ -31,6 +31,36 @@ ssh www-data@silverfish02.nine.ch
 2)
 
 cd marceli.to/oxid-arch.ch/
+
+3)
+
+tar -zxvf app.tar.gz &&
+php composer.phar install --optimize-autoloader --no-dev && 
+php artisan config:clear && 
+php artisan view:clear &&
+rm app.tar.gz
+
+4)
+
+php artisan cache:clear
+
+------
+
+DEPLOYING - Production:
+-------------------
+
+1)
+
+php artisan cache:clear &&
+php artisan view:clear &&
+npm run production &&
+tar --exclude="INSTALL.txt" --exclude="*.DS_Store" --exclude="vendor/" --exclude="storage/" --exclude="node_modules/" --exclude=".git*" --exclude=".env" --exclude=".editorconfig" --exclude="public/storage/" --exclude="public/.htaccess" -cvzf app.tar.gz * &&
+scp app.tar.gz burkhal2@oxid-arch.ch:~/www/oxid-architektur.ch &&
+ssh burkhal2@oxid-arch.ch
+
+2)
+
+cd www/oxid-architektur.ch/
 
 3)
 

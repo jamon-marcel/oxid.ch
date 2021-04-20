@@ -31,31 +31,6 @@
     }
   }
 
-  .works__grid {
-
-    @include bp-sm() {
-      > div {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: $grid-gap-sm;
-      }
-    }
-
-    @include bp-md() {
-      > div {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-gap: $grid-gap-sm;
-      }
-    }
-
-    @include bp-lg() {
-      > div {
-        grid-template-columns: repeat(5, 1fr)
-      }
-    }
-  }
-
   .works__items {
     margin-bottom: $space-xxl;
     @include bp-sm() {
@@ -110,5 +85,75 @@
 
   img {
     @extend %is-responsive;
+  }
+}
+
+.no-cssgrid {
+
+  .works {
+
+    .works__grid {
+      
+      .works__items {
+        @extend %clearfix;
+      }
+
+      @include bp-sm() {
+        .works__items {
+          > article {
+            float: left;
+            width: 50%;
+          }
+        }
+      }
+  
+      @include bp-md() {
+        .works__items {
+          > article {
+            width: 33.3333%;
+          }
+        }
+      }
+  
+      @include bp-lg() {
+        .works__items {
+          > article {
+            width: 20%;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.cssgrid {
+
+  .works {
+
+    .works__grid {
+  
+      @include bp-sm() {
+        > div {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          grid-gap: $grid-gap-sm;
+        }
+      }
+  
+      @include bp-md() {
+        > div {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-gap: $grid-gap-sm;
+        }
+      }
+  
+      @include bp-lg() {
+        > div {
+          grid-template-columns: repeat(5, 1fr)
+        }
+      }
+    }
   }
 }

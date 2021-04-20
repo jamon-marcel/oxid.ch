@@ -4,25 +4,25 @@
  * -----------------------------------------------------------------------------
  */
 
-main.site-content-home {
-  padding-bottom: $footer-height;
-  @include responsive-prop('padding-top', $header-height);
+// main.site-content-home {
+//   padding-bottom: $footer-height;
+//   @include responsive-prop('padding-top', $header-height);
   
-  @include bp-sm() {
-    padding-bottom: 0;
-    padding-top: 0 !important;
+//   @include bp-sm() {
+//     padding-bottom: 0;
+//     padding-top: 0 !important;
     
-    section {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+//     section {
+//       display: grid;
+//       grid-template-columns: repeat(2, 1fr);
 
-      .span:nth-child(1) {
-        order: 2;
-      }
+//       .span:nth-child(1) {
+//         order: 2;
+//       }
 
-      .span:nth-child(2) {
-        order: 1;
-      }
-    }
-  }
-}
+//       .span:nth-child(2) {
+//         order: 1;
+//       }
+//     }
+//   }
+// }

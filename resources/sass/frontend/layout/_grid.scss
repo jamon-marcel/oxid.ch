@@ -5,21 +5,40 @@
  *
  */
 
-.grid-home {
-  @include bp-sm() {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+// Home
+.no-cssgrid {
+  .grid-home {
+    @extend %clearfix;
+    @include bp-sm() {
+      figure,
+      > div {
+        float: left;
+        width: 50%;
+      }
 
-    .span:nth-child(1) {
-      order: 2;
-    }
-
-    .span:nth-child(2) {
-      order: 1;
+      figure {
+        float: right;
+      }
     }
   }
 }
 
+.cssgrid {
+  .grid-home {
+    @include bp-sm() {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      .span:nth-child(1) {
+        order: 2;
+      }
+      .span:nth-child(2) {
+        order: 1;
+      }
+    }
+  }
+}
+
+// Team
 .grid-team {
   margin-bottom: $space-xxl;
 
@@ -34,23 +53,60 @@
       margin-bottom: 0;
     }
   }
+}
 
-  @include bp-sm() {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: $space-md;
-    grid-row-gap: $space-lg;
-    margin-bottom: $space-lg;
-    .span:not(.span-alumni) {
+.no-cssgrid {
+  .grid-team {
+    @extend %clearfix;
+    @include bp-sm() {
       margin-bottom: 0;
+    }
+
+    > div,
+    > article {
+      @include bp-sm() {
+        float: left;
+        width: 50%;
+        margin-bottom: $space-lg;
+      }
     }
   }
 }
 
-.grid-contact {
-  @include bp-sm() {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 0;
+.cssgrid {
+  .grid-team {
+    @include bp-sm() {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: $space-md;
+      grid-row-gap: $space-lg;
+      margin-bottom: $space-lg;
+      .span:not(.span-alumni) {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Contact
+.no-cssgrid {
+  .grid-contact {
+    @extend %clearfix;
+    @include bp-sm() {
+      > div {
+        float: left;
+        width: 50%;
+      }
+    }
+  }
+}
+
+.cssgrid {
+  .grid-contact {
+    @include bp-sm() {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: 0;
+    }
   }
 }

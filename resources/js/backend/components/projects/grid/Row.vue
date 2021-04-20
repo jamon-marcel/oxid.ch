@@ -280,6 +280,9 @@ export default {
         this.toggleOverlay();
         this.$notify({ type: "success", text: "Bild hinzugefügt" });
         this.fetch();
+
+        this.tmpPosition = null;
+
       });
     },
 

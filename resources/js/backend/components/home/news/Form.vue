@@ -52,29 +52,6 @@
                       <label for="publish_0" class="form-control">Nein</label>
                     </div>
                   </div>
-                  <div class="form-row is-sm">
-                    <label class="is-sm">Anheften?</label>
-                    <div class="form-radio">
-                      <input
-                        v-model="news.sticky"
-                        type="radio"
-                        name="sticky_1"
-                        id="sticky_1"
-                        value="1"
-                        class="visually-hidden"
-                      >
-                      <label for="sticky_1" class="form-control">Ja</label>
-                      <input
-                        v-model="news.sticky"
-                        type="radio"
-                        name="sticky_0"
-                        id="sticky_0"
-                        value="0"
-                        class="visually-hidden"
-                      >
-                      <label for="sticky_0" class="form-control">Nein</label>
-                    </div>
-                  </div>
                   <div class="form-row is-sm is-last">
                     <label class="is-sm">Publizieren bis</label>
                     <the-mask

@@ -29,7 +29,7 @@ class NewsController extends Controller
 
   public function get()
   {
-    return new DataCollection($this->news->get());
+    return new DataCollection($this->news->orderBy('order', 'ASC')->get());
   }
 
   /**
@@ -81,6 +81,25 @@ class NewsController extends Controller
     $news->publish = $news->publish == 0 ? 1 : 0;
     $news->save();
     return response()->json($news->publish);
+  }
+
+  /**
+   * Update the order of the resources.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+
+  public function order(Request $request)
+  {
+    $news = $request->get('news');
+    foreach($news as $n)
+    {
+      $d = $this->news->find($n['id']);
+      $d->order = $n['order'];
+      $d->save(); 
+    }
+    return response()->json('successfully updated');
   }
 
   /**

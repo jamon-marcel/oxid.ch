@@ -165,7 +165,7 @@ class TeamImageController extends Controller
     $imageCache = new \Intervention\Image\ImageCache();
 
     // Get a cached image from it and apply all of your templates / methods
-    $image = $imageCache->make(storage_path('app/public/uploads/') . $image->name)->filter(new \App\Filters\Image\Template\Team);
+    $image = $imageCache->make(storage_path('app/public/uploads/') . $image->name)->filter(new \App\Filters\Image\Template\Cache);
 
     // Remove the image from the cache by using its internal checksum
     Cache::forget($image->checksum());

@@ -15,15 +15,6 @@
     padding: $space-md;
   }
 
-  .discourse__grid {
-    @include bp-sm() {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-column-gap: $grid-gap-sm;
-      grid-row-gap: $grid-gap-lg;
-    }
-  }
-
   .discourse-item {
     margin-bottom: $space-xxl;
     
@@ -70,11 +61,58 @@
         @extend %is-responsive;
       }
     }
+  }
+}
 
-    @include bp-sm() {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-gap: $grid-gap-md;
+.no-cssgrid {
+  .discourse {
+    .discourse__grid {
+      @extend %clearfix;
+      @include bp-sm() {
+        > article {
+          float: left;
+          margin-bottom: $grid-gap-lg;
+          width: 50%;
+        }
+      }
+    }
+
+    .discourse-item__body {
+      @extend %clearfix;
+      @include bp-sm() {
+        > div,
+        > figure {
+          float: left;
+          margin-bottom: $grid-gap-md;
+          width: 50%;
+        }
+
+        > div {
+          padding-left: $grid-gap-md;
+          padding-right: $grid-gap-md;
+        }
+      }
+    }
+  }
+}
+
+.cssgrid {
+  .discourse {
+    .discourse__grid {
+      @include bp-sm() {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-column-gap: $grid-gap-sm;
+        grid-row-gap: $grid-gap-lg;
+      }
+    }
+
+    .discourse-item__body {
+      @include bp-sm() {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: $grid-gap-md;
+      }
     }
   }
 }

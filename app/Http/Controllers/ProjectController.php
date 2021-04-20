@@ -40,7 +40,7 @@ class ProjectController extends BaseController
 
     // get teaser images
     $projectTeasers = $this->project->published()->with('teaserImage')->get();
-
+    
     return 
       view($this->viewPath . 'show',
       [

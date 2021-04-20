@@ -7,6 +7,7 @@
     <a href="javascript:;" class="anchor-ul is-active js-btn-info">Info</a>
   </div>
 </div>
+<!--
 <nav class="menu-footer__dropdown js-dropdown">
   <ul>
     <li class="{{ request()->routeIs('page.office.team') ? 'is-selected' : '' }}">
@@ -32,3 +33,4 @@
     </li>
   </ul>
 </nav>
+-->

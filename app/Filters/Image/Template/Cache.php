@@ -11,7 +11,7 @@ class Cache implements FilterInterface
   protected $coords;
   protected $orientation = 'landscape';
 
-  public function __construct($maxWidth, $maxHeight, $coords)
+  public function __construct($maxWidth = NULL, $maxHeight = NULL, $coords = NULL)
   {
     $this->maxWidth  = $maxWidth ? $maxWidth : 2000;
     $this->maxHeight = $maxHeight ? $maxHeight : 1250;

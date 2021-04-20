@@ -19,7 +19,6 @@ class News extends Base
 		'title',
 		'text',
 		'date_end',
-		'sticky',
 		'order',
 		'publish',
 	];

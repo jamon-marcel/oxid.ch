@@ -27,13 +27,18 @@
                   ></tinymce-editor>
                   <div class="is-required">Pflichtfeld</div>
                 </div>
-                <div class="form-row is-last">
+                <div
+                  class="form-row is-last"
+                  :class="errors.info.de ? 'has-error': ''"
+                  @mouseenter="removeError('info', 'de')"
+                >
                   <label>Info *</label>
                   <tinymce-editor
                     :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="job.info.de"
                   ></tinymce-editor>
+                  <div class="is-required">Pflichtfeld</div>
                 </div>
               </div>
               <div class="column-sidebar">
@@ -205,7 +210,7 @@ export default {
   methods: {
     // Validation methods
     validate() {
-      if (this.job.title.de && this.job.description.de) {
+      if (this.job.title.de && this.job.description.de && this.job.info.de) {
         return true;
       }
 
@@ -216,6 +221,11 @@ export default {
 
       if (!this.job.description.de) {
         this.errors.description.de = true;
+        this.tabs.data.error = true;
+      }
+
+      if (!this.job.info.de) {
+        this.errors.info.de = true;
         this.tabs.data.error = true;
       }
 
@@ -243,7 +253,7 @@ export default {
       let uri = "/api/job/create";
       this.axios.post(uri, this.job).then(response => {
         this.$router.push({ name: "jobs" });
-        this.$notify({ type: "success", text: "Job erfasst!" });
+        this.$notify({ type: "success", text: "Diskurs erfasst!" });
       });
     },
 

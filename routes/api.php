@@ -31,6 +31,7 @@ Route::middleware('auth:api')->group(function() {
   Route::get('news/edit/{news}', 'Api\NewsController@edit');
   Route::post('news/update/{news}', 'Api\NewsController@update');
   Route::get('news/status/{news}', 'Api\NewsController@status');
+  Route::post('news/order', 'Api\NewsController@order');
   Route::delete('news/destroy/{news}', 'Api\NewsController@destroy');
 
   /**

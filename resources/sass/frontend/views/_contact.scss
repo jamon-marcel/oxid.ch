@@ -35,8 +35,7 @@
     address {
       @include font-size($fs-xl);
 
-      a[href*="mailto"],
-      a[href*="tel"] {
+      a[href*="mailto"] {
         @extend %ul-sm-hover;
         color: $color-black;
       }

@@ -36,7 +36,7 @@ class HomeController extends BaseController
   public function index()
   {
     $images = $this->image->published()->get();
-    $news = $this->news->published()->orderBy('sticky', 'DESC')->get();
+    $news = $this->news->published()->orderBy('order', 'asc')->get();
    
     $image = null;
     if (count($images) > 0)

@@ -10,33 +10,42 @@
             <span>Hinzufügen</span>
           </router-link>
           <div class="list-items" v-if="news.length">
-            <div
-              :class="[n.publish == 0 ? 'is-disabled' : '', 'list-item']"
-              v-for="n in news"
-              :key="n.id"
-              data-icons="3"
+
+            <draggable
+              :disabled="false"
+              v-model="news"
+              @end="order()"
+              ghost-class="draggable-ghost"
+              draggable=".list-item"
             >
-              <div class="list-item-body">
-                <strong>{{ n.title.de }}</strong>
-                <em v-if="n.sticky" class="icon-sticky"></em>
+              <div
+                :class="[n.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
+                v-for="n in news"
+                :key="n.id"
+                data-icons="3"
+              >
+                <div class="list-item-body">
+                  <strong>{{ n.title.de }}</strong>
+                  <em v-if="n.sticky" class="icon-sticky"></em>
+                </div>
+                <div class="list-item-action" data-icons="3">
+                  <a
+                    href="javascript:;"
+                    :class="[n.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
+                    @click.prevent="toggleStatus(n.id,$event)"
+                  ></a>
+                  <router-link
+                    :to="{name: 'news-edit', params: { id: n.id }}"
+                    class="icon-edit icon-mini"
+                  ></router-link>
+                  <a
+                    href="javascript:;"
+                    class="icon-trash icon-mini"
+                    @click.prevent="destroy(n.id,$event)"
+                  ></a>
+                </div>
               </div>
-              <div class="list-item-action" data-icons="3">
-                <a
-                  href="javascript:;"
-                  :class="[n.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
-                  @click.prevent="toggleStatus(n.id,$event)"
-                ></a>
-                <router-link
-                  :to="{name: 'news-edit', params: { id: n.id }}"
-                  class="icon-edit icon-mini"
-                ></router-link>
-                <a
-                  href="javascript:;"
-                  class="icon-trash icon-mini"
-                  @click.prevent="destroy(n.id,$event)"
-                ></a>
-              </div>
-            </div>
+            </draggable>
           </div>
           <div v-else>
             <p>Es sind noch keine News vorhanden...</p>
@@ -49,9 +58,11 @@
 <script>
 import PageHeader from "@/layout/PageHeader.vue";
 import Progress from "@/mixins/progress";
+import draggable from "vuedraggable";
 
 export default {
   components: {
+    draggable,
     PageHeader: PageHeader
   },
 
@@ -85,6 +96,21 @@ export default {
           this.progress(el);
         });
       }
+    },
+
+    order(index) {
+      let news = this.news.map(function(n, index) {
+        n.order = index;
+        return n;
+      });
+
+      if (this.debounce) return;
+      this.debounce = setTimeout(function() {
+        this.debounce = false 
+        this.axios.post(`/api/news/order`, {news: news}).then((response) => {
+          this.$notify({type: 'success', text: 'Reihenfolge angepasst'});
+        });
+      }.bind(this, news), 500);
     },
 
     toggleStatus(id,event) {

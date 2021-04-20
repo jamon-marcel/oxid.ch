@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/_backup-27082020
 .env
 .env.backup
 .phpunit.result.cache
