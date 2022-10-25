@@ -1,31 +1,9 @@
 <?php return array (
-  'barryvdh/laravel-dompdf' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Barryvdh\\DomPDF\\ServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'PDF' => 'Barryvdh\\DomPDF\\Facade',
-    ),
-  ),
   'fideloper/proxy' => 
   array (
     'providers' => 
     array (
       0 => 'Fideloper\\Proxy\\TrustedProxyServiceProvider',
-    ),
-  ),
-  'htmlmin/htmlmin' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'HTMLMin\\HTMLMin\\HTMLMinServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'HTMLMin' => 'HTMLMin\\HTMLMin\\Facades\\HTMLMin',
     ),
   ),
   'intervention/image' => 
@@ -37,17 +15,6 @@
     'aliases' => 
     array (
       'Image' => 'Intervention\\Image\\Facades\\Image',
-    ),
-  ),
-  'jenssegers/agent' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Jenssegers\\Agent\\AgentServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Agent' => 'Jenssegers\\Agent\\Facades\\Agent',
     ),
   ),
   'laravel/scout' => 
@@ -69,6 +36,13 @@
     'providers' => 
     array (
       0 => 'Carbon\\Laravel\\ServiceProvider',
+    ),
+  ),
+  'nunomaduro/collision' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     ),
   ),
   'spatie/laravel-translatable' => 
