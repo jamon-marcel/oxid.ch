@@ -73,3 +73,10 @@ rm app.tar.gz
 4)
 
 php artisan cache:clear
+
+Composer Hostpoint:
+/usr/local/php81/bin/composer
+/usr/local/php81/bin/composer install --optimize-autoloader --no-dev --ignore-platform-reqs
+
+PHP 8.1
+/usr/local/php81/bin/php

@@ -82,7 +82,7 @@ class JobController extends Controller
           'job_id' => $job->id,
           'name' => $i['name'],
           'caption' => [
-            'de' => $i['caption']['de'],
+            'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
             'en' => $i['caption']['en'],    
           ],
           'publish' => $i['publish'],

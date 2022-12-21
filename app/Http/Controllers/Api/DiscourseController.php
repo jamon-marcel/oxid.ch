@@ -100,8 +100,8 @@ class DiscourseController extends Controller
           'discourse_id' => $discourse->id,
           'name' => $i['name'],
           'caption' => [
-            'de' => $i['caption']['de'],
-            'en' => $i['caption']['en'],    
+            'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
+            'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
           ],
           'is_preview' => $i['is_preview'],
           'publish' => $i['publish'],
@@ -120,8 +120,8 @@ class DiscourseController extends Controller
           'discourse_id' => $discourse->id,
           'name' => $i['name'],
           'caption' => [
-            'de' => $i['caption']['de'],
-            'en' => $i['caption']['en'],    
+            'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
+            'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
           ],
           'publish' => $i['publish'],
         ]);
@@ -186,7 +186,7 @@ class DiscourseController extends Controller
             'discourse_id' => $discourse->id,
             'name' => $i['name'],
             'caption' => [
-              'de' => $i['caption']['de'],
+              'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
               'en' => $i['caption']['en']
             ],
             'is_preview' => $i['is_preview'] ? $i['is_preview'] : 0,
@@ -208,8 +208,8 @@ class DiscourseController extends Controller
             'discourse_id' => $discourse->id,
             'name' => $i['name'],
             'caption' => [
-              'de' => $i['caption']['de'],
-              'en' => $i['caption']['en']
+              'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
+              'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
             ],
             'publish' => $i['publish'] ? $i['publish'] : 0,
           ]

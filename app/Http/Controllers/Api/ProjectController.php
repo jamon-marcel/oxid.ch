@@ -106,8 +106,8 @@ class ProjectController extends Controller
           'project_id'  => $project->id,
           'name'        => $i['name'],
           'caption' => [
-            'de' => $i['caption']['de'],
-            'en' => $i['caption']['en'],    
+            'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
+            'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
           ],
           'is_preview_navigation' => $i['is_preview_navigation'],
           'is_preview_works'      => $i['is_preview_works'],
@@ -132,8 +132,8 @@ class ProjectController extends Controller
           'project_id'  => $project->id,
           'name'        => $i['name'],
           'caption' => [
-            'de' => $i['caption']['de'],
-            'en' => $i['caption']['en'],    
+            'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
+            'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
           ],
           'publish' => $i['publish'],
         ]);
@@ -208,8 +208,8 @@ class ProjectController extends Controller
             'project_id' => $project->id,
             'name' => $i['name'],
             'caption' => [
-              'de' => $i['caption']['de'],
-              'en' => $i['caption']['en']
+              'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
+              'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
             ],
             'publish'                 => $i['publish'] ? $i['publish'] : 0,
             'is_preview_navigation'   => $i['is_preview_navigation'] ? $i['is_preview_navigation'] : 0,
@@ -236,8 +236,8 @@ class ProjectController extends Controller
             'project_id' => $project->id,
             'name' => $i['name'],
             'caption' => [
-              'de' => $i['caption']['de'],
-              'en' => $i['caption']['en']
+              'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
+              'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
             ],
             'publish' => $i['publish'] ? $i['publish'] : 0,
           ]

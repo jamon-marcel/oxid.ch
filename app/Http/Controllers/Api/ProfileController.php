@@ -66,8 +66,8 @@ class ProfileController extends Controller
           'profile_id' => $profile->id,
           'name' => $i['name'],
           'caption' => [
-            'de' => $i['caption']['de'],
-            'en' => $i['caption']['en'],    
+            'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
+            'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
           ],
           'publish' => $i['publish'],
         ]);
@@ -122,8 +122,8 @@ class ProfileController extends Controller
             'profile_id' => $profile->id,
             'name' => $i['name'],
             'caption' => [
-              'de' => $i['caption']['de'],
-              'en' => $i['caption']['en']
+              'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
+              'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
             ],
             'publish' => $i['publish'] ? $i['publish'] : 0,
           ]
