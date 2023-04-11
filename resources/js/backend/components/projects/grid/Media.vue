@@ -7,7 +7,7 @@
         @click.prevent="deleteImage(element.id, $event)">
         Löschen
       </a>
-      <figcaption v-if="element.caption">
+      <figcaption v-if="element.caption != 'null' && element.caption != 'undefined'">
         <strong>{{element.caption}}</strong>
       </figcaption>
     </figure>
