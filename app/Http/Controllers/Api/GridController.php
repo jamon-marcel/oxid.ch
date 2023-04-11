@@ -106,7 +106,7 @@ class GridController extends Controller
   {
     $grids = $this->grid
       ->byProject($projectId)
-      ->with('layout')
+      ->with('layout', 'elements.image')
       ->orderBy('order', 'ASC')
       ->get();
     return new DataCollection($grids);

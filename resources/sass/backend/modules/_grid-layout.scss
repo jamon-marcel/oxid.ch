@@ -55,9 +55,11 @@
 
 .grid-layout-row {
   border-bottom: 2px solid $color-light-grey;
+
   @include responsive-prop('margin-bottom', $space-sm);
 
   &.is-list {
+    display: flex;
     margin-bottom: 0 !important;
     padding-bottom: 10px;
     padding-top: 10px !important;
@@ -65,11 +67,15 @@
 
     &:first-child {
       border-top: 2px solid $color-light-grey;
-
     }
 
     &:hover {
       cursor: move;
     }
+  }
+
+  .grid-layout-row__images {
+    display: flex;
+    @include responsive-prop('margin-left', $space-sm);
   }
 }

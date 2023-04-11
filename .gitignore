@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
 /public/storage
+/public/.htaccess
 /storage/*.key
 /vendor
 /_backup-27082020
@@ -11,3 +12,5 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+
+/bootstrap/cache/*

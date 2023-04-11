@@ -34,6 +34,18 @@
                 <span class="icon-grid-list">
                   <img :src="'/assets/backend/img/icons/grid-' + grid.layout.key + '.svg'" height="172" width="126">
                 </span>
+                <template v-if="grid.elements">
+                  <div class="grid-layout-row__images">
+                    <div v-for="element in grid.elements" :key="element.id">
+                      <img 
+                        :src="getSource(element.image.name, 'tiny')" 
+                        height="300" 
+                        width="300"
+                        style="height: 50px; width: auto; display: block; margin: 0 4px"
+                        v-if="element.image">       
+                    </div>
+                  </div>
+                </template>
               </div>
             </draggable>
           </div>
@@ -57,6 +69,7 @@ import PageHeader from "@/layout/PageHeader.vue";
 import draggable from 'vuedraggable';
 import GridRow from "@/components/projects/grid/Row.vue";
 import GridSelector from "@/components/projects/grid/Selector.vue";
+import Utils from "@/mixins/utils";
 
 export default {
   components: {
@@ -77,6 +90,8 @@ export default {
     };
   },
 
+  mixins: [Utils],
+
   created() {
     this.projectId = parseInt(this.$route.params.id);
     this.fetch();
@@ -96,6 +111,7 @@ export default {
       let uri = `/api/project/grids/${this.projectId}`;
       this.axios.get(uri).then(response => {
         this.grids = response.data.data;
+        console.log(this.grids);
       });
     },
 
