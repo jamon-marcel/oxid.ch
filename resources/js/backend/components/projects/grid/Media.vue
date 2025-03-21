@@ -1,6 +1,6 @@
 <template>
   <div class="box-wrapper">
-    <figure :style="{ backgroundImage: 'url(/image/project/'+img.name+')' }">
+    <figure :style="{ backgroundImage: 'url(/img/project/'+img.name+')' }">
       <a
         href="javascript:;"
         class="btn-trash is-mini"

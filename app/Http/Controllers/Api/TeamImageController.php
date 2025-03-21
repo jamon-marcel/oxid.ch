@@ -5,8 +5,10 @@ use App\Http\Resources\DataCollection;
 use App\Http\Requests\TeamImageStoreRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
+use MarceliTo\ImageCache\Facades\ImageCache;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class TeamImageController extends Controller
 {
@@ -155,19 +157,23 @@ class TeamImageController extends Controller
   /**
    * Remove cached version of the image
    *
-   * @param TeamImage $teamImage
-   * @param  \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
+   * @param TeamImage $image
+   * @return void
    */
   private function removeCachedImage(TeamImage $image)
   {
-    // Get an instance of the ImageCache class
-    $imageCache = new \Intervention\Image\ImageCache();
-
-    // Get a cached image from it and apply all of your templates / methods
-    $image = $imageCache->make(storage_path('app/public/uploads/') . $image->name)->filter(new \App\Filters\Image\Template\Cache);
-
-    // Remove the image from the cache by using its internal checksum
-    Cache::forget($image->checksum());
+    // Try the package method first
+    ImageCache::clearImageCache($image->name);
+    
+    // Also manually clear cache from all template directories
+    $cachePath = storage_path('app/public/cache');
+    $templateDirs = File::directories($cachePath);
+    
+    foreach ($templateDirs as $dir) {
+      $files = File::glob($dir . '/*' . $image->name . '*');
+      foreach ($files as $file) {
+        File::delete($file);
+      }
+    }
   }
 }

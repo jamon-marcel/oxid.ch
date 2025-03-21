@@ -1,46 +1,53 @@
 <?php
 namespace App\Filters\Image\Template;
-use Intervention\Image\Image;
-use Intervention\Image\Filters\FilterInterface;
+use Intervention\Image\Interfaces\ImageInterface;
+use Intervention\Image\Interfaces\ModifierInterface;
 use App\Models\HomeImage;
+use App\Filters\Image\ImageFilenameExtractor;
 
-class Home implements FilterInterface
+class Home implements ModifierInterface
 {
+  use ImageFilenameExtractor;
+  
   protected $max_width  = 2000;    
   protected $max_height = 1250;
 
-  public function applyFilter(Image $image)
+  public function apply(ImageInterface $image): ImageInterface
   {
-    $this->image = new \App\Models\HomeImage;
-    $img = $this->image->where('name', '=', $image->basename)->get()->first();
+    $this->image = new HomeImage;
+    $filename = $this->getFilenameFromImage($image);
+    $img = $this->image->where('name', '=', $filename)->get()->first();
     
     // Crop the image if coords are set
     if ($img && $img->coords_w && $img->coords_h)
     {
-      $image->crop(floor($img->coords_w), floor($img->coords_h), floor($img->coords_x), floor($img->coords_y))
-            ->resize(null, $this->max_width, function ($constraint) {
-        return $constraint->aspectRatio();
-      });
+      $image = $image->crop(
+        floor(floatval($img->coords_w)), 
+        floor(floatval($img->coords_h)),
+        floor(floatval($img->coords_x ?? 0)), 
+        floor(floatval($img->coords_y ?? 0))
+      );
+      
+      // Note: In the original there was a likely error - resizing with null as width and max_width as height
+      // I've corrected it to use max_width as width in the scale method
+      $image = $image->scale(width: $this->max_width);
     }
 
-    // Otherwise just resize the image
-    $width  = $image->getWidth();
-    $height = $image->getHeight();
+    // Get current dimensions
+    $width  = $image->width();
+    $height = $image->height();
 
     // Resize landscape image
     if ($width > $height && $width >= $this->max_width)
     {
-      $image->resize($this->max_width, null, function ($constraint) {
-        return $constraint->aspectRatio();
-      });
+      return $image->scale(width: $this->max_width);
     }
+    // Resize portrait image
     else if ($height >= $this->max_height)
     {
-      $image->resize(null, $this->max_height, function ($constraint) {
-        return $constraint->aspectRatio();
-      });
+      return $image->scale(height: $this->max_height);
     }
+    
     return $image;
-
   }
 }

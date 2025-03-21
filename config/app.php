@@ -166,6 +166,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Intervention\Image\Laravel\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -175,7 +176,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
 
     ],
 
@@ -229,7 +229,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'AppHelper' => App\Helpers\AppHelper::class,
         'ImageHelper' => App\Helpers\ImageHelper::class,
-        'Image' => Intervention\Image\Facades\Image::class,
+        'Image' => Intervention\Image\Laravel\Facades\Image::class,
     ],
 
 ];

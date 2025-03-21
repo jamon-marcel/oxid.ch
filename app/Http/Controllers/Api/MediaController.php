@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Image;
+use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
@@ -45,7 +45,8 @@ class MediaController extends Controller
     $orientation = '';
     if (in_array($filetype, $image_types))
     {
-      $img = \Image::make(storage_path('app/public/uploads/') . $name);
+      $manager = new ImageManager(new Driver());
+      $img = $manager->read(storage_path('app/public/uploads/') . $name);
       $orientation = $img->width() >= $img->height() ? 'l' : 'p';
     }
     return response()->json(['name' => $name, 'filetype' => $filetype, 'orientation' => $orientation], 200);

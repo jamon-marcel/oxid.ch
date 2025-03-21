@@ -43,7 +43,7 @@ export default {
     },
 
     getSource(asset, size) {
-      return `/image/${size}/${asset}`;
+      return `/img/${size}/${asset}`;
     }
   }
 };
