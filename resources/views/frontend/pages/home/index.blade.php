@@ -7,6 +7,7 @@
     <figure class="span visual-fit is-home">
       <img src="/img/home/{{$image->name}}" height="400" width="800">
     </figure>
+    
   @endif
   <div class="span news-listing">
     @if ($news)
