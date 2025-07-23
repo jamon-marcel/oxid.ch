@@ -34,5 +34,7 @@ return [
   'partner' => 'Partner',
   'employee' => 'Mitarbeitende',
   'alumni' => 'Ehemalige Mitarbeitende',
+  'associate' => 'Associate',
+  'senior-staff' => 'Leitende Mitarbeitende',
 
 ];

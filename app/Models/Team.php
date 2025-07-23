@@ -46,4 +46,14 @@ class Team extends Base
 	{
 		return $query->where('category', '=', '3')->orderBy('name', 'ASC')->orderBy('order', 'ASC');
 	}
+
+  public function scopeAssociate($query)
+  {
+    return $query->where('category', '=', '4')->orderBy('order', 'ASC');
+  }
+
+  public function scopeSeniorStaff($query)
+  {
+    return $query->where('category', '=', '5')->orderBy('order', 'ASC');
+  }
 }

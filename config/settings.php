@@ -30,7 +30,9 @@ return [
   'teamCategories' => [
     1 => 'partner',
     2 => 'employee',
-    3 => 'alumni'
+    3 => 'alumni',
+    4 => 'associate',
+    5 => 'senior-staff',
   ],
 
 ];

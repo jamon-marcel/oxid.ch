@@ -50,6 +50,8 @@ class TeamController extends BaseController
           'images'  => $this->teamImages->published()->orderBy('order')->get(),
           'team'    => [
             'partner'  => $this->team->with('documents')->published()->partner()->get(),
+            'associate' => $this->team->with('documents')->published()->associate()->get(),
+            'seniorStaff' => $this->team->with('documents')->published()->seniorStaff()->get(),
             'employee' => $this->team->with('documents')->published()->employee()->get(),
             'alumni'   => $chunks,
           ],

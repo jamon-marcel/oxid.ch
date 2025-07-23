@@ -44,6 +44,40 @@
         @endforeach
       </div>
     @endif
+
+    @if ($team['associate'])
+      <h3>{{__('settings.associate')}}</h3>
+      <div class="grid-team">
+        @foreach($team['associate'] as $t)
+          <article class="span team-member">
+            <div class="team-member__heading">{{$t->firstname}} {{$t->name}}</div>
+            <div class="team-member__info">
+              @if ($t->role) {{$t->role}}<br>@endif
+              @if ($t->email)<a href="mailto:{{$t->email}}">{{$t->email}}</a>@endif
+              @if ($t->phone)<br><a href="tel:{{$t->phone}}">{{$t->phone}}</a>@endif
+            </div>
+          </article>
+        @endforeach
+      </div>
+    @endif
+
+    @if ($team['seniorStaff'])
+      <h3>{{__('settings.senior-staff')}}</h3>
+      <div class="grid-team">
+        @foreach($team['seniorStaff'] as $t)
+          <article class="span team-member">
+            <div class="team-member__heading">{{$t->firstname}} {{$t->name}}</div>
+            <div class="team-member__info">
+              @if ($t->role) {{$t->role}}<br>@endif
+              @if ($t->email)<a href="mailto:{{$t->email}}">{{$t->email}}</a>@endif
+              @if ($t->phone)<br><a href="tel:{{$t->phone}}">{{$t->phone}}</a>@endif
+            </div>
+          </article>
+        @endforeach
+      </div>
+    @endif
+
+
     @if ($team['employee'])
       <h3>{{__('settings.employee')}}</h3>
       <div class="grid-team">

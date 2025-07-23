@@ -10,17 +10,17 @@
             <span>Hinzufügen</span>
           </router-link>
           <div class="list-items is-grouped" v-if="teams">
-            <div v-for="(team, index) in teams" :key="index">
-              <h3 class="list-item-header">{{categories[index]}}</h3>
+            <div v-for="categoryId in displayOrder" :key="categoryId" v-if="teams[categoryId]">
+              <h3 class="list-item-header">{{categories[categoryId]}}</h3>
               <draggable 
                 :disabled="false"
-                v-model="teams[index]" 
-                @end="order(index)"
+                v-model="teams[categoryId]" 
+                @end="order(categoryId)"
                 ghost-class="draggable-ghost"
                 draggable=".list-item">
                 <div
                   :class="[t.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
-                  v-for="t in team"
+                  v-for="t in teams[categoryId]"
                   :key="t.id"
                   data-icons="3"
                 >
@@ -72,6 +72,7 @@ export default {
     return {
       teams: [],
       categories: [],
+      displayOrder: [1, 4, 5, 2, 3], // Custom display order for team categories
     };
   },
 
