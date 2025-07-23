@@ -32,4 +32,16 @@ class ProjectImage extends Base
   {
     return $this->belongsTo('App\Models\Project');
   }
+
+  // Append the coords as coma separated string
+  protected $appends = ['coords'];
+
+  public function getCoordsAttribute() {
+    $coords = [];
+    $coords[] = $this->coords_w !== null ? floor(floatval($this->coords_w)) : 0;
+    $coords[] = $this->coords_h !== null ? floor(floatval($this->coords_h)) : 0;
+    $coords[] = $this->coords_x !== null ? floor(floatval($this->coords_x)) : 0;
+    $coords[] = $this->coords_y !== null ? floor(floatval($this->coords_y)) : 0;
+    return implode(',', $coords);
+  }
 }

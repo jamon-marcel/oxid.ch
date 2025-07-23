@@ -174,7 +174,7 @@
               <div class="grid-image-selector__media">
                 <figure v-for="image in images" :key="image.id">
                   <a href @click.prevent="storeImage(image.id)">
-                    <img :src="getSource(image.name, 'tiny')" height="120" width="70">
+                    <img :src="getSource(image.name, 'thumbnail')" height="120" width="70">
                     <span>{{image.name}}</span>
                   </a>
                 </figure>
@@ -239,8 +239,9 @@ export default {
                 position: e.position,
                 projectId: img.project.id || null,
                 image: img.name || null,
+                coords: img.coords || null,
                 imageId: img.id,
-                caption: `${img.caption.de}` || null
+                caption: `${img.caption.de}` || null
               };
               els[e.position] = el;
             }

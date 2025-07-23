@@ -1,6 +1,6 @@
 <template>
   <div class="box-wrapper">
-    <figure :style="{ backgroundImage: 'url(/img/project/'+img.name+')' }">
+    <figure :style="{ backgroundImage: 'url(/img/crop/'+img.name+'/2400/1500/'+img.coords+')' }">
       <a
         href="javascript:;"
         class="btn-trash is-mini"
@@ -29,13 +29,15 @@ export default {
   data() {
     return {
       img: {
-        name: null
+        name: null,
+        coords: null,
       },
     };
   },
 
   created() {
     this.img.name = this.$props.element.image;
+    this.img.coords = this.$props.element.coords;
   },
 
   methods: {

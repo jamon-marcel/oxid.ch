@@ -38,7 +38,7 @@
                   <div class="grid-layout-row__images">
                     <div v-for="element in grid.elements" :key="element.id">
                       <img 
-                        :src="getSource(element.image.name, 'tiny')" 
+                        :src="getSource(element.image.name, 'thumbnail')" 
                         height="300" 
                         width="300"
                         style="height: 50px; width: auto; display: block; margin: 0 4px"
@@ -111,7 +111,6 @@ export default {
       let uri = `/api/project/grids/${this.projectId}`;
       this.axios.get(uri).then(response => {
         this.grids = response.data.data;
-        console.log(this.grids);
       });
     },
 
