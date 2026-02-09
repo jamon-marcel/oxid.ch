@@ -15,6 +15,16 @@ nav.menu-home {
     bottom: auto;
     height: auto;
     transform: translateY(0);
+
+    ul {
+      margin-left: $space-sm;
+    }
+  }
+
+  @include bp-md() {
+    ul {
+      margin-left: $space-xl;
+    }
   }
 
   &.is-visible {

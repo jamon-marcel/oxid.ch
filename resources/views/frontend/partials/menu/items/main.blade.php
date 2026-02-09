@@ -46,6 +46,14 @@
   <li>
     <a href="{{ route('page.search.index') }}" class="icon-magnifier"></a>
   </li>
+  <li class="social"> 
+    <a href="https://www.linkedin.com/company/oxid-architektur/" target="_blank" rel="noopener noreferrer">
+      @include('frontend.partials.icons.linkedin')
+    </a>
+    <a href="https://www.instagram.com/oxid_architektur/" target="_blank" rel="noopener noreferrer">
+      @include('frontend.partials.icons.instagram')
+    </a>
+  </li>
 </ul>
 {{-- <ul class="language">
   <li>

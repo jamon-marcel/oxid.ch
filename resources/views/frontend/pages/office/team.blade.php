@@ -32,11 +32,10 @@
               @if ($t->documents)
                 @foreach($t->documents as $d)
                   <br>
-                  <a href="{{asset('storage/uploads/' . $d->name)}}" class="icon-document-blue" target="_blank" title="Download Lebenslauf">
-                    @include('frontend.partials.icons.document-blue')
+                  <a href="{{asset('storage/uploads/' . $d->name)}}" class="icon-document-cv" target="_blank" title="Download Lebenslauf">
+                    @include('frontend.partials.icons.document')
                     <div><span>{{__('content.cv')}}</span></div>
                   </a>
-                  </div>
                 @endforeach
               @endif
             </div>
@@ -55,6 +54,15 @@
               @if ($t->role) {{$t->role}}<br>@endif
               @if ($t->email)<a href="mailto:{{$t->email}}">{{$t->email}}</a>@endif
               @if ($t->phone)<br><a href="tel:{{$t->phone}}">{{$t->phone}}</a>@endif
+              @if ($t->documents)
+                @foreach($t->documents as $d)
+                  <br>
+                  <a href="{{asset('storage/uploads/' . $d->name)}}" class="icon-document-cv" target="_blank" title="Download Lebenslauf">
+                    @include('frontend.partials.icons.document')
+                    <div><span>{{__('content.cv')}}</span></div>
+                  </a>
+                @endforeach
+              @endif
             </div>
           </article>
         @endforeach

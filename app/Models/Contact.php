@@ -12,12 +12,15 @@ class Contact extends Base {
 
   public $translatable = [
 		'address',
+    'contacts',
     'info',
     'imprint'
 	];
 
 	protected $fillable = [
 		'address',
+    'google_maps_url',
+    'contacts',
     'info',
     'imprint',
   ];

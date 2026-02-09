@@ -27,23 +27,56 @@
       }
 
       &[href*="mailto"],
-      &[href*="javascript"], {
+      &[href*="javascript"] {
         @extend %ul-xs-blue-hover;
       } 
     }
 
-    address {
+    address,
+    .contacts {
       @include font-size($fs-xl);
+      display: block;
 
       a[href*="mailto"] {
         @extend %ul-sm-hover;
         color: $color-black;
       }
 
-      a[href*="//"]:not([href*="oxid.ch"]) {
+      a.google-maps {
         @include font-size($fs-fix-md);
+        margin-top: $space-lg;
+        
         @include bp-sm() {
-          display: none;
+          display: none !important;
+        }
+
+        &:after {
+          top: 8px !important;
+        }
+      }
+    }
+
+    .socials {
+      display: flex;
+      gap: $space-xs;
+      margin-bottom: $space-lg;
+      margin-top: $space-lg;
+
+      @include bp-sm() {
+        margin-top: $space-xs;
+        margin-bottom: $space-huge;
+      }
+
+      a {
+        margin-right: 0 !important;
+
+        svg {
+          height: 36px;
+          width: 36px;
+        }
+
+        &:after {
+          display: none !important;
         }
       }
     }

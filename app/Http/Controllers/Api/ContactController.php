@@ -45,6 +45,11 @@ class ContactController extends Controller
         'de' => $request->input('address.de'),
         'en' => $request->input('address.en'),
       ],
+      'google_maps_url' => $request->input('google_maps_url'),
+      'contacts' => [
+        'de' => $request->input('contacts.de'),
+        'en' => $request->input('contacts.en'),
+      ],
       'info' => [
         'de' => $request->input('info.de'),
         'en' => $request->input('info.en'),
@@ -84,6 +89,9 @@ class ContactController extends Controller
     $contact = $this->contact->findOrFail($contact->id);
     $contact->setTranslation('address', 'de', $request->input('address.de'));
     $contact->setTranslation('address', 'en', $request->input('address.en'));
+    $contact->google_maps_url = $request->input('google_maps_url');
+    $contact->setTranslation('contacts', 'de', $request->input('contacts.de'));
+    $contact->setTranslation('contacts', 'en', $request->input('contacts.en'));
     $contact->setTranslation('info', 'de', $request->input('info.de'));
     $contact->setTranslation('info', 'en', $request->input('info.en'));
     $contact->setTranslation('imprint', 'de', $request->input('imprint.de'));

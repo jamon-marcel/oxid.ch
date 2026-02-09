@@ -10,8 +10,27 @@
           @if ($contact->address)
             <address>
               {!! $contact->address !!}
+              @if ($contact->google_maps_url)
+                <a href="{{ $contact->google_maps_url }}" class="google-maps" target="_blank">Google Maps</a>
+              @endif
             </address>
           @endif
+          
+          <span class="socials">
+            <a href="https://www.linkedin.com/company/oxid-architektur/" target="_blank" rel="noopener noreferrer">
+              @include('frontend.partials.icons.linkedin')
+            </a>
+            <a href="https://www.instagram.com/oxid_architektur/" target="_blank" rel="noopener noreferrer">
+              @include('frontend.partials.icons.instagram')
+            </a>
+          </span>
+
+          @if ($contact->contacts)
+            <span class="contacts">
+              {!! $contact->contacts !!}
+            </span>
+          @endif
+
           <div>
             @if ($contact->info)
               {!! $contact->info !!}

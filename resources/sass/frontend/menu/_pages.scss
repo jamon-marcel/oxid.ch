@@ -24,6 +24,22 @@
 
 nav.menu-pages {
   @extend %menu;
+  height: 100%;
+  padding-bottom: 1px;
   transform: translateY(0);
   top: 0;
+
+  @include bp-sm() {
+    height: auto;
+
+    ul {
+      margin-left: $space-sm;
+    }
+  }
+
+  @include bp-md() {
+    ul {
+      margin-left: $space-xl;
+    }
+  }
 }

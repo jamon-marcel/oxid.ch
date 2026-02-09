@@ -100,15 +100,54 @@
   }
 
   ul.meta {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 0;
     margin-top: $space-md;
-    
+    width: auto;
+
     @include bp-sm() {
       margin-top: 4px;
+      padding-bottom: 4px;
     }
-
 
     @include bp-lg() {
       margin-top: 7px;
+      padding-bottom: 5px;
+    }
+
+    li.social {
+      display: flex;
+      gap: $space-xs;
+      margin-top: $space-xs;
+
+      @include bp-sm() {
+        margin-top: 0;
+      }
+
+      a {
+        svg {
+          display: block;
+          height: 36px;
+          width: 36px;
+
+          @include bp-sm() {
+            height: 22px;
+            width: 22px;
+          }
+
+          @include bp-lg() {
+            height: 24px;
+            width: 24px;
+          }
+        }
+      }
+
+      a:hover {
+        text-decoration: none !important;
+        box-shadow: none !important;
+      }
     }
   }
 

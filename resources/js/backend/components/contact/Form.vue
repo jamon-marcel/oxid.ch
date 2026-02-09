@@ -18,6 +18,18 @@
                   ></tinymce-editor>
                 </div>
                 <div class="form-row">
+                  <label>Google Maps URL</label>
+                  <input type="text" v-model="contact.google_maps_url" class="form-control">
+                </div>
+                <div class="form-row">
+                  <label>Kontakte</label>
+                  <tinymce-editor
+                    :api-key="tinyApiKey"
+                    :init="tinyConfig"
+                    v-model="contact.contacts.de"
+                  ></tinymce-editor>
+                </div>
+                <div class="form-row">
                   <label>Info</label>
                   <tinymce-editor
                     :api-key="tinyApiKey"
@@ -45,6 +57,14 @@
                     :api-key="tinyApiKey"
                     :init="tinyConfig"
                     v-model="contact.address.en"
+                  ></tinymce-editor>
+                </div>
+                <div class="form-row">
+                  <label>Kontakte</label>
+                  <tinymce-editor
+                    :api-key="tinyApiKey"
+                    :init="tinyConfig"
+                    v-model="contact.contacts.en"
                   ></tinymce-editor>
                 </div>
                 <div class="form-row">
@@ -122,6 +142,11 @@ export default {
           de: null,
           en: null,
         },
+        google_maps_url: null,
+        contacts: {
+          de: null,
+          en: null,
+        },
         info: {
           de: null,
           en: null,
@@ -143,6 +168,9 @@ export default {
       let uri = `/api/contact/edit/${this.$route.params.id}`;
       this.axios.get(uri).then(response => {
         this.contact = response.data;
+        if (!this.contact.contacts) {
+          this.contact.contacts = { de: null, en: null };
+        }
         this.tabs.data.active = true;
       });
 
