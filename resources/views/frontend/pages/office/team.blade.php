@@ -32,7 +32,7 @@
               @if ($t->documents)
                 @foreach($t->documents as $d)
                   <br>
-                  <a href="{{asset('storage/uploads/' . $d->name)}}" class="icon-document-cv" target="_blank" title="Download Lebenslauf">
+                  <a href="{{asset('storage/uploads/' . $d->name)}}" class="icon-document-cv" target="_blank" title="Download CV">
                     @include('frontend.partials.icons.document')
                     <div><span>{{__('content.cv')}}</span></div>
                   </a>
@@ -57,7 +57,7 @@
               @if ($t->documents)
                 @foreach($t->documents as $d)
                   <br>
-                  <a href="{{asset('storage/uploads/' . $d->name)}}" class="icon-document-cv" target="_blank" title="Download Lebenslauf">
+                  <a href="{{asset('storage/uploads/' . $d->name)}}" class="icon-document-cv" target="_blank" title="Download CV">
                     @include('frontend.partials.icons.document')
                     <div><span>{{__('content.cv')}}</span></div>
                   </a>

@@ -10,7 +10,7 @@ return [
   */
 
   // Team
-  'cv' => 'Lebenslauf',
+  'cv' => 'CV',
 
   // Authors (Works)
   'author_heading_1'      => 'Oxid Architektur',
