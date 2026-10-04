@@ -188,6 +188,64 @@ removes its model observers from every save.
 
 Keep Scout through phase 1 only so that phase 1 stays a one-line revert.
 
+#### Phase 2 — done 2026-10-04
+
+`app/Services/Search/`: `Tokenizer` and `SearchIndex` are pure (no DB, no
+framework), `SearchService` feeds them from the models, caches the postings
+(`Cache::rememberForever('search.index')`, file store) and loads published
+records in rank order. `Project`/`Discourse` flush the cache from
+`booted()` on `saved`/`deleted`; every admin change goes through `save()`,
+publish toggles included. Scout and `config/scout.php` are gone.
+
+Weights as designed above; Discourse `heading` (the type label: Vortrag,
+Publikation, …) weighs 5, `description_short` 2. Index build 31–43 ms
+(3,625 distinct token spellings), queries 2–9 ms.
+
+Changes against the design, all from the 15-query comparison:
+
+- **Two rules added.** *Stem prefix* (0.7): drop one German ending
+  (`-en -er -e -n -s`, stem ≥ 4 chars) and prefix-match — "schule" finds
+  "Schulhaus", "wohnen" finds "Wohnung". *Typo prefix* (0.45, query ≥ 5
+  chars): one typo within the first n±1 chars of a longer word — "hollz"
+  finds "Holzbau". At 4 chars it was noise ("haus" → "Hauptbahnhof").
+- **Numbers never match fuzzily** (2018 is not a typo for 2019); exact or
+  prefix only.
+- **Multi-word:** when some records match every query word, the rest are
+  dropped (Algolia's default behaviour); otherwise partial matches remain,
+  ranked by the share of words matched.
+- Phonetics (Kölner Phonetik) not added; nothing in the comparison needed it.
+- `/suche/{keyword}` now searches too; before, only `?keyword=` was read.
+- Result groups (projects, then discourse) stay as the view renders them;
+  ranking applies within each group.
+
+Same 15 queries, same data:
+
+| Query | Prod (Algolia) | Phase 1 | **Phase 2** |
+|---|---|---|---|
+| holz | 48 | 46 | **48** |
+| umbau | 11 | 11 | **12** |
+| basel | 7 | 5 | **6** |
+| zürich | 56 | 45 | **49** |
+| wohn | 47 | 50 | **50** |
+| wohnschiff | 0 | 1 | **1** |
+| ausstellung | 0 | 2 | **2** |
+| haus | 65 | 35 | **52** |
+| wohnen | 30 | 14 | **47** |
+| schule | 14 | 2 | **16** |
+| zurich | 56 | 0 | **49** |
+| hollz | 48 | 0 | **48** |
+| holz bau | 35 | 0 | **45** |
+| 2019 / 2021 | 47 / 96 | 8 / 17 | **8 / 17** (prod matched timestamps) |
+
+Every loss from phase 1 is recovered; "zurich" = "zürich" exactly; "hollz"
+= "holz" exactly. Counts differ from Algolia mostly where Algolia's prefix
+typo tolerance is broader. **Ranking is not yet tuned against real
+queries** — that still needs the access-log sample (`06-progress.md`).
+
+Tests: 18 unit tests in `tests/Unit/Search` — tokenisation, umlaut
+variants, every match rule and its thresholds, compounds, multi-word, and
+ranking (title outranks description).
+
 #### Effort
 
 **1 – 1.5 days** including a tuning pass. Budget the tuning: collect 20–30

@@ -1,53 +1,44 @@
 <?php
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
-use App\Models\Project;
-use App\Models\Discourse;
 use App\Models\HomeImage;
+use App\Services\Search\SearchService;
 use Illuminate\Http\Request;
 
 class SearchController extends BaseController
 {
   protected $viewPath = 'frontend.pages.search.index';
   
-  // Models
   protected $image;
-  protected $project;
-  protected $discourse;
+  protected $search;
 
   /**
    * Constructor
    * 
    */
 
-  public function __construct(
-    Project $project,
-    Discourse $discourse,
-    HomeImage $image)
+  public function __construct(SearchService $search, HomeImage $image)
   {
     parent::__construct();
-    $this->project   = $project;
-    $this->discourse = $discourse;
-    $this->image     = $image;
+    $this->search = $search;
+    $this->image  = $image;
   }
 
   /**
-   * Show the homepage
+   * Show the search page, with results for ?keyword= or /suche/{keyword}
    *
    * @param  \Illuminate\Http\Request $request
    * @return \Illuminate\Http\Response
    */
 
-  public function index(Request $request)
+  public function index(Request $request, ?string $keyword = null)
   {
     $results = [];
-    $keyword = null;
+    $keyword = $request->input('keyword', $keyword);
 
-    if ($request->input('keyword'))
+    if ($keyword)
     {
-      $keyword = $request->input('keyword');
-      $results['projects']  = $this->project->search($request->input('keyword'))->where('publish', '1')->get();
-      $results['discourse'] = $this->discourse->search($request->input('keyword'))->where('publish', '1')->get();
+      $results = $this->search->search($keyword);
     }
    
     $images = $this->image->published()->get();

@@ -3,12 +3,11 @@ namespace App\Models;
 use App\Models\Base;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
-use Laravel\Scout\Searchable;
+use App\Services\Search\SearchService;
 
 class Project extends Base
 {
 	use HasTranslations;
-	use Searchable;
 
 	public $translatable = [
 		'title',
@@ -41,26 +40,11 @@ class Project extends Base
 		'publish',
 	];
 
-  public function searchableAs()
+	protected static function booted()
 	{
-    return 'projects';
-	}
-
-	public function toSearchableArray()
-	{
-		// Plain text: strip the editor's HTML so tags and entities don't match
-		return array_map(
-			fn ($value) => trim(html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8')),
-			[
-				'title' => $this->title,
-				'title_short' => $this->title_short,
-				'location' => $this->location,
-				'year' => $this->year,
-				'year_works' => $this->year_works,
-				'description' => $this->description,
-				'info' => $this->info,
-			]
-		);
+		// The search index is cached; any change to a record invalidates it
+		static::saved(fn () => SearchService::flush());
+		static::deleted(fn () => SearchService::flush());
 	}
 
 	public function images()

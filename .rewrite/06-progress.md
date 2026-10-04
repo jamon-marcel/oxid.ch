@@ -3,7 +3,7 @@
 Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
 Backend steps 3 (dead code), 4 (Laravel 13 + Glide dependency), search
 phase 1, 5 (Glide images), 6 (slim skeleton), 7 (config diff) and JWT →
-Sanctum and the validation-message check done 2026-10-04.
+Sanctum, the validation-message check and search phase 2 done 2026-10-04.
 
 Production: **https://oxid-architektur.ch** (www.oxid.ch is a different, static page).
 
@@ -58,7 +58,7 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | Config diff against L13 (was step 7), drop `intervention/image-laravel` | ✅ done — 145 routes (duplicate `/suche` removed); `config:cache` **and `route:cache`** OK; effective config unchanged except `same_site` → `lax` and the cache key prefix; public pages, admin API GETs, throttle headers OK | `5bdc257` |
 | JWT → Sanctum, incl. the Vue 2 SPA's auth bootstrap | ✅ done — cookie flow verified with curl and in headless Chromium against the Vue 2 admin: login, 8 list screens, edit + save, upload, session expiry on navigation and on POST, logout; 145 routes, caches OK | `046c9e8` |
 | Form-request validation messages (L12+ wants strings) | ✅ checked, **no change needed** — all 10 form requests already return string messages (ran each one's rules + messages through the validator: 17 errors, 0 non-string); 422 shape verified unchanged in the Sanctum run | (docs only) |
-| Search phase 2: own scoring search + unit tests, drop Scout | — | |
+| Search phase 2: own scoring search + unit tests, drop Scout | ✅ done — 18 unit tests; 15 queries vs production in `07-search.md`, every phase 1 loss recovered; queries 2–9 ms; index flushed on save. Ranking tuning against real queries still open (needs the access logs) | this commit |
 | **Rethink image handling — more generic** (requested 2026-10-04, see below) | — open, design first | |
 
 The Laravel 13 bump and the image-cache → Glide dependency swap **must be
@@ -351,8 +351,8 @@ based on luvo:
   added to the deploy.
 - `php artisan optimize:clear`.
 - `.env`: remove `ALGOLIA_APP_ID` / `ALGOLIA_SECRET`, and make sure
-  `SCOUT_DRIVER` is unset or `collection` (the config default is now
-  `collection`).
+  `SCOUT_DRIVER` / `SCOUT_PREFIX` are gone too (Scout removed in search
+  phase 2).
 - `.env`, after step 7 (Laravel 11+ env names; the config files that read the
   old names are gone):
   - **`DB_CONNECTION=mysql` must be set** — the framework default is `sqlite`.
