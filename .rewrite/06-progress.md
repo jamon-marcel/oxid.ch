@@ -1,7 +1,7 @@
 # Progress
 
-Nothing started. Survey only, done 2026-10-04 against `f140dca` on `master`
-(clean tree).
+Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
+Backend step 3 (dead code) done 2026-10-04.
 
 Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 
@@ -46,7 +46,7 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 
 | Step | Status | Commit |
 |---|---|---|
-| Delete dead code: 6 filter classes, `dompdf`/`media`/`content` configs | — | |
+| Delete dead code: 6 filter classes, `dompdf`/`media`/`content` configs | ✅ done — 144 routes, config caches; `home`, `small`, `thumbnail` images 200; `tiny`, `project` 400 | this commit |
 | **One commit:** Laravel 13, PHP ^8.3, drop image-cache, add Glide + Intervention 4 | — | |
 | Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | — | |
 | Slim skeleton, `app/User.php` → `app/Models/User.php` | — | |

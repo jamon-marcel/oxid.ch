@@ -86,7 +86,6 @@ php artisan test
 ### Environment Setup
 - Copy `.env.example` to `.env` and configure database, Algolia keys, and JWT secret
 - Image cache configuration in `config/image-cache.php`
-- Custom content settings in `config/content.php`
 
 ### Database
 - Uses MySQL/MariaDB

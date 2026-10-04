@@ -33,8 +33,6 @@ return [
 		'thumbnail' => \MarceliTo\ImageCache\Templates\Thumbnail::class,
 		'crop' => \MarceliTo\ImageCache\Templates\Crop::class,
 		'home' => \App\Filters\Image\Template\Home::class,
-		'project' => \App\Filters\Image\Template\Project::class,
-		'tiny' => \App\Filters\Image\Template\Tiny::class,
 	],
 	
 	// Route configuration
