@@ -324,6 +324,11 @@ moved aside (framework defaults), and diff. Then decide per file.
   custom messages. Fix candidates: add a German `validation.php`, or set
   the fallback to `en` — the latter would also change which file answers
   missing `content`/`settings` keys on the public site, so check that first.
+  **Fixed 2026-10-04:** `resources/lang/de/validation.php`, every rule in
+  German, plus attribute names for the admin's fields. In practice the
+  admin only marks the failed fields and never shows the text, so this
+  matters for API responses, not for what editors see. The form requests'
+  own `required` messages are still English ("Title is required!").
 - Lang files still live in `resources/lang`; L13 picks that up
   (`app()->langPath()`), moving them to `lang/` is optional.
 
@@ -1013,7 +1018,12 @@ based on luvo:
   it never did before because of the duplicate route name.
 - Glide cache dir writable; not backed up.
 - After go-live, `storage/app/public/cache/` (old image-cache output) can go.
-- Optionally warm the Glide cache after deploy (cold renders 0.3–1.3 s each).
+- `php artisan images:warm` after the deploy: crawls the public pages and
+  renders every image they use into the Glide cache (cold renders 0.3–1.3 s
+  each, so the first run takes a while; a warm run is ~20 s locally for 128
+  pages / 6,162 URLs). Exits non-zero and lists the URLs that weren't 200.
+  `images:clear` (a leftover that deleted directories which no longer
+  existed) is gone.
 
 ## Next after this project
 

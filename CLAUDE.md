@@ -76,8 +76,10 @@ site; keep its output path.
 - The admin uses the fixed `/img/thumbnail|large|original/{file}` routes
   (`resources/js/backend/lib/images.js`). `/img/crop/...` and
   `/img/home/...` are legacy URLs that 301 to signed ones.
-- `php artisan images:clear` is a leftover that deletes directories which
-  no longer exist; the Glide cache is `storage/app/.glide-cache`.
+- `php artisan images:warm` crawls the public pages in-process and
+  renders every signed `/img/...` URL they emit into the Glide cache
+  (`storage/app/.glide-cache`); run it after a deploy. `--dry-run` only
+  counts.
 
 ### Search
 
