@@ -20,9 +20,20 @@ reuses it rather than re-litigating.
 | `05-image-pipeline.md` | image-cache → Glide, the oxid-specific wrinkle |
 | `06-progress.md` | What is done, verified, and left to do |
 | `07-search.md` | Algolia → own search: why, design, staging |
+| `08-frontend-js.md` | Public site JS: jQuery → vanilla, Swiper, dead code |
 
 QA automation (luvo's `07-` / `08-`) is deliberately not here yet. luvo wrote
 those *after* the upgrade landed. Same order applies.
+
+## Two projects, not one
+
+`00`–`07` are the **rework**: Laravel 13, Vue 3, Sanctum, Glide, own search.
+11.25–14 days, backend first, sequenced.
+
+`08-frontend-js.md` is **separate**: modernising the public site's JavaScript.
+3.5–4 days. It shares only the Vite migration and can run before, after or
+alongside — or be abandoned halfway without breaking anything. Its numbers
+are deliberately not folded into the rework total.
 
 ## The 30-second version
 

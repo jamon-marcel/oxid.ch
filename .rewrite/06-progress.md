@@ -76,6 +76,18 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
   completely different from the JWT refresh flow it replaces, and it is the
   single most likely thing to be wrong and not noticed.
 
+## Public site JS (separate project — `08-frontend-js.md`)
+
+| Step | Status | Commit |
+|---|---|---|
+| Delete dead code: fancybox ×2, axios, `@fancyapps/ui`, `in-view` | — | |
+| jQuery → vanilla, 9 modules + `bootstrap.js` | — | |
+| Swiper 5.3.8 → 12 | — | |
+| `maps.js` de-jQuery | — | |
+
+Capture before/after screenshots of every public page type at 375 and
+1280 px **before** starting. That is the only baseline this work gets.
+
 ## Known issues to carry (found during the survey, pre-existing)
 
 - Public-site cache-busting does not work: four bundles are `.version()`-ed
@@ -88,7 +100,10 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
   **v2** API. It is a latent fatal that has never fired because no URL
   reaches it. It will become a hard failure on Intervention v4 if left in.
 - `busu.css` is built from a 1,569-line Sass tree that nothing in this repo
-  references.
+  references. Answered: another site consumes it — keep the output path.
+- The public site loads **axios and never makes a request with it**, and
+  ships a dead fancyBox 3.5.7 that is not even in the compiled bundle.
+  See `08-frontend-js.md` step 1.
 
 ## Deploy notes
 

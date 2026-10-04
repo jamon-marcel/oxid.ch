@@ -201,6 +201,10 @@ The SPA mounts on `<div id="app">` in `resources/views/backend/app.blade.php:11`
 Leave `resources/js/frontend/vendor/` (fancybox, lazysizes, scrollTo, swiper)
 alone; make sure Vite does not try to optimise the vendored copies.
 
+If `08-frontend-js.md` step 1 runs first — it is pure deletion — then
+`vendor/fancybox.js` and `modules/fancybox.js` are already gone and Vite has
+less to carry. Worth doing in that order.
+
 ## Shortcut: the near-duplicates
 
 The CRUD screens follow a rigid pattern — `Create.vue` / `Edit.vue` /
