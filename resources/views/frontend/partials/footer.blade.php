@@ -3,6 +3,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxU6MLGw6kEAd9ejc8GfqXx38qvm0oHPI"></script>
 @vite('resources/js/frontend/maps.js')
 @endif
+@production
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-171670650-1"></script>
 <script>
@@ -11,6 +12,7 @@
   gtag('js', new Date());
   gtag('config', 'UA-171670650-1');
 </script>
+@endproduction
 </body>
 <!-- made with ❤ by bivgrafik GmbH & marceli.to -->
 </html>
