@@ -5,24 +5,16 @@
       <span v-else>Listen Ansicht</span>
     </a>
     <div class="upload-listing-rows" v-if="view === 'list'">
-      <draggable
-        v-model="images"
-        item-key="name"
-        ghost-class="draggable-ghost"
-        draggable=".is-draggable"
-        @end="order(images)"
-      >
-        <template #item="{ element: image }">
-          <div class="upload-item-row is-draggable">
-            <figure>
-              <img :src="imageUrl(image, 'thumbnail')" height="300" width="300">
-            </figure>
-            <div>
-              <PhDotsSixVertical :size="18" weight="light" />
-            </div>
+      <SortableList v-model="images" @end="order">
+        <div v-for="image in images" :key="image.name" class="upload-item-row is-draggable">
+          <figure>
+            <img :src="imageUrl(image, 'thumbnail')" height="300" width="300">
+          </figure>
+          <div>
+            <PhDotsSixVertical :size="18" weight="light" />
           </div>
-        </template>
-      </draggable>
+        </div>
+      </SortableList>
     </div>
     <div class="card-grid" v-else>
       <Card
@@ -108,13 +100,13 @@
 </template>
 <script setup>
 import { ref, reactive } from 'vue';
-import draggable from 'vuedraggable';
 import { Cropper } from 'vue-advanced-cropper';
 import {
   PhEye, PhEyeSlash, PhPencilSimple, PhArrowSquareOut, PhTrash, PhCrop, PhDotsSixVertical,
 } from '@phosphor-icons/vue';
 import Lightbox from '@/components/ui/Lightbox.vue';
 import Card from '@/components/ui/Card.vue';
+import SortableList from '@/components/ui/SortableList.vue';
 import { imageUrl, preloadImage } from '@/lib/images';
 import { useOrder } from '@/composables/useOrder';
 

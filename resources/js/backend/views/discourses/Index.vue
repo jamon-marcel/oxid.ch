@@ -8,22 +8,14 @@
           <span>Hinzufügen</span>
         </router-link>
         <div class="list-items" v-if="discourses.items.length">
-          <draggable
-            v-model="discourses.items"
-            item-key="id"
-            ghost-class="draggable-ghost"
-            draggable=".list-item"
-            @end="order(discourses.items)"
-          >
-            <template #item="{ element: discourse }">
-              <div :class="[discourse.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']" data-icons="3">
-                <div class="list-item-body">
-                  {{ discourse.title.de }} - ({{ discourse.heading.de }}, {{ discourse.date.de }}) - {{ categories[discourse.category] }}
-                </div>
-                <ListActions :record="discourse" edit-route="discourse-edit" @toggle="discourses.toggle" @destroy="discourses.destroy" />
+          <SortableList v-model="discourses.items" @end="order">
+            <div v-for="discourse in discourses.items" :key="discourse.id" :class="[discourse.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']" data-icons="3">
+              <div class="list-item-body">
+                {{ discourse.title.de }} - ({{ discourse.heading.de }}, {{ discourse.date.de }}) - {{ categories[discourse.category] }}
               </div>
-            </template>
-          </draggable>
+              <ListActions :record="discourse" edit-route="discourse-edit" @toggle="discourses.toggle" @destroy="discourses.destroy" />
+            </div>
+          </SortableList>
         </div>
         <div v-else-if="discourses.isFetched">
           <p>Es sind noch keine Einträge vorhanden...</p>
@@ -34,9 +26,9 @@
 </template>
 <script setup>
 import { ref, reactive } from 'vue';
-import draggable from 'vuedraggable';
 import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
 import ListActions from '@/components/ui/ListActions.vue';
+import SortableList from '@/components/ui/SortableList.vue';
 import { useListing } from '@/composables/useListing';
 import { useOrder } from '@/composables/useOrder';
 import http from '@/lib/http';

@@ -16,32 +16,24 @@
           </div>
         </div>
         <div v-else>
-          <draggable
-            v-model="grids"
-            item-key="id"
-            ghost-class="draggable-ghost"
-            draggable=".grid-layout-row"
-            @end="order(grids)"
-          >
-            <template #item="{ element: grid }">
-              <div class="grid-layout-row is-list is-draggable">
-                <span class="icon-grid-list">
-                  <img :src="`/assets/backend/img/icons/grid-${grid.layout.key}.svg`" height="172" width="126">
-                </span>
-                <div class="grid-layout-row__images" v-if="grid.elements">
-                  <div v-for="element in grid.elements" :key="element.id">
-                    <img
-                      v-if="element.image"
-                      :src="imageUrl(element.image, 'thumbnail')"
-                      height="300"
-                      width="300"
-                      style="height: 50px; width: auto; display: block; margin: 0 4px"
-                    >
-                  </div>
+          <SortableList v-model="grids" @end="order">
+            <div v-for="grid in grids" :key="grid.id" class="grid-layout-row is-list is-draggable">
+              <span class="icon-grid-list">
+                <img :src="`/assets/backend/img/icons/grid-${grid.layout.key}.svg`" height="172" width="126">
+              </span>
+              <div class="grid-layout-row__images" v-if="grid.elements">
+                <div v-for="element in grid.elements" :key="element.id">
+                  <img
+                    v-if="element.image"
+                    :src="imageUrl(element.image, 'thumbnail')"
+                    height="300"
+                    width="300"
+                    style="height: 50px; width: auto; display: block; margin: 0 4px"
+                  >
                 </div>
               </div>
-            </template>
-          </draggable>
+            </div>
+          </SortableList>
         </div>
         <footer class="site-footer">
           <div>
@@ -56,9 +48,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import draggable from 'vuedraggable';
 import { notify } from '@/lib/notify';
 import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
+import SortableList from '@/components/ui/SortableList.vue';
 import GridRow from '@/components/grid/Row.vue';
 import GridSelector from '@/components/grid/Selector.vue';
 import { useOrder } from '@/composables/useOrder';

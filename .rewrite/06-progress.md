@@ -63,8 +63,9 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
      uploads and render memory), CLI PHP version, access-log samples
      (`/img/project`, `/img/tiny`, search queries for ranking tuning).
   3. Image agent's open item: 16-byte AVIF renders under forked PHP workers.
-  4. `vuedraggable` → SortableJS composable (unmaintained; the `vue` alias
-     in `vite.config.js` exists only for it).
+  4. ~~`vuedraggable` → SortableJS~~ — done, see "vuedraggable → SortableJS"
+     below. Found on the way and fixed: `order` columns were `TINYINT`.
+     **Production needs `php artisan migrate`** (see Deploy notes).
   5. End-of-project QA (lists below), screenshot comparison of the public
      site against production, then rewrite `CLAUDE.md` (still says Laravel
      11, JWT, Algolia, image-cache).
@@ -508,8 +509,8 @@ vuedraggable and the cropper went in together.
 - **Kept, and why:** `vue`, `vue-router`, `axios` (interceptors, XSRF);
   `@tiptap/*` (the editor); `vue-advanced-cropper` (a cropper is real work);
   `vuedraggable` (8 lists; it's unmaintained since 2021 and is the reason
-  for the `vue` alias in `vite.config.js` — swapping it for SortableJS via a
-  small composable is the next candidate); `@phosphor-icons/vue`. Public
+  for the `vue` alias in `vite.config.js` — *replaced by SortableJS later
+  the same day*); `@phosphor-icons/vue`. Public
   site: `jquery`, `jquery.scrollto`, `lazysizes`, `swiper` until
   `08-frontend-js.md`.
 - **One Lightbox for all overlays** (`components/ui/Lightbox.vue`, native
@@ -611,6 +612,37 @@ Menu: group pages sit flush under their header (no indent).
   laid out at 840 px and scrolls sideways. The admin is desktop-only by
   design; left alone.
 
+### vuedraggable → SortableJS (2026-10-04)
+
+- `components/ui/SortableList.vue`: `v-model` on the array, `@end` with the
+  new order, the `v-for` goes in the slot; children with `.is-draggable`
+  are the items (all 7 call sites already had the class). Sortable moves
+  the dragged node; `onEnd` puts it back and reorders the array, so Vue
+  keeps owning the DOM. Uses `oldDraggableIndex`/`newDraggableIndex`.
+- A component rather than the planned composable: the team page renders
+  one list per category in a `v-for`, which a single template ref doesn't
+  cover. `v-model="groups[categoryId]"` does.
+- Same DOM as before (vuedraggable also rendered a wrapping `<div>`), same
+  `draggable-ghost` class, so no CSS change.
+- `vuedraggable` removed, `sortablejs` ^1.15.7 direct; the `vue` alias in
+  `vite.config.js` gone. Admin entry 156 → 118 KB, the chunk holding
+  Sortable 95 → 37 KB; no template compiler in the build.
+- Checked in Chromium (Playwright's `dragTo` drives Sortable's native DnD
+  fine): news 0→1 and back; team images (list view), grid builder (list
+  view, project 2) and the largest team group 0→2 and back — UI order, the
+  POST, and the order after a reload.
+- **Found: `order` is a `TINYINT` (max 127) in all 10 tables.** Team
+  category 3 (former members) has 244 rows, so saving its order 500s at
+  the 128th row — in production too, since 2020. The rows before it are
+  already written (no transaction). Migration
+  `2026_10_04_150000_widen_order_columns` makes them `SMALLINT`, same
+  default `-1`, NOT NULL; checked by saving all 244 inside a rolled-back
+  transaction (200, orders up to 243).
+- The failed test run rewrote `order` on 156 category-3 rows locally
+  (the old values had duplicates, so dragging back didn't restore them).
+  Restored row by row from the 2026-10-04 production dump, guarded by the
+  test's `updated_at`, so nothing written outside the test was touched.
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the
@@ -697,6 +729,9 @@ based on luvo:
   and the admin's Mix output until the Vue 3 port): run `npm run build`
   (and `npm run admin:build`) before committing a release. Never commit
   `public/hot` (gitignored).
+- `php artisan migrate --force` — `2026_10_04_120000_add_dimensions_to_image_tables`
+  (image agent) and `2026_10_04_150000_widen_order_columns` (`order`
+  TINYINT → SMALLINT; fixes reordering the 244 former team members).
 - `php artisan optimize:clear`.
 - `.env`: remove `ALGOLIA_APP_ID` / `ALGOLIA_SECRET`, and make sure
   `SCOUT_DRIVER` / `SCOUT_PREFIX` are gone too (Scout removed in search

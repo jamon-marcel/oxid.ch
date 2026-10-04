@@ -22,10 +22,10 @@
         "@tiptap/vue-3": "^3.31.4",
         "jquery.scrollto": "2.1.2",
         "lazysizes": "5.1.2",
+        "sortablejs": "^1.15.7",
         "swiper": "5.3.8",
         "vue": "^3.5.43",
         "vue-advanced-cropper": "^2.8.9",
-        "vue-router": "^4.6.4",
-        "vuedraggable": "^4.1.0"
+        "vue-router": "^4.6.4"
     }
 }

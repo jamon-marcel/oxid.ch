@@ -28,9 +28,6 @@ export default defineConfig(({ command }) => ({
   resolve: {
     alias: [
       { find: '@', replacement: fileURLToPath(new URL('./resources/js/backend', import.meta.url)) },
-      // vuedraggable's UMD build require()s 'vue', which would pull in Vue's
-      // CommonJS build and the template compiler with it
-      { find: /^vue$/, replacement: 'vue/dist/vue.runtime.esm-bundler.js' },
     ],
   },
   // Dev only: serve public/ so the Sass's absolute /assets/... URLs resolve

@@ -1,1 +1,0 @@
-import{F as e,S as t,s as n,y as r}from"./app-PWgEYNVZ.js";n();var i=(e,t)=>{let n=e.__vccOpts||e;for(let[e,r]of t)n[e]=r;return n},a={},o={class:`container`};function s(n,i){return e(),t(`div`,o,[...i[0]||=[r(`main`,{class:`content`,role:`main`},[r(`div`,null,[r(`h1`,null,`Dashboard`)])],-1)]])}var c=i(a,[[`render`,s]]);export{c as default};
