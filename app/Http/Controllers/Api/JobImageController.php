@@ -117,18 +117,18 @@ class JobImageController extends Controller
   public function destroy($image)
   {
     // Delete image from database
-    $image = $this->image->where('name', '=', $image)->first();
+    $record = $this->image->where('name', '=', $image)->first();
     
-    if ($image)
+    if ($record)
     {
-      $image->delete();
+      $record->delete();
     }
 
     // Delete file from storage
     $directories = Storage::allDirectories('public');
     foreach($directories as $d)
     {
-      Storage::delete($d . '/'. $image->name);
+      Storage::delete($d . '/'. $image);
     }
     
     return response()->json('successfully deleted');
