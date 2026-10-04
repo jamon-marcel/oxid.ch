@@ -46,6 +46,36 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
       every public page emits and their byte sizes, and screenshots of the
       public pages at 375 and 1280 px.
 
+## Where things stand (handover, 2026-10-04 evening)
+
+- **Backend phase: done.** Laravel 13, slim skeleton, config trimmed,
+  Sanctum, own search, upload validation. Generic image handling done by a
+  separate agent (`ffac092`).
+- **Frontend: done except the login splash.** Public site on Vite; admin
+  on Vue 3 + Vite in luvo's shape (`<script setup>`, composables, `lib/`,
+  `components/ui`), Tiptap, own Uploader/notifications, one Lightbox, one
+  Card, toggles, Phosphor icons, 1px lines. Admin feedback rounds after
+  that are in the notes below.
+- **Open, in order of weight:**
+  1. Login splash: a random published home image as background
+     (`09-admin-ui.md` #1). Use the image agent's `url()`/signed URLs,
+     not `/img/home/…`.
+  2. Production facts to collect on Hostpoint: web PHP `upload_max_filesize`
+     / `post_max_size` / `memory_limit`, Imagick loaded? (decides 16 MB
+     uploads and render memory), CLI PHP version, access-log samples
+     (`/img/project`, `/img/tiny`, search queries for ranking tuning).
+  3. Image agent's open item: 16-byte AVIF renders under forked PHP workers.
+  4. `vuedraggable` → SortableJS composable (unmaintained; the `vue` alias
+     in `vite.config.js` exists only for it).
+  5. End-of-project QA (lists below), screenshot comparison of the public
+     site against production, then rewrite `CLAUDE.md` (still says Laravel
+     11, JWT, Algolia, image-cache).
+  6. `08-frontend-js.md` (public JS de-jQuery) — a separate project.
+- **Testing:** Playwright scripts in `/tmp/pw` (not in the repo; they go
+  when /tmp is cleaned). The user works in the same local admin: tests
+  must clean up through the UI/API, not restore whole tables.
+- **Not pushed:** everything after `ffac092`.
+
 ## Backend
 
 | Step | Status | Commit |
@@ -585,7 +615,7 @@ Menu: group pages sit flush under their header (no indent).
 | **`<script setup>` + composables, luvo's shape** (scope changed 2026-10-04): foundation + news | ✅ done — `lib/{http,utils,images}`, composables `useResourceForm/useListing/useOrder/useEscape`, `components/ui/*`, `App.vue` + `views/layout/PageHeader`, lazy `router.js` with the session guard; news list/create/edit/order/toggle and server-side validation verified; old screens still run inside the new shell | `f4ac39b` |
 | … projects, discourses, team, jobs, profile, contact | ✅ done — all lists and forms; `ImageManager`, `FileManager`, `Uploader`, `useImages/useImageLibrary/useFiles` | `7b55d5e` |
 | … image pages, listings, grid builder | ✅ done, same commit — one `views/images/Index.vue` for home/team/jobs/profile (route props); grid builder in `views/projects/Grid.vue` + `components/grid/`. No Options API, mixin or `$parent` left | `7b55d5e` |
-| Fewer dependencies, one Lightbox, menu sections | ✅ done — see notes | this commit |
+| Fewer dependencies, one Lightbox, menu sections | ✅ done — see notes | `5f77c53` |
 | Login screen / splash | ⏳ login error shown (`15c4102`); random home image as background **waits for the image agent** — it is reworking `/img/home/…` | |
 
 ### To verify at the end of the frontend phase
