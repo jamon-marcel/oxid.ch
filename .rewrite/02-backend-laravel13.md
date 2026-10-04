@@ -152,23 +152,39 @@ template; drop its `DetectRequestLocale` and multilingual bits.
 
 ## Step plan
 
-1. **Verify PHP 8.3+ on the production host.** Hard gate. Do this first.
-   Laravel 13 and `jwt-auth` v2.9.3 both require it.
+Revised 2026-10-04 after a consistency review. Two things changed:
+the order (see "Why step 4 must be one commit"), and stale entries left over
+from before questions 3, 6 and 7 were answered.
+
+1. ~~Verify PHP 8.3+ on production.~~ **Done** — 8.3 up to 8.5.
 2. Snapshot the production DB + `storage/` as baseline and rollback point.
-3. Delete the dead v2-API filters (`Cache`, `Large`, `Small`, `Thumbnail`) and
-   `config/dompdf.php`. Verify then remove `config/{media,content,image}.php`.
-4. Replace `marceli-to/image-cache` with Glide per `05-image-pipeline.md`.
-   Removes the blocker. Includes the `Tiny` / `Project` template decision.
-5. `composer.json`: `php: ^8.3`, `laravel/framework: ^13.0`, bump the rest per
-   the table, drop `marceli-to/image-cache`, add `league/glide`.
-   Resolve the fallout.
+3. **Delete dead code.** No Composer involved, so this works on Laravel 11:
+   - `app/Filters/Image/Template/{Cache,Large,Small,Thumbnail,Tiny,Project}.php`
+     and the `tiny` / `project` entries in `config/image-cache.php`
+   - `config/dompdf.php`, `config/media.php`, `config/content.php`
+   - the stale `config/content.php` line in `CLAUDE.md`
+   - **keep** `config/image.php` — it is `intervention/image-laravel`'s config
+4. **One Composer change, in one commit:** `php: ^8.3`,
+   `laravel/framework: ^13.0`, drop `marceli-to/image-cache`, add
+   `league/glide: ^4.1`, `intervention/image: ^4.0`,
+   `intervention/image-laravel: ^4.1`, bump the rest per the table. Resolve
+   the fallout. Image routes are down between this commit and step 5;
+   acceptable on a branch.
+5. **Glide routes:** `ImageController` + `app/Support/{Glide,ImageSupport}.php`
+   from luvo, controller-side coord lookup for `/img/home/`, `ImageHelper` →
+   `<picture>` with requested sizes + WebP/AVIF. Verify against production
+   per `05-image-pipeline.md`. Then delete the remaining `app/Filters/` tree.
 6. Migrate the skeleton to `bootstrap/app.php` + `bootstrap/providers.php`,
-   lean `config/app.php`. Move `app/User.php` → `app/Models/User.php`.
-7. Diff `config/*` against a fresh L13 skeleton. Preserve: `content.php`,
-   `seo.php`, `settings.php`, `scout.php`, `translatable.php`.
-8. Search: `SCOUT_DRIVER=collection`, drop the Algolia client, add explicit
-   `toSearchableArray()` (phase 1 of `07-search.md`).
-9. **JWT → Sanctum** per above.
+   lean `config/app.php`. Move `app/User.php` → `app/Models/User.php` and
+   update the provider model in `config/auth.php`.
+7. Diff `config/*` against a fresh L13 skeleton. Custom configs to preserve:
+   `seo.php`, `settings.php`. Package configs to keep: `image.php`,
+   `scout.php` (until search phase 2). `image-cache.php` went in step 4.
+8. **Search phase 1** (`07-search.md`): `SCOUT_DRIVER=collection` — change the
+   default in `config/scout.php`, not just `.env` — drop the Algolia client,
+   add explicit `toSearchableArray()`. On Laravel 13 Composer works normally,
+   so this stays a separate, revertable commit.
+9. **JWT → Sanctum** per above. Fresh Sanctum config, not a ported one.
 10. Carbon 2 → 3: one call site in `app/` (`Models/News.php`), but check
     vendor fallout.
 11. Validation messages: L12+ requires strings, not arrays. luvo hit 500s here
@@ -176,3 +192,26 @@ template; drop its `DetectRequestLocale` and multilingual bits.
     shape. You have **10 form requests, 414 LOC** — check all of them, and keep
     the response shape identical or the SPA's error handling breaks.
 12. Smoke test: all 144 routes, login, every admin CRUD path.
+13. **Search phase 2**: own scoring search, drop Scout. Last, because it is the
+    one backend item that is a new feature rather than an upgrade.
+
+### Why step 4 must be one commit
+
+Composer currently refuses to resolve **anything** while `composer.json`
+requires `laravel/framework ^11` — every 11.x release is blocked by security
+advisories. Verified with a dry run on 2026-10-04: even a partial
+`composer require league/glide intervention/image ...` that leaves Laravel
+locked fails with the same advisory error.
+
+So the image-cache → Glide dependency swap cannot precede the framework bump.
+luvo did both together for the same reason (`c6bca43`, "Upgrade to Laravel
+13, replace image-cache with Glide dependency"), then added the Glide routes
+in a follow-up (`c100fe0`).
+
+The alternatives — `policy.advisories.ignore-id` to unblock Laravel 11
+temporarily, or retagging `marceli-to/image-cache` — both exist only to
+manufacture an intermediate state nobody will deploy. Not worth it.
+
+Note that the Glide packages themselves would be fine on 11
+(`intervention/image-laravel` 4.1.1 allows `illuminate ^8…^13`); the block is
+purely Composer's advisory policy.

@@ -28,7 +28,7 @@ those *after* the upgrade landed. Same order applies.
 ## Two projects, not one
 
 `00`–`07` are the **rework**: Laravel 13, Vue 3, Sanctum, Glide, own search.
-11.25–14 days, backend first, sequenced.
+12.5–13.75 days, backend first, sequenced.
 
 `08-frontend-js.md` is **separate**: modernising the public site's JavaScript.
 4–4.5 days. It shares only the Vite migration and can run before, after or
@@ -37,7 +37,7 @@ are deliberately not folded into the rework total.
 
 ## The 30-second version
 
-- **11.25–14 working days** of focused work. Backend 4.25–5.5, frontend 7–8.5.
+- **12.5–13.75 working days** of focused work. Backend 5–5.5, frontend 7.5–8.25.
   luvo's comparable number was 7–9; the delta is JWT→Sanctum, the own search
   implementation, the project grid builder, Tiptap, and a frontend that is
   ~15% bigger.
@@ -63,7 +63,7 @@ Three deliberate exceptions, decided 2026-10-04: TinyMCE is **replaced with
 Tiptap** rather than upgraded, the image pipeline **serves requested sizes +
 WebP/AVIF** rather than porting today's behaviour 1:1, and **Algolia is
 dropped** for an own search implementation (`07-search.md`). Together
-+2.75 days, each chosen as the better outcome over the smaller diff.
+roughly +2 days, each chosen as the better outcome over the smaller diff.
 
 Worth knowing: luvo set this same rule, then broke it afterwards
 (`fc4583f`: 6.9k → 2.2k LOC, 639 KB → 216 KB bundle) and replaced TinyMCE with

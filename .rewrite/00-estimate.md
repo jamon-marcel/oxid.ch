@@ -31,15 +31,19 @@ behaviour. Nothing else.
 
 | Phase | Days |
 |---|---|
-| Backend L11 → L13 + Sanctum + Glide + search | **4.25 – 5.5** |
-| Frontend Vue 3 + Vite + Tiptap | **7 – 8.5** |
-| **Total** | **11.25 – 14** |
+| Backend L11 → L13 + Sanctum + Glide + search | **5 – 5.5** |
+| Frontend Vue 3 + Vite + Tiptap | **7.5 – 8.25** |
+| **Total** | **12.5 – 13.75** |
 
 Add review and click-through QA → **~3 weeks calendar** if reviewed as we go.
 
-Up from the 9–12 first written on 2026-10-04: the answers to questions 2 and
-4 both chose the better outcome over the smaller diff. Worth it, but it is
-+1.5 days and should not arrive as a surprise later.
+The headline totals are the sums of the breakdown tables below. An
+earlier revision had patched the headline numbers decision by decision and
+let them drift from the tables; corrected 2026-10-04.
+
+History: 9–12 days at first survey, then the answers to questions 2, 4 and 7
+each chose the better outcome over the smaller diff (requested image sizes,
+Tiptap, own search), together roughly +2 days.
 
 ### Backend breakdown
 
@@ -61,7 +65,7 @@ Up from the 9–12 first written on 2026-10-04: the answers to questions 2 and
 |---|---|
 | Vite setup, `@vite` in blade, aliases, sass, 6 bundles | 0.5 – 0.75 |
 | `app.js` rewrite: Vue 3 bootstrap, router 4, drop vuex/moment/vue-axios | 0.25 |
-| Sanctum auth in the SPA (replaces ~200 LOC of token machinery) | 0.5 |
+| Sanctum auth in the SPA (replaces ~175 LOC of token machinery) | 0.5 |
 | **Dropzone replacement** (6 files + 2 configs) | 1 – 1.25 |
 | `vuedraggable` 2 → 4 across 13 files | 0.75 |
 | **TinyMCE → Tiptap** across 7 files, incl. round-trip verification (Q4) | 1 |

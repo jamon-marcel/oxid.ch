@@ -28,15 +28,18 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 
 | Step | Status | Commit |
 |---|---|---|
-| Delete dead v2 filters + orphan configs | — | |
-| Glide replaces `marceli-to/image-cache` | — | |
-| Requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | — | |
-| Laravel 13, PHP ^8.3, Carbon 3, Intervention 4 | — | |
+| Delete dead code: 6 filter classes, `dompdf`/`media`/`content` configs | — | |
+| **One commit:** Laravel 13, PHP ^8.3, drop image-cache, add Glide + Intervention 4 | — | |
+| Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | — | |
 | Slim skeleton, `app/User.php` → `app/Models/User.php` | — | |
 | Search phase 1: drop Algolia, Scout `collection` driver | — | |
-| Search phase 2: own scoring search + unit tests | — | |
 | JWT → Sanctum | — | |
 | Form-request validation messages (L12+ wants strings) | — | |
+| Search phase 2: own scoring search + unit tests, drop Scout | — | |
+
+The Laravel 13 bump and the image-cache → Glide dependency swap **must be
+the same commit** — Composer will not resolve anything on Laravel 11. See
+`02-backend-laravel13.md`, "Why step 4 must be one commit".
 
 ### To verify at the end of the backend phase
 
