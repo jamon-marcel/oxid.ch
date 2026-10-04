@@ -63,12 +63,12 @@
 @import 'components/icons/view';
 
 @import 'components/lists/global';
-@import 'components/overlay/global';
 @import 'components/images';
 @import 'components/editor';
+@import 'components/uploader';
+@import 'components/lightbox';
 
 @import 'components/upload/listing';
-@import 'components/upload/overlay';
 
 @import 'components/tables/global';
 @import 'components/pagination/global';
@@ -108,8 +108,6 @@
 @import 'modules/grid-layout';
 
 // Vendor
-@import 'vendor/dropzone';
-@import 'vendor/dropzone-custom';
 @import 'vendor/notifications';
 @import 'vendor/draggable';
 @import 'vendor/cropper';

@@ -31,6 +31,14 @@ export function formatDate(value) {
 }
 
 /**
+ * Typing aid for dd.mm.yyyy: digits only, dots added. "01062020" → "01.06.2020".
+ */
+export function dateMask(value) {
+  const digits = (value || '').replace(/\D/g, '').slice(0, 8);
+  return [digits.slice(0, 2), digits.slice(2, 4), digits.slice(4)].filter(Boolean).join('.');
+}
+
+/**
  * { field: true } for each empty field; paths like 'title.de'.
  */
 export function requiredErrors(record, paths) {

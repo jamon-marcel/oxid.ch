@@ -27,11 +27,6 @@
     "@babel/helper-string-parser" "^7.29.7"
     "@babel/helper-validator-identifier" "^7.29.7"
 
-"@fancyapps/ui@^5.0.14":
-  version "5.0.36"
-  resolved "https://registry.npmjs.org/@fancyapps/ui/-/ui-5.0.36.tgz"
-  integrity sha512-GMygQzp1MBTFNTT6AzpbL6pXTD6bTxwjmmpI1fe8Ozmmiseu8/g82Sudl1YhcbZmS4bJgaBOF5THDFGpXQ1fDw==
-
 "@floating-ui/core@^1.8.0":
   version "1.8.0"
   resolved "https://registry.npmjs.org/@floating-ui/core/-/core-1.8.0.tgz"
@@ -91,11 +86,6 @@
   dependencies:
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
-
-"@kyvg/vue3-notification@^3.4.2":
-  version "3.4.2"
-  resolved "https://registry.npmjs.org/@kyvg/vue3-notification/-/vue3-notification-3.4.2.tgz"
-  integrity sha512-CZ2zOdXsbGCtWbdqMgbusKtZTkMT+dYpw9bmAitsdSNHT0knh4njD8X95JIyTMWvNVjhDkFedbkNiZLcPqttwQ==
 
 "@oxc-project/types@=0.152.0":
   version "0.152.0"
@@ -456,11 +446,6 @@ axios@^1.6.7:
     form-data "^4.0.5"
     proxy-from-env "^1.1.0"
 
-boolbase@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz"
-  integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
-
 braces@^3.0.3:
   version "3.0.3"
   resolved "https://registry.npmjs.org/braces/-/braces-3.0.3.tgz"
@@ -536,11 +521,6 @@ dom7@^2.1.3:
   integrity sha512-xnhwVgyOh3eD++/XGtH+5qBwYTgCm0aW91GFgPJ3XG+jlsRLyJivnbP0QmUBFhI+Oaz9FV0s7cxgXHezwOEBYA==
   dependencies:
     ssr-window "^2.0.0"
-
-dropzone@^6.3.5:
-  version "6.3.5"
-  resolved "https://registry.npmjs.org/dropzone/-/dropzone-6.3.5.tgz"
-  integrity sha512-voAoyVj3ZyFwoUVkKMmtfCrp7gbjqKJv3gNCsz0lW1lApcmKILBCbCgBU64hJF4LC4+cs6+peXhsn122fPQqsw==
 
 dunder-proto@^1.0.1:
   version "1.0.1"
@@ -684,13 +664,6 @@ immutable@^5.0.2:
   resolved "https://registry.npmjs.org/immutable/-/immutable-5.0.3.tgz"
   integrity sha512-P8IdPQHq3lA1xVeBRi5VPqUm5HDgKnx0Ru51wZz5mjxHr5n3RWhjIpOFU7ybkUxfB+5IToy+OLaHYDBIWsv+uw==
 
-in-view@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.npmjs.org/in-view/-/in-view-0.6.1.tgz"
-  integrity sha1-+fmbXVpv4BNZ2eGcVwMCoxIbr0I=
-  dependencies:
-    lodash "^4.15.0"
-
 is-extglob@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/is-extglob/-/is-extglob-2.1.1.tgz"
@@ -763,22 +736,12 @@ linkifyjs@^4.3.3:
   resolved "https://registry.npmjs.org/linkifyjs/-/linkifyjs-4.3.3.tgz"
   integrity sha512-P8aEP5U/D1/IlTY2OeYsErdwh9bGuLE30NcXtKEjgdHcahveQoQwM2yZNsioQHsWFz0P7KKudisbrzCgR0sDHg==
 
-lodash@^4.15.0:
-  version "4.17.23"
-  resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.23.tgz"
-  integrity sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==
-
 magic-string@^0.30.21:
   version "0.30.21"
   resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.30.21.tgz"
   integrity sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.5.5"
-
-maska@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.npmjs.org/maska/-/maska-3.2.2.tgz"
-  integrity sha512-qhhoeKXYLsDOxfB70nybuGJmB+XsNb/xhKBBQGMMnT5Hw4+lhdeQmgwlkHYoMIUcppcnLHW6LppPPpGewrv9WQ==
 
 math-intrinsics@^1.1.0:
   version "1.1.0"
@@ -814,13 +777,6 @@ node-addon-api@^7.0.0:
   version "7.1.1"
   resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-7.1.1.tgz"
   integrity sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==
-
-nth-check@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.npmjs.org/nth-check/-/nth-check-2.1.1.tgz"
-  integrity sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==
-  dependencies:
-    boolbase "^1.0.0"
 
 orderedmap@^2.0.0:
   version "2.1.1"

@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { notify } from '@kyvg/vue3-notification';
+import { notify } from '@/lib/notify';
 import http, { validationErrors } from '@/lib/http';
 
 /**

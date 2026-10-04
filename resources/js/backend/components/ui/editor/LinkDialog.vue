@@ -1,13 +1,6 @@
 <template>
-  <dialog ref="dialog" class="editor-dialog" @close="onClose()" @click.self="close()">
-    <form method="dialog" @submit.prevent="apply()">
-      <header class="editor-dialog__header">
-        <h2>Link</h2>
-        <a href="javascript:;" @click.prevent="close()">
-          <PhX :size="18" weight="light" />
-        </a>
-      </header>
-
+  <Lightbox :open="isOpen" title="Link" size="small" @close="onClose()">
+    <form :id="formId" @submit.prevent="apply()">
       <div class="form-row">
         <label>Typ</label>
         <div class="select-wrapper">
@@ -51,18 +44,17 @@
           <span>In neuem Fenster öffnen</span>
         </label>
       </div>
-
-      <footer class="form-buttons">
-        <button type="submit" class="btn-secondary">Übernehmen</button>
-        <a href="javascript:;" v-if="isEditing" @click.prevent="remove()">Entfernen</a>
-        <a href="javascript:;" @click.prevent="close()">Abbrechen</a>
-      </footer>
     </form>
-  </dialog>
+    <template #footer>
+      <button type="submit" class="btn-secondary" :form="formId">Übernehmen</button>
+      <a href="javascript:;" v-if="isEditing" @click.prevent="remove()">Entfernen</a>
+      <a href="javascript:;" @click.prevent="close()">Abbrechen</a>
+    </template>
+  </Lightbox>
 </template>
 <script setup>
 import { ref, reactive } from 'vue';
-import { PhX } from '@phosphor-icons/vue';
+import Lightbox from '@/components/ui/Lightbox.vue';
 
 const props = defineProps({
   editor: { type: Object, required: true },
@@ -70,7 +62,10 @@ const props = defineProps({
 
 const types = { url: 'URL', email: 'E-Mail', tel: 'Telefon' };
 
-const dialog = ref(null);
+const isOpen = ref(false);
+
+// Several editors on a page: each link form needs its own id
+const formId = `link-${Math.random().toString(36).slice(2)}`;
 const isEditing = ref(false);
 const link = reactive({ type: 'url', protocol: 'https://', value: '', title: '', blank: false });
 
@@ -99,7 +94,7 @@ function open() {
     });
   }
 
-  dialog.value.showModal();
+  isOpen.value = true;
 }
 
 function href() {
@@ -135,11 +130,12 @@ function remove() {
 }
 
 function close() {
-  dialog.value.close();
+  isOpen.value = false;
 }
 
 // Also fired when the dialog is torn down with an already destroyed editor
 function onClose() {
+  isOpen.value = false;
   if (!props.editor.isDestroyed) {
     props.editor.commands.focus();
   }

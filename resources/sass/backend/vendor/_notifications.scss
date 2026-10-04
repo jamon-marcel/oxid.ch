@@ -36,3 +36,27 @@
         @include font-bold();
     }
 }
+
+// Own toast list (lib/notify.js), where the vue3-notification group was
+.notifications {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 300px;
+    z-index: 1000;
+
+    .notification {
+        cursor: pointer;
+    }
+}
+
+.notification-enter-active,
+.notification-leave-active {
+    transition: opacity .2s ease-out, transform .2s ease-out;
+}
+
+.notification-enter-from,
+.notification-leave-to {
+    opacity: 0;
+    transform: translateX(20px);
+}

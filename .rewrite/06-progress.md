@@ -467,6 +467,39 @@ vuedraggable and the cropper went in together.
   grid builder add row → pick image → delete image; session expiry on
   navigation and on API call, re-login, logout.
 
+### Notes from the dependency / lightbox pass (user feedback 2026-10-04)
+
+- **Dependencies removed (6):** `@kyvg/vue3-notification` → `lib/notify.js`
+  + `components/ui/Notifications.vue` (~40 lines, same CSS classes);
+  `dropzone` → own `components/ui/Uploader.vue` (drop zone + picker,
+  browser-side type/size/count checks, sequential uploads through `http`, so
+  the CSRF and error handling are the app's own); `maska` → `dateMask()` in
+  `lib/utils.js` (its only use was the news end date); `@fancyapps/ui`,
+  `in-view`, `nth-check` — not imported anywhere. The two Dropzone vendor
+  stylesheets went with it; the drop zone shows plain text, no button.
+- **Kept, and why:** `vue`, `vue-router`, `axios` (interceptors, XSRF);
+  `@tiptap/*` (the editor); `vue-advanced-cropper` (a cropper is real work);
+  `vuedraggable` (8 lists; it's unmaintained since 2021 and is the reason
+  for the `vue` alias in `vite.config.js` — swapping it for SortableJS via a
+  small composable is the next candidate); `@phosphor-icons/vue`. Public
+  site: `jquery`, `jquery.scrollto`, `lazysizes`, `swiper` until
+  `08-frontend-js.md`.
+- **One Lightbox for all overlays** (`components/ui/Lightbox.vue`, native
+  `<dialog>`): image edit, crop, file edit, grid image picker, editor link
+  dialog (size `small`). Header with title + close, scrolling body, footer
+  for the buttons; Escape, focus and backdrop come from `<dialog>`; page
+  scroll locked while open. Replaces four overlay styles
+  (`upload-overlay-edit/-cropper`, `overlay`, `overlay-asset/-crop`).
+- **Cropper fits the window:** `fill` mode gives the cropper exactly the
+  height between header and footer (was a fixed `max-height: 700px` plus
+  80px padding, so buttons fell off short screens). Checked at 1280×620:
+  footer ends at 590px. The edit lightbox caps its image to the window.
+- **Menu:** single pages (Projekte, Diskurs, Kontakt) sit at section level
+  with the same spacing as group headers; the pages of a group are indented
+  under it, as in the old admin. The list scrolls on short windows; logout
+  stays below it.
+- Admin entry chunk 156 KB.
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the
@@ -492,8 +525,9 @@ vuedraggable and the cropper went in together.
 | Border tokens, 1px lines (`09-admin-ui.md`) | ✅ done — `$border-width`, 39 lines; softer shadows; focus rings | `4dfc989` |
 | Menu: type scale + group headers | ✅ done | `4dfc989` |
 | **`<script setup>` + composables, luvo's shape** (scope changed 2026-10-04): foundation + news | ✅ done — `lib/{http,utils,images}`, composables `useResourceForm/useListing/useOrder/useEscape`, `components/ui/*`, `App.vue` + `views/layout/PageHeader`, lazy `router.js` with the session guard; news list/create/edit/order/toggle and server-side validation verified; old screens still run inside the new shell | `f4ac39b` |
-| … projects, discourses, team, jobs, profile, contact | ✅ done — all lists and forms; `ImageManager`, `FileManager`, `Uploader`, `useImages/useImageLibrary/useFiles` | this commit |
-| … image pages, listings, grid builder | ✅ done, same commit — one `views/images/Index.vue` for home/team/jobs/profile (route props); grid builder in `views/projects/Grid.vue` + `components/grid/`. No Options API, mixin or `$parent` left | this commit |
+| … projects, discourses, team, jobs, profile, contact | ✅ done — all lists and forms; `ImageManager`, `FileManager`, `Uploader`, `useImages/useImageLibrary/useFiles` | `7b55d5e` |
+| … image pages, listings, grid builder | ✅ done, same commit — one `views/images/Index.vue` for home/team/jobs/profile (route props); grid builder in `views/projects/Grid.vue` + `components/grid/`. No Options API, mixin or `$parent` left | `7b55d5e` |
+| Fewer dependencies, one Lightbox, menu sections | ✅ done — see notes | this commit |
 | Login screen / splash | ⏳ login error shown (`15c4102`); random home image as background **waits for the image agent** — it is reworking `/img/home/…` | |
 
 ### To verify at the end of the frontend phase

@@ -57,7 +57,7 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import draggable from 'vuedraggable';
-import { notify } from '@kyvg/vue3-notification';
+import { notify } from '@/lib/notify';
 import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
 import GridRow from '@/components/grid/Row.vue';
 import GridSelector from '@/components/grid/Selector.vue';

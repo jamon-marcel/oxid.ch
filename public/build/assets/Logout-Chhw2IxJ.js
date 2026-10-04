@@ -1,1 +1,0 @@
-import{N as e,a as t,n,s as r}from"./app-Dnl3rXjS.js";r();var i={__name:`Logout`,setup(r){let i=t();return e(async()=>{try{await n.post(`/api/auth/logout`)}catch{}i.push({name:`login`})}),(e,t)=>null}};export{i as default};

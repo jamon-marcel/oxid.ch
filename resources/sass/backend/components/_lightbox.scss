@@ -1,0 +1,137 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/lightbox
+ * The Lightbox component: every overlay of the admin
+ * -----------------------------------------------------------------------------
+ */
+
+html:has(dialog.lightbox[open]) {
+  overflow: hidden;
+}
+
+.lightbox {
+  border: 0;
+  color: $color-dark;
+  padding: 0;
+
+  &::backdrop {
+    background-color: rgba($color-white, .98);
+  }
+
+  &.lightbox--full {
+    background-color: $color-white;
+    height: 100%;
+    max-height: none;
+    max-width: none;
+    width: 100%;
+
+    .lightbox__frame {
+      @extend %page-block;
+      height: 100%;
+      padding-bottom: 30px;
+      padding-top: 30px;
+    }
+  }
+
+  &.lightbox--small {
+    background-color: $color-white;
+    border-radius: 2px;
+    box-shadow: $box-shadow-lg;
+    max-width: 480px;
+    width: calc(100% - 32px);
+
+    &::backdrop {
+      background-color: rgba($color-black, .3);
+    }
+
+    .lightbox__frame {
+      max-height: calc(100vh - 64px);
+      padding: 24px;
+    }
+  }
+}
+
+.lightbox__frame {
+  display: flex;
+  flex-direction: column;
+}
+
+.lightbox__header {
+  align-items: center;
+  display: flex;
+  flex: none;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  h2 {
+    @include font-bold();
+    margin: 0;
+  }
+}
+
+.lightbox__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+
+  // Takes exactly the room left: the cropper scales its image into it
+  &.lightbox__body--fill {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    > .vue-advanced-cropper {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+  }
+}
+
+.lightbox__footer {
+  display: flex;
+  flex: none;
+  gap: 20px;
+  align-items: center;
+  padding-top: 20px;
+
+  a:not([class*="btn"]) {
+    color: $color-dark;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Image or file on the left, fields on the right
+.lightbox-grid {
+  display: grid;
+  grid-gap: 35px;
+  grid-template-columns: 2fr 1fr;
+
+  figure {
+    border: $border-width solid $color-light-grey;
+
+    img {
+      display: block;
+      height: auto;
+      // The whole image in view, whatever the window height
+      max-height: calc(100vh - 220px);
+      object-fit: contain;
+      padding: 10px;
+      width: 100%;
+    }
+
+    figcaption {
+      padding: 0 10px 10px;
+
+      span {
+        display: block;
+      }
+    }
+  }
+}
+
+.lightbox__loading {
+  color: $color-medium-grey;
+}

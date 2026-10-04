@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { notify } from '@kyvg/vue3-notification';
+import { notify } from '@/lib/notify';
 
 // Same-origin SPA on Sanctum's session cookie: axios sends X-XSRF-TOKEN from
 // the XSRF-TOKEN cookie by itself.

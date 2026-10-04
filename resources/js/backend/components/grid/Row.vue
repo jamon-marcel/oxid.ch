@@ -164,34 +164,26 @@
         </div>
       </div>
     </div>
-    <div :class="[isOverlayOpen ? 'is-visible' : '', 'overlay']">
-      <div>
-        <a href="javascript:;" @click.prevent="closeOverlay()" class="feather-icon upload-overlay__close" title="Schliessen">
-          <PhX :size="24" weight="light" />
-        </a>
-        <div v-if="isOverlayOpen">
-          <h1>Projektbild auswählen</h1>
-          <div class="grid-image-selector">
-            <div class="grid-image-selector__item">
-              <div class="grid-image-selector__media">
-                <figure v-for="image in images" :key="image.id">
-                  <a href @click.prevent="storeImage(image.id)">
-                    <img :src="imageUrl(image, 'thumbnail')" height="120" width="70">
-                    <span>{{image.name}}</span>
-                  </a>
-                </figure>
-              </div>
-            </div>
+    <Lightbox :open="isOverlayOpen" title="Projektbild auswählen" @close="isOverlayOpen = false">
+      <div class="grid-image-selector">
+        <div class="grid-image-selector__item">
+          <div class="grid-image-selector__media">
+            <figure v-for="image in images" :key="image.id">
+              <a href @click.prevent="storeImage(image.id)">
+                <img :src="imageUrl(image, 'thumbnail')" height="120" width="70">
+                <span>{{ image.name }}</span>
+              </a>
+            </figure>
           </div>
         </div>
       </div>
-    </div>
+    </Lightbox>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue';
-import { notify } from '@kyvg/vue3-notification';
-import { PhX } from '@phosphor-icons/vue';
+import { notify } from '@/lib/notify';
+import Lightbox from '@/components/ui/Lightbox.vue';
 import GridMedia from '@/components/grid/Media.vue';
 import ButtonAdd from '@/components/grid/ButtonAdd.vue';
 import { imageUrl } from '@/lib/images';
@@ -233,7 +225,7 @@ async function pick(at) {
   const { data } = await http.get(`/api/project/image/get/${props.projectId}`);
   images.value = data.data;
   position = at;
-  openOverlay();
+  isOverlayOpen.value = true;
 }
 
 async function storeImage(imageId) {
@@ -243,7 +235,7 @@ async function storeImage(imageId) {
     project_image_id: imageId,
     project_id: props.projectId,
   });
-  closeOverlay();
+  isOverlayOpen.value = false;
   notify({ type: 'success', text: 'Bild hinzugefügt' });
   fetch();
 }
@@ -252,16 +244,6 @@ async function deleteImage(id) {
   await http.delete(`/api/project/grid/image/delete/${id}`);
   notify({ type: 'success', text: 'Bild gelöscht' });
   fetch();
-}
-
-function openOverlay() {
-  document.documentElement.classList.add('has-overlay');
-  isOverlayOpen.value = true;
-}
-
-function closeOverlay() {
-  document.documentElement.classList.remove('has-overlay');
-  isOverlayOpen.value = false;
 }
 
 fetch();

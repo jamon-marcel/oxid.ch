@@ -63,20 +63,15 @@
       </div>
     </div>
 
-    <div :class="[editItem ? 'is-visible' : '', 'upload-overlay-edit']">
-      <div v-if="editItem">
-        <a href="javascript:;" class="feather-icon upload-overlay__close" title="Schliessen" @click.prevent="editItem = null">
-          <PhX :size="24" weight="light" />
-        </a>
-        <div>
-          <figure>
-            <img :src="imageUrl(editItem, 'large')" height="300" width="300">
-            <figcaption v-if="editItem.caption.de || editItem.caption.en">
-              <span v-if="editItem.caption.de">{{ editItem.caption.de }}</span>
-              <span v-if="editItem.caption.en">{{ editItem.caption.en }}</span>
-            </figcaption>
-          </figure>
-        </div>
+    <Lightbox :open="!!editItem" title="Bild bearbeiten" @close="editItem = null">
+      <div class="lightbox-grid" v-if="editItem">
+        <figure>
+          <img :src="imageUrl(editItem, 'large')" height="300" width="300">
+          <figcaption v-if="editItem.caption.de || editItem.caption.en">
+            <span v-if="editItem.caption.de">{{ editItem.caption.de }}</span>
+            <span v-if="editItem.caption.en">{{ editItem.caption.en }}</span>
+          </figcaption>
+        </figure>
         <div>
           <div class="form-row">
             <label>Bildlegende</label>
@@ -87,40 +82,35 @@
             <input type="text" v-model="editItem.caption.en">
           </div>
           <slot name="fields" :image="editItem" />
-          <div class="form-row-button">
-            <a v-if="saveOnClose" href="javascript:;" class="btn-secondary" @click.prevent="emit('update', editItem); editItem = null">Speichern</a>
-            <a v-else href="javascript:;" class="btn-secondary" @click.prevent="editItem = null">Schliessen</a>
-          </div>
         </div>
       </div>
-    </div>
+      <template #footer>
+        <a v-if="saveOnClose" href="javascript:;" class="btn-secondary" @click.prevent="emit('update', editItem); editItem = null">Speichern</a>
+        <a v-else href="javascript:;" class="btn-secondary" @click.prevent="editItem = null">Schliessen</a>
+      </template>
+    </Lightbox>
 
-    <div :class="[cropItem ? 'is-visible' : '', 'upload-overlay-cropper']">
-      <div class="loader" v-if="isCropperLoading">Bild wird geladen...</div>
-      <div v-else-if="cropItem">
-        <a href="javascript:;" class="feather-icon upload-overlay__close" title="Schliessen" @click.prevent="cropItem = null">
-          <PhX :size="24" weight="light" />
-        </a>
-        <div>
-          <span class="cropper-info">Neue Grösse:<br>{{ cropSize.w }} x {{ cropSize.h }}px</span>
-          <Cropper
-            :src="cropSrc"
-            :default-position="defaultPosition"
-            :default-size="defaultSize"
-            :stencil-props="{
-              aspectRatio: cropRatio,
-              linesClassnames: { default: 'line' },
-              handlersClassnames: { default: 'handler' },
-            }"
-            @change="change"
-          />
-          <div class="form-buttons">
-            <a href="javascript:;" class="btn-secondary" @click.prevent="saveCrop()">Speichern</a>
-            <a href="javascript:;" @click.prevent="cropItem = null">Abbrechen</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Lightbox :open="!!cropItem" title="Bild zuschneiden" fill @close="cropItem = null">
+      <p class="lightbox__loading" v-if="isCropperLoading">Bild wird geladen...</p>
+      <template v-else-if="cropItem">
+        <span class="cropper-info">Neue Grösse: {{ cropSize.w }} x {{ cropSize.h }}px</span>
+        <Cropper
+          :src="cropSrc"
+          :default-position="defaultPosition"
+          :default-size="defaultSize"
+          :stencil-props="{
+            aspectRatio: cropRatio,
+            linesClassnames: { default: 'line' },
+            handlersClassnames: { default: 'handler' },
+          }"
+          @change="change"
+        />
+      </template>
+      <template #footer>
+        <a href="javascript:;" class="btn-secondary" @click.prevent="saveCrop()">Speichern</a>
+        <a href="javascript:;" @click.prevent="cropItem = null">Abbrechen</a>
+      </template>
+    </Lightbox>
   </div>
 </template>
 <script setup>
@@ -128,11 +118,11 @@ import { ref, reactive } from 'vue';
 import draggable from 'vuedraggable';
 import { Cropper } from 'vue-advanced-cropper';
 import {
-  PhEye, PhEyeSlash, PhPencilSimple, PhArrowSquareOut, PhTrash, PhCrop, PhX, PhDotsSixVertical,
+  PhEye, PhEyeSlash, PhPencilSimple, PhArrowSquareOut, PhTrash, PhCrop, PhDotsSixVertical,
 } from '@phosphor-icons/vue';
+import Lightbox from '@/components/ui/Lightbox.vue';
 import { imageUrl, preloadImage } from '@/lib/images';
 import { useOrder } from '@/composables/useOrder';
-import { useEscape } from '@/composables/useEscape';
 
 const props = defineProps({
   // resource path below /api, for saving the order, e.g. 'discourse'
@@ -226,9 +216,4 @@ function saveCrop() {
   emit('save-coords', image);
   cropItem.value = null;
 }
-
-useEscape(() => {
-  editItem.value = null;
-  cropItem.value = null;
-});
 </script>

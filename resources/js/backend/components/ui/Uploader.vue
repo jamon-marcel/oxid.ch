@@ -1,61 +1,90 @@
 <template>
   <div>
     <label v-if="label">{{ label }}</label>
-    <div ref="el" class="vue-dropzone dropzone"></div>
+    <div
+      :class="['uploader', { 'is-dragover': isDragover, 'is-uploading': uploading }]"
+      @click="input.click()"
+      @dragover.prevent="isDragover = true"
+      @dragleave.prevent="isDragover = false"
+      @drop.prevent="drop"
+    >
+      <span v-if="uploading">{{ uploading }}</span>
+      <span v-else>Dateien hierher ziehen oder klicken</span>
+      <input ref="input" type="file" :accept="acceptedFiles" :multiple="maxFiles > 1" hidden @change="choose">
+    </div>
     <span class="bubble is-restriction">{{ restrictions }}</span>
   </div>
 </template>
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import Dropzone from 'dropzone';
-import { notify } from '@kyvg/vue3-notification';
+import { ref } from 'vue';
+import http from '@/lib/http';
+import { notify } from '@/lib/notify';
 
-Dropzone.autoDiscover = false;
-
+// Drop zone + file picker; uploads one file after the other and emits the
+// upload endpoint's JSON response ({ name, filetype, orientation }) for each
 const props = defineProps({
   url: { type: String, default: '/api/media/upload' },
   label: { type: String, default: 'Upload' },
   restrictions: { type: String, default: '' },
+  // e.g. '.png,.jpg'
   acceptedFiles: { type: String, required: true },
   maxFiles: { type: Number, default: 99 },
+  // MB
   maxFilesize: { type: Number, required: true },
 });
 
-// The upload endpoint's JSON response: { name, filetype, orientation }
 const emit = defineEmits(['uploaded']);
 
-const el = ref(null);
-let dropzone = null;
+const input = ref(null);
+const isDragover = ref(false);
+const uploading = ref(null);
 
-onMounted(() => {
-  const token = document.head.querySelector('meta[name="csrf-token"]');
-  dropzone = new Dropzone(el.value, {
-    url: props.url,
-    method: 'post',
-    acceptedFiles: props.acceptedFiles,
-    maxFiles: props.maxFiles,
-    maxFilesize: props.maxFilesize,
-    createImageThumbnails: false,
-    headers: token ? { 'X-CSRF-TOKEN': token.content } : {},
-    dictDefaultMessage: 'Dateien hierher ziehen oder klicken',
-    dictInvalidFileType: `Dateityp nicht erlaubt (erlaubt: ${props.restrictions.split('|')[0].trim()}).`,
-    dictFileTooBig: 'Datei ist zu gross ({{filesize}} MB, erlaubt: max. {{maxFilesize}} MB).',
-    dictMaxFilesExceeded: 'Zu viele Dateien (max. {{maxFiles}} auf einmal).',
-    hiddenInputContainer: el.value.parentElement,
-  });
+const extensions = props.acceptedFiles.split(',').map(extension => extension.trim().toLowerCase());
 
-  // Rejected in the browser (type, size, count) or by the server
-  dropzone.on('error', (file, message, xhr) => {
-    notify({ type: 'error', text: `«${file.name}»: ${xhr ? `Upload fehlgeschlagen (${xhr.status})` : message}` });
-  });
+function drop(event) {
+  isDragover.value = false;
+  upload([...event.dataTransfer.files]);
+}
 
-  dropzone.on('complete', file => {
-    if (file.status === 'success') {
-      emit('uploaded', JSON.parse(file.xhr.response));
+function choose() {
+  upload([...input.value.files]);
+  input.value.value = '';
+}
+
+// Checked in the browser too, so a wrong file fails before it is sent
+function rejection(file) {
+  if (!extensions.some(extension => file.name.toLowerCase().endsWith(extension))) {
+    return `Dateityp nicht erlaubt (erlaubt: ${props.restrictions.split('|')[0].trim()}).`;
+  }
+  if (file.size > props.maxFilesize * 1024 * 1024) {
+    return `Datei ist zu gross (max. ${props.maxFilesize} MB).`;
+  }
+  return null;
+}
+
+async function upload(files) {
+  if (files.length > props.maxFiles) {
+    notify({ type: 'error', text: `Zu viele Dateien (max. ${props.maxFiles} auf einmal).` });
+    return;
+  }
+  for (const [index, file] of files.entries()) {
+    const reason = rejection(file);
+    if (reason) {
+      notify({ type: 'error', text: `«${file.name}»: ${reason}` });
+      continue;
     }
-    dropzone.removeFile(file);
-  });
-});
-
-onBeforeUnmount(() => dropzone?.destroy());
+    uploading.value = files.length > 1 ? `Hochladen… ${index + 1} / ${files.length}` : 'Hochladen…';
+    const data = new FormData();
+    data.append('file', file);
+    try {
+      const response = await http.post(props.url, data);
+      emit('uploaded', response.data);
+    }
+    catch (error) {
+      const status = error.response?.status;
+      notify({ type: 'error', text: `«${file.name}»: ${status === 413 ? 'Datei ist zu gross für den Server.' : `Upload fehlgeschlagen (${status ?? 'Netzwerk'}).`}` });
+    }
+  }
+  uploading.value = null;
+}
 </script>

@@ -1,4 +1,4 @@
-import { notify } from '@kyvg/vue3-notification';
+import { notify } from '@/lib/notify';
 import http from '@/lib/http';
 import { confirmDelete, translations } from '@/lib/utils';
 

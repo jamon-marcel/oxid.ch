@@ -1,0 +1,35 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/uploader
+ * Drop zone of the Uploader component (was Dropzone's box and button)
+ * -----------------------------------------------------------------------------
+ */
+
+.uploader {
+  align-items: center;
+  border: $border-width solid $color-light-grey;
+  border-radius: 2px;
+  color: $color-medium-grey;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  min-height: 150px;
+  padding: 20px;
+  text-align: center;
+  transition: border-color .12s ease-out, color .12s ease-out;
+
+  &:hover,
+  &.is-dragover {
+    border-color: $color-dark;
+    color: $color-dark;
+  }
+
+  &.is-dragover {
+    border-style: dashed;
+  }
+
+  &.is-uploading {
+    color: $color-dark;
+    cursor: progress;
+  }
+}

@@ -31,10 +31,11 @@
                   <div class="form-row is-sm is-last">
                     <label class="is-sm">Publizieren bis</label>
                     <input
-                      v-maska="'##.##.####'"
                       class="is-light"
-                      v-model="record.date_end"
+                      :value="record.date_end"
+                      @input="record.date_end = $event.target.value = dateMask($event.target.value)"
                       type="text"
+                      inputmode="numeric"
                       placeholder="z.B. 01.06.2020"
                     >
                   </div>
@@ -68,7 +69,6 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import { vMaska } from 'maska/vue';
 import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
 import Tabs from '@/components/ui/Tabs.vue';
 import LabelRequired from '@/components/ui/LabelRequired.vue';
@@ -76,7 +76,7 @@ import RadioButton from '@/components/ui/RadioButton.vue';
 import FormFooter from '@/components/ui/FormFooter.vue';
 import Editor from '@/components/ui/editor/Editor.vue';
 import { useResourceForm } from '@/composables/useResourceForm';
-import { translations, formatDate } from '@/lib/utils';
+import { translations, formatDate, dateMask } from '@/lib/utils';
 
 const props = defineProps({
   type: { type: String, required: true },
