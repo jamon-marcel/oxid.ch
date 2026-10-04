@@ -58,7 +58,7 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | Config diff against L13 (was step 7), drop `intervention/image-laravel` | ✅ done — 145 routes (duplicate `/suche` removed); `config:cache` **and `route:cache`** OK; effective config unchanged except `same_site` → `lax` and the cache key prefix; public pages, admin API GETs, throttle headers OK | `5bdc257` |
 | JWT → Sanctum, incl. the Vue 2 SPA's auth bootstrap | ✅ done — cookie flow verified with curl and in headless Chromium against the Vue 2 admin: login, 8 list screens, edit + save, upload, session expiry on navigation and on POST, logout; 145 routes, caches OK | `046c9e8` |
 | Form-request validation messages (L12+ wants strings) | ✅ checked, **no change needed** — all 10 form requests already return string messages (ran each one's rules + messages through the validator: 17 errors, 0 non-string); 422 shape verified unchanged in the Sanctum run | (docs only) |
-| Search phase 2: own scoring search + unit tests, drop Scout | ✅ done — 18 unit tests; 15 queries vs production in `07-search.md`, every phase 1 loss recovered; queries 2–9 ms; index flushed on save. Ranking tuning against real queries still open (needs the access logs) | this commit |
+| Search phase 2: own scoring search + unit tests, drop Scout | ✅ done — 18 unit tests; 15 queries vs production in `07-search.md`, every phase 1 loss recovered; queries 2–9 ms; index flushed on save. Ranking tuning against real queries still open (needs the access logs) | `bd0eacb` |
 | **Rethink image handling — more generic** (requested 2026-10-04, see below) | — open, design first | |
 
 The Laravel 13 bump and the image-cache → Glide dependency swap **must be
@@ -269,6 +269,48 @@ moved aside (framework defaults), and diff. Then decide per file.
 - Lang files still live in `resources/lang`; L13 picks that up
   (`app()->langPath()`), moving them to `lang/` is optional.
 
+### Notes from the public site on Vite
+
+- **Vite 8.3 + `laravel-vite-plugin` 3.2.** Three entries: `frontend/app.scss`,
+  `frontend/app.js`, `frontend/maps.js` → `public/build/` with a manifest,
+  committed (deploy decision #8). The Blade layouts use `@vite(...)`, so the
+  cache-busting that never worked under Mix (`asset()` instead of `mix()`)
+  now works — a behaviour change: browsers fetch new CSS/JS after a deploy.
+- **Admin stays on Mix until the Vue 3 port.** `webpack.mix.js` now builds
+  only `backend/app.js` and `backend/app.scss`; npm scripts are
+  `admin:dev` / `admin:watch` / `admin:build`. `mix-manifest.json` holds
+  only the admin entries.
+- **`busu.css` keeps its path** (`public/assets/css/busu.css`, another site
+  loads it) — built by the `sass` CLI in `npm run build` (`build:busu`).
+  Output differs from Mix only in vendor prefixes and value notation
+  (Mix ran autoprefixer + cssnano); the rules are the same.
+- **Vendored UMD files → npm, same versions, pinned exactly:** `swiper`
+  5.3.8, `lazysizes` 5.1.2, `jquery.scrollto` 2.1.2. Vite's dev server
+  cannot load local CommonJS/UMD. `vendor/fancybox.js` stays (dead code,
+  `08-frontend-js.md` step 1).
+- `require()` → `import`; `bootstrap.js` still sets the jQuery global the
+  modules rely on. Vite entries load as deferred `type="module"` scripts;
+  no inline script uses `$`, and every module waits for DOM ready anyway.
+- **Sass URLs made absolute:** fonts → `/assets/css/fonts/…`,
+  `$url-images`/`$url-icons` → `/assets/img/…` (they were relative to
+  `public/assets/css/`; the built CSS now lives in `public/build/assets/`).
+  `vite.config.js` sets `publicDir: 'public'` for the dev server only, so
+  those URLs resolve there too; in a build it would prefix them with
+  `/build/`.
+- LightningCSS (Vite 8's CSS minifier) rejects the old-IE `*zoom: 1` hack;
+  `css.lightningcss.errorRecovery` drops it. Sass `@import` deprecation
+  warnings are silenced, as in luvo — the `@use` migration is separate.
+- Removed: Mix's public outputs `public/assets/{js/app.js, js/maps.js,
+  css/app.css}`. `public/assets/js/modernizr.min.js` stays (static, linked
+  directly).
+- **Pre-existing, seen during the check, not changed:** `/geschichte` throws
+  `_toggleDropDownItems is not defined` (8×, in the old build too);
+  `/werkliste` is a 200 with an empty body (`WorksController@index` is
+  empty — the menu links to the sub-pages).
+- The public `<meta name="csrf-token">` also uses `value=`, so the public
+  site's axios sent `X-CSRF-TOKEN: undefined` — harmless, it never makes a
+  request. Left for `08-frontend-js.md` step 1, which deletes axios there.
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the
@@ -285,7 +327,7 @@ moved aside (framework defaults), and diff. Then decide per file.
 
 | Step | Status | Commit |
 |---|---|---|
-| Public site on Vite | — | |
+| Public site on Vite | ✅ done — 30 screenshots (15 pages × 1280/375) old Mix build vs Vite build: 27 pixel-identical, 3 differ only by the random home image; menu, map, Swiper, collapsible, lazysizes, scrollTo work; `vite` dev server checked | this commit |
 | Admin on Vue 3 + Vite | — | |
 | Dropzone v6 replacement | — | |
 | TinyMCE → Tiptap (incl. round-trip verification) | — | |
@@ -347,8 +389,10 @@ To be filled in once `04-open-questions.md` #8 is answered. Expected shape,
 based on luvo:
 
 - `composer install --no-dev` on the server, PHP 8.3+ CLI.
-- Vite build output committed (as the Mix output is today), or a build step
-  added to the deploy.
+- Vite build output is committed (`public/build/`, plus `public/assets/css/busu.css`
+  and the admin's Mix output until the Vue 3 port): run `npm run build`
+  (and `npm run admin:build`) before committing a release. Never commit
+  `public/hot` (gitignored).
 - `php artisan optimize:clear`.
 - `.env`: remove `ALGOLIA_APP_ID` / `ALGOLIA_SECRET`, and make sure
   `SCOUT_DRIVER` / `SCOUT_PREFIX` are gone too (Scout removed in search

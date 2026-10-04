@@ -1,7 +1,7 @@
-<script src="{{ asset('assets/js/app.js') }}" type="text/javascript"></script>
+@vite('resources/js/frontend/app.js')
 @if (request()->routeIs('page.contact'))
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxU6MLGw6kEAd9ejc8GfqXx38qvm0oHPI"></script>
-<script src="{{ asset('assets/js/maps.js') }}" type="text/javascript"></script>
+@vite('resources/js/frontend/maps.js')
 @endif
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-171670650-1"></script>

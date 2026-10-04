@@ -18,7 +18,7 @@
 <meta name="theme-color" content="#aa4939">
 <meta name="csrf-token" value="{{ csrf_token() }}" />
 <meta name="format-detection" content="telephone=no">
-<link href="{{ asset('assets/css/app.css') }}" type="text/css" rel="stylesheet" />
+@vite('resources/sass/frontend/app.scss')
 <script src="{{ asset('assets/js/modernizr.min.js') }}"></script>
 </head>
 <body>

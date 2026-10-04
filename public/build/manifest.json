@@ -1,0 +1,23 @@
+{
+  "resources/js/frontend/app.js": {
+    "file": "assets/app-DKOZInbx.js",
+    "name": "app",
+    "src": "resources/js/frontend/app.js",
+    "isEntry": true
+  },
+  "resources/js/frontend/maps.js": {
+    "file": "assets/maps-IhyfSzuj.js",
+    "name": "maps",
+    "src": "resources/js/frontend/maps.js",
+    "isEntry": true
+  },
+  "resources/sass/frontend/app.scss": {
+    "file": "assets/app-HPoxn7IA.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/sass/frontend/app.scss",
+    "isEntry": true
+  }
+}

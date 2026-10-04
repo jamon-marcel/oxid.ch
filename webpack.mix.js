@@ -48,19 +48,3 @@ mix.sass('resources/sass/backend/app.scss', 'public/assets/backend/css', {
         outputStyle: 'compressed',
     }
 });
-
-// Frontend
-mix.js('resources/js/frontend/app.js', 'public/assets/js').version();
-mix.js('resources/js/frontend/maps.js', 'public/assets/js').version();
-mix.sass('resources/sass/frontend/app.scss', 'public/assets/css', {
-    sassOptions: {
-        outputStyle: 'compressed',
-    }
-}).version();
-
-// Frontend - Busu
-mix.sass('resources/sass/frontend-busu/busu.scss', 'public/assets/css', {
-    sassOptions: {
-        outputStyle: 'compressed',
-    }
-}).version();
