@@ -7,7 +7,7 @@
 @section('content')
 <section class="content content--discourse">
   <a href="javascript:window.history.back();" class="btn-close" data-swiper="themed"></a>
-  <div class="swiper-container">
+  <div class="swiper">
     <div class="swiper-wrapper">
       @if ($discourse->publishedImages)
         @foreach($discourse->publishedImages as $img)

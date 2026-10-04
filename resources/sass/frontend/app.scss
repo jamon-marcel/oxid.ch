@@ -72,7 +72,8 @@
 
 
 // Vendor
-@import 'vendor/swiper/swiper';
+// Swiper's core CSS comes from the package (swiper/swiper.css)
+@import 'swiper/swiper.css';
 @import 'vendor/swiper/swiper-custom';
 
 

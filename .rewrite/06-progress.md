@@ -799,9 +799,9 @@ only grid element missing from the whole table.
 | Step | Status | Commit |
 |---|---|---|
 | Delete dead code: fancyBox (JS **and** Sass), axios | done | `046a170` |
-| jQuery → vanilla, 9 modules + `bootstrap.js`, `js-` → `data-` | done | see below |
-| `maps.js` de-jQuery | done (with step 2) | |
-| Swiper 5.3.8 → 12 | — | |
+| jQuery → vanilla, 9 modules + `bootstrap.js`, `js-` → `data-` | done | `ccbfa36` |
+| `maps.js` de-jQuery | done (with step 2) | `ccbfa36` |
+| Swiper 5.3.8 → 14.3 | done | see below |
 
 **Baseline and how it is checked.** Playwright scripts in `~/oxid-qa`
 (outside the repo; `playwright`, `pngjs`, `pixelmatch` installed there):
@@ -872,6 +872,34 @@ renders from the built `maps.js`. Dropdown (works page, 375) and the project
 page filter (24 → 36 → 24 entries) checked separately. `php artisan test`
 37 passed. Bundle: `app.js` 238.8 KB → **147.6 KB** (gzip 71.0 → 40.0 KB);
 Swiper 5 is most of the rest.
+
+**Step 3, Swiper 5.3.8 → 14.3.0** (14 is current; the plan said 12).
+Swiper runs on the discourse detail page only, from 960 px up: 42 of 77
+published entries have two or more images.
+
+- `import Swiper from 'swiper'` + `Navigation` from `swiper/modules`;
+  only those two are bundled. Container class `.swiper-container` →
+  `.swiper` (blade).
+- The 531-line vendored Swiper 5 CSS is gone; `app.scss` imports the
+  package's `swiper/swiper.css` (5.9 KB). Sass emits it as a plain CSS
+  import, Vite inlines it at the top of the bundle, so
+  `_swiper-custom.scss` (e.g. `.swiper-wrapper { display: block }` below
+  960 px) still wins. Checked in the built CSS.
+- The theme classes are now also set on `init`; Swiper 5 got there through
+  a `transitionEnd` fired by the loop setup.
+- Loop mode since Swiper 11 rearranges the real slides instead of cloning
+  two extra, so the DOM has 5 slides instead of 7. That is the only
+  difference in `behave.js` (dev server and `BUILD=1`).
+- `~/oxid-qa/swiper-check.js`: entry 17 (themes 1,0,0,…) switches the
+  arrows and close button light → dark and back; entry 5 (two images)
+  loops both ways with no loop warning; images fill 1280 px. Screenshot
+  diff: anti-aliasing inside the slide image only.
+- Changing the dependency left the running Vite dev server with stale
+  pre-bundled deps (504 on `.vite/deps/swiper_modules.js`), so the public
+  JS did not run through it. Restarted it with `npx vite --force`.
+
+Bundle: `app.js` 147.6 KB → **83.5 KB** (gzip 40.0 → 26.6 KB); 238.8 KB
+(71.0 KB gzip) before this project. Public CSS 79.3 → 71.1 KB.
 
 **Found on the way, left alone:** the office footer dropdown
 (`menu/footer/office.blade.php`) is inside an HTML comment, so it ships in
