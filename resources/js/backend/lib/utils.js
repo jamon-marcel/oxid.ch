@@ -53,6 +53,14 @@ export function requiredErrors(record, paths) {
 }
 
 /**
+ * An upload's name without the uniqid prefix the server adds:
+ * "6a97cc421059b_01-situation.png" → "01-situation.png".
+ */
+export function displayName(name) {
+  return (name ?? '').replace(/^[0-9a-f]{13}_/, '');
+}
+
+/**
  * { de: null, en: null }
  */
 export function translations() {

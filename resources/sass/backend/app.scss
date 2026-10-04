@@ -48,8 +48,6 @@
 @import 'components/buttons/toggle-layout';
 @import 'components/buttons/trash';
 
-@import 'components/cards/global';
-@import 'components/cards/post';
 
 @import 'components/headings/global';
 @import 'components/headings/h1';
@@ -67,6 +65,7 @@
 @import 'components/editor';
 @import 'components/uploader';
 @import 'components/lightbox';
+@import 'components/card';
 
 @import 'components/upload/listing';
 
@@ -105,7 +104,6 @@
 @import 'ui';
 
 // Modules
-@import 'modules/grid-image-selector';
 @import 'modules/grid-layout';
 
 // Vendor

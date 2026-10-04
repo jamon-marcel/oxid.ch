@@ -24,43 +24,36 @@
         </template>
       </draggable>
     </div>
-    <div class="upload-listing" v-else>
-      <div>
-        <figure
-          v-for="image in images"
-          :key="image.id ?? image.name"
-          :class="[image.publish == 0 ? 'is-disabled' : '', 'upload-item']"
+    <div class="card-grid" v-else>
+      <Card
+        v-for="image in images"
+        :key="image.id ?? image.name"
+        :src="imageUrl(image, 'thumbnail')"
+        :href="imageUrl(image, 'large')"
+        :disabled="image.publish == 0"
+      >
+        <a href="javascript:;" class="feather-icon" :title="image.publish == 1 ? 'Verbergen' : 'Publizieren'" @click.prevent="emit('toggle', image)">
+          <PhEye v-if="image.publish == 1" :size="18" weight="light" />
+          <PhEyeSlash v-else :size="18" weight="light" class="is-off" />
+        </a>
+        <a href="javascript:;" class="feather-icon" title="Bearbeiten" @click.prevent="openEdit(image)">
+          <PhPencilSimple :size="18" weight="light" />
+        </a>
+        <a :href="imageUrl(image, 'large')" target="_blank" class="feather-icon" title="Öffnen">
+          <PhArrowSquareOut :size="18" weight="light" />
+        </a>
+        <a
+          href="javascript:;"
+          :class="['feather-icon', { 'is-disabled': isProtected(image) }]"
+          :title="isProtected(image) ? 'Im Layout verwendet' : 'Löschen'"
+          @click.prevent="!isProtected(image) && emit('destroy', image)"
         >
-          <a :href="imageUrl(image, 'large')" target="_blank" class="upload__preview">
-            <img :src="imageUrl(image, 'thumbnail')" height="300" width="300">
-          </a>
-          <div class="upload__actions">
-            <div class="list-item-actions">
-              <a href="javascript:;" class="feather-icon" :title="image.publish == 1 ? 'Verbergen' : 'Publizieren'" @click.prevent="emit('toggle', image)">
-                <PhEye v-if="image.publish == 1" :size="18" weight="light" />
-                <PhEyeSlash v-else :size="18" weight="light" class="is-off" />
-              </a>
-              <a href="javascript:;" class="feather-icon" title="Bearbeiten" @click.prevent="openEdit(image)">
-                <PhPencilSimple :size="18" weight="light" />
-              </a>
-              <a :href="imageUrl(image, 'large')" target="_blank" class="feather-icon" title="Öffnen">
-                <PhArrowSquareOut :size="18" weight="light" />
-              </a>
-              <a
-                href="javascript:;"
-                :class="['feather-icon', { 'is-disabled': isProtected(image) }]"
-                :title="isProtected(image) ? 'Im Layout verwendet' : 'Löschen'"
-                @click.prevent="!isProtected(image) && emit('destroy', image)"
-              >
-                <PhTrash :size="18" weight="light" />
-              </a>
-              <a href="javascript:;" class="feather-icon" title="Zuschneiden" @click.prevent="openCropper(image)">
-                <PhCrop :size="18" weight="light" />
-              </a>
-            </div>
-          </div>
-        </figure>
-      </div>
+          <PhTrash :size="18" weight="light" />
+        </a>
+        <a href="javascript:;" class="feather-icon" title="Zuschneiden" @click.prevent="openCropper(image)">
+          <PhCrop :size="18" weight="light" />
+        </a>
+      </Card>
     </div>
 
     <Lightbox :open="!!editItem" title="Bild bearbeiten" @close="editItem = null">
@@ -121,6 +114,7 @@ import {
   PhEye, PhEyeSlash, PhPencilSimple, PhArrowSquareOut, PhTrash, PhCrop, PhDotsSixVertical,
 } from '@phosphor-icons/vue';
 import Lightbox from '@/components/ui/Lightbox.vue';
+import Card from '@/components/ui/Card.vue';
 import { imageUrl, preloadImage } from '@/lib/images';
 import { useOrder } from '@/composables/useOrder';
 

@@ -546,6 +546,18 @@ and the two project image preview flags (were two button-style
 checkboxes). The team document language DE/EN stays two buttons — a choice,
 not a yes/no.
 
+### One card for images and files (2026-10-04)
+
+`components/ui/Card.vue` + `.card-grid`: square media (image fitted, so
+plans aren't cut), footer with a label and/or actions, dimmed when
+unpublished, `selectable` makes the whole card a button (hover, focus,
+Enter/Space). Used by `ImageManager` (actions), `FileManager` (file icon,
+name above the actions) and the grid builder's image picker (name only,
+click to choose; names without the 13-character upload prefix, full name
+on hover). Replaces `.upload-listing/.upload-item`, the picker's
+`grid-image-selector` module and the unused old `.card`/`.post` partials.
+Menu: group pages sit flush under their header (no indent).
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the

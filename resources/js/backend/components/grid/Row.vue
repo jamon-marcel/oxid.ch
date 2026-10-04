@@ -165,17 +165,15 @@
       </div>
     </div>
     <Lightbox :open="isOverlayOpen" title="Projektbild auswählen" @close="isOverlayOpen = false">
-      <div class="grid-image-selector">
-        <div class="grid-image-selector__item">
-          <div class="grid-image-selector__media">
-            <figure v-for="image in images" :key="image.id">
-              <a href @click.prevent="storeImage(image.id)">
-                <img :src="imageUrl(image, 'thumbnail')" height="120" width="70">
-                <span>{{ image.name }}</span>
-              </a>
-            </figure>
-          </div>
-        </div>
+      <div class="card-grid">
+        <Card
+          v-for="image in images"
+          :key="image.id"
+          :src="imageUrl(image, 'thumbnail')"
+          :label="displayName(image.name)"
+          selectable
+          @select="storeImage(image.id)"
+        />
       </div>
     </Lightbox>
   </div>
@@ -187,6 +185,8 @@ import Lightbox from '@/components/ui/Lightbox.vue';
 import GridMedia from '@/components/grid/Media.vue';
 import ButtonAdd from '@/components/grid/ButtonAdd.vue';
 import { imageUrl } from '@/lib/images';
+import { displayName } from '@/lib/utils';
+import Card from '@/components/ui/Card.vue';
 import http from '@/lib/http';
 
 // One row of the project layout: its boxes, filled with project images

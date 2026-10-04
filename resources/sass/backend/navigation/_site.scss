@@ -107,11 +107,9 @@ nav.site-nav {
         margin-top: 14px;
     }
 
-    // The pages of a group are indented under its header (width auto: a
-    // 100% wide list plus the margin made the menu scroll sideways)
+    // The pages of a group sit flush under its header
     .site-nav__menu ul {
-        margin-left: 14px;
-        width: auto;
+        margin-left: 0;
     }
 
 

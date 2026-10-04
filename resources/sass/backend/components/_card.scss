@@ -1,0 +1,97 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/card
+ * Card component (images, files, the grid image picker) and its grid
+ * -----------------------------------------------------------------------------
+ */
+
+.card-grid {
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+  &.is-files {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+
+.card {
+  background-color: $color-white;
+  border: $border-width solid $color-light-grey;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-width: 0;
+  transition: border-color .12s ease-out;
+
+  &.is-selectable {
+    cursor: pointer;
+
+    &:hover {
+      border-color: $color-dark;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px $color-blue;
+      outline: none;
+    }
+  }
+
+  &.is-disabled .card__media img {
+    opacity: .6;
+  }
+}
+
+// Square, the image fits inside (plans aren't cut)
+.card__media {
+  aspect-ratio: 1;
+  display: block;
+  padding: 10px;
+
+  img {
+    display: block;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity .12s ease-out;
+    width: 100%;
+  }
+
+  .card.is-file & {
+    padding: 25%;
+  }
+}
+
+.card__footer {
+  align-items: center;
+  flex-wrap: wrap;
+  border-top: $border-width solid $color-light-grey;
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  min-height: 40px;
+  padding: 8px 10px;
+}
+
+.card__label {
+  color: $color-medium-grey;
+  flex: 1 1 auto;
+  @include font-mono();
+  @include font-size($fs-xxs);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// File cards: the name on its own line above the actions
+.card.is-file .card__label {
+  flex-basis: 100%;
+}
+
+.card__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-left: auto;
+}
