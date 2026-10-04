@@ -65,8 +65,11 @@ What *does* need touching:
 | `popper.js` | ^1.16.1 | **deprecated upstream** → `@popperjs/core` | — | public site only |
 | `laravel-mix` | ^6.0.49 | **Vite** | `webpack.mix.js`, blade | 0.5–0.75 day |
 
-**No `vue-feather-icons`.** oxid skips luvo's single widest mechanical change
-(24 files there). Only one inline `<svg>` in the whole admin.
+**Icons: corrected 2026-10-04.** An earlier version of this file said "no
+`vue-feather-icons`, only one inline `<svg>`" and dropped the icon swap. The
+package really isn't used, but the admin uses **Feather SVG files as CSS
+background images**: 18 icon classes across 25 components. They're replaced
+with Phosphor (light) during this port — see `09-admin-ui.md`.
 
 ### Exact file lists
 

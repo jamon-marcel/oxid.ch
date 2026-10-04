@@ -20,7 +20,7 @@ behaviour. Nothing else.
 
 - Composition API / `<script setup>` rewrite — keep Options API + mixins
 - Test suite — there is none; QA stays manual click-through
-- Any design or UX change
+- Any design or UX change — **except** the admin UI refresh in `09-admin-ui.md`
 - The **public site** frontend: plain JS + jQuery + Bootstrap 4, no Vue.
   Untouched here apart from the Vite entry points — modernising it is a
   separate project, costed in `08-frontend-js.md` (4–4.5 days).
@@ -33,7 +33,8 @@ behaviour. Nothing else.
 |---|---|
 | Backend L11 → L13 + Sanctum + Glide + search | **5 – 5.5** |
 | Frontend Vue 3 + Vite + Tiptap | **7.5 – 8.25** |
-| **Total** | **12.5 – 13.75** |
+| Admin UI refresh (`09-admin-ui.md`) | **1.75 – 2.5** |
+| **Total** | **14.25 – 16.25** |
 
 Add review and click-through QA → **~3 weeks calendar** if reviewed as we go.
 
@@ -87,7 +88,7 @@ luvo's comparable figure was 7–9 days for 11→13 + Vue 2→3. oxid is +2 to +
 | `vuedraggable`: 13 files vs 9 | +0.25 | |
 | 6 build bundles vs 4 | +0.25 | |
 | Glide port with DB-lookup coords | +0.25 | `Home.php` needs controller-side resolution |
-| **No `vue-feather-icons`** | **−0.25** | luvo's 24-file icon swap does not apply |
+| Icons | ±0 | 25 files vs luvo's 24, now in `09-admin-ui.md` |
 
 Offsetting that: the Glide pipeline, the Vite config, the slim skeleton and
 the "port one entity, then replicate" approach are all proven over there, so

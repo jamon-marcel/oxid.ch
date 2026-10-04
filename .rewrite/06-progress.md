@@ -61,6 +61,10 @@ the same commit** — Composer will not resolve anything on Laravel 11. See
 | Dropzone v6 replacement | — | |
 | TinyMCE → Tiptap (incl. round-trip verification) | — | |
 | `projects/grid/` page builder | — | |
+| Icons → Phosphor light, during the port (`09-admin-ui.md`) | — | |
+| Border tokens, 1px lines (`09-admin-ui.md`) | — | |
+| Menu: type scale + group headers | — | |
+| Login screen / splash | — | |
 
 ### To verify at the end of the frontend phase
 

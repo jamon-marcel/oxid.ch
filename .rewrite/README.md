@@ -21,6 +21,7 @@ reuses it rather than re-litigating.
 | `06-progress.md` | What is done, verified, and left to do |
 | `07-search.md` | Algolia → own search: why, design, staging |
 | `08-frontend-js.md` | Public site JS: jQuery → vanilla, Swiper, dead code |
+| `09-admin-ui.md` | Admin look and feel: splash, menu, Phosphor icons, 1px lines |
 
 QA automation (luvo's `07-` / `08-`) is deliberately not here yet. luvo wrote
 those *after* the upgrade landed. Same order applies.
@@ -28,7 +29,7 @@ those *after* the upgrade landed. Same order applies.
 ## Two projects, not one
 
 `00`–`07` are the **rework**: Laravel 13, Vue 3, Sanctum, Glide, own search.
-12.5–13.75 days, backend first, sequenced.
+14.25–16.25 days including the admin UI refresh, backend first, sequenced.
 
 `08-frontend-js.md` is **separate**: modernising the public site's JavaScript.
 4–4.5 days. It shares only the Vite migration and can run before, after or
@@ -37,7 +38,8 @@ are deliberately not folded into the rework total.
 
 ## The 30-second version
 
-- **12.5–13.75 working days** of focused work. Backend 5–5.5, frontend 7.5–8.25.
+- **14.25–16.25 working days** of focused work. Backend 5–5.5, frontend
+  7.5–8.25, admin UI refresh 1.75–2.5.
   luvo's comparable number was 7–9; the delta is JWT→Sanctum, the own search
   implementation, the project grid builder, Tiptap, and a frontend that is
   ~15% bigger.
@@ -59,11 +61,13 @@ are deliberately not folded into the rework total.
 Stay on Options API. Keep the mixins. No test suite. No design changes.
 Do **not** rewrite into `<script setup>` / composables while in there.
 
-Three deliberate exceptions, decided 2026-10-04: TinyMCE is **replaced with
+Four deliberate exceptions, decided 2026-10-04: TinyMCE is **replaced with
 Tiptap** rather than upgraded, the image pipeline **serves requested sizes +
 WebP/AVIF** rather than porting today's behaviour 1:1, and **Algolia is
 dropped** for an own search implementation (`07-search.md`). Together
 roughly +2 days, each chosen as the better outcome over the smaller diff.
+And the admin gets a **light visual refresh** (`09-admin-ui.md`, 1.75–2.5
+days): splash, menu, Phosphor icons, thinner lines.
 
 Worth knowing: luvo set this same rule, then broke it afterwards
 (`fc4583f`: 6.9k → 2.2k LOC, 639 KB → 216 KB bundle) and replaced TinyMCE with
