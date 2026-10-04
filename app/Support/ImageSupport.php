@@ -55,4 +55,22 @@ class ImageSupport
 	{
 		return in_array(strtolower($format), self::supportedFormats(), true);
 	}
+
+	/**
+	 * Width and height as displayed, i.e. after EXIF auto-orientation, or
+	 * null when the file cannot be read.
+	 *
+	 * @return array{0: int, 1: int}|null
+	 */
+	public static function dimensions(string $path): ?array
+	{
+		$size = is_file($path) ? @getimagesize($path) : false;
+		if (! $size) {
+			return null;
+		}
+
+		$orientation = function_exists('exif_read_data') ? (@exif_read_data($path)['Orientation'] ?? 1) : 1;
+
+		return $orientation >= 5 ? [$size[1], $size[0]] : [$size[0], $size[1]];
+	}
 }

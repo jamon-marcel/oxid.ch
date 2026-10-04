@@ -1,7 +1,7 @@
 @foreach($teasers as $t)
   @if ($t->teaserImage)
     <figure class="project-teaser-image" data-project-teaser="{{$t->id}}">
-      {!! ImageHelper::teaserImage($t->teaserImage) !!}
+      <x-image :image="$t->teaserImage" preset="teaser" />
     </figure>
   @endif
 @endforeach

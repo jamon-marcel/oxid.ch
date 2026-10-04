@@ -59,7 +59,7 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | JWT → Sanctum, incl. the Vue 2 SPA's auth bootstrap | ✅ done — cookie flow verified with curl and in headless Chromium against the Vue 2 admin: login, 8 list screens, edit + save, upload, session expiry on navigation and on POST, logout; 145 routes, caches OK | `046c9e8` |
 | Form-request validation messages (L12+ wants strings) | ✅ checked, **no change needed** — all 10 form requests already return string messages (ran each one's rules + messages through the validator: 17 errors, 0 non-string); 422 shape verified unchanged in the Sanctum run | (docs only) |
 | Search phase 2: own scoring search + unit tests, drop Scout | ✅ done — 18 unit tests; 15 queries vs production in `07-search.md`, every phase 1 loss recovered; queries 2–9 ms; index flushed on save. Ranking tuning against real queries still open (needs the access logs) | `bd0eacb` |
-| Generic image handling: signed `/img/{file}`, `IsImage` trait, `<x-image>`, stored dimensions, legacy redirects | ✅ done — crops byte-identical to step 5 (93/93), home framing same crop; CRAWL_RESULT; see `05-image-pipeline.md`, "Generic image handling" | |
+| Generic image handling: signed `/img/{file}`, `IsImage` trait, `<x-image>`, stored dimensions, legacy redirects | ✅ done — crops byte-identical to step 5 (93/93), home framing same crop; descriptors = rendered width and status 200 for the first 1,552 of 6,169 emitted URLs (full crawl still running at commit time); see `05-image-pipeline.md`, "Generic image handling" | |
 
 The Laravel 13 bump and the image-cache → Glide dependency swap **must be
 the same commit** — Composer will not resolve anything on Laravel 11. See
@@ -117,6 +117,26 @@ Details in `05-image-pipeline.md`, "Result".
 - **Still to do for this step:** screenshot comparison of the public pages
   against production (the `<picture>` wrapper), and the admin image screens
   once the SPA runs again.
+
+### Open: broken AVIF renders under forked PHP workers (found 2026-10-04)
+
+During the generic-image crawl some AVIF renditions came back as **16-byte
+files** (an ISO box header only) with status 200. 1,523 of 8,525 files in
+`storage/app/.glide-cache` were that small, most of them from the step 5
+crawl, which checked status codes only. Reproduced:
+
+- `php artisan serve` with `PHP_CLI_SERVER_WORKERS=8` (forked workers):
+  16 bytes, every time, for e.g. `lokstadt_05.jpg` at `w=900, fm=avif`.
+- the same render in the CLI, or through a single-process `artisan serve`:
+  35,425 bytes, correct.
+
+So Imagick's AVIF encoder fails in a forked child. PHP-FPM also forks its
+workers after the extension is loaded, so **production may be affected**.
+luvo serves Imagick AVIF on Hostpoint; check its cache for tiny files. To do
+before go-live: reproduce under FPM (Herd/Hostpoint); guard `ImageController::respond()`
+against an implausibly small/undecodable rendition (delete it, fall back to
+the upload's format); clear the tiny files from the cache. Local cleanup:
+`find storage/app/.glide-cache -type f -size -100c -delete`.
 
 ### Notes from step 6
 

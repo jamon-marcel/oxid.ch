@@ -1,7 +1,6 @@
 <?php
 
 use App\Helpers\AppHelper;
-use App\Helpers\ImageHelper;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -28,7 +27,6 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'AppHelper' => AppHelper::class,
-        'ImageHelper' => ImageHelper::class,
     ])->toArray(),
 
 ];

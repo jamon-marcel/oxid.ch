@@ -58,8 +58,9 @@ Route::get('/suche/{keyword?}', [SearchController::class, 'index'])->name('page.
 Route::get('/img/original/{filename}', [ImageController::class, 'original']);
 Route::get('/img/thumbnail/{filename}', [ImageController::class, 'thumbnail']);
 Route::get('/img/large/{filename}', [ImageController::class, 'large']);
-Route::get('/img/home/{filename}', [ImageController::class, 'home']);
-Route::get('/img/crop/{filename}/{maxWidth?}/{maxHeight?}/{coords?}', [ImageController::class, 'crop']);
+Route::get('/img/home/{filename}', [ImageController::class, 'legacyHome']);
+Route::get('/img/crop/{filename}/{maxWidth?}/{maxHeight?}/{coords?}', [ImageController::class, 'legacyCrop']);
+Route::get('/img/{filename}', [ImageController::class, 'show']);
 
 // Admin routes
 Route::view('admin', 'backend.app');

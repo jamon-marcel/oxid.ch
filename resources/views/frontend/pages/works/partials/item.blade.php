@@ -4,7 +4,7 @@
   data-filter-wood="{{$p->is_filter_wood}}"
   data-filter-area="{{$p->is_filter_area}}">
   @if ($p->workImage)
-    {!! ImageHelper::previewImage($p->workImage, $p->title_short) !!}
+    <x-image :image="$p->workImage" preset="preview" :alt="$p->title_short" />
   @endif
   @if ($p->has_detail)
     <h2>

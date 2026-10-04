@@ -311,9 +311,136 @@ every public page), `glide-render.php` (renders a `map.txt` through an
 (dimensions + PSNR). They expect a scratch dir (`/tmp/oxid-img/` was used)
 holding `paths.txt`, `map.txt` and the production renders in `prod/`.
 
-## To rethink: make it generic (2026-10-04)
+## Generic image handling (design agreed 2026-10-04)
 
-The user finds the shape from step 5 too special-cased: a controller action
-per image purpose and a helper method per page use. To be redesigned as a
-more generic pipeline — design here first, then implement. Tracked in
-`06-progress.md`, "Deferred: generic image handling".
+The step 5 shape put the knowledge in the wrong places: `ImageController`
+had one action per image purpose (`/img/home` even queried the database),
+`ImageHelper` one static method per page use with magic size arrays, and the
+size whitelist had to be kept in sync with the helper by hand. On top of
+that the markup was wrong for portraits: a `900/562` portrait comes out
+~375 px wide but was announced as `900w`, and every `<img>` claimed
+`width="1600" height="1000"` (the teaser `1000 × 1600`, home `800 × 400`).
+
+### Shape
+
+1. **One signed route.** `/img/{file}?w=…&h=…&fit=max&crop=w,h,x,y&fm=avif&s=…`.
+   Glide's own URL signatures (`SignatureFactory`, keyed with `APP_KEY`)
+   replace the size whitelist: any parameters are allowed, but only URLs the
+   app generated validate, so crafted URLs cannot fill the cache. The
+   controller checks the signature and hands the parameters to Glide; it
+   knows nothing about page uses. Coords are part of the URL, so a re-crop
+   gets a new URL and every rendition is browser-cached for a year.
+2. **The image models know how to render themselves.** A trait
+   `App\Models\Concerns\IsImage` on all six image models
+   (`Home|Project|Discourse|Job|Team|Profile`Image) gives `crop()` (floored
+   `[w, h, x, y]` or null), `displaySize()` (after the crop),
+   `url(int $size, ?string $format)` and `srcset(array $sizes, ?string $format)`.
+3. **Sizes are longer sides.** A size `L` means "fit inside `L × L`, never
+   upscale" (`w=L&h=L&fit=max`), whatever the orientation. That is what
+   image-cache did for its single 2400 (see "Crop template behaviour"), it
+   needs no orientation logic in the URL, and the srcset descriptor is the
+   *real* resulting width, computed from the stored dimensions. Sizes beyond
+   the image's own size collapse into one candidate.
+4. **`width` / `height` columns** on the six tables: the upload's size after
+   EXIF orientation, set by the trait on save when the name changes or the
+   value is missing, backfilled by the migration. The markup gets the real
+   aspect ratio without reading files per page view.
+5. **A Blade component** replaces `ImageHelper`:
+   `<x-image :image="$image" preset="large" :alt="$image->title" />`.
+   Presets are plain lists of longer sides in `config/images.php`. The OG
+   image is `$image->url(1600)`. `ImageHelper` and its alias go.
+
+### Presets
+
+| Preset | Longer sides | Used for | Was |
+|---|---|---|---|
+| `large` | 900, 1200, 2400 | grids, team, jobs, profile, discourse | `900/562, 1200/750, 2400/2400` |
+| `preview` | 900, 1600 | works list, discourse list, next project | `900/562, 1600/1000` |
+| `teaser` | 1600, 2400 | project teasers | `1600/1000, 2400/2400` |
+| `home` | 1200, 2000 | home, search | one `/img/home` rendition (2000 wide / 1250 high) |
+
+The largest candidate of every preset equals the step 5 / production
+maximum, so large screens lose nothing. Portraits now get honest
+descriptors, which makes the browser pick a larger candidate for them —
+the same file production served before.
+
+### Decisions (2026-10-04)
+
+1. **Old URLs redirect.** `/img/crop/...` (shared OG images, search
+   engines) and `/img/home/...` answer with a 301 to the signed URL. The
+   crop comes from the database record, not the old URL, so the redirect
+   cannot be used to render arbitrary crops; size: landscape → `maxWidth`,
+   portrait → `maxHeight`, none → 2400. The redirect carries
+   `max-age=3600`, so a re-crop is picked up.
+2. **Home images are no longer upscaled.** `Home.php` stretched a cropped
+   home image to 2000 wide even when the crop was smaller; now it is never
+   enlarged and CSS scales it on screen (it is `object-fit: cover` anyway).
+   Framing is unchanged; bytes no longer match production for small crops.
+3. **Dimensions are stored** (point 4 above), not read per view.
+
+### Admin
+
+The SPA builds `/img/thumbnail|large|original/{file}` itself (~30 call sites)
+and cannot sign URLs. Those three stay as fixed, parameter-free actions
+until the Vue 3 port, which should take the URLs from the API instead.
+`Media.vue`'s `/img/crop/...` goes through the redirect.
+
+### Accepted side effects
+
+- Rotating `APP_KEY` changes every image URL (old ones 404 until the HTML
+  is regenerated). Pages are rendered per request, so only externally
+  shared signed URLs are affected; the old `/img/crop` URLs keep working.
+- Signatures differ per environment (different keys) — production HTML
+  cannot be replayed locally.
+
+### Verification
+
+- Framing: unchanged by construction (same crop parameter, same
+  orientation handling); re-check a sample against production with
+  `.rewrite/tools/image-compare.sh` at matching sizes.
+- Descriptors: rendered width of each candidate = the `w` in the srcset.
+- Every `/img/...` URL the public pages emit returns 200 (crawl).
+- Legacy `/img/crop/...` and `/img/home/...` URLs redirect and resolve.
+
+### Result (2026-10-04)
+
+Files: `app/Models/Concerns/IsImage.php` (on all six image models),
+`app/Support/Glide.php` (`url()`, `signature()`), `app/Http/Controllers/ImageController.php`
+(`show` + the three admin actions + two legacy redirects),
+`resources/views/components/image.blade.php`, `config/images.php`, migration
+`2026_10_04_120000_add_dimensions_to_image_tables` (backfilled 939/939 rows).
+`app/Helpers/ImageHelper.php` and its alias are gone. 146 routes
+(145 + `/img/{file}`), `route:cache` / `view:cache` OK.
+
+**Framing, Imagick:**
+
+- Crops: the 93 production crop URLs from the step 5 sample, rendered
+  through the new signed route at the legacy size (longer side 2400), are
+  **byte-identical to the step 5 renders** (93/93), which were verified
+  against production. `w=h=2400, fit=max` and step 5's one-sided bound give
+  the same file.
+- Home: the 14 home images are now 689–1502 px wide instead of production's
+  937/938 × 1250 (no upscaling, longer side up to 2000). Scaled to
+  production's size and downscaled to 25 %, ours scores 41.6–46.0 dB, while
+  production shifted by 2 px scores 23.5–33.8 dB. Same crop.
+
+**Signing:** a tampered parameter, a missing signature and an added
+parameter all give 404. Signed renditions send
+`Cache-Control: max-age=31536000, public, immutable`.
+
+**Legacy URLs:** `/img/crop/{f}/1600/1000/{coords}` → 301 to the signed URL
+built from the *record's* crop (bogus coords in the old URL are ignored),
+portrait → `maxHeight`; `?fm=webp` is carried over; unknown sizes 404.
+`/img/home/{f}` → 301 to the 2000 rendition. Redirects carry `max-age=3600`.
+
+**Crawl:** the public pages (129) emit 6,169 distinct `/img/...` URLs. At
+commit time the first 1,552 had been fetched: all 200, and for every srcset
+candidate the rendered width equals its `w` descriptor. The rest was still
+rendering (cold Glide cache).
+
+**Save hook:** setting `width` to null and saving refills it from the file.
+
+**Tests:** `tests/Unit/ImageTest.php`: crop flooring, crop cut at the
+edges, honest descriptors and the collapse of upscaled candidates, and
+signature coverage (4 tests).
+

@@ -2,7 +2,7 @@
 @section('seo_title', $discourse->title . ' - Diskurs')
 @section('seo_description', substr(strip_tags($discourse->description_short),0,255))
 @if ($discourse_og)
-  @section('og_image', url('/') . ImageHelper::openGraphImage($discourse_og))
+  @section('og_image', url('/') . $discourse_og->url(1600))
 @endif
 @section('content')
 <section class="content content--discourse">
@@ -13,7 +13,7 @@
         @foreach($discourse->publishedImages as $img)
           <div class="swiper-slide" data-theme="{{$img->theme}}">
             <figure class="visual-fit">
-              {!! ImageHelper::largeImage($img, $img->title) !!}
+              <x-image :image="$img" preset="large" :alt="$img->title" />
             </figure>
           </div>
         @endforeach

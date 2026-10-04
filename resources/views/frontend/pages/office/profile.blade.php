@@ -9,7 +9,7 @@
     <div class="visual-list">
       @foreach($images as $image)
         <figure class="visual-fit js-scroll-item">
-          {!! ImageHelper::largeImage($image, $image->title) !!}
+          <x-image :image="$image" preset="large" :alt="$image->title" />
         </figure>
       @endforeach
     </div>

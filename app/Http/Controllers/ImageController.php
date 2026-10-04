@@ -1,42 +1,66 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\DiscourseImage;
 use App\Models\HomeImage;
+use App\Models\JobImage;
+use App\Models\ProfileImage;
+use App\Models\ProjectImage;
+use App\Models\TeamImage;
 use App\Support\Glide;
 use App\Support\ImageSupport;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use League\Glide\Server;
+use League\Glide\Signatures\SignatureException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * Serves /img/... through Glide, keeping the URL shapes of the former
- * marceli-to/image-cache package:
+ * Serves uploads through Glide:
  *
- *   /img/original/{file}
- *   /img/thumbnail/{file}                                  admin
- *   /img/large/{file}                                      admin
- *   /img/home/{file}                                       crop from home_images
- *   /img/crop/{file}/{maxWidth?}/{maxHeight?}/{coords?}   coords = w,h,x,y
+ *   /img/{file}?...&s=...       signed, built by Glide::url() — the site
+ *   /img/original/{file}        admin
+ *   /img/thumbnail/{file}       admin
+ *   /img/large/{file}           admin
+ *   /img/crop/{file}/...        legacy, 301 to the signed URL
+ *   /img/home/{file}            legacy, 301 to the signed URL
  *
- * Every variant except original accepts ?fm=avif|webp.
+ * Every rendition accepts fm=avif|webp when the driver can write it.
  */
 class ImageController extends Controller
 {
-  public const MAX_SIZE = 2400;
+  public const FORMAT_QUALITY = ['jpg' => 75, 'png' => 90, 'gif' => 90, 'webp' => 80, 'avif' => 70];
 
   /**
-   * The width/height pairs the markup asks for. Anything else is a 404, so
-   * crafted URLs cannot fill the cache.
+   * The width/height pairs the old /img/crop URLs used.
    */
-  public const CROP_SIZES = [[900, 562], [1200, 750], [1600, 1000], [2400, 1500], [2400, 2400]];
+  protected const LEGACY_SIZES = [[900, 562], [1200, 750], [1600, 1000], [2400, 1500], [2400, 2400]];
 
-  public const FORMAT_QUALITY = ['jpg' => 75, 'png' => 90, 'gif' => 90, 'webp' => 80, 'avif' => 70];
+  protected const MODELS = [ProjectImage::class, DiscourseImage::class, HomeImage::class, TeamImage::class, JobImage::class, ProfileImage::class];
 
   protected Server $server;
 
   public function __construct()
   {
     $this->server = Glide::server();
+  }
+
+  /**
+   * Renders exactly what the signed parameters ask for.
+   */
+  public function show(Request $request, string $filename): Response
+  {
+    $this->source($filename);
+
+    try {
+      Glide::signature()->validateRequest('img/' . $filename, $request->query());
+    }
+    catch (SignatureException) {
+      abort(404);
+    }
+
+    // The crop is part of the URL, so a re-crop gets a new one
+    return $this->respond($filename, $request->except('s'), 31536000, ['immutable']);
   }
 
   public function original(string $filename): BinaryFileResponse
@@ -51,7 +75,7 @@ class ImageController extends Controller
   {
     $this->source($filename);
 
-    return $this->respond($filename, ['w' => 300, 'h' => 300, 'fit' => 'crop'], $request, 3600);
+    return $this->respond($filename, ['w' => 300, 'h' => 300, 'fit' => 'crop', 'fm' => $request->query('fm')], 3600);
   }
 
   /**
@@ -60,86 +84,41 @@ class ImageController extends Controller
    */
   public function large(Request $request, string $filename): Response
   {
-    [$width, $height] = $this->orientedSize($this->source($filename));
+    [$width, $height] = ImageSupport::dimensions($this->source($filename));
+    $params = $height > $width ? ['w' => 99999, 'h' => 900] : ['w' => 1600, 'h' => 99999];
 
-    return $this->respond($filename, $this->bound($width, $height, 1600, 900) + ['fit' => 'max'], $request, 3600);
+    return $this->respond($filename, $params + ['fit' => 'max', 'fm' => $request->query('fm')], 3600);
   }
 
   /**
-   * Home images: the crop comes from home_images, not the URL. A cropped
-   * image is scaled to 2000 wide, or 1250 high when portrait, upscaling if
-   * needed; an uncropped one is only scaled down.
+   * /img/crop/{file}/{maxWidth?}/{maxHeight?}/{coords?}: landscape was
+   * scaled to maxWidth, portrait to maxHeight. The crop comes from the
+   * record, not the URL, so this cannot render arbitrary crops.
    */
-  public function home(Request $request, string $filename): Response
+  public function legacyCrop(Request $request, string $filename, ?string $maxWidth = null, ?string $maxHeight = null): RedirectResponse
   {
-    [$width, $height] = $this->orientedSize($this->source($filename));
+    $path = $this->source($filename);
+    $size = $maxWidth === null ? [2400, 2400] : [(int) $maxWidth, (int) $maxHeight];
+    abort_unless(in_array($size, self::LEGACY_SIZES, true), 404);
+
+    $image = $this->find($filename);
+    [$width, $height] = $image?->displaySize() ?? ImageSupport::dimensions($path);
+    $size = $height > $width ? $size[1] : $size[0];
+
+    return $this->redirect(Glide::url($filename, $size, $image?->crop(), $this->format($request)));
+  }
+
+  public function legacyHome(Request $request, string $filename): RedirectResponse
+  {
     $image = HomeImage::where('name', $filename)->first();
-    $params = [];
+    abort_unless($image, 404);
 
-    if ($image && $image->coords_w && $image->coords_h) {
-      $crop = array_map(fn ($v) => (int) floor((float) $v), [$image->coords_w, $image->coords_h, $image->coords_x ?? 0, $image->coords_y ?? 0]);
-      $params['crop'] = implode(',', $crop);
-      [$width, $height] = $crop;
-
-      // image-cache scaled twice (to 2000 wide, then portrait to 1250 high);
-      // reproduce its rounded size exactly, but resample only once.
-      $scaledHeight = (int) round($height * 2000 / $width);
-      $params += $width > $height
-        ? ['w' => 2000, 'h' => $scaledHeight]
-        : ['w' => (int) round(2000 * 1250 / $scaledHeight), 'h' => 1250];
-      $params['fit'] = 'stretch';
-    }
-    elseif ($width > $height && $width >= 2000) {
-      $params += ['w' => 2000, 'h' => 99999, 'fit' => 'max'];
-    }
-    elseif ($height >= 1250) {
-      $params += ['w' => 99999, 'h' => 1250, 'fit' => 'max'];
-    }
-
-    // Re-cropping keeps the URL, so no long browser cache here
-    return $this->respond($filename, $params, $request, 3600);
+    return $this->redirect($image->url(2000, $this->format($request)));
   }
 
-  /**
-   * Crop to the coords, then scale down to the requested size: landscape to
-   * maxWidth, portrait to maxHeight (orientation taken after the crop).
-   */
-  public function crop(Request $request, string $filename, ?string $maxWidth = null, ?string $maxHeight = null, ?string $coords = null): Response
+  protected function respond(string $filename, array $params, int $maxAge, array $cacheDirectives = []): Response
   {
-    $source = $this->source($filename);
-    [$maxWidth, $maxHeight] = $this->size($maxWidth, $maxHeight);
-
-    $params = [];
-    $crop = $this->coords($coords);
-
-    if ($crop) {
-      $params['crop'] = implode(',', $crop);
-      [$width, $height] = $crop;
-    }
-    else {
-      [$width, $height] = $this->orientedSize($source);
-    }
-
-    // The coords are part of the URL, so a re-crop gets a new one
-    return $this->respond($filename, $params + $this->bound($width, $height, $maxWidth, $maxHeight) + ['fit' => 'max'], $request, 31536000);
-  }
-
-  /**
-   * Bound one side only: width for landscape (and square), height for
-   * portrait. The unbounded other side keeps Glide from flooring the
-   * derived dimension (2400 x 1600.49 would become 2399 x 1600).
-   */
-  protected function bound(int $width, int $height, int $maxWidth, int $maxHeight): array
-  {
-    return $height > $width
-      ? ['w' => 99999, 'h' => $maxHeight]
-      : ['w' => $maxWidth, 'h' => 99999];
-  }
-
-  protected function respond(string $filename, array $params, Request $request, int $maxAge): Response
-  {
-    $format = strtolower((string) $request->query('fm'));
-    $format = in_array($format, ImageSupport::modernFormats(), true) ? $format : $this->sourceFormat($filename);
+    $format = in_array($params['fm'] ?? null, ImageSupport::modernFormats(), true) ? $params['fm'] : $this->sourceFormat($filename);
 
     $params['fm'] = $format;
     $params['q'] = self::FORMAT_QUALITY[$format];
@@ -148,7 +127,31 @@ class ImageController extends Controller
 
     return response($this->server->getCache()->read($cachedPath), 200, [
       'Content-Type' => 'image/' . ($format === 'jpg' ? 'jpeg' : $format),
-    ] + $this->cacheHeaders($maxAge));
+    ] + $this->cacheHeaders($maxAge, $cacheDirectives));
+  }
+
+  /**
+   * Short-lived, so a re-crop reaches anyone who followed it before.
+   */
+  protected function redirect(string $url): RedirectResponse
+  {
+    return redirect($url, 301, $this->cacheHeaders(3600));
+  }
+
+  protected function find(string $filename): ?object
+  {
+    foreach (self::MODELS as $model) {
+      if ($image = $model::where('name', $filename)->first()) {
+        return $image;
+      }
+    }
+
+    return null;
+  }
+
+  protected function format(Request $request): ?string
+  {
+    return in_array($request->query('fm'), ImageSupport::modernFormats(), true) ? $request->query('fm') : null;
   }
 
   /**
@@ -182,50 +185,8 @@ class ImageController extends Controller
     return $path;
   }
 
-  /**
-   * One of CROP_SIZES; no size at all means the largest.
-   */
-  protected function size(?string $maxWidth, ?string $maxHeight): array
+  protected function cacheHeaders(int $maxAge, array $directives = []): array
   {
-    if ($maxWidth === null) {
-      return [self::MAX_SIZE, self::MAX_SIZE];
-    }
-
-    $size = [(int) $maxWidth, (int) $maxHeight];
-    abort_unless(ctype_digit($maxWidth) && ctype_digit((string) $maxHeight) && in_array($size, self::CROP_SIZES, true), 404);
-
-    return $size;
-  }
-
-  /**
-   * w,h,x,y as ints, or null when there is no usable crop. Missing or
-   * non-numeric x/y (the admin sends "null") count as 0.
-   */
-  protected function coords(?string $coords): ?array
-  {
-    $parts = explode(',', (string) $coords);
-    if (count($parts) !== 4) {
-      return null;
-    }
-
-    $parts = array_map(fn ($v) => is_numeric($v) ? max(0, (int) $v) : 0, $parts);
-
-    return $parts[0] > 0 && $parts[1] > 0 ? $parts : null;
-  }
-
-  /**
-   * Width and height as displayed, i.e. after EXIF auto-orientation.
-   */
-  protected function orientedSize(string $path): array
-  {
-    [$width, $height] = getimagesize($path);
-    $orientation = function_exists('exif_read_data') ? (@exif_read_data($path)['Orientation'] ?? 1) : 1;
-
-    return $orientation >= 5 ? [$height, $width] : [$width, $height];
-  }
-
-  protected function cacheHeaders(int $maxAge): array
-  {
-    return ['Cache-Control' => 'max-age=' . $maxAge . ', public'];
+    return ['Cache-Control' => implode(', ', ['max-age=' . $maxAge, 'public', ...$directives])];
   }
 }

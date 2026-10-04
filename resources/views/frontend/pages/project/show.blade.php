@@ -2,7 +2,7 @@
 @section('seo_title', $project->title . ' - Projekte')
 @section('seo_description', substr(strip_tags($project->description),0,255))
 @if ($project_og)
-  @section('og_image', url('/') . ImageHelper::openGraphImage($project_og))
+  @section('og_image', url('/') . $project_og->url(1600))
 @endif
 @section('content')
 <section class="content">
@@ -37,7 +37,7 @@
       @if ($navBrowse['next']->teaserImage)
         <figure>
           <a href="{{ route('page.project', ['slug' => AppHelper::slug($navBrowse['next']->title_short), 'project' => $navBrowse['next']->id]) }}" title="{{$navBrowse['next']->title_short}}, {{$navBrowse['next']->location}}">
-            {!! ImageHelper::previewImage($navBrowse['next']->teaserImage, $navBrowse['next']->title_short) !!}
+            <x-image :image="$navBrowse['next']->teaserImage" preset="preview" :alt="$navBrowse['next']->title_short" />
           </a>
         </figure>
       @endif

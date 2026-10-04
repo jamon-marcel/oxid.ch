@@ -1,12 +1,13 @@
 <?php
 namespace App\Models;
 use App\Models\Base;
+use App\Models\Concerns\IsImage;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
 class ProjectImage extends Base
 {
-	use HasTranslations;
+	use HasTranslations, IsImage;
 
 	public $translatable = [
 		'caption'
