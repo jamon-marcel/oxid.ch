@@ -243,7 +243,7 @@ need custom values should switch to the variables.
 ### On #1: a random home image as the login background
 
 Same idea the public search page already uses (`SearchController:53-58` picks
-a random published `HomeImage`). 9 of 12 home images are published today.
+a random published `HomeImage`). 10 of 14 home images are published in production.
 
 **How:**
 

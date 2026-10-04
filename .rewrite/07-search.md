@@ -8,7 +8,7 @@ if Algolia goes.
 
 | | |
 |---|---|
-| Searchable records | **119** — 51 `Project`, 68 `Discourse` |
+| Searchable records | **136** — 56 `Project`, 80 `Discourse` (production, 2026-10-04; the first survey measured 119 on a stale local copy) |
 | UI | plain `GET` form, full page reload, server-rendered list |
 | Instant search / autocomplete / facets / pagination | none |
 | Client-side Algolia | **none** — no search JS in `resources/js/frontend/` |

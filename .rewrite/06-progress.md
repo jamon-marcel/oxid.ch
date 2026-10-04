@@ -18,8 +18,17 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 - [ ] Collect 20–30 real search queries from the production access logs —
       the search page is a `GET`, so `?keyword=` is in there. Needed to tune
       the ranking in `07-search.md` phase 2.
-- [ ] Snapshot the production DB + `storage/` locally, as baseline and
-      rollback point. The image verification depends on it.
+- [x] **Production DB → local `oxid`** (2026-10-04). Dump from Hostpoint
+      (MariaDB 10.11.19), imported into local MySQL 5.7.39; all 19 tables
+      with data match the dump row for row. Prod and repo have run the same
+      51 migrations. Previous local DB (an older snapshot, behind prod on
+      every content table) backed up to
+      `~/backups/oxid-local-before-prod-2026-10-04/oxid-local.sql`; the prod
+      dump is kept beside it as `oxid-prod-2026-10-04.sql`.
+- [ ] **Production `storage/` → local** — download in progress.
+- [ ] Decide on the dev/prod database mismatch: production is **MariaDB
+      10.11**, local is **MySQL 5.7** (EOL). The dump imported cleanly, but
+      check Laravel 13's minimum MySQL version before the framework bump.
 - [ ] Record the current state for comparison: route list, the `/img/...` URLs
       every public page emits and their byte sizes, and screenshots of the
       public pages at 375 and 1280 px.
