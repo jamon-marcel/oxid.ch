@@ -224,13 +224,25 @@ one pass, not two.
 
 ## Open questions
 
-1. **Login image.** New photograph, a project image from the site, or a
-   flat brand colour with the wordmark? This is the one item that needs a
-   design decision before work starts.
-2. **Pre-mount splash** — wanted, or is restyling the login screen enough?
-3. **Box shadows** — soften them along with the borders, or keep them as
-   they are?
-4. **Brand colour / typeface** — staying as they are? The proposal assumes
-   yes: Euclid Circular A (Regular + Medium) and the existing palette in
-   `config/_colors.scss`. Changing either would turn a refresh into a
-   redesign.
+| # | Question | Answer (2026-10-04) |
+|---|---|---|
+| 1 | Login image | **Client provides a new splash image.** Replaces `splash.jpg`; serve as AVIF/WebP + JPEG fallback, sized for the viewport. Blocks only the login-screen item, nothing else. |
+| 2 | Pre-mount splash | _open_ |
+| 3 | Box shadows | **Soften them** along with the borders. |
+| 4 | Brand colour / typeface | **Unchanged** — Euclid Circular A (Regular + Medium), palette in `config/_colors.scss`. |
+
+### On #3: what "soften" means here
+
+`$box-shadow` and `$box-shadow-lg` are used on the open menu and on
+overlays, plus 5 call sites passing explicit `$x $y $blur $spread $color`.
+Soften = lower opacity and a smaller spread, keeping the blur, so surfaces
+still lift off the page but don't look heavy next to 1px lines. Do it in the
+two variables first. Then check the 5 explicit call sites; any that don't
+need custom values should switch to the variables.
+
+### On #1: what to deliver
+
+A single high-resolution image, at least 2400 px on the long edge, landscape,
+is enough. The build produces the AVIF/WebP/JPEG variants. If the subject
+has a focal point that must stay visible on narrow screens, say where, so
+`background-position` can be set to keep it in frame.
