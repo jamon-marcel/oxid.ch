@@ -1,5 +1,25 @@
 # Admin UI refresh
 
+*Done 2026-10-04. Outcome against the plan below:*
+
+- *Splash: login background is a random published home image, done with a
+  `<style>` block rather than `--splash` (`2457ad4`). No pre-mount splash
+  (not wanted).*
+- *Menu: 280 px, regular `$fs-sm` links, small uppercase group headers,
+  logout below a 1px rule, close button top right. The active page is
+  **underlined**, not marked by a left line (`8c0b175`). Group pages sit
+  flush under their header.*
+- *Icons: first Phosphor light **SVG files** behind the CSS classes
+  (`4dfc989`), then Phosphor **components** for the action icons with the
+  `<script setup>` rewrite (`7b55d5e`). The `grid-*` pictograms are
+  custom and were never unused (this file listed them as unreferenced);
+  they stay as SVG files.*
+- *Borders: `$border-width` / `$border-color` / `$border`; 39 lines, not
+  54 (the count included `border-radius: 2px`). Shadows softened in the
+  variables; the "5 explicit call sites" don't exist.*
+- *Not in the plan: lighter type — regular weight for buttons, labels,
+  tabs and tables (`adfd57a`).*
+
 Added 2026-10-04 at the client's request. A *slight* refresh of the admin's
 look and feel, not a redesign:
 

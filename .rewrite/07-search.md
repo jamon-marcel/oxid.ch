@@ -117,7 +117,8 @@ Branch-only regression, never deployed: phase 2 lands before go-live.
 
 ### Phase 2 — own scoring search
 
-Bring back all three. At 119 records this is comfortably tractable.
+Bring back all three. At 119 records (136 on the production copy) this is
+comfortably tractable.
 
 **Measured, not assumed:** a full fuzzy scan over ~9.5k tokens (119 records ×
 ~80 tokens) with a 2-term query, length-gated `levenshtein()`, runs in
@@ -144,7 +145,8 @@ Weighted fields, heaviest first:
 
 Tokenisation: `strip_tags` → lowercase → split on non-letters → drop tokens
 < 2 chars. Store both the raw token and a normalised form (see German notes).
-Queries also drop stopwords (`Tokenizer::STOPWORDS`: German articles,
+*Added after phase 2 (`33b32da`):* queries also drop stopwords
+(`Tokenizer::STOPWORDS`: German articles,
 prepositions, conjunctions, a few English ones); a query of stopwords only
 keeps them. Without this, "das schulhaus" found 4 records instead of 9: a
 document matching every query token wins, so "das" acted as a required word.
@@ -247,7 +249,8 @@ Every loss from phase 1 is recovered; "zurich" = "zürich" exactly; "hollz"
 typo tolerance is broader. **Ranking is not yet tuned against real
 queries** — that still needs the access-log sample (`06-progress.md`).
 
-Tests: 21 unit tests in `tests/Unit/Search` — tokenisation, stopwords, umlaut
+Tests: 19 unit tests in `tests/Unit/Search` (16 at phase 2, 3 more with
+the stopwords) — tokenisation, stopwords, umlaut
 variants, every match rule and its thresholds, compounds, multi-word, and
 ranking (title outranks description).
 

@@ -1,5 +1,8 @@
 # Open questions — answer before starting
 
+*All answered except 1b (Imagick or GD on Hostpoint), which the pipeline
+handles at runtime anyway. Outcomes are noted per question.*
+
 ## 1. PHP version on production — ANSWERED 2026-10-04
 
 **Production runs PHP 8.3, up to 8.5. Gate cleared.** Laravel 13 (`^8.3`) and
@@ -64,6 +67,12 @@ Not the minimum-scope answer; adds ~0.75 day over a TinyMCE 5 → 8 bump.
 Buys: 7.5 MB of self-hosted assets deleted, and off the TinyMCE CVE treadmill
 for good.
 
+*Done (`15c4102`, then moved with the `<script setup>` rewrite); now
+`components/ui/editor/` — Editor, Toolbar, LinkDialog,
+plus `div.js`, `noWrap.js` ("Worttrennung deaktivieren") and
+`serialize.js`; no `smallText`. Round trip over all 213 stored values:
+0 visible differences (`06-progress.md`).*
+
 Port luvo's `components/ui/editor/` (Editor, Toolbar, LinkDialog, smallText)
 and, importantly, its **round-trip verification**: export every stored
 rich-text value, run it through Tiptap, and diff the visible text, links,
@@ -90,6 +99,11 @@ Worth confirming with the consuming site whether it also expects the `?id=`
 query string that Mix's `.version()` currently produces in
 `mix-manifest.json`. Today that hash is only in the manifest; whoever links
 the file may or may not be reading it.
+
+*Done: built by the `sass` CLI (`npm run build:busu`, part of
+`npm run build`) to the same path, outside the Vite manifest.
+`mix-manifest.json` is gone, so there is no `?id=` hash any more; nobody
+has confirmed whether the other site read it.*
 
 ## 6. Orphan configs — ANSWERED 2026-10-04: dead code. Delete.
 
@@ -129,7 +143,8 @@ gets committed too**, exactly as the Mix output is today.
 Implications to carry into the Vite work:
 
 - `public/build/` goes into git; remove `public/assets/backend/**` and the
-  Mix-built frontend bundles once nothing references them.
+  Mix-built frontend bundles once nothing references them. *Done; only
+  `public/assets/backend/{css/fonts,img/icons}` remain, both still used.*
 - `busu.css` keeps its current path (#5), so it stays outside the manifest.
 - The release that switches to Laravel 13 is the one that needs
   `composer install` with an 8.3+ CLI — confirm which PHP version the
@@ -140,6 +155,9 @@ Implications to carry into the Vite work:
   part a git revert will not undo.
 
 ## 9. Backend and frontend together, or sequenced?
+
+*Done that way: backend first, Sanctum on the Vue 2 SPA (`046c9e8`),
+then the Vue 3 port (`15c4102`).*
 
 The estimate assumes **sequential** — backend first, then frontend, so each
 half can be smoke-tested against a known-good other half. One branch is
@@ -162,7 +180,7 @@ depends on having real data locally.
 | # | Question | Answer |
 |---|---|---|
 | 1 | PHP 8.3+ on production? | **yes — 8.3 up to 8.5. Gate cleared.** |
-| 1b | Imagick or GD? | likely Hostpoint + Imagick (same as luvo), unconfirmed; detect at runtime regardless |
+| 1b | Imagick or GD? | **still open** — likely Hostpoint + Imagick (same as luvo), unconfirmed; detected at runtime (`Glide::driver()`) |
 | 2 | Fix the 2400 px issue? | **yes** |
 | 3 | `/img/project/` and `/img/tiny/` dead? | **yes — delete both** |
 | 4 | TinyMCE 8 or Tiptap? | **Tiptap** |
@@ -170,7 +188,7 @@ depends on having real data locally.
 | 6 | Orphan configs safe to delete? | **yes — `dompdf`, `media`, `content`. Keep `image.php` (package config).** |
 | 7 | Algolia index config in code or dashboard? | **moot — Algolia dropped, see `07-search.md`** |
 | 8 | Deploy / rollback? | **SSH + git pull, commit the Vite build** |
-| 9 | Sequenced? | assumed yes |
+| 9 | Sequenced? | **yes** — backend first, Sanctum before the Vue 3 port |
 | 10 | Snapshot taken? | **yes** — DB and `storage/`, 2026-10-04 |
 
 **Decided 2026-10-04:** JWT → Sanctum, as part of this project. See

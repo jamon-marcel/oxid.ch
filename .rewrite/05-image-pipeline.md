@@ -1,7 +1,11 @@
 # Image pipeline: image-cache → Glide
 
-Status: **done 2026-10-04, verified against production** — see "Result" at
-the end. The original plan follows unchanged above it.
+Status: **done 2026-10-04, verified against production.** The file reads
+in the order things happened: the plan, then "Result (2026-10-04)" for the
+step 5 port (per-purpose routes), then "Generic image handling", which
+replaced that shape the same day (`ffac092`) and is what the code does
+now: one signed `/img/{file}` route, the `IsImage` trait, `<x-image>`.
+Only the three admin routes and two legacy redirects remain of step 5.
 
 ## Why replace rather than retag
 
@@ -120,8 +124,8 @@ differs from `Crop`'s 2400/1600. Preserve per-route, do not unify by accident.
 2. **Cache location.** Today `storage/app/public/cache` (`lifetime` 43200
    min). Glide uses `storage/app/.glide-cache`, outside the public disk.
    After go-live the old directory can be deleted.
-3. **`/img/project/` and `/img/tiny/`** — pending the access-log check,
-   `04-open-questions.md` #3.
+3. ~~**`/img/project/` and `/img/tiny/`** — pending the access-log check,
+   `04-open-questions.md` #3.~~ Answered there: not in use; deleted.
 
 ## The pipeline runs on GD today
 
@@ -187,6 +191,10 @@ arbitrary parameters, so whitelist sizes and formats — otherwise crafted
 requests can fill the cache. luvo did this in `c100fe0`.
 
 ## Result (2026-10-04)
+
+*Step 5 (`62c73c4`). The routes, `CROP_SIZES` and `ImageHelper` below
+were replaced by "Generic image handling"; the verification and the driver
+findings still hold.*
 
 `app/Http/Controllers/ImageController.php`, `app/Support/{Glide,ImageSupport}.php`,
 `app/Helpers/ImageHelper.php`. `app/Filters/` is gone.
@@ -303,7 +311,7 @@ longer written or read; delete after go-live.
   nothing emits them.
 - `resources/js/backend/components/global/upload/ImageUpload.vue:84` emits
   `/media/thumbnail/{f}`, a route that did not exist before either. Dead or
-  broken already; left for the Vue 3 port.
+  broken already; left for the Vue 3 port. *Deleted there as dead code.*
 
 Harness: `.rewrite/tools/` — `image-crawl.py` (collects `/img/` URLs from
 every public page), `glide-render.php` (renders a `map.txt` through an
@@ -385,6 +393,12 @@ and cannot sign URLs. Those three stay as fixed, parameter-free actions
 until the Vue 3 port, which should take the URLs from the API instead.
 `Media.vue`'s `/img/crop/...` goes through the redirect.
 
+*Outcome: the Vue 3 admin kept the fixed routes.* Every admin image URL
+now goes through `resources/js/backend/lib/images.js` (`imageUrl()`), the
+one place to change if the API ever supplies signed URLs. The grid
+builder's `components/grid/Media.vue` still uses `/img/crop/...` and the
+redirect.
+
 ### Accepted side effects
 
 - Rotating `APP_KEY` changes every image URL (old ones 404 until the HTML
@@ -437,6 +451,13 @@ portrait → `maxHeight`; `?fm=webp` is carried over; unknown sizes 404.
 commit time the first 1,552 had been fetched: all 200, and for every srcset
 candidate the rendered width equals its `w` descriptor. The rest was still
 rendering (cold Glide cache).
+
+This crawl is where the broken AVIF renditions turned up (16-byte files
+served with 200): guarded in `92e0eed`, see `06-progress.md`, "Broken AVIF
+renders". The full crawl in the final QA: all 6,135 URLs from 125 pages
+200, right format and `Content-Type`, real width = descriptor.
+`php artisan images:warm` does the same crawl to fill the cache after a
+deploy.
 
 **Save hook:** setting `width` to null and saving refills it from the file.
 

@@ -3,6 +3,12 @@
 Survey done **2026-10-04** against commit `f140dca` (branch `master`, clean tree).
 Written so the next session can skip re-deriving all of this.
 
+**Status: done** (2026-10-04, branch `rework/laravel-13-vue-3`, pushed,
+not deployed). `06-progress.md` is the logbook: start at "Where things
+stand", then "Deploy notes". Files `00`–`05`, `08` and `09` are the plans
+as written before the work; each starts with a note on how the outcome
+differed.
+
 Modelled on the same survey done for **luvo.ch** (`.rewrite/` in
 `github.com/marceli-to/luvo`), which went 11→13 + Vue 2→3 in Sept/Oct 2026.
 Where a decision was already made and verified there, this set says so and
@@ -24,7 +30,9 @@ reuses it rather than re-litigating.
 | `09-admin-ui.md` | Admin look and feel: splash, menu, Phosphor icons, 1px lines |
 
 QA automation (luvo's `07-` / `08-`) is deliberately not here yet. luvo wrote
-those *after* the upgrade landed. Same order applies.
+those *after* the upgrade landed. Same order applies. (There are 118
+PHPUnit tests by now, and Playwright scripts outside the repo; see
+`06-progress.md`.)
 
 ## Two projects, not one
 
@@ -51,7 +59,8 @@ are deliberately not folded into the rework total.
   no `slot-scope`, no `.sync`). The cost is replacing dead Vue 2 packages,
   not fixing your components.
 - Biggest single risk: **`vue2-dropzone` has no Vue 3 port** — 6 files, full
-  rewrite. luvo hit the same wall with only 2 files.
+  rewrite. luvo hit the same wall with only 2 files. *Outcome: 4 of the 6
+  were dead code; the rest became an own `Uploader` component.*
 - ~~Hard gate: PHP 8.3+.~~ **Cleared** — production runs 8.3 up to 8.5.
   The image driver (Imagick vs GD) is still unconfirmed, but the pipeline
   detects it at runtime, so it does not gate anything.
@@ -63,7 +72,8 @@ follows luvo's current code — `<script setup>`, composables instead of
 mixins, `lib/http.js`, shared `components/ui/`, `views/` per entity. This
 rule predated luvo's own rewrite and was never updated. The first port
 (`15c4102`) was Options API; the rewrite follows in steps.
-No test suite. No design changes.
+No design changes. ~~No test suite~~ — tests were added along the way.
+`<script setup>` was done in a second pass, as described below.
 
 Four deliberate exceptions, decided 2026-10-04: TinyMCE is **replaced with
 Tiptap** rather than upgraded, the image pipeline **serves requested sizes +

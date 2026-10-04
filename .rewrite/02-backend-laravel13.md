@@ -1,5 +1,16 @@
 # Backend: Laravel 11 → 13
 
+*Done 2026-10-04. This is the plan as written before the work; the step
+plan below is annotated with what happened. Notes per step are in
+`06-progress.md`, "Backend".*
+
+**Resolved versions now:** `laravel/framework` 13.34, PHP `^8.3`
+(Composer platform pinned to 8.3.0), Sanctum 4.3, Glide 4.1 +
+Intervention Image 4, Carbon 3.14, Tinker 3, PHPUnit **12** (13 needs PHP
+8.4.1). Gone: `jwt-auth`, `laravel/scout`, the Algolia client,
+`marceli-to/image-cache`, and also `intervention/image-laravel` (unused,
+removed in step 7).
+
 ## Why this is not optional
 
 `composer update` **cannot run today**:
@@ -151,6 +162,16 @@ long backwards compatibility survives. luvo's `bootstrap/app.php` is a good
 template; drop its `DetectRequestLocale` and multilingual bits.
 
 ## Step plan
+
+*As done: steps 1–3 as planned (`0afa861`); 4 (`a809fd2`); search phase 1
+moved up from step 8 to right after step 4, because Guzzle 8 broke the
+Algolia client (`e9d5dde`); 5 (`62c73c4`, later replaced by the generic
+image handling, `ffac092`); 6 (`5c014f1`); 7 (`5bdc257`, which also
+dropped `intervention/image-laravel` and `config/image.php`); 9 Sanctum
+(`046c9e8`); 10 Carbon 3 came with the framework bump, no code change;
+11 validation messages needed no change (all strings); 12 smoke test in
+every step, final QA at the end; 13 search phase 2 (`bd0eacb`). 145
+routes at the end.*
 
 Revised 2026-10-04 after a consistency review. Two things changed:
 the order (see "Why step 4 must be one commit"), and stale entries left over

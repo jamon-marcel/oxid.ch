@@ -1,5 +1,12 @@
 # Estimate
 
+*The plan before the work. Outcome: everything below, plus the
+`<script setup>` rewrite and the public site JS (`08-frontend-js.md`), was
+done on 2026-10-04. Two "out of scope" lines no longer hold: there is
+a test suite now (118 tests, `06-progress.md`), and the public site's
+JavaScript was modernised. Bootstrap and the Sass `@use` migration remain
+untouched.*
+
 Scope: **minimum**. Get onto Laravel 13, Vue 3 and Sanctum with identical
 behaviour. Nothing else.
 

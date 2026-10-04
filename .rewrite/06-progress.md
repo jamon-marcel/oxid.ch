@@ -1,9 +1,15 @@
 # Progress
 
 Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
-Backend steps 3 (dead code), 4 (Laravel 13 + Glide dependency), search
-phase 1, 5 (Glide images), 6 (slim skeleton), 7 (config diff) and JWT →
-Sanctum, the validation-message check and search phase 2 done 2026-10-04.
+All of it — backend, admin, public site JS — was done on 2026-10-04
+(`3960590` … `3699b16`). Everything is pushed to
+`origin/rework/laravel-13-vue-3`; nothing is deployed yet.
+
+The sections below are written in the order the work happened, and
+some later steps replaced earlier ones the same day (Dropzone → own
+Uploader, vuedraggable → SortableJS, CSS icons → Phosphor components,
+Options API → `<script setup>`). Where an older note no longer describes
+the code, it says so. For the code as it is now, read `CLAUDE.md`.
 
 Production: **https://oxid-architektur.ch** (www.oxid.ch is a different, static page).
 
@@ -17,8 +23,9 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 - [ ] Run the driver one-liner from `04-open-questions.md` #1 on the server,
       and record the result here. Also check the **CLI** PHP version, not
       just the web one.
-- [ ] Grep production access logs for `/img/project/` and `/img/tiny/`
-      (`04-open-questions.md` #3).
+- [x] ~~Grep production access logs for `/img/project/` and `/img/tiny/`~~
+      — moot: answered "not in use" (`04-open-questions.md` #3), deleted in
+      `0afa861`. Both now 404. A log grep would only confirm it.
 - [ ] Collect 20–30 real search queries from the production access logs —
       the search page is a `GET`, so `?keyword=` is in there. Needed to tune
       the ranking in `07-search.md` phase 2.
@@ -39,40 +46,44 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
       older code (the current delete endpoints do remove files). Harmless:
       nothing emits their URLs. Not touched; a cleanup candidate after
       go-live, not part of this project.
-- [ ] Decide on the dev/prod database mismatch: production is **MariaDB
-      10.11**, local is **MySQL 5.7** (EOL). The dump imported cleanly, but
-      check Laravel 13's minimum MySQL version before the framework bump.
-- [ ] Record the current state for comparison: route list, the `/img/...` URLs
-      every public page emits and their byte sizes, and screenshots of the
-      public pages at 375 and 1280 px.
+- [x] Dev/prod database mismatch: production is **MariaDB 10.11**, local
+      is **MySQL 5.7** (EOL). Kept as it is: the whole rework ran against
+      the local MySQL 5.7 without a problem. The admin API tests run on
+      in-memory SQLite (see "Admin API tests").
+- [x] Record the current state for comparison: route list (144 at
+      `f140dca`), the `/img/...` URLs the public pages emit (step 5 crawl,
+      6,187 URLs), and screenshots (Mix build vs Vite build, then local vs
+      production in "Final QA").
 
 ## Where things stand (handover, 2026-10-04 evening)
 
-- **Backend phase: done.** Laravel 13, slim skeleton, config trimmed,
-  Sanctum, own search, upload validation. Generic image handling done by a
-  separate agent (`ffac092`).
-- **Frontend: done.** Public site on Vite; admin
-  on Vue 3 + Vite in luvo's shape (`<script setup>`, composables, `lib/`,
-  `components/ui`), Tiptap, own Uploader/notifications, one Lightbox, one
-  Card, toggles, Phosphor icons, 1px lines. Admin feedback rounds after
-  that are in the notes below.
-- **Open, in order of weight:**
-  1. ~~Login splash~~ — done, see "Login splash" below.
-  2. Production facts to collect on Hostpoint: web PHP `upload_max_filesize`
-     / `post_max_size` / `memory_limit`, Imagick loaded? (decides 16 MB
-     uploads and render memory), CLI PHP version, access-log samples
-     (`/img/project`, `/img/tiny`, search queries for ranking tuning).
-  3. ~~Broken AVIF renders~~ — guarded, see "Broken AVIF renders" below.
-  4. ~~`vuedraggable` → SortableJS~~ — done, see "vuedraggable → SortableJS"
-     below. Found on the way and fixed: `order` columns were `TINYINT`.
-     **Production needs `php artisan migrate`** (see Deploy notes).
-  5. ~~End-of-project QA, screenshot comparison, `CLAUDE.md`~~ — done,
-     see "Final QA (2026-10-04)" below; `CLAUDE.md` rewritten (`cefbaee`).
-  6. `08-frontend-js.md` (public JS de-jQuery) — a separate project.
-- **Testing:** Playwright scripts in `/tmp/pw` (not in the repo; they go
-  when /tmp is cleaned). The user works in the same local admin: tests
-  must clean up through the UI/API, not restore whole tables.
-- **Not pushed:** everything after `ffac092`.
+- **Backend: done.** Laravel 13, slim skeleton, config trimmed, Sanctum,
+  own search, upload validation, generic image handling (`ffac092`),
+  public controllers (`c195334`), `images:warm`.
+- **Admin: done.** Vue 3 + Vite in luvo's shape (`<script setup>`,
+  composables, `lib/`, `components/ui`), Tiptap, own Uploader with
+  per-file progress, own notifications, one Lightbox, one Card, toggles,
+  SortableJS, Phosphor icons, 1px lines, lighter type, lands on the news
+  list.
+- **Public site JS: done** (`08-frontend-js.md`): no jQuery, ES modules,
+  `data-` hooks, Swiper 14.
+- **Tests:** 118 (`php artisan test`): 84 admin API feature tests on
+  in-memory SQLite, 7 public-page and 2 rendition tests against the local
+  MySQL copy, 19 search and 4 image unit tests, 2 examples.
+- **Open:**
+  1. Production facts to collect on Hostpoint: web PHP `upload_max_filesize`
+     / `post_max_size` / `memory_limit`, Imagick loaded? (decides larger
+     uploads and render memory), CLI PHP version, search queries from the
+     access logs (ranking tuning, `07-search.md`).
+  2. The deploy itself — see "Deploy notes". Production needs
+     `php artisan migrate` (two new migrations).
+  3. After go-live: watch `laravel.log` for "Broken … rendition"; delete
+     `storage/app/public/cache/`; the 120 unreferenced uploads are a
+     cleanup candidate.
+- **QA scripts:** Playwright in `~/oxid-qa` (outside the repo; see
+  "Public site JS"). The admin QA scripts of the earlier rounds lived in
+  `/tmp/pw` and are gone. The user works in the same local admin: tests
+  must clean up after themselves, never restore whole tables.
 
 ## Backend
 
@@ -86,8 +97,10 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | Config diff against L13 (was step 7), drop `intervention/image-laravel` | ✅ done — 145 routes (duplicate `/suche` removed); `config:cache` **and `route:cache`** OK; effective config unchanged except `same_site` → `lax` and the cache key prefix; public pages, admin API GETs, throttle headers OK | `5bdc257` |
 | JWT → Sanctum, incl. the Vue 2 SPA's auth bootstrap | ✅ done — cookie flow verified with curl and in headless Chromium against the Vue 2 admin: login, 8 list screens, edit + save, upload, session expiry on navigation and on POST, logout; 145 routes, caches OK | `046c9e8` |
 | Form-request validation messages (L12+ wants strings) | ✅ checked, **no change needed** — all 10 form requests already return string messages (ran each one's rules + messages through the validator: 17 errors, 0 non-string); 422 shape verified unchanged in the Sanctum run | (docs only) |
-| Search phase 2: own scoring search + unit tests, drop Scout | ✅ done — 18 unit tests; 15 queries vs production in `07-search.md`, every phase 1 loss recovered; queries 2–9 ms; index flushed on save. Ranking tuning against real queries still open (needs the access logs) | `bd0eacb` |
-| Generic image handling: signed `/img/{file}`, `IsImage` trait, `<x-image>`, stored dimensions, legacy redirects | ✅ done — crops byte-identical to step 5 (93/93), home framing same crop; descriptors = rendered width and status 200 for the first 1,552 of 6,169 emitted URLs (full crawl still running at commit time); see `05-image-pipeline.md`, "Generic image handling" | |
+| Search phase 2: own scoring search + unit tests, drop Scout | ✅ done — 16 unit tests (19 since the stopword change, `33b32da`); 15 queries vs production in `07-search.md`, every phase 1 loss recovered; queries 2–9 ms; index flushed on save. Ranking tuning against real queries still open (needs the access logs) | `bd0eacb` |
+| Generic image handling: signed `/img/{file}`, `IsImage` trait, `<x-image>`, stored dimensions, legacy redirects | ✅ done — crops byte-identical to step 5 (93/93), home framing same crop; descriptors = rendered width and status 200 for the first 1,552 of 6,169 emitted URLs at commit time; the full crawl later (Final QA): 6,135/6,135. See `05-image-pipeline.md`, "Generic image handling" | `ffac092` |
+| Public controllers: unpublished pages 404, `/werkliste` 301, no `BaseController` | ✅ done — see "Public controllers" | `c195334` |
+| German `validation.php`; `images:warm` replaces `images:clear` | ✅ done | `29edfc0` |
 
 The Laravel 13 bump and the image-cache → Glide dependency swap **must be
 the same commit** — Composer will not resolve anything on Laravel 11. See
@@ -117,8 +130,8 @@ screens.
   (local CLI is 8.4; Symfony 8 would need 8.4). Resolved Symfony 7.4.20.
 - PHPUnit is `^12`, not 13 as the dependency table said: 13 needs PHP
   ≥ 8.4.1. Same choice as luvo.
-- `intervention/image-laravel` stays per the plan, but nothing uses its
-  `Image` facade — the only Intervention caller is `MediaController`, which
+- `intervention/image-laravel` stays per the plan (*removed in step 7*),
+  but nothing uses its `Image` facade — the only Intervention caller is `MediaController`, which
   builds its own `ImageManager`. It can go with the skeleton cleanup in
   step 6/7, along with `config/image.php`.
 - The six `*ImageController::removeCachedImage()` lost their
@@ -139,12 +152,12 @@ Details in `05-image-pipeline.md`, "Result".
   box sizes justify it; smaller screens get 900/1200/1600.
 - **Cold renders** take 0.3–1.3 s each (AVIF slowest). The old pipeline had
   the same first-hit cost. Consider an `images:warm` command for the deploy
-  (luvo's `Glide.php` mentions one).
+  (luvo's `Glide.php` mentions one). *Added in `29edfc0`.*
 - **Full crawl done:** all 6,187 `/img/...` URLs the public pages emit
   (at `62c73c4`) return 200 — 2,054 AVIF, 2,054 WebP, 1,551 JPEG, 528 PNG.
-- **Still to do for this step:** screenshot comparison of the public pages
+- ~~Still to do for this step: screenshot comparison of the public pages
   against production (the `<picture>` wrapper), and the admin image screens
-  once the SPA runs again.
+  once the SPA runs again.~~ Both done in "Final QA".
 
 ### Broken AVIF renders (found 2026-10-04, guarded the same day)
 
@@ -209,7 +222,8 @@ If it shows up often, drop `avif` from `ImageSupport::modernFormats()`
   changes it, so existing tokens fail and the SPA falls back to the login
   screen. Harmless, and Sanctum replaces the tokens anyway.
 - **`config/app.php`** is down to the non-default keys plus the two custom
-  facade aliases (`AppHelper`, `ImageHelper`). The `Image` alias went —
+  facade aliases (`AppHelper`, `ImageHelper`; `ImageHelper` went with the
+  generic image handling, so only `AppHelper` is left). The `Image` alias went —
   nothing calls it, and the Intervention package registers it itself.
   Providers are auto-discovered; `bootstrap/providers.php` lists only
   `AppServiceProvider`.
@@ -219,9 +233,11 @@ If it shows up often, drop `avif` from `ImageSupport::modernFormats()`
   factories still use the Laravel ≤7 `$factory->define()` syntax, and the
   seeders call `Model::factory()` on models without `HasFactory`, so
   `db:seed` fails. Nothing on production seeds; a QA-automation item.
+  *Fixed later with the admin API tests (class-based factories).*
 - `CLAUDE.md` named the image command `app:clear-images`; it is
   `images:clear`. Fixed. The rest of `CLAUDE.md` (Algolia, image-cache,
-  Laravel 11) is rewritten at the end of the project.
+  Laravel 11) was rewritten at the end (`cefbaee`). `images:clear` itself
+  was removed later for `images:warm` (`29edfc0`).
 
 ### Notes from step 7
 
@@ -246,9 +262,10 @@ moved aside (framework defaults), and diff. Then decide per file.
     the Sanctum step needs.
   - `logging`: stack channel `daily`, as before.
   - `filesystems`: the `local` disk root stays **`storage/app`** (L13: `app/private`)
-    and `serve` stays off. Load-bearing: every image/document delete endpoint
-    and `images:clear` call `Storage::allDirectories('public')` /
-    `Storage::delete('public/…')` on the default disk.
+    and `serve` stays off. Load-bearing: every image/document delete
+    endpoint (and, at the time, `images:clear`) calls
+    `Storage::allDirectories('public')` / `Storage::delete('public/…')` on
+    the default disk.
 - **Left as is:** `auth`, `jwt` (rewritten in the Sanctum step), `scout`
   (goes in search phase 2), `seo`, `settings`, `app` (done in step 6).
   `cors` is not published; the framework default applies (see step 6 notes).
@@ -260,8 +277,9 @@ moved aside (framework defaults), and diff. Then decide per file.
   went; the second matches `/suche` too, and `route('page.search.index')`
   still yields `/suche`. So production has never been able to cache its
   routes. 146 → 145 routes.
-- Pre-existing, not changed: `/suche/{keyword}` ignores the path segment —
-  `SearchController` only reads `?keyword=`. Revisit in search phase 2.
+- Pre-existing, not changed here: `/suche/{keyword}` ignores the path
+  segment — `SearchController` only reads `?keyword=`. *Fixed in search
+  phase 2: the path segment searches too.*
 
 ### Notes from JWT → Sanctum
 
@@ -285,7 +303,8 @@ moved aside (framework defaults), and diff. Then decide per file.
   guard asks `POST /api/auth/me`; one interceptor sends 401/419 to the login
   screen (auth calls excluded). Login calls `/sanctum/csrf-cookie` first.
   Logout calls the API. Dropzone (4 configs) sends `X-CSRF-TOKEN` from the
-  meta tag.
+  meta tag. *(Dropzone is gone since `5f77c53`; the own Uploader posts
+  through `lib/http.js` like every other call.)*
 - **Two pre-existing SPA bugs surfaced and fixed:**
   - `<meta name="csrf-token" value=…>` — `value`, not `content`, so axios had
     been sending `X-CSRF-TOKEN: undefined`. Harmless under JWT; under
@@ -328,11 +347,17 @@ moved aside (framework defaults), and diff. Then decide per file.
   German, plus attribute names for the admin's fields. In practice the
   admin only marks the failed fields and never shows the text, so this
   matters for API responses, not for what editors see. The form requests'
-  own `required` messages are still English ("Title is required!").
+  own `required` messages are still English ("Title is required!") —
+  still true, left as they are.
 - Lang files still live in `resources/lang`; L13 picks that up
   (`app()->langPath()`), moving them to `lang/` is optional.
 
 ### Notes from the public site on Vite
+
+*Several points here were superseded by the public JS project
+(`08-frontend-js.md`): jQuery, `jquery.scrollto` and the axios import are
+gone, Swiper is 14, and the two pre-existing bugs are fixed. The admin left
+Mix with the Vue 3 port.*
 
 - **Vite 8.3 + `laravel-vite-plugin` 3.2.** Three entries: `frontend/app.scss`,
   `frontend/app.js`, `frontend/maps.js` → `public/build/` with a manifest,
@@ -372,12 +397,21 @@ moved aside (framework defaults), and diff. Then decide per file.
   empty — the menu links to the sub-pages).
 - The public `<meta name="csrf-token">` also uses `value=`, so the public
   site's axios sent `X-CSRF-TOKEN: undefined` — harmless, it never makes a
-  request. Left for `08-frontend-js.md` step 1, which deletes axios there.
+  request. Axios went in `046a170`; the tag still says `value=` and
+  nothing reads it.
 
 ### Notes from the admin on Vue 3 + Vite
 
 One commit: a half-ported Vue 2/3 admin can't run, so Dropzone, Tiptap,
 vuedraggable and the cropper went in together.
+
+*This was a mechanical port, and most of it was replaced later the same
+day:* Options API, mixins, `this.axios` and `$parent` → `<script setup>`
+(`f4ac39b`, `7b55d5e`); `@kyvg/vue3-notification`, Dropzone and `maska` →
+own code (`5f77c53`); vuedraggable → SortableJS (`ac6a435`). The editor
+moved from `components/global/editor/` to `components/ui/editor/`. Still
+true: Vite, Tiptap and its round trip, the bugs fixed, the dead code
+removed.
 
 - **Build:** the admin joins `vite.config.js` (`@vitejs/plugin-vue`, `@`
   alias). Laravel Mix is gone (`webpack.mix.js`, `mix-manifest.json`, the
@@ -429,6 +463,13 @@ vuedraggable and the cropper went in together.
   tables restored from dumps; temp user deleted.
 
 ### Notes from the admin UI refresh
+
+*The CSS-icon decision below lasted until the `<script setup>` rewrite:
+action icons are Phosphor components now (`ListActions`), as originally
+planned. What stays CSS: the select/button carets, the `grid-*`
+pictograms, and a few icons in `public/assets/backend/img/icons/` (21
+files). The menu changed twice more: the active page is underlined
+(`8c0b175`), group pages sit flush under their header (`8aa6ee4`).*
 
 - **Icons: SVG files, not components — a deliberate change from the plan.**
   The 27 referenced icon files are now Phosphor *light* SVGs with the
@@ -657,6 +698,18 @@ Menu: group pages sit flush under their header (no indent).
   Restored row by row from the 2026-10-04 production dump, guarded by the
   test's `updated_at`, so nothing written outside the test was touched.
 
+### Smaller admin rounds (2026-10-04)
+
+- Menu: close button in the top right corner (`fb8d41d`); the active page
+  is underlined instead of marked by a line on the left, and the indented
+  group lists no longer scroll sideways (`8c0b175`).
+- The admin lands on the news list: login, the header logo and `/admin` go
+  to `/admin/home/news`; the empty dashboard view is gone and
+  `/admin/dashboard` redirects there (`e2a5b21`).
+- Lighter type: regular weight for buttons, labels, tabs, tables and
+  notifications; `h2` bold (`adfd57a`).
+- Public footer: the Google tag loads only in production (`cbe136c`).
+
 ### Final QA (2026-10-04)
 
 Run against `cefbaee` with the local copy of the production DB and uploads.
@@ -719,6 +772,9 @@ only grid element missing from the whole table.
 
 ### To verify at the end of the backend phase
 
+*Done, see "Final QA". The last point ran against the Vue 2 SPA in the
+Sanctum step, and against the Vue 3 admin in the final QA.*
+
 - Same routes as the baseline: 145 since step 7 (146 before minus the
   duplicate `/suche`).
 - Every public page 200.
@@ -735,19 +791,27 @@ only grid element missing from the whole table.
 |---|---|---|
 | Public site on Vite | ✅ done — 30 screenshots (15 pages × 1280/375) old Mix build vs Vite build: 27 pixel-identical, 3 differ only by the random home image; menu, map, Swiper, collapsible, lazysizes, scrollTo work; `vite` dev server checked | `cba7799` |
 | Admin on Vue 3 + Vite | ✅ done — headless Chromium against the real admin: all 27 screens render without errors; login (incl. wrong-password message), editor, save, drag reorder, Dropzone upload → crop → delete, grid builder (add row, pick image, delete row), session expiry, logout | `15c4102` |
-| Dropzone v6 replacement | ✅ done, same commit — thin wrapper `global/upload/Dropzone.vue` | `15c4102` |
+| Dropzone v6 replacement | ✅ done, same commit — thin wrapper `global/upload/Dropzone.vue`; *replaced by the own `ui/Uploader.vue` in `5f77c53`* | `15c4102` |
 | TinyMCE → Tiptap (incl. round-trip verification) | ✅ done, same commit — 213 stored values round-trip with 0 visible differences | `15c4102` |
-| `projects/grid/` page builder | ✅ ported in the same commit (vuedraggable 4 slot syntax; `$parent` calls are direct parents, kept) | `15c4102` |
-| Icons → Phosphor light, during the port (`09-admin-ui.md`) | ✅ done — as SVG files behind the existing CSS classes, not components (see notes) | `4dfc989` |
+| `projects/grid/` page builder | ✅ ported in the same commit (vuedraggable 4 slot syntax; `$parent` calls are direct parents, kept); *rewritten as `views/projects/Grid.vue` + `components/grid/` in `7b55d5e`* | `15c4102` |
+| Icons → Phosphor light, during the port (`09-admin-ui.md`) | ✅ done — as SVG files behind the existing CSS classes, not components (see notes); *action icons became Phosphor components in `7b55d5e`* | `4dfc989` |
 | Border tokens, 1px lines (`09-admin-ui.md`) | ✅ done — `$border-width`, 39 lines; softer shadows; focus rings | `4dfc989` |
 | Menu: type scale + group headers | ✅ done | `4dfc989` |
 | **`<script setup>` + composables, luvo's shape** (scope changed 2026-10-04): foundation + news | ✅ done — `lib/{http,utils,images}`, composables `useResourceForm/useListing/useOrder/useEscape`, `components/ui/*`, `App.vue` + `views/layout/PageHeader`, lazy `router.js` with the session guard; news list/create/edit/order/toggle and server-side validation verified; old screens still run inside the new shell | `f4ac39b` |
 | … projects, discourses, team, jobs, profile, contact | ✅ done — all lists and forms; `ImageManager`, `FileManager`, `Uploader`, `useImages/useImageLibrary/useFiles` | `7b55d5e` |
 | … image pages, listings, grid builder | ✅ done, same commit — one `views/images/Index.vue` for home/team/jobs/profile (route props); grid builder in `views/projects/Grid.vue` + `components/grid/`. No Options API, mixin or `$parent` left | `7b55d5e` |
 | Fewer dependencies, one Lightbox, menu sections | ✅ done — see notes | `5f77c53` |
-| Login screen / splash | ✅ done — login error shown (`15c4102`); random published home image as background, white card with 1px border; `splash.jpg` deleted. See notes | |
+| Login screen / splash | ✅ done — login error shown (`15c4102`); random published home image as background, white card with 1px border; `splash.jpg` deleted. See notes | `2457ad4` |
+| Uploader progress per file; yes/no fields as toggles | ✅ done | `946fb60`, `d787c01` |
+| One `Card` for images, files and the grid picker | ✅ done | `8aa6ee4` |
+| vuedraggable → SortableJS (`SortableList`), `order` columns → `SMALLINT` | ✅ done | `ac6a435`, `f7b4584` |
+| Menu close button, active page underlined, land on news, lighter type | ✅ done — see "Smaller admin rounds" | `fb8d41d`, `8c0b175`, `e2a5b21`, `adfd57a` |
 
 ### To verify at the end of the frontend phase
+
+*Written before the port. Done in "Final QA", against what the admin has
+now (Tiptap, not TinyMCE; the own Uploader, not Dropzone). Drag and drop
+could be automated after all: Playwright's `dragTo` drives SortableJS.*
 
 - Public site pixel-identical to production, no console errors; jQuery
   plugins, lazysizes, fancybox, swiper all load.
@@ -962,72 +1026,83 @@ devices. The scroll-position modules (`history`, `sections`) only run from
 (`menu/footer/office.blade.php`) is inside an HTML comment, so it ships in
 the page source but does nothing; converted with the rest, not removed.
 
-## Known issues to carry (found during the survey, pre-existing)
+## Known issues found during the survey (pre-existing) — all resolved
 
-- Public-site cache-busting does not work: four bundles are `.version()`-ed
-  but referenced with `asset()` instead of `mix()`, so the `?id=` hash is
-  never emitted. Vite fixes this by construction — treat it as a behaviour
-  change, not a silent improvement.
-- Every image crop is served at up to 2400 px regardless of the requested
-  size. See `05-image-pipeline.md` rule 3 and `04-open-questions.md` #2.
-- `config/image-cache.php` registers `Tiny.php`, which uses the Intervention
-  **v2** API. It is a latent fatal that has never fired because no URL
-  reaches it. It will become a hard failure on Intervention v4 if left in.
+- Public-site cache-busting did not work: four bundles were `.version()`-ed
+  but referenced with `asset()` instead of `mix()`, so the `?id=` hash was
+  never emitted. **Fixed** by Vite (`cba7799`) — a behaviour change:
+  browsers fetch new CSS/JS after a deploy.
+- Every image crop was served at up to 2400 px regardless of the requested
+  size. **Fixed** (`62c73c4`, then `ffac092`): requested sizes + AVIF/WebP.
+- `config/image-cache.php` registered `Tiny.php`, which used the
+  Intervention **v2** API. **Deleted** in `0afa861`, image-cache in `a809fd2`.
 - `busu.css` is built from a 1,569-line Sass tree that nothing in this repo
-  references. Answered: another site consumes it — keep the output path.
-- The public site loads **axios and never makes a request with it**, and
-  ships a dead fancyBox 3.5.7 that is not even in the compiled bundle.
-  See `08-frontend-js.md` step 1. **Fixed** in `046a170`.
+  references. Answered: another site consumes it — output path kept.
+- The public site loaded **axios and never made a request with it**, and
+  shipped a dead fancyBox 3.5.7. **Fixed** in `046a170`.
 
 ## Deploy notes
 
-To be filled in once `04-open-questions.md` #8 is answered. Expected shape,
-based on luvo:
+`04-open-questions.md` #8: SSH + `git pull`, as in luvo. The full
+checklist with server-specific notes is in `DEPLOYMENT.md` at the repo
+root — gitignored on purpose, so it exists only locally. The committed
+summary:
 
-- `composer install --no-dev` on the server, PHP 8.3+ CLI.
-- Vite build output is committed (`public/build/`, plus `public/assets/css/busu.css`
-  and the admin's Mix output until the Vue 3 port): run `npm run build`
-  (and `npm run admin:build`) before committing a release. Never commit
-  `public/hot` (gitignored).
-- `php artisan migrate --force` — `2026_10_04_120000_add_dimensions_to_image_tables`
-  (image agent) and `2026_10_04_150000_widen_order_columns` (`order`
-  TINYINT → SMALLINT; fixes reordering the 244 former team members).
-- `php artisan optimize:clear`.
-- `.env`: remove `ALGOLIA_APP_ID` / `ALGOLIA_SECRET`, and make sure
-  `SCOUT_DRIVER` / `SCOUT_PREFIX` are gone too (Scout removed in search
-  phase 2).
-- `.env`, after step 7 (Laravel 11+ env names; the config files that read the
-  old names are gone):
+- Built assets are committed: run `npm run build` (public site + admin
+  into `public/build/`, plus `public/assets/css/busu.css`) and commit the
+  output with the change that needs it. Never commit `public/hot`
+  (gitignored). Nothing is built on the server.
+- Before the first rework deploy: snapshot the production DB and
+  `storage/`; confirm the server's **CLI** PHP is 8.3+.
+- On the server:
+  ```bash
+  git pull
+  composer install --no-dev --optimize-autoloader
+  php artisan migrate --force
+  php artisan optimize:clear
+  php artisan optimize
+  php artisan images:warm
+  ```
+- New migrations: `2026_10_04_120000_add_dimensions_to_image_tables`
+  (stored image sizes, backfilled from the files) and
+  `2026_10_04_150000_widen_order_columns` (`order` TINYINT → SMALLINT;
+  fixes reordering the 244 former team members). The other 51, including
+  the two from 2026-02-09, already ran on production at `f140dca`.
+- `.env` (Laravel 11+ names; the config files that read the old names are
+  gone):
   - **`DB_CONNECTION=mysql` must be set** — the framework default is `sqlite`.
-  - `CACHE_DRIVER` → `CACHE_STORE` (default is `file` now, so only needed if
-    production uses something else). Same for `FILESYSTEM_DRIVER` →
-    `FILESYSTEM_DISK` (default `local`).
   - `QUEUE_CONNECTION=sync` — nothing is queued, but the framework default
     is `database`.
-  - Unused, can go: `BROADCAST_DRIVER`, `PUSHER_*`, `MIX_PUSHER_*`,
-    `REDIS_*`, `MAIL_*`, and `JWT_SECRET` (since the Sanctum step).
+  - `CACHE_DRIVER` → `CACHE_STORE`, `FILESYSTEM_DRIVER` → `FILESYSTEM_DISK`
+    (the defaults `file` / `local` are right).
+  - Remove: `ALGOLIA_APP_ID`, `ALGOLIA_SECRET`, `SCOUT_DRIVER`,
+    `SCOUT_PREFIX`, `JWT_SECRET`, `BROADCAST_DRIVER`, `PUSHER_*`,
+    `MIX_PUSHER_*`, `REDIS_*`, `MAIL_*`.
 - `.env`, Sanctum: **`APP_URL` must be the exact production origin**
   (`https://oxid-architektur.ch`) — Sanctum treats requests from that host
   as stateful. If the admin is also reached via `www.`, set
   `SANCTUM_STATEFUL_DOMAINS=oxid-architektur.ch,www.oxid-architektur.ch`.
   Leave `SESSION_DOMAIN` unset (host-only cookie) unless both hosts are
-  used. Consider `SESSION_SECURE_COOKIE=true`.
+  used. Set `SESSION_SECURE_COOKIE=true`.
 - Admins are logged out once by the deploy (JWTs no longer accepted); the
   SPA lands on the login screen.
 - `php artisan optimize` (config + route + view cache) works since step 7;
   it never did before because of the duplicate route name.
-- Glide cache dir writable; not backed up.
-- After go-live, `storage/app/public/cache/` (old image-cache output) can go.
-- `php artisan images:warm` after the deploy: crawls the public pages and
-  renders every image they use into the Glide cache (cold renders 0.3–1.3 s
-  each, so the first run takes a while; a warm run is ~20 s locally for 128
+- `storage/` and `storage/app/.glide-cache` writable; the Glide cache is
+  not backed up.
+- `php artisan images:warm` crawls the public pages in-process and renders
+  every image they use into the Glide cache (cold renders 0.3–1.3 s each,
+  so the first run takes a while; a warm run is ~20 s locally for 128
   pages / 6,162 URLs). Exits non-zero and lists the URLs that weren't 200.
-  `images:clear` (a leftover that deleted directories which no longer
-  existed) is gone.
+- After go-live: `storage/app/public/cache/` (image-cache's output) can
+  go; watch `laravel.log` for "Broken … rendition".
 
 ## Next after this project
 
-QA automation, as luvo did afterwards: a checklist with stable ids, PHPUnit
-feature tests, Playwright E2E, and a visual comparison against production.
-See `07-qa-automation-prompt.md` and `08-test-plan.md` in the luvo repo —
+QA automation, as luvo did afterwards. Partly done already: PHPUnit
+feature tests for the whole admin API and the public pages, and the
+Playwright screenshot/behaviour scripts in `~/oxid-qa` (outside the repo).
+Still missing: a checklist with stable ids, Playwright E2E for the admin
+in the repo, and a repeatable visual comparison against production. See
+`07-qa-automation-prompt.md` and `08-test-plan.md` in the luvo repo —
 both are reusable here with the entity names swapped.

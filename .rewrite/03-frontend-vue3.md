@@ -1,5 +1,28 @@
 # Frontend: Vue 2.7 → Vue 3
 
+*Done 2026-10-04. This is the plan; the outcome differs in several places.
+The first port (`15c4102`) followed this table, then the admin was
+rewritten in luvo's shape the same day. What the admin uses now:*
+
+| Plan | Outcome |
+|---|---|
+| Options API + mixins | `<script setup>` + composables (`f4ac39b`, `7b55d5e`) |
+| `vue2-dropzone` → Dropzone v6 wrapper | own `components/ui/Uploader.vue`, per-file progress (`5f77c53`, `946fb60`) |
+| `vuedraggable@^4` | `sortablejs` via `components/ui/SortableList.vue` (`ac6a435`) |
+| `@kyvg/vue3-notification` | own `lib/notify.js` + `components/ui/Notifications.vue` (`5f77c53`) |
+| `vue-the-mask` → a Vue 3 replacement | `dateMask()` in `lib/utils.js` (`maska` in between) |
+| `moment` → `dayjs` if needed | no date library |
+| `$parent` converted opportunistically | none left |
+| `Create`/`Edit`/`Form`/`Index` per entity | `views/<entity>/{Index,Form}.vue`; one `views/images/Index.vue` for the four image libraries |
+| feather CSS-background icons → Phosphor | `@phosphor-icons/vue` components for actions; a few CSS icons stay (`09-admin-ui.md`) |
+| TinyMCE → Tiptap | as planned, `components/ui/editor/` |
+| `vue-advanced-cropper` ^2, `vue-router` ^4, Vuex deleted | as planned |
+| Mix → Vite | as planned; the admin and the public site share `vite.config.js` |
+| Vendored public libs left alone | moved to npm, later removed or upgraded (`08-frontend-js.md`) |
+
+The router has 33 named routes; the dashboard is gone (the admin lands on
+the news list).
+
 Scope is `resources/js/backend/` (the admin SPA). The public site
 (`resources/js/frontend/`) is plain JS + jQuery + Bootstrap 4 and stays as it
 is, apart from its Vite entry points.

@@ -1,5 +1,23 @@
 # Public site JS: modernisation
 
+*Done 2026-10-04 (`046a170`, `ccbfa36`, `127b04e`); details and
+verification in `06-progress.md`, "Public site JS". Differences from the
+plan below:*
+
+- *Swiper went to **14.3**, not 12 (14 was current).*
+- *Step 4 (`maps.js`) was done with step 2.*
+- *fancyBox's Sass was still in the tree (955 lines) despite "no references
+  in the frontend Sass"; deleted with the JS.*
+- *`jquery.scrollto` is gone; lazysizes stays (npm, 5.1.2). The Vite
+  migration had already moved the vendored copies to npm.*
+- *`contact.js` became `imprint.js`; `project.js` and `imagescroll.js`
+  share `lib/sections.js`. No `data-module` auto-init: `app.js` imports
+  the modules and calls `init()`.*
+- *Bundle: `app.js` 238.8 KB (the Vite build of the jQuery code) →
+  **83.5 KB** (gzip 71.0 → 26.6 KB).*
+- *QA: Playwright in Chromium, WebKit and Firefox (`~/oxid-qa`); no real
+  devices.*
+
 Scope: `resources/js/frontend/` — the public site. Added 2026-10-04 at the
 client's request; earlier drafts of `00-estimate.md` listed this as explicitly
 out of scope.

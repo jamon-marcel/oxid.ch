@@ -1,5 +1,9 @@
 # Inventory (measured 2026-10-04, commit f140dca)
 
+*A snapshot of the code before the rework, kept for reference. Most of
+what it lists (legacy skeleton, dead filters, orphan configs, Vue 2
+structure, Mix) is gone. For the current structure see `CLAUDE.md`.*
+
 ## Size
 
 | Area | Measured | luvo, for scale |
