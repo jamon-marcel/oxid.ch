@@ -6,17 +6,17 @@
   @if ($projects)
     <div class="works">
       @foreach($projects as $key => $group)
-        <div class="collapsible {{ $loop->last || $search ? 'is-expanded' : ''}} js-clpsbl">
+        <div class="collapsible {{ $loop->last || $search ? 'is-expanded' : ''}}" data-collapsible="root">
           <div class="works__heading">
             <h1>
-              <a href="javascript:;" class="btn-collapsible js-clpsbl-btn">
+              <a href="javascript:;" class="btn-collapsible" data-collapsible="btn">
                 {!! __('content.author_heading_' . $key) !!}
               </a>
             </h1>
           </div>
-          <div class="works__grid collapsible__content js-clpsbl-body" style="{{ $loop->last || $search ? 'display: block' : 'display: none'}}">
+          <div class="works__grid collapsible__content" data-collapsible="body"@unless ($loop->last || $search) hidden @endunless>
             <span class="works__authors">{!! __('content.author_description_' . $key) !!}</span>
-            <div class="works__items {{$loop->last ? 'is-last' : ''}} js-filter-items">
+            <div class="works__items {{$loop->last ? 'is-last' : ''}}" data-filter="group">
               @foreach($group as $p)
                 @if (isset($p->workImage))
                   @include('frontend.pages.works.partials.item')

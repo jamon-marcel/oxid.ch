@@ -1,36 +1,16 @@
-var Dropdown = (function() {
-	
-	var selectors = {
-    html:     'html',
-    body:     'body',
-    wrapper:  '.js-dropdown',
-    btn:      '.js-btn-dropdown',
-  };
-  
-  // css classes
-  var classes = {
-    active:  'is-active',
-    open:    'is-open',
-  };
+const SEL = {
+  root: '[data-dropdown="root"]',
+  btn: '[data-dropdown="btn"]',
+};
 
-  var _initialize = function() {
-    _bind();
-  };
+const ACTIVE = 'is-active';
+const OPEN = 'is-open';
 
-  var _bind = function() {
-    $(selectors.body).on('click', selectors.btn, function(){
-      $(this).toggleClass(classes.active);
-      $(selectors.wrapper).toggleClass(classes.open);
-    });
-  };
-
-  return {
-    init:  _initialize,
-  };
-	
-})();
-
-// Initialize
-$(function() {
-  Dropdown.init();
-});
+export function init() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest(SEL.btn);
+    if (!btn) return;
+    btn.classList.toggle(ACTIVE);
+    document.querySelectorAll(SEL.root).forEach((el) => el.classList.toggle(OPEN));
+  });
+}

@@ -1,4 +1,4 @@
-<div class="project-grid-{{$grid->layout->key}} js-project-grid">
+<div class="project-grid-{{$grid->layout->key}}" data-project="grid">
   <div>
     <div class="project-grid__stack">
       @if (isset($grid->elements[0]))

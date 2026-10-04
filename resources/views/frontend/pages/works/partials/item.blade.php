@@ -1,5 +1,5 @@
 <article 
-  class="js-filter-item"
+  data-filter="item"
   data-filter-reuse="{{$p->is_filter_reuse}}" 
   data-filter-wood="{{$p->is_filter_wood}}"
   data-filter-area="{{$p->is_filter_area}}">

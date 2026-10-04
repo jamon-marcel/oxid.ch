@@ -1,4 +1,4 @@
-<div class="menu-wrapper {{ request()->routeIs('page.projects') ? 'is-visible' : '' }} js-menu">
+<div class="menu-wrapper {{ request()->routeIs('page.projects') ? 'is-visible' : '' }}" data-menu="root">
   <header class="menu-header">
     @include('frontend.partials.icons.logo')
   </header>

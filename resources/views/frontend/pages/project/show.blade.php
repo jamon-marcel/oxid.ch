@@ -7,9 +7,9 @@
 @section('content')
 <section class="content">
   @if ($project_grid->isNotEmpty())
-    <div class="project-grids js-project-grids">
-      <a href="javascript:;" class="btn-scroll is-prev js-btn-scroll-up"></a>
-      <a href="javascript:;" class="btn-scroll is-next js-btn-scroll-down"></a>
+    <div class="project-grids">
+      <a href="javascript:;" class="btn-scroll is-prev" data-project="prev"></a>
+      <a href="javascript:;" class="btn-scroll is-next" data-project="next"></a>
       @foreach($project_grid as $grid)
         @if ($grid->layout->key == '1' || $grid->layout->key == '1-1')
           @include('frontend.pages.project.partials.grid-1')
@@ -44,8 +44,8 @@
     </div>
   @endif
 </section>
-<div class="overlay-info overlay-info js-info">
-  <a href="javascript:;" class="btn-close js-btn-info"></a>
+<div class="overlay-info" data-overlay="root">
+  <a href="javascript:;" class="btn-close" data-overlay="btn"></a>
   <div class="project">
     <h1>{{$project->title}}</h1>
     {!! $project->description !!}

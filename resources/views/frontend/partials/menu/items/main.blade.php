@@ -1,21 +1,21 @@
 <ul>
   <li>
     <a href="{{ route('page.projects') }}" 
-       class="{{request()->routeIs('page.project*') ? 'is-active' : ''}} js-menu-parent">
+       class="{{request()->routeIs('page.project*') ? 'is-active' : ''}}" data-menu="parent">
      Projekte
     </a>
     @include('frontend.partials.menu.items.projects')
   </li>
   <li>
     <a href="{{ route('page.works.authors') }}" 
-       class="{{request()->routeIs('page.works*') ? 'is-active' : ''}} js-menu-parent">
+       class="{{request()->routeIs('page.works*') ? 'is-active' : ''}}" data-menu="parent">
        Werkliste
     </a>
     @include('frontend.partials.menu.items.works')
   </li>
   <li>
     <a href="{{ route('page.discourse') }}" 
-       class="{{request()->routeIs('page.discourse*') ? 'is-active' : ''}} js-menu-parent">
+       class="{{request()->routeIs('page.discourse*') ? 'is-active' : ''}}" data-menu="parent">
        Diskurs
     </a>
     @include('frontend.partials.menu.items.discourse')
@@ -30,7 +30,7 @@
   </li>
   <li>
     <a href="{{ route('page.office.team') }}" 
-       class="{{request()->routeIs('page.office*') ? 'is-active' : ''}} js-menu-parent">
+       class="{{request()->routeIs('page.office*') ? 'is-active' : ''}}" data-menu="parent">
      Büro
     </a>
     @include('frontend.partials.menu.items.office')

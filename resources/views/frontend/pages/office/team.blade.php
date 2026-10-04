@@ -4,19 +4,19 @@
 @section('content')
 <section class="content">
   @if ($images)
-    <a href="javascript:;" class="btn-scroll is-prev js-btn-scroll-prev" style="display:none"></a>
-    <a href="javascript:;" class="btn-scroll is-next js-btn-scroll-next"></a>
+    <a href="javascript:;" class="btn-scroll is-prev" data-imagescroll="prev" hidden></a>
+    <a href="javascript:;" class="btn-scroll is-next" data-imagescroll="next"></a>
     <div class="visual-list">
       @foreach($images as $image)
-        <figure class="visual-fit js-scroll-item">
+        <figure class="visual-fit" data-imagescroll="item">
           <x-image :image="$image" preset="large" :alt="$image->title" />
         </figure>
       @endforeach
     </div>
   @endif
 </section>
-<div class="overlay-info js-info" data-visible-onload="1">
-  <a href="javascript:;" class="btn-close js-btn-info"></a>
+<div class="overlay-info" data-overlay="root" data-visible-onload="1">
+  <a href="javascript:;" class="btn-close" data-overlay="btn"></a>
   <div>
     @if ($team['partner'])
       <h3>{{__('settings.partner')}}</h3>

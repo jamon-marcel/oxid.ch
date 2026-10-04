@@ -13,7 +13,7 @@
   <div class="menu-footer__project-info">
     <h1>{{$project->title_short}}, {{$project->location}}</h1>&nbsp;
     @if ($project_grid->isNotEmpty())
-      <span><em class="js-project-idx">1</em>/{{count($project_grid)}}</span>
+      <span><em data-project="index">1</em>/{{count($project_grid)}}</span>
     @endif
   </div>
   <div class="menu-footer__info">
@@ -22,6 +22,6 @@
         Pdf
       </a>
     @endif
-    <a href="javascript:;" class="anchor-ul js-btn-info">Info</a>
+    <a href="javascript:;" class="anchor-ul" data-overlay="btn">Info</a>
   </div>
 </div>

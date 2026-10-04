@@ -1,78 +1,36 @@
-var Overlay = (function() {
-	
-	// selectors
-	var selectors = {
-    html:    'html',
-    body:    'body',
-    wrapper: '.js-info',
-    btnInfo: '.js-btn-info'
-	};
+import { desktop } from '../lib/utils.js';
 
-  // css classes
-  var classes = {
-    active:  'is-active',
-    visible: 'is-visible',
-    hidden:  'is-hidden',
-    open:    'is-open',
-    parent:  'is-parent',
-    hasMenu: 'has-menu',
-  };
+const SEL = {
+  root: '[data-overlay="root"]',
+  btn: '[data-overlay="btn"]',
+};
 
-  // media queries
-  var mq = {
-    sm: window.matchMedia("(min-width: 960px)"),
-  };
+const ACTIVE = 'is-active';
+const VISIBLE = 'is-visible';
 
-  // Init
-  var _initialize = function() {
-    _bind();
-  };
+function toggle(btn) {
+  btn.classList.toggle(ACTIVE);
+  document.querySelectorAll(SEL.root).forEach((el) => el.classList.toggle(VISIBLE));
+}
 
-  // Bind events
-  var _bind = function() {
+function hide() {
+  document.querySelectorAll(SEL.btn).forEach((el) => el.classList.remove(ACTIVE));
+  document.querySelectorAll(SEL.root).forEach((el) => el.classList.remove(VISIBLE));
+}
 
-    $(selectors.body).on('click', selectors.btnInfo, function(){
-      _toggle($(this));
-    });
+export function init() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest(SEL.btn);
+    if (btn) toggle(btn);
+  });
 
-    if (mq.sm.matches) {
-      if ($(selectors.body).find(selectors.wrapper).length) {
-        if ($(selectors.wrapper).data('visibleOnload')) {
-          $(selectors.wrapper).addClass(classes.visible);
-        }
-      }
-    }
+  // The office pages open with the info shown, on desktop only
+  const root = document.querySelector(SEL.root);
+  if (root && desktop.matches && root.dataset.visibleOnload === '1') {
+    root.classList.add(VISIBLE);
+  }
 
-    $(document).keyup(function(event){
-      var keycode = (event.keyCode ? event.keyCode : event.which);
-      if (keycode == 27) {
-        _hide();
-      }  
-    });
-  };
-
-  var _toggle = function(btn) {
-    btn.toggleClass(classes.active);
-    $(selectors.wrapper).toggleClass(classes.visible);
-  };
-
-  var _hide = function() {
-    $(selectors.btnInfo).removeClass(classes.active);
-    $(selectors.wrapper).removeClass(classes.visible);
-  };
-
-  /* --------------------------------------------------------------
-    * RETURN PUBLIC METHODS
-    * ------------------------------------------------------------ */
-
-  return {
-    init:  _initialize,
-  };
-	
-})();
-
-// Initialize
-$(function() {
-  Overlay.init();
-});
-
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'Escape') hide();
+  });
+}

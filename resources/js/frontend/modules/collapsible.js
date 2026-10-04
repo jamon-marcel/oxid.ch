@@ -1,62 +1,48 @@
-var Collapsible = (function() {
- 
-  // selectors 	
-  var selectors = {
-    body:  		'body',
-    wrapper:	'.js-clpsbl', 
-    content:	'.js-clpsbl-body',
-    btn:		  '.js-clpsbl-btn',
-  };
+import { scrollToY } from '../lib/utils.js';
 
-  // css classes
-  var classes = {
-    expanded: 'is-expanded',
-  };
+const SEL = {
+  root: '[data-collapsible="root"]',
+  body: '[data-collapsible="body"]',
+  btn: '[data-collapsible="btn"]',
+};
 
-  var _initialize = function() {
-    _bind();
-  };
+const EXPANDED = 'is-expanded';
 
-  var _bind = function() {
-    $(selectors.body).on('click', selectors.btn, function(e){
-      _toggle($(this));
-    });
-  };
+function setExpanded(root, expanded) {
+  root.classList.toggle(EXPANDED, expanded);
+  root.querySelectorAll(SEL.body).forEach((body) => { body.hidden = !expanded; });
+  root.querySelectorAll(SEL.btn).forEach((btn) => btn.setAttribute('aria-expanded', String(expanded)));
+}
 
-  var _toggle = function(el) {
-    var wrapper = el.parents(selectors.wrapper);
-    if (!wrapper.hasClass(classes.expanded)) {
-      var distance = wrapper.offset().top - 20;
-      $.scrollTo(distance, 400);
-    }
-    wrapper.toggleClass(classes.expanded);
-    wrapper.find(selectors.content).toggle();
-  };
+function toggle(btn) {
+  const root = btn.closest(SEL.root);
+  if (!root) return;
 
-  var _hide = function(el) {
-    var wrapper = el.parents(selectors.wrapper);
-    wrapper.removeClass(classes.expanded);
-    wrapper.find(selectors.content).hide();
-  };
+  const expand = !root.classList.contains(EXPANDED);
+  if (expand) {
+    scrollToY(root.getBoundingClientRect().top + window.scrollY - 20);
+  }
+  setExpanded(root, expand);
+}
 
-  var _expandAll = function() {
-    $(selectors.wrapper).each(function(){
-      $(this).addClass(classes.expanded);
-      $(this).find(selectors.content).show();
-    });
-  };
-       
-  return {
-    init: _initialize,
-    hide: _hide,
-    expandAll: _expandAll,
-  };
+// Collapse the collapsible that contains `el`
+export function hide(el) {
+  const root = el.closest(SEL.root);
+  if (root) setExpanded(root, false);
+}
 
-})();
+export function expandAll() {
+  document.querySelectorAll(SEL.root).forEach((root) => setExpanded(root, true));
+}
 
-$(function() {
-  Collapsible.init();
-});
+export function init() {
+  document.querySelectorAll(SEL.root).forEach((root) => {
+    const expanded = root.classList.contains(EXPANDED);
+    root.querySelectorAll(SEL.btn).forEach((btn) => btn.setAttribute('aria-expanded', String(expanded)));
+  });
 
-export default Collapsible;
-
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest(SEL.btn);
+    if (btn) toggle(btn);
+  });
+}

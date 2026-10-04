@@ -1,4 +1,4 @@
-<div class="project-grid-{{$grid->layout->key}} js-project-grid">
+<div class="project-grid-{{$grid->layout->key}}" data-project="grid">
   <div>
     @if (isset($grid->elements[0]))
       <figure class="visual-fit {{ $grid->elements[0]->image->is_plan ? 'is-plan' : ''}}">

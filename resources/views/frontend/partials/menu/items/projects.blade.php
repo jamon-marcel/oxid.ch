@@ -2,10 +2,10 @@
 @if (!request()->routeIs('page.project'))
   <ul class="{{request()->routeIs('page.project*') ? 'is-visible' : ''}}">
     <li class="project-filter">
-      <a href="javascript:;" class="js-filter-btn is-active" data-filter="all">Alle</a>
-      <a href="javascript:;" class="js-filter-btn" data-filter="wood">Holz</a>
-      <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
-      <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
+      <a href="javascript:;" class="is-active" data-filter="btn" data-filter-value="all">Alle</a>
+      <a href="javascript:;" data-filter="btn" data-filter-value="wood">Holz</a>
+      <a href="javascript:;" data-filter="btn" data-filter-value="reuse">Umnutzung</a>
+      <a href="javascript:;" data-filter="btn" data-filter-value="area">Areal</a>
     </li>
     @if ($menuProjects)
       @foreach($menuProjects as $item)
@@ -13,7 +13,7 @@
         <a 
           href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 
           title="{{$item->title_short}}" 
-          class="{{ request()->routeIs('page.projects') && $loop->first ? 'is-active' : '' }} js-filter-item"
+          class="{{ request()->routeIs('page.projects') && $loop->first ? 'is-active' : '' }}" data-filter="item"
           data-filter-reuse="{{$item->is_filter_reuse}}" 
           data-filter-wood="{{$item->is_filter_wood}}"
           data-filter-area="{{$item->is_filter_area}}"
@@ -32,10 +32,10 @@
     
     @if ($project->is_filter_wood)
       <li class="project-filter">
-        <a href="javascript:;" class="js-filter-btn" data-filter="all">Alle</a>
-        <a href="javascript:;" class="js-filter-btn is-active" data-filter="wood">Holz</a>
-        <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
-        <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="all">Alle</a>
+        <a href="javascript:;" class="is-active" data-filter="btn" data-filter-value="wood">Holz</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="reuse">Umnutzung</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="area">Areal</a>
       </li>
       @if ($menuProjects)
         @foreach($menuProjects as $item)
@@ -43,12 +43,11 @@
             <a 
               href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 
               title="{{$item->title_short}}" 
-              class="{{ $project->id == $item->id ? 'is-active' : '' }} js-filter-item"
+              class="{{ $project->id == $item->id ? 'is-active' : '' }}" data-filter="item"
               data-filter-reuse="{{$item->is_filter_reuse}}" 
               data-filter-wood="{{$item->is_filter_wood}}"
               data-filter-area="{{$item->is_filter_area}}"
-              data-project-id="{{$item->id}}"
-              style="{{$item->is_filter_wood ? 'display: inline-block' : 'display: none'}}">
+              data-project-id="{{$item->id}}"@unless ($item->is_filter_wood) hidden @endunless>
               {{$item->title_short}}, {{$item->location}}
             </a>
           </li>
@@ -57,10 +56,10 @@
 
     @elseif ($project->is_filter_reuse)
       <li class="project-filter">
-        <a href="javascript:;" class="js-filter-btn" data-filter="all">Alle</a>
-        <a href="javascript:;" class="js-filter-btn" data-filter="wood">Holz</a>
-        <a href="javascript:;" class="js-filter-btn is-active" data-filter="reuse">Umnutzung</a>
-        <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="all">Alle</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="wood">Holz</a>
+        <a href="javascript:;" class="is-active" data-filter="btn" data-filter-value="reuse">Umnutzung</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="area">Areal</a>
       </li>
       @if ($menuProjects)
         @foreach($menuProjects as $item)
@@ -68,12 +67,11 @@
             <a 
               href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 
               title="{{$item->title_short}}" 
-              class="{{ $project->id == $item->id ? 'is-active' : '' }} js-filter-item"
+              class="{{ $project->id == $item->id ? 'is-active' : '' }}" data-filter="item"
               data-filter-reuse="{{$item->is_filter_reuse}}" 
               data-filter-wood="{{$item->is_filter_wood}}"
               data-filter-area="{{$item->is_filter_area}}"
-              data-project-id="{{$item->id}}"
-              style="{{$item->is_filter_reuse ? 'display: inline-block' : 'display: none'}}">
+              data-project-id="{{$item->id}}"@unless ($item->is_filter_reuse) hidden @endunless>
               {{$item->title_short}}, {{$item->location}}
             </a>
           </li>
@@ -82,10 +80,10 @@
 
     @elseif ($project->is_filter_area)
       <li class="project-filter">
-        <a href="javascript:;" class="js-filter-btn" data-filter="all">Alle</a>
-        <a href="javascript:;" class="js-filter-btn" data-filter="wood">Holz</a>
-        <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
-        <a href="javascript:;" class="js-filter-btn is-active" data-filter="area">Areal</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="all">Alle</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="wood">Holz</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="reuse">Umnutzung</a>
+        <a href="javascript:;" class="is-active" data-filter="btn" data-filter-value="area">Areal</a>
       </li>
       @if ($menuProjects)
         @foreach($menuProjects as $item)
@@ -93,12 +91,11 @@
             <a 
               href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 
               title="{{$item->title_short}}" 
-              class="{{ $project->id == $item->id ? 'is-active' : '' }} js-filter-item"
+              class="{{ $project->id == $item->id ? 'is-active' : '' }}" data-filter="item"
               data-filter-reuse="{{$item->is_filter_reuse}}" 
               data-filter-wood="{{$item->is_filter_wood}}"
               data-filter-area="{{$item->is_filter_area}}"
-              data-project-id="{{$item->id}}"
-              style="{{$item->is_filter_area ? 'display: inline-block' : 'display: none'}}">
+              data-project-id="{{$item->id}}"@unless ($item->is_filter_area) hidden @endunless>
               {{$item->title_short}}, {{$item->location}}
             </a>
           </li>
@@ -107,10 +104,10 @@
 
     @else
       <li class="project-filter">
-        <a href="javascript:;" class="js-filter-btn" data-filter="all">Alle</a>
-        <a href="javascript:;" class="js-filter-btn" data-filter="wood">Holz</a>
-        <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
-        <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="all">Alle</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="wood">Holz</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="reuse">Umnutzung</a>
+        <a href="javascript:;" data-filter="btn" data-filter-value="area">Areal</a>
       </li>
       @if ($menuProjects)
         @foreach($menuProjects as $item)
@@ -118,7 +115,7 @@
             <a 
               href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 
               title="{{$item->title_short}}" 
-              class="{{ $project->id == $item->id ? 'is-active' : '' }} js-filter-item"
+              class="{{ $project->id == $item->id ? 'is-active' : '' }}" data-filter="item"
               data-filter-reuse="{{$item->is_filter_reuse}}" 
               data-filter-wood="{{$item->is_filter_wood}}"
               data-filter-area="{{$item->is_filter_area}}"

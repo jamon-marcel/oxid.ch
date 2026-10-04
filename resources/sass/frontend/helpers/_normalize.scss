@@ -94,9 +94,17 @@ audio:not([controls]) {
  * Hide the `template` element in IE 8/9/10/11, Safari, and Firefox < 22.
  */
 
-[hidden],
 template {
   display: none;
+}
+
+/**
+ * The public JS shows and hides elements with the `hidden` attribute; this
+ * has to beat any `display` set by a component rule.
+ */
+
+[hidden] {
+  display: none !important;
 }
 
 /* Links

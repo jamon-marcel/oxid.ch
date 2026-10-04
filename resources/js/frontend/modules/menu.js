@@ -1,74 +1,40 @@
-var Menu = (function() {
-	
-	// selectors
-	var selectors = {
-    html:           'html',
-    body:           'body',
-    menuBtn:        '.js-menu-btn',
-    menuBar:        '.js-menu-bar',
-    menu:           '.js-menu',
-    menuParent:     '.js-menu-parent',
-    menuFilterBtn:  '.js-menu-filter-btn',
-	};
+const SEL = {
+  root: '[data-menu="root"]',
+  btn: '[data-menu="btn"]',
+  bar: '[data-menu="bar"]',
+  parent: '[data-menu="parent"]',
+};
 
-  // css classes
-  var classes = {
-    active:  'is-active',
-    visible: 'is-visible',
-    hidden: 'is-hidden',
-    open:    'is-open',
-    parent:  'is-parent',
-    hasMenu: 'has-menu',
-  };
+const VISIBLE = 'is-visible';
+const HIDDEN = 'is-hidden';
+const HAS_MENU = 'has-menu';
 
-  // media queries
-  var mq = {
-    xs: window.matchMedia("(max-width: 959px)"),
-    sm: window.matchMedia("(min-width: 960px)"),
-  };
+const mobile = window.matchMedia('(max-width: 959px)');
 
-  // Init
-  var _initialize = function() {
-    _bind();
-  };
+function toggle() {
+  document.querySelectorAll(SEL.root).forEach((el) => el.classList.toggle(VISIBLE));
+  document.querySelectorAll(SEL.bar).forEach((el) => el.classList.toggle(HIDDEN));
+  document.documentElement.classList.toggle(HAS_MENU);
+}
 
-  // Bind events
-  var _bind = function() {
-    $(selectors.body).on('click', selectors.menuBtn, function(){
-      _toggle($(this));
-    });
+// Close the menu if the user opened it
+export function close() {
+  if (document.documentElement.classList.contains(HAS_MENU)) toggle();
+}
 
-    $(selectors.body).on('click', selectors.menuParent, function(e){
-      if (mq.xs.matches) {
-        e.preventDefault();
-        _toggleSub($(this));
-      }
-    });
+export function init() {
+  document.addEventListener('click', (e) => {
+    if (e.target.closest(SEL.btn)) {
+      toggle();
+      return;
+    }
 
-  };
-
-  var _toggle = function(btn) {
-    $(selectors.menu).toggleClass(classes.visible);
-    $(selectors.menuBar).toggleClass(classes.hidden);
-    $(selectors.html).toggleClass(classes.hasMenu);
-  };
-
-  var _toggleSub = function(btn) {
-    btn.next('ul').toggleClass(classes.visible);
-  };
-
-  /* --------------------------------------------------------------
-    * RETURN PUBLIC METHODS
-    * ------------------------------------------------------------ */
-
-  return {
-    init:  _initialize,
-  };
-	
-})();
-
-// Initialize
-$(function() {
-  Menu.init();
-});
-
+    // On mobile a top-level entry opens its sub menu instead of navigating
+    const parent = e.target.closest(SEL.parent);
+    if (parent && mobile.matches) {
+      e.preventDefault();
+      const sub = parent.nextElementSibling;
+      if (sub?.matches('ul')) sub.classList.toggle(VISIBLE);
+    }
+  });
+}

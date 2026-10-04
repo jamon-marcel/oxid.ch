@@ -1,119 +1,44 @@
-function debounce(a,b,c){var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}}
+import { debounce, desktop, scrollToElement } from '../lib/utils.js';
+import { close as closeMenu } from './menu.js';
 
-var ImageScroll = (function() {
+const PERIOD = '[data-period]';
+const ACTIVE = 'is-active';
 
-  // selectors
-  var selectors = {
-    html:    'html',
-    body:    'body',
-    item:    '.js-btn-history',
-    menu:    '.js-menu',
-    menuBar: '.js-menu-bar',
-  };
+// Mark the year links (href="#1984" …) for the current period
+function markActive(period) {
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.classList.toggle(ACTIVE, a.getAttribute('href') === `#${period}`);
+  });
+}
 
-  // media queries
-  var mq = {
-    sm: window.matchMedia("(min-width: 960px)"),
-  };
+function onHashChange() {
+  const period = window.location.hash.slice(1);
+  closeMenu();
+  markActive(period);
+  const el = document.querySelector(`[data-period="${CSS.escape(period)}"]`);
+  if (el) scrollToElement(el);
+}
 
-  var classes = {
-    visible: 'is-visible',
-    hidden: 'is-hidden',
-    hasMenu: 'has-menu',
-    selected: 'is-selected',
-    open: 'is-open',
-    active: 'is-active',
-  };
-
-  var _initialize = function() {
-    _bind();
-  };
-
-  var _bind = function() {
-
-    $(window).on('hashchange', function(e) {
-      _hashChange();
-    });
-
-    if (mq.sm.matches) {
-      _scroll();
-    }
-
-    $(window).scroll(function(event){
-      if (mq.sm.matches) {
-        _scroll();
-      }
-    });
-  };
-
-  var _hashChange = function() {
-    var hash = window.location.hash.substr(1);
-    _toggleMenu();
-    _toggleMenuItems(hash);
-    _scrollTo(hash);
-  };
-
-  var _toggleMenu = function() {
-    if ($(selectors.html).hasClass(classes.hasMenu)) {
-      $(selectors.menu).removeClass(classes.visible);
-      $(selectors.menuBar).toggleClass(classes.hidden);
-      $(selectors.html).removeClass(classes.hasMenu);
-    }
-  };
-
-  var _toggleMenuItems = function(hash) {
-    $('a[href!="#"]').removeClass(classes.active);
-    $('a[href="#'+hash+'"]').addClass(classes.active);
-  };
-
-  var _scrollTo = function(target){
-    $.scrollTo('[data-period="'+target+'"]', 800);
-  };
-  
-  var _scroll = debounce(function(){
-    var matches = document.querySelectorAll("[data-period]");
-    [...matches].forEach((match) => {
-        var inViewport = _inViewport(match);
-        if (inViewport) {
-          var hash = match.dataset.period;
-          _toggleMenu();
-          _toggleMenuItems(hash);
-          history.replaceState(null, null, document.location.pathname + '#' + hash);
-
-        }
-    });
-  }, 50);
-
-
-  var _getScrollPosition = function() {
-    if (window.pageYOffset != undefined) {
-      return [pageXOffset, pageYOffset];
-    } 
-    else {
-      var sx, sy, d = document, r = d.documentElement, b = d.body;
-      sx = r.scrollLeft || b.scrollLeft || 0;
-      sy = r.scrollTop || b.scrollTop || 0;
-      return [sx, sy];
-    }
-  };
-
-  var _inViewport = function(el) {
+// Desktop: the period in the upper half of the viewport becomes the hash
+const spy = debounce(() => {
+  document.querySelectorAll(PERIOD).forEach((el) => {
     const rect = el.getBoundingClientRect();
-    const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
-    const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
-    const vertInView = (rect.top <= windowHeight/2) && ((rect.top + rect.height) >= 0);
-    //const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
-    return (vertInView);
-  };
+    if (rect.top <= window.innerHeight / 2 && rect.bottom >= 0) {
+      const period = el.dataset.period;
+      closeMenu();
+      markActive(period);
+      history.replaceState(null, '', `${window.location.pathname}#${period}`);
+    }
+  });
+}, 50);
 
-  return {
-    init:  _initialize,
-  };
-	
-})();
+export function init() {
+  if (!document.querySelector(PERIOD)) return;
 
-// Initialize
-$(function() {
-  ImageScroll.init();
-});
+  window.addEventListener('hashchange', onHashChange);
 
+  if (desktop.matches) spy();
+  window.addEventListener('scroll', () => {
+    if (desktop.matches) spy();
+  }, { passive: true });
+}

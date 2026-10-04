@@ -6,7 +6,7 @@
 @endif
 @section('content')
 <section class="content content--discourse">
-  <a href="javascript:window.history.back();" class="btn-close js-btn-close"></a>
+  <a href="javascript:window.history.back();" class="btn-close" data-swiper="themed"></a>
   <div class="swiper-container">
     <div class="swiper-wrapper">
       @if ($discourse->publishedImages)
@@ -20,13 +20,13 @@
       @endif
     </div>
     @if ($discourse->publishedImages->count() > 1)
-      <div class="swiper-btn-prev js-btn-prev"></div>
-      <div class="swiper-btn-next js-btn-next"></div>
+      <div class="swiper-btn-prev" data-swiper="themed"></div>
+      <div class="swiper-btn-next" data-swiper="themed"></div>
     @endif
   </div>
 </section>
-<div class="overlay-info overlay-info is-discourse js-info">
-  <a href="javascript:;" class="btn-close js-btn-info"></a>
+<div class="overlay-info is-discourse" data-overlay="root">
+  <a href="javascript:;" class="btn-close" data-overlay="btn"></a>
   <div class="discourse-detail">
     <h1>{{$discourse->title}}</h1>
     {!! $discourse->description !!}
@@ -36,14 +36,14 @@
   </div>
 </div>
 <div class="menu-bar is-pages is-discourse">
-  <div class="menu-bar__open js-menu-bar">
+  <div class="menu-bar__open" data-menu="bar">
     <div class="menu-footer menu-footer--discourse-show">
-      <a href="javascript:window.history.back();" class="btn-close js-btn-close is-sm"></a>
+      <a href="javascript:window.history.back();" class="btn-close is-sm" data-swiper="themed"></a>
       <h2 class="menu-footer__heading">{{$discourse->heading}}</h2>
       <h1>{{$discourse->title}}</h1>
       <div class="menu-footer__info">
         @if ($discourse->description || $discourse->info)
-          <a href="javascript:;" class="anchor-ul js-btn-info">Info</a>
+          <a href="javascript:;" class="anchor-ul" data-overlay="btn">Info</a>
         @endif
       </div>
     </div>

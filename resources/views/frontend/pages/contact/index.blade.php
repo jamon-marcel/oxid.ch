@@ -37,8 +37,8 @@
             @endif
           </div>
           <div>
-            <a href="javascript:;" class="js-btn-imprint">Impressum</a>
-            <div style="display:none">
+            <a href="javascript:;" data-imprint="btn">Impressum</a>
+            <div data-imprint="body" hidden>
               @if ($contact->imprint)
                 {!! $contact->imprint !!}
               @endif
@@ -46,7 +46,7 @@
           </div>
         </div>
       @endif
-      <div class="contact__map" id="js-maps"></div>
+      <div class="contact__map" data-map></div>
     </div>
   </div>
 </section>

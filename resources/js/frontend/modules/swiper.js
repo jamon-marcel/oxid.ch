@@ -1,69 +1,45 @@
-/**
- * Dependencies
- */
 import Swiper from 'swiper';
+import { desktop } from '../lib/utils.js';
 
-var SwiperUi = (function() {
+// Buttons that switch between is-dark and is-light with the slide's theme
+const THEMED = '[data-swiper="themed"]';
 
-  var mySwiper;
-     
-  // media queries
-  var bp = window.matchMedia( '(min-width:960px)' );
+let swiper;
 
-  var _initialize = function() {
-    _bind();
-  };
-
-  var _bind = function() {
-    _watch();
-    bp.addListener(_watch);
-  };
-
-  var _watch = function() {
-    if (bp.matches === true ) {
-      return _enable();
-    } 
-    else if (bp.matches === false) {
-      if ( mySwiper !== undefined ) mySwiper.destroy( true, true );
-      return;
-    }
- };
-
-  var _enable = function() {
-    mySwiper = new Swiper('.swiper-container', {
-      speed: 600,
-      autoHeight: false,
-      autoplay: false,
-      loop: true,
-      navigation: {
-        nextEl: '.swiper-btn-next',
-        prevEl: '.swiper-btn-prev'
+function enable() {
+  swiper = new Swiper('.swiper-container', {
+    speed: 600,
+    autoHeight: false,
+    autoplay: false,
+    loop: true,
+    navigation: {
+      nextEl: '.swiper-btn-next',
+      prevEl: '.swiper-btn-prev',
+    },
+    on: {
+      transitionEnd() {
+        const dark = this.slides[this.activeIndex]?.dataset.theme === '0';
+        document.querySelectorAll(THEMED).forEach((el) => {
+          el.classList.toggle('is-dark', dark);
+          el.classList.toggle('is-light', !dark);
+        });
       },
-      on: {
-        transitionEnd: function() {
-          var themeId = $(this.slides[this.activeIndex]).data('theme');
-          if (themeId == 0) {
-            $('.js-btn-next, .js-btn-prev, .js-btn-close').removeClass('is-light');
-            $('.js-btn-next, .js-btn-prev, .js-btn-close').addClass('is-dark');
-          }
-          else {
-            $('.js-btn-next, .js-btn-prev, .js-btn-close').removeClass('is-dark');
-            $('.js-btn-next, .js-btn-prev, .js-btn-close').addClass('is-light');
-          }
-        },
-      }
-    });  
-  };
-  
-  return {
-    init:  _initialize,
-  };
-	
-})();
+    },
+  });
+}
 
-// Initialize
-$(function() {
-  if ($('body').find('.swiper-container').length) {
-    SwiperUi.init();
+// Slider on desktop, a plain image list below
+function watch() {
+  if (desktop.matches) {
+    enable();
+  } else if (swiper) {
+    swiper.destroy(true, true);
+    swiper = undefined;
   }
-});
+}
+
+export function init() {
+  if (!document.querySelector('.swiper-container')) return;
+  watch();
+  desktop.addEventListener('change', watch);
+}

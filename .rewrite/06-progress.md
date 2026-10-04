@@ -798,13 +798,84 @@ only grid element missing from the whole table.
 
 | Step | Status | Commit |
 |---|---|---|
-| Delete dead code: fancybox ×2, axios, `@fancyapps/ui`, `in-view` | — | |
-| jQuery → vanilla, 9 modules + `bootstrap.js` | — | |
+| Delete dead code: fancyBox (JS **and** Sass), axios | done | `046a170` |
+| jQuery → vanilla, 9 modules + `bootstrap.js`, `js-` → `data-` | done | see below |
+| `maps.js` de-jQuery | done (with step 2) | |
 | Swiper 5.3.8 → 12 | — | |
-| `maps.js` de-jQuery | — | |
 
-Capture before/after screenshots of every public page type at 375 and
-1280 px **before** starting. That is the only baseline this work gets.
+**Baseline and how it is checked.** Playwright scripts in `~/oxid-qa`
+(outside the repo; `playwright`, `pngjs`, `pixelmatch` installed there):
+
+- `shots.js <dir>`: full-page screenshots of 13 page types at 375 and
+  1280 px, console errors per page. `cmp.js before after` pixel-diffs them.
+- `behave.js <out.json>`: drives every module (menu, sub menu on mobile,
+  overlay + Esc, dropdown, scroll buttons and the project counter, project
+  teaser hover, filter in the menu and on the works list, collapsibles and
+  their scroll, swiper next/prev/loop and resize across 960 px, history hash
+  and scroll spy, imprint, map) and logs the resulting classes, scroll
+  positions and hash. `diff.js` compares two runs, ignoring `js-*` classes.
+- `BUILD=1` serves the pages with the `public/build` assets (Playwright
+  rewrites the dev-server tags), so the committed build is tested while the
+  shared Vite dev server keeps running.
+
+Baseline taken at `5752cff` (after the `/geschichte` fix).
+
+**Step 1.** fancyBox's Sass was still in the tree
+(`sass/frontend/vendor/fancybox/`, 955 lines), imported only in comments —
+the plan's "no references in the Sass" was wrong; deleted with the JS.
+`@fancyapps/ui` and `in-view` were already gone from `package.json`. Without
+axios the public page no longer loads the shared 36 KB axios chunk.
+
+**Step 2, decisions:**
+
+- Hooks are `data-<module>="<part>"`: `collapsible` root/btn/body, `menu`
+  root/btn/bar/parent, `overlay` root/btn, `dropdown` root/btn, `filter`
+  btn/item/group, `project` grid/prev/next/index, `imagescroll`
+  item/prev/next, `imprint` btn/body, `swiper` themed, `data-map`. Filter
+  buttons were `data-filter="wood"`, which collides with the hook, so the
+  type moved to `data-filter-value`. `data-project-id`,
+  `data-project-teaser`, `data-period`, `data-visible-onload` and the
+  items' `data-filter-wood` etc. were already data attributes and stay.
+- Show/hide is the `hidden` attribute everywhere, backed by
+  `[hidden] { display: none !important }` in `_normalize.scss`. The inline
+  `style="display: …"` the blades set for the initial state became
+  `hidden` too.
+- `$.scrollTo` → `window.scrollTo({ behavior: 'smooth' })`; the browser
+  picks the duration (was 400/800 ms). Scroll targets are unchanged.
+- `project.js` and `imagescroll.js` were the same code; both use
+  `lib/sections.js` now. `contact.js` became `imprint.js` (it only toggles
+  the imprint). `app.js` imports the modules and calls `init()`; module
+  scripts run after parsing, like the old `$(fn)`.
+- `aria-expanded` on collapsible buttons (free while rewriting it).
+- `maps.js` is an ES module without jQuery; it bails out if
+  `window.google` is missing instead of throwing.
+
+**Behaviour changes, deliberate:**
+
+- History scroll spy: `$('a[href!="#"]').removeClass('is-active')` took
+  `is-active` off **every** link on the page, so the main menu lost its
+  "Geschichte" marker after the first scroll. Now only `#…` links are
+  touched (visible in the screenshot diff: "Geschichte" stays underlined).
+- Scroll buttons on a project page closed the menu but left
+  `html.has-menu` set. They now use the menu's own `close()`, which clears
+  all three states (as history already did).
+- Menu entries hidden by the filter come back as `display: inline`
+  (their CSS default) instead of the `inline-block` jQuery wrote inline.
+  Pixel diff: a sub-pixel underline shift on the active entry, nothing else.
+
+**Verified:** `behave.js` before vs after, dev server and `BUILD=1`:
+identical (after dropping the duplicate `overlay-info overlay-info` class
+from two blades, which `classList` dedupes), 0 console errors. Screenshots:
+22 of 26 identical; home and search differ by their random image, history
+by the "Geschichte" marker, project by the underline shift. Contact map
+renders from the built `maps.js`. Dropdown (works page, 375) and the project
+page filter (24 → 36 → 24 entries) checked separately. `php artisan test`
+37 passed. Bundle: `app.js` 238.8 KB → **147.6 KB** (gzip 71.0 → 40.0 KB);
+Swiper 5 is most of the rest.
+
+**Found on the way, left alone:** the office footer dropdown
+(`menu/footer/office.blade.php`) is inside an HTML comment, so it ships in
+the page source but does nothing; converted with the rest, not removed.
 
 ## Known issues to carry (found during the survey, pre-existing)
 
@@ -821,7 +892,7 @@ Capture before/after screenshots of every public page type at 375 and
   references. Answered: another site consumes it — keep the output path.
 - The public site loads **axios and never makes a request with it**, and
   ships a dead fancyBox 3.5.7 that is not even in the compiled bundle.
-  See `08-frontend-js.md` step 1.
+  See `08-frontend-js.md` step 1. **Fixed** in `046a170`.
 
 ## Deploy notes
 

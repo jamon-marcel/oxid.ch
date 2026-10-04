@@ -1,70 +1,39 @@
-import Collapsible from './collapsible';
+import * as collapsible from './collapsible.js';
 
-var Filter = (function() {
-	
-	// selectors
-	var selectors = {
-    html:      'html',
-    body:      'body',
-    items:     '.js-filter-items',
-    item:      '.js-filter-item',
-    btnFilter: '.js-filter-btn'
-  };
-  
-  // css classes
-  var classes = {
-    active: 'is-active',
-  };
-    
-  var _initialize = function() {
-    _bind();
-  };
+const SEL = {
+  btn: '[data-filter="btn"]',
+  item: '[data-filter="item"]',
+  group: '[data-filter="group"]',
+};
 
-  var _bind = function() {
-    $(selectors.body).on('click', selectors.btnFilter, function(){
-      _filter($(this));
-    });
-  };
+const ACTIVE = 'is-active';
 
-  var _filter = function(btn) {
+function filter(btn) {
+  const type = btn.dataset.filterValue;
 
-    var type = btn.data('filter');
+  document.querySelectorAll(SEL.btn).forEach((el) => el.classList.remove(ACTIVE));
+  btn.classList.add(ACTIVE);
 
-    // Set button state
-    $(selectors.btnFilter).removeClass(classes.active);
-    btn.addClass(classes.active);
+  const items = document.querySelectorAll(SEL.item);
+  if (type === 'all') {
+    items.forEach((item) => { item.hidden = false; });
+    return;
+  }
 
-    if (type == 'all') {
-      $(selectors.item).css('display', 'inline-block');
-      return;
-    }
+  // Items carry data-filter-wood="1" etc.
+  items.forEach((item) => { item.hidden = item.getAttribute(`data-filter-${type}`) !== '1'; });
 
-    // Hide all items
-    $(selectors.item).css('display', 'none');
+  // Works list: open every group, then close the ones left empty
+  collapsible.expandAll();
+  document.querySelectorAll(SEL.group).forEach((group) => {
+    const visible = [...group.querySelectorAll(SEL.item)].some((item) => !item.hidden);
+    if (!visible) collapsible.hide(group);
+  });
+}
 
-    // Show matching items
-    $('[data-filter-'+ type +'="'+ 1 +'"]').css('display', 'inline-block');
-
-    // Expand all
-    Collapsible.expandAll();
-
-    // Collapse all with no visible items
-    $(selectors.items).each(function() {
-      var items = $(this).find(selectors.item + ':visible');
-      if (items.length == 0) {
-        Collapsible.hide($(this));
-      }
-    });
-  };
-
-  return {
-    init:  _initialize,
-  };
-	
-})();
-
-// Initialize
-$(function() {
-  Filter.init();
-});
-
+export function init() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest(SEL.btn);
+    if (btn) filter(btn);
+  });
+}

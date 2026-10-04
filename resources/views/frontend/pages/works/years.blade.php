@@ -6,14 +6,14 @@
   @if ($projects)
     <div class="works">
       @foreach($projects as $key => $group)
-        <div class="collapsible is-expanded js-clpsbl">
+        <div class="collapsible is-expanded" data-collapsible="root">
           <div class="works__heading">
             <h1>
-              <a href="javascript:;" class="btn-collapsible js-clpsbl-btn">{{$key}}</a>
+              <a href="javascript:;" class="btn-collapsible" data-collapsible="btn">{{$key}}</a>
             </h1>
           </div>
-          <div class="works__grid collapsible__content js-clpsbl-body" style="display: block">
-            <div class="works__items js-filter-items">
+          <div class="works__grid collapsible__content" data-collapsible="body">
+            <div class="works__items" data-filter="group">
               @foreach($group as $p)
                 @include('frontend.pages.works.partials.item')
               @endforeach
