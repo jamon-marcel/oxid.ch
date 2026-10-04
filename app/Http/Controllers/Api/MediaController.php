@@ -46,7 +46,7 @@ class MediaController extends Controller
     if (in_array($filetype, $image_types))
     {
       $manager = new ImageManager(new Driver());
-      $img = $manager->read(storage_path('app/public/uploads/') . $name);
+      $img = $manager->decodePath(storage_path('app/public/uploads/') . $name);
       $orientation = $img->width() >= $img->height() ? 'l' : 'p';
     }
     return response()->json(['name' => $name, 'filetype' => $filetype, 'orientation' => $orientation], 200);

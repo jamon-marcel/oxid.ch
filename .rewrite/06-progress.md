@@ -1,7 +1,8 @@
 # Progress
 
 Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
-Backend step 3 (dead code) done 2026-10-04.
+Backend steps 3 (dead code) and 4 (Laravel 13 + Glide dependency) done
+2026-10-04.
 
 Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 
@@ -46,8 +47,8 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 
 | Step | Status | Commit |
 |---|---|---|
-| Delete dead code: 6 filter classes, `dompdf`/`media`/`content` configs | ✅ done — 144 routes, config caches; `home`, `small`, `thumbnail` images 200; `tiny`, `project` 400 | this commit |
-| **One commit:** Laravel 13, PHP ^8.3, drop image-cache, add Glide + Intervention 4 | — | |
+| Delete dead code: 6 filter classes, `dompdf`/`media`/`content` configs | ✅ done — 144 routes, config caches; `home`, `small`, `thumbnail` images 200; `tiny`, `project` 400 | `0afa861` |
+| **One commit:** Laravel 13, PHP ^8.3, drop image-cache, add Glide + Intervention 4 | ✅ done — 0 advisories; 141 routes (the 3 image-cache `/img` routes gone); all 16 public pages 200, 404 renders as 404; all 36 read-only admin API GETs 200 with a JWT; upload 200. **Keyword search 500s** — see below | this commit |
 | Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | — | |
 | Slim skeleton, `app/User.php` → `app/Models/User.php` | — | |
 | Search phase 1: drop Algolia, Scout `collection` driver | — | |
@@ -58,6 +59,29 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 The Laravel 13 bump and the image-cache → Glide dependency swap **must be
 the same commit** — Composer will not resolve anything on Laravel 11. See
 `02-backend-laravel13.md`, "Why step 4 must be one commit".
+
+### Notes from step 4
+
+- **Keyword search is broken until search phase 1.** Laravel 13 lets
+  Composer pick Guzzle 8, which removed `GuzzleHttp\choose_handler()`; the
+  Algolia v3 client still calls it (`src/Http/GuzzleHttpClient.php:56`). `/suche`
+  without a keyword is fine. Not patched: the client is deleted in search
+  phase 1 anyway.
+- **Image URLs are down until step 5**, as planned.
+- `config.platform.php` is pinned to `8.3.0`, so the lock always resolves
+  for the production minimum no matter which PHP runs Composer locally
+  (local CLI is 8.4; Symfony 8 would need 8.4). Resolved Symfony 7.4.20.
+- PHPUnit is `^12`, not 13 as the dependency table said: 13 needs PHP
+  ≥ 8.4.1. Same choice as luvo.
+- `intervention/image-laravel` stays per the plan, but nothing uses its
+  `Image` facade — the only Intervention caller is `MediaController`, which
+  builds its own `ImageManager`. It can go with the skeleton cleanup in
+  step 6/7, along with `config/image.php`.
+- The six `*ImageController::removeCachedImage()` lost their
+  `ImageCache::clearImageCache()` call; the manual sweep of
+  `storage/app/public/cache` stays. Step 5 replaces the method body with
+  `Glide::server()->deleteCache()`, as luvo does.
+- `MediaController`: Intervention 4 `read()` → `decodePath()`.
 
 ### To verify at the end of the backend phase
 

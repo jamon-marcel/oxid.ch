@@ -4,7 +4,6 @@ use App\Models\DiscourseImage;
 use App\Http\Resources\DataCollection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
-use MarceliTo\ImageCache\Facades\ImageCache;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -130,10 +129,7 @@ class DiscourseImageController extends Controller
    */
   private function removeCachedImage(DiscourseImage $image)
   {
-    // Try the package method first
-    ImageCache::clearImageCache($image->name);
-    
-    // Also manually clear cache from all template directories
+    // Clear cache from all template directories
     $cachePath = storage_path('app/public/cache');
     $templateDirs = File::directories($cachePath);
     

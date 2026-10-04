@@ -4,7 +4,6 @@ use App\Models\ProjectImage;
 use App\Http\Resources\DataCollection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-use MarceliTo\ImageCache\Facades\ImageCache;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -107,10 +106,7 @@ class ProjectImageController extends Controller
    */
   private function removeCachedImage(ProjectImage $image)
   {
-    // Try the package method first
-    ImageCache::clearImageCache($image->name);
-    
-    // Also manually clear cache from all template directories
+    // Clear cache from all template directories
     $cachePath = storage_path('app/public/cache');
     $templateDirs = File::directories($cachePath);
     
