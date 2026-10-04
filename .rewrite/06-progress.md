@@ -2,8 +2,8 @@
 
 Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
 Backend steps 3 (dead code), 4 (Laravel 13 + Glide dependency), search
-phase 1, 5 (Glide images), 6 (slim skeleton) and 7 (config diff) done
-2026-10-04.
+phase 1, 5 (Glide images), 6 (slim skeleton), 7 (config diff) and JWT →
+Sanctum done 2026-10-04.
 
 Production: **https://oxid-architektur.ch** (www.oxid.ch is a different, static page).
 
@@ -55,8 +55,8 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | Search phase 1: drop Algolia, Scout `collection` driver — **moved up from step 8**, it fixed the Guzzle 8 search 500 | ✅ done — 15 queries compared with production, see `07-search.md` | `e9d5dde` |
 | Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | ✅ done — 167 production renders compared, geometry matches 167/167; 5 routes incl. the admin's `large`/`thumbnail`/`original`; full crawl of every emitted URL: see notes | `62c73c4` |
 | Slim skeleton, `app/User.php` → `app/Models/User.php` | ✅ done — same 146 routes, same per-route middleware; all 21 public pages 200, 404 renders as 404; 32 admin API GETs 200 with a JWT, `auth/me` + `auth/refresh` OK; 422 shape unchanged; `config:cache` OK. (`route:cache` was recorded as OK here too — wrong, it failed; see step 7) | `5c014f1` |
-| Config diff against L13 (was step 7), drop `intervention/image-laravel` | ✅ done — 145 routes (duplicate `/suche` removed); `config:cache` **and `route:cache`** OK; effective config unchanged except `same_site` → `lax` and the cache key prefix; public pages, admin API GETs, throttle headers OK | this commit |
-| JWT → Sanctum | — | |
+| Config diff against L13 (was step 7), drop `intervention/image-laravel` | ✅ done — 145 routes (duplicate `/suche` removed); `config:cache` **and `route:cache`** OK; effective config unchanged except `same_site` → `lax` and the cache key prefix; public pages, admin API GETs, throttle headers OK | `5bdc257` |
+| JWT → Sanctum, incl. the Vue 2 SPA's auth bootstrap | ✅ done — cookie flow verified with curl and in headless Chromium against the Vue 2 admin: login, 8 list screens, edit + save, upload, session expiry on navigation and on POST, logout; 145 routes, caches OK | this commit |
 | Form-request validation messages (L12+ wants strings) | — | |
 | Search phase 2: own scoring search + unit tests, drop Scout | — | |
 | **Rethink image handling — more generic** (requested 2026-10-04, see below) | — open, design first | |
@@ -203,6 +203,57 @@ moved aside (framework defaults), and diff. Then decide per file.
 - Pre-existing, not changed: `/suche/{keyword}` ignores the path segment —
   `SearchController` only reads `?keyword=`. Revisit in search phase 2.
 
+### Notes from JWT → Sanctum
+
+- **Backend:** `laravel/sanctum` 4.3.3 in, `php-open-source-saver/jwt-auth`
+  out (with `lcobucci/jwt`, `namshi/jose`), `config/jwt.php` deleted.
+  `config/sanctum.php` freshly published — not ported (luvo's `c4ba6a6`
+  warning); it points at `ValidateCsrfToken`, which exists in L13 as a
+  subclass of `PreventRequestForgery`. `config/auth.php` republished from
+  L13: default guard `web`, no `api` guard; reset table kept at
+  `password_resets` (the table that exists).
+- `bootstrap/app.php`: `statefulApi()`. Routes: `auth:api` → `auth:sanctum`;
+  `auth/refresh` gone; `auth/login` now **throttled 10/min** (new — JWT login
+  had only the global 200/min); `logout`/`me` behind `auth:sanctum` at the
+  route instead of the controller constructor. `AuthController`: session
+  login with `regenerate()`, logout with `invalidate()` + `regenerateToken()`.
+  The `/api/user` route stays.
+- **Login response changed:** it returns the user, not
+  `{access_token, token_type, expires_in}`. A failed login is still
+  `401 {"error":"Unauthorized"}`.
+- **SPA (Vue 2, rebuilt):** no tokens or `localStorage` anywhere. The router
+  guard asks `POST /api/auth/me`; one interceptor sends 401/419 to the login
+  screen (auth calls excluded). Login calls `/sanctum/csrf-cookie` first.
+  Logout calls the API. Dropzone (4 configs) sends `X-CSRF-TOKEN` from the
+  meta tag.
+- **Two pre-existing SPA bugs surfaced and fixed:**
+  - `<meta name="csrf-token" value=…>` — `value`, not `content`, so axios had
+    been sending `X-CSRF-TOKEN: undefined`. Harmless under JWT; under
+    Sanctum it would beat the cookie's `X-XSRF-TOKEN` and 419 every POST.
+    The axios default header is gone entirely now (axios reads the cookie);
+    the meta tag is fixed for Dropzone.
+  - Two axios instances: `bootstrap.js` did `require('axios')` (the CJS
+    build) while `app.js` did `import` (ESM), so `window.axios` — used by the
+    login/logout components — had no interceptors. Now one instance.
+- **419 vs 401:** L13's `PreventRequestForgery` accepts a browser request
+  with `Sec-Fetch-Site: same-origin` without a token, so an expired session
+  usually shows up as **401**, not 419, even on POST. The interceptor
+  handles both.
+- **Session expiry** is now inactivity-based (`SESSION_LIFETIME`, 120 min);
+  every API call extends it. JWT had a TTL plus silent refresh. Unsaved form
+  data is lost on expiry either way.
+- **Build:** local `node_modules` was behind `yarn.lock` (axios 1.8.4 vs the
+  locked and previously shipped 1.13.5) — `yarn install --frozen-lockfile`
+  fixed it, no lockfile change. Only the admin JS bundle was rebuilt (a
+  temporary backend-only Mix config); Mix rewrites `mix-manifest.json` with
+  only what it built, so the manifest was restored and just the backend
+  hash updated. Public bundles untouched.
+- **Test residue, cleaned:** a temporary user and two uploaded test PNGs
+  were removed. The local news entry 2 got an unchanged save (only
+  `updated_at` moved).
+- Pre-existing, not changed: a POST to an unknown `api/*` URL returns **405**
+  JSON, not the 404 fallback, because `Route::fallback` is GET-only.
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the
@@ -296,7 +347,15 @@ based on luvo:
   - `QUEUE_CONNECTION=sync` — nothing is queued, but the framework default
     is `database`.
   - Unused, can go: `BROADCAST_DRIVER`, `PUSHER_*`, `MIX_PUSHER_*`,
-    `REDIS_*`, `MAIL_*`.
+    `REDIS_*`, `MAIL_*`, and `JWT_SECRET` (since the Sanctum step).
+- `.env`, Sanctum: **`APP_URL` must be the exact production origin**
+  (`https://oxid-architektur.ch`) — Sanctum treats requests from that host
+  as stateful. If the admin is also reached via `www.`, set
+  `SANCTUM_STATEFUL_DOMAINS=oxid-architektur.ch,www.oxid-architektur.ch`.
+  Leave `SESSION_DOMAIN` unset (host-only cookie) unless both hosts are
+  used. Consider `SESSION_SECURE_COOKIE=true`.
+- Admins are logged out once by the deploy (JWTs no longer accepted); the
+  SPA lands on the login screen.
 - `php artisan optimize` (config + route + view cache) works since step 7;
   it never did before because of the duplicate route name.
 - Glide cache dir writable; not backed up.

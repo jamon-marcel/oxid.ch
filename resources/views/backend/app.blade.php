@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Oxid - Administration</title>
 <link href="{{ mix('assets/backend/css/app.css') }}" type="text/css" rel="stylesheet" />
-<meta name="csrf-token" value="{{ csrf_token() }}" />
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 </head>
 <body>
 <div id="app">

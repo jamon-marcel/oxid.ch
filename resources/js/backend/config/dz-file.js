@@ -6,6 +6,6 @@ export default {
   createImageThumbnails: false,
   acceptedFiles: '.pdf',
   headers: {
-    'Authorization': 'Bearer ' + localStorage.getItem('token')
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
   }
 }

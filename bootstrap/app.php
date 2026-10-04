@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->statefulApi();
         $middleware->api(prepend: ['throttle:200,1']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

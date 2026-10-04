@@ -93,7 +93,7 @@ Consequences here:
 
 ## JWT → Sanctum
 
-**Decided 2026-10-04.** Note for the record: luvo is *not* precedent for the
+**Decided 2026-10-04. Done 2026-10-04** — see `06-progress.md`, "Notes from JWT → Sanctum". Note for the record: luvo is *not* precedent for the
 migration itself — it has used Sanctum since its initial commit and never had
 JWT. What luvo does give us is the target shape (`statefulApi()`, the Sanctum 4
 config, a ~30-line axios module) and one hard-won warning, below.

@@ -36,14 +36,14 @@
         methods: {
             submitLogin() {
                 this.loginError = false;
-                axios.post('/api/auth/login', {
-                    email: this.email,
-                    password: this.password
-                }).then(response => {
-                    // login user, store the token and redirect to dashboard
+                axios.get('/sanctum/csrf-cookie').then(() => {
+                    return axios.post('/api/auth/login', {
+                        email: this.email,
+                        password: this.password
+                    });
+                }).then(() => {
+                    // Session cookie is set; reload so the page gets the new CSRF token
                     store.commit('loginUser')
-                    localStorage.setItem('token', response.data.access_token)
-                    // this.$router.push({ name: 'dashboard' })
                     window.location.href = '/admin/';
                 }).catch(error => {
                     this.loginError = true
