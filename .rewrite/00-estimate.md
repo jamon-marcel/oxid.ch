@@ -23,7 +23,7 @@ behaviour. Nothing else.
 - Any design or UX change
 - The **public site** frontend: plain JS + jQuery + Bootstrap 4, no Vue.
   Untouched here apart from the Vite entry points — modernising it is a
-  separate project, costed in `08-frontend-js.md` (3.5–4 days).
+  separate project, costed in `08-frontend-js.md` (4–4.5 days).
 - The 12.2k LOC of Sass, and its `@import` → `@use` migration. Untouched.
 - Bootstrap 4 → 5 (EOL, but public-site only and a separate project)
 

@@ -31,7 +31,7 @@ those *after* the upgrade landed. Same order applies.
 11.25–14 days, backend first, sequenced.
 
 `08-frontend-js.md` is **separate**: modernising the public site's JavaScript.
-3.5–4 days. It shares only the Vite migration and can run before, after or
+4–4.5 days. It shares only the Vite migration and can run before, after or
 alongside — or be abandoned halfway without breaking anything. Its numbers
 are deliberately not folded into the rework total.
 

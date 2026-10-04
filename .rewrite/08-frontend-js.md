@@ -88,7 +88,163 @@ removing them also removes a licensing question nobody needs to answer.
 Dropping axios alone is a meaningful chunk of the 296 KB bundle for a
 dependency that is never called.
 
-## Step 2 — jQuery → vanilla
+## Step 2 — the target style
+
+Three changes travel together, because each one touches the same lines:
+`var` → `let`/`const` + ES modules, `js-` hook classes → `data-` attributes,
+and jQuery → vanilla.
+
+### `js-*` → `data-*`, but **not** `is-*` / `has-*`
+
+Two different kinds of class are in play and only one should move.
+
+| Kind | Examples | Count | Styled in Sass? | Action |
+|---|---|---|---|---|
+| **Behaviour hooks** | `js-menu-btn`, `js-clpsbl-body`, `js-filter-item` | 29 distinct | **no — verified zero** | → `data-` attributes |
+| **State classes** | `is-active`, `is-visible`, `is-open`, `is-expanded`, `has-menu` | 10 distinct | **yes** (`is-active` in 4 files, `is-visible` in 5, …) | **keep as classes** |
+
+The state classes are how CSS reacts to behaviour. Turning those into data
+attributes would mean rewriting the matching Sass selectors too, for no gain.
+Only the query hooks move.
+
+Worth recording: **no `js-` class is styled anywhere in
+`resources/sass/frontend`.** The convention has been observed perfectly. That
+makes the migration safe — nothing visual can break from removing them — but
+it also means the current `js-` prefix is already doing its job, so this is a
+structural improvement rather than a bug fix.
+
+(One loose end: `is-parent` is toggled by `modules/menu.js` but matches
+nothing in the Sass. Either dead or styled under a different selector —
+check when converting that module.)
+
+### Naming
+
+Module name as the attribute, part as the value:
+
+| Before | After |
+|---|---|
+| `.js-clpsbl` | `[data-collapsible="root"]` |
+| `.js-clpsbl-body` | `[data-collapsible="body"]` |
+| `.js-clpsbl-btn` | `[data-collapsible="btn"]` |
+| `.js-menu-btn` | `[data-menu="btn"]` |
+| `.js-menu-parent` | `[data-menu="parent"]` |
+
+29 class names collapse to roughly 9 attribute names. Grouping by module
+makes the ownership obvious in the template, which a flat `data-menu-btn`
+does not.
+
+### Worked example — `collapsible.js`, the pilot
+
+Current (62 LOC, jQuery, IIFE):
+
+```js
+var Collapsible = (function() {
+  var selectors = { body: 'body', wrapper: '.js-clpsbl', content: '.js-clpsbl-body', btn: '.js-clpsbl-btn' };
+  var classes = { expanded: 'is-expanded' };
+  var _toggle = function(el) {
+    var wrapper = el.parents(selectors.wrapper);
+    if (!wrapper.hasClass(classes.expanded)) {
+      var distance = wrapper.offset().top - 20;
+      $.scrollTo(distance, 400);
+    }
+    wrapper.toggleClass(classes.expanded);
+    wrapper.find(selectors.content).toggle();
+  };
+  ...
+})();
+$(function() { Collapsible.init(); });
+```
+
+Target:
+
+```js
+const SEL = {
+  root: '[data-collapsible="root"]',
+  body: '[data-collapsible="body"]',
+  btn:  '[data-collapsible="btn"]',
+};
+const EXPANDED = 'is-expanded';   // styled in Sass — stays a class
+
+function toggle(btn) {
+  const root = btn.closest(SEL.root);
+  if (!root) return;
+
+  if (!root.classList.contains(EXPANDED)) {
+    const top = root.getBoundingClientRect().top + window.scrollY - 20;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  const expanded = root.classList.toggle(EXPANDED);
+  root.querySelectorAll(SEL.body).forEach((el) => { el.hidden = !expanded; });
+  btn.setAttribute('aria-expanded', String(expanded));
+}
+
+export function init() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest(SEL.btn);
+    if (btn) toggle(btn);
+  });
+}
+```
+
+What that one file demonstrates, and why it is the right pilot:
+
+- `var` → `const`, IIFE → ES module exports
+- `.js-clpsbl*` → `[data-collapsible="…"]`, `is-expanded` left alone
+- `parents()` → `closest()`, `hasClass`/`toggleClass` → `classList`
+- `offset().top` → `getBoundingClientRect().top + scrollY`
+- `$.scrollTo(…, 400)` → `window.scrollTo({ behavior: 'smooth' })`, which
+  retires `vendor/scrollTo.js`
+- `.toggle()` → `el.hidden` — **gotcha 1 below**
+- `aria-expanded`, which the jQuery version never set. The conversion is a
+  natural moment to add the obvious ARIA state; do it where it is free, do
+  not turn this into an accessibility project.
+
+### `[hidden]` needs one line of Sass
+
+`el.hidden` only works if nothing overrides it. Any rule setting
+`display: block` on a collapsible body beats the browser default, so add this
+once to the reset and the whole `show`/`hide`/`toggle` category is solved:
+
+```scss
+[hidden] { display: none !important; }
+```
+
+That is the entire Sass footprint of this project, provided the `[hidden]`
+convention is used consistently rather than mixed with a `.is-hidden` class.
+
+### Blade cost
+
+29 hooks, **110 occurrences across 28 blade files**, plus 49 in the JS.
+
+**Do this in the same pass as the jQuery conversion, not as a follow-up.**
+Each module's selector object is being rewritten anyway, and the blade side
+is a mechanical find/replace per hook. Done later it means touching all 28
+templates and all 9 modules a second time, and running the QA twice.
+
+Budget **+0.5 day** on top of the jQuery work when combined. Roughly double
+that if split.
+
+### Optional: `data-module` auto-init
+
+With data attributes in place, `app.js`'s flat require list could become:
+
+```js
+const MODULES = { menu: () => import('./modules/menu.js'), ... };
+document.querySelectorAll('[data-module]').forEach((el) => {
+  MODULES[el.dataset.module]?.().then((m) => m.init(el));
+});
+```
+
+Tidier — modules initialise only where their markup exists, instead of every
+module binding a delegated listener on every page.
+
+**But be honest about the payoff: there is not much.** The current modules
+already delegate from `body`, so running them everywhere is harmless, and at
+~1,150 LOC total the code-splitting this enables saves a few kilobytes.
+Worth doing if it falls out naturally; not worth engineering toward.
+
+## Step 2b — jQuery → vanilla
 
 ### The API surface, counted
 
@@ -199,11 +355,11 @@ touched anyway.
 | Step | Days |
 |---|---|
 | 1. Delete dead code (fancybox ×2, axios, 2 npm deps) | **0.25** |
-| 2. jQuery → vanilla, 9 modules + `bootstrap.js` | **2 – 2.5** |
+| 2. Target style: ESM + `let`/`const`, `js-` → `data-`, jQuery → vanilla; 9 modules + `bootstrap.js` + 28 blades | **2.5 – 3** |
 | 3. Swiper 5 → 12 | **0.5** |
 | 4. `maps.js` de-jQuery | **0.25** |
 | 5. Cross-browser + device QA | **0.5** |
-| **Total** | **3.5 – 4** |
+| **Total** | **4 – 4.5** |
 
 The QA half-day is not compressible. There are no tests, the modules drive
 visible layout behaviour (menus, scroll effects, sliders), and `imagescroll`
