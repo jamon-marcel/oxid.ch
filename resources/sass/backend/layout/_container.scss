@@ -11,7 +11,8 @@
 .container-auth {
     @extend %v-center;
     @include background-default();
-    background-image: url($url-images + 'splash.jpg');
+    // The image is a random home image, set in backend/app.blade.php
+    background-color: $color-light-grey;
     background-size: cover;
     background-position: center center;
     height: 100vh;

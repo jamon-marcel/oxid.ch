@@ -20,7 +20,8 @@ main.content {
     }
 }
 main.content-auth {
-    background-color: $color-light;
+    background-color: $color-white;
+    border: $border;
     box-shadow: $box-shadow;
     margin-left: auto;
     margin-right: auto;

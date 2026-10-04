@@ -12,6 +12,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ImageController;
+use App\Models\HomeImage;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,8 +63,7 @@ Route::get('/img/home/{filename}', [ImageController::class, 'legacyHome']);
 Route::get('/img/crop/{filename}/{maxWidth?}/{maxHeight?}/{coords?}', [ImageController::class, 'legacyCrop']);
 Route::get('/img/{filename}', [ImageController::class, 'show']);
 
-// Admin routes
-Route::view('admin', 'backend.app');
-Route::get('admin/{any}', function () {
-    return view('backend.app');
+// Admin routes; the login screen shows a random published home image
+Route::get('admin/{any?}', function () {
+    return view('backend.app', ['splash' => HomeImage::published()->inRandomOrder()->first()]);
 })->where('any', '.*');

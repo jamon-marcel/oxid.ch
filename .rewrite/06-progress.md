@@ -51,15 +51,13 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 - **Backend phase: done.** Laravel 13, slim skeleton, config trimmed,
   Sanctum, own search, upload validation. Generic image handling done by a
   separate agent (`ffac092`).
-- **Frontend: done except the login splash.** Public site on Vite; admin
+- **Frontend: done.** Public site on Vite; admin
   on Vue 3 + Vite in luvo's shape (`<script setup>`, composables, `lib/`,
   `components/ui`), Tiptap, own Uploader/notifications, one Lightbox, one
   Card, toggles, Phosphor icons, 1px lines. Admin feedback rounds after
   that are in the notes below.
 - **Open, in order of weight:**
-  1. Login splash: a random published home image as background
-     (`09-admin-ui.md` #1). Use the image agent's `url()`/signed URLs,
-     not `/img/home/…`.
+  1. ~~Login splash~~ — done, see "Login splash" below.
   2. Production facts to collect on Hostpoint: web PHP `upload_max_filesize`
      / `post_max_size` / `memory_limit`, Imagick loaded? (decides 16 MB
      uploads and render memory), CLI PHP version, access-log samples
@@ -588,6 +586,31 @@ on hover). Replaces `.upload-listing/.upload-item`, the picker's
 `grid-image-selector` module and the unused old `.card`/`.post` partials.
 Menu: group pages sit flush under their header (no indent).
 
+### Login splash (2026-10-04)
+
+- `admin` and `admin/{any}` are one route now, `admin/{any?}`, a closure
+  that passes `HomeImage::published()->inRandomOrder()->first()` to
+  `backend/app.blade.php` (one query; `route:cache` still OK).
+- The blade writes a small `<style>` for `.container-auth`: a plain JPEG
+  `url()` first, then `image-set()` with AVIF/WebP (from
+  `ImageSupport::modernFormats()`) and JPEG, all signed URLs from the
+  image's `url()`, with its crop. 2000 px, 1200 px at ≤ 1000 px wide.
+  **Not a `--splash` custom property** as `09-admin-ui.md` planned: a `var()`
+  that turns out invalid (older browser without `image-set()` `type()`)
+  falls back to `none`, not to the declaration before it. Two plain
+  declarations give the JPEG fallback for free.
+- No published image → no `<style>`, `.container-auth` shows
+  `$color-light-grey`.
+- Card: white, `$border`, the existing shadow.
+- Checked: 40 loads hit all 10 published images and none of the 4
+  unpublished; all 6 renditions 200 with real sizes (AVIF 157/243 KB, no
+  16-byte files); Chromium picks AVIF; wrong-password message still shows;
+  `/admin/…` deep links 200; 22 tests pass.
+- Not changed: the admin has `body { min-width: 840px }`
+  (`$page-min-width`, since the initial commit), so on a phone the login is
+  laid out at 840 px and scrolls sideways. The admin is desktop-only by
+  design; left alone.
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the
@@ -616,7 +639,7 @@ Menu: group pages sit flush under their header (no indent).
 | … projects, discourses, team, jobs, profile, contact | ✅ done — all lists and forms; `ImageManager`, `FileManager`, `Uploader`, `useImages/useImageLibrary/useFiles` | `7b55d5e` |
 | … image pages, listings, grid builder | ✅ done, same commit — one `views/images/Index.vue` for home/team/jobs/profile (route props); grid builder in `views/projects/Grid.vue` + `components/grid/`. No Options API, mixin or `$parent` left | `7b55d5e` |
 | Fewer dependencies, one Lightbox, menu sections | ✅ done — see notes | `5f77c53` |
-| Login screen / splash | ⏳ login error shown (`15c4102`); random home image as background **waits for the image agent** — it is reworking `/img/home/…` | |
+| Login screen / splash | ✅ done — login error shown (`15c4102`); random published home image as background, white card with 1px border; `splash.jpg` deleted. See notes | |
 
 ### To verify at the end of the frontend phase
 

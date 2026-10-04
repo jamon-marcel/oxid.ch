@@ -247,6 +247,9 @@ need custom values should switch to the variables.
 
 ### On #1: a random home image as the login background
 
+*Done 2026-10-04 — implemented with a `<style>` block instead of the
+`--splash` property; see `06-progress.md`, "Login splash".*
+
 Same idea the public search page already uses (`SearchController:53-58` picks
 a random published `HomeImage`). 10 of 14 home images are published in production.
 
