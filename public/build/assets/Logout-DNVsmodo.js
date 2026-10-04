@@ -1,0 +1,1 @@
+import{A as e,n as t,o as n}from"./app-v8YT97PE.js";var r={__name:`Logout`,setup(r){let i=n();return e(async()=>{try{await t.post(`/api/auth/logout`)}catch{}i.push({name:`login`})}),(e,t)=>null}};export{r as default};

@@ -10,8 +10,8 @@ const images = () => import('@/views/images/Index.vue');
 
 const routes = [
   { path: '/', redirect: { name: 'login' } },
-  { name: 'admin', path: '/admin', redirect: { name: 'dashboard' } },
-  { name: 'dashboard', path: '/admin/dashboard', component: () => import('@/views/dashboard/Index.vue') },
+  { name: 'admin', path: '/admin', redirect: { name: 'news' } },
+  { path: '/admin/dashboard', redirect: { name: 'news' } },
   { name: 'login', path: '/admin/login', component: () => import('@/views/auth/Login.vue'), meta: { guest: true } },
   { name: 'logout', path: '/admin/logout', component: () => import('@/views/auth/Logout.vue'), meta: { guest: true } },
 
@@ -66,7 +66,7 @@ router.beforeEach(async (to) => {
   }
   try {
     await http.post('/api/auth/me');
-    return to.name === 'login' ? { name: 'dashboard' } : true;
+    return to.name === 'login' ? { name: 'news' } : true;
   }
   catch {
     return to.meta.guest ? true : { name: 'login' };

@@ -1,1 +1,0 @@
-import{g as e,j as t,y as n}from"./app-BSemY_FY.js";var r=(e,t)=>{let n=e.__vccOpts||e;for(let[e,r]of t)n[e]=r;return n},i={},a={class:`container`};function o(r,i){return t(),n(`div`,a,[...i[0]||=[e(`main`,{class:`content`,role:`main`},[e(`div`,null,[e(`h1`,null,`Dashboard`)])],-1)]])}var s=r(i,[[`render`,o]]);export{s as default};

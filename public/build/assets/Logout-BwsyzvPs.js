@@ -1,1 +1,0 @@
-import{A as e,n as t,o as n}from"./app-BSemY_FY.js";var r={__name:`Logout`,setup(r){let i=n();return e(async()=>{try{await t.post(`/api/auth/logout`)}catch{}i.push({name:`login`})}),(e,t)=>null}};export{r as default};

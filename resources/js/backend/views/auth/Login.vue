@@ -39,7 +39,7 @@ async function login() {
     await http.get('/sanctum/csrf-cookie');
     await http.post('/api/auth/login', { email: email.value, password: password.value });
     // Session cookie is set; reload so the page gets the new CSRF token
-    window.location.href = '/admin/';
+    window.location.href = '/admin/home/news';
   }
   catch {
     failed.value = true;
