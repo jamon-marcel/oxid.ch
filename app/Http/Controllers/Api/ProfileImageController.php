@@ -6,8 +6,8 @@ use App\Http\Requests\ProfileImageStoreRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
+use App\Support\Glide;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 
 class ProfileImageController extends Controller
 {
@@ -163,15 +163,6 @@ class ProfileImageController extends Controller
    */
   private function removeCachedImage(ProfileImage $image)
   {
-    // Clear cache from all template directories
-    $cachePath = storage_path('app/public/cache');
-    $templateDirs = File::directories($cachePath);
-    
-    foreach ($templateDirs as $dir) {
-      $files = File::glob($dir . '/*' . $image->name . '*');
-      foreach ($files as $file) {
-        File::delete($file);
-      }
-    }
+    Glide::forget($image->name);
   }
 }

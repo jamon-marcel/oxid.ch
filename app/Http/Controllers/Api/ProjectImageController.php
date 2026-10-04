@@ -5,8 +5,8 @@ use App\Http\Resources\DataCollection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use App\Support\Glide;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 
 class ProjectImageController extends Controller
 {
@@ -106,15 +106,6 @@ class ProjectImageController extends Controller
    */
   private function removeCachedImage(ProjectImage $image)
   {
-    // Clear cache from all template directories
-    $cachePath = storage_path('app/public/cache');
-    $templateDirs = File::directories($cachePath);
-    
-    foreach ($templateDirs as $dir) {
-      $files = File::glob($dir . '/*' . $image->name . '*');
-      foreach ($files as $file) {
-        File::delete($file);
-      }
-    }
+    Glide::forget($image->name);
   }
 }

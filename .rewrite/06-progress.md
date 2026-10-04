@@ -51,8 +51,8 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 |---|---|---|
 | Delete dead code: 6 filter classes, `dompdf`/`media`/`content` configs | ✅ done — 144 routes, config caches; `home`, `small`, `thumbnail` images 200; `tiny`, `project` 400 | `0afa861` |
 | **One commit:** Laravel 13, PHP ^8.3, drop image-cache, add Glide + Intervention 4 | ✅ done — 0 advisories; 141 routes (the 3 image-cache `/img` routes gone); all 16 public pages 200, 404 renders as 404; all 36 read-only admin API GETs 200 with a JWT; upload 200. **Keyword search 500s** — see below | `a809fd2` |
-| Search phase 1: drop Algolia, Scout `collection` driver — **moved up from step 8**, it fixed the Guzzle 8 search 500 | ✅ done — 15 queries compared with production, see `07-search.md` | this commit |
-| Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | — | |
+| Search phase 1: drop Algolia, Scout `collection` driver — **moved up from step 8**, it fixed the Guzzle 8 search 500 | ✅ done — 15 queries compared with production, see `07-search.md` | `e9d5dde` |
+| Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | ✅ done — 167 production renders compared, geometry matches 167/167; 5 routes incl. the admin's `large`/`thumbnail`/`original`; full crawl of every emitted URL: see notes | this commit |
 | Slim skeleton, `app/User.php` → `app/Models/User.php` | — | |
 | JWT → Sanctum | — | |
 | Form-request validation messages (L12+ wants strings) | — | |
@@ -68,7 +68,6 @@ the same commit** — Composer will not resolve anything on Laravel 11. See
   commit). Laravel 13 lets Composer pick Guzzle 8, which removed
   `GuzzleHttp\choose_handler()`; the Algolia v3 client still calls it
   (`src/Http/GuzzleHttpClient.php:56`).
-- **Image URLs are down until step 5**, as planned.
 - `config.platform.php` is pinned to `8.3.0`, so the lock always resolves
   for the production minimum no matter which PHP runs Composer locally
   (local CLI is 8.4; Symfony 8 would need 8.4). Resolved Symfony 7.4.20.
@@ -83,6 +82,23 @@ the same commit** — Composer will not resolve anything on Laravel 11. See
   `storage/app/public/cache` stays. Step 5 replaces the method body with
   `Glide::server()->deleteCache()`, as luvo does.
 - `MediaController`: Intervention 4 `read()` → `decodePath()`.
+
+### Notes from step 5
+
+Details in `05-image-pipeline.md`, "Result".
+
+- **Driver is detected** — Imagick when loaded (AVIF, and no PHP-memory
+  bitmap), GD otherwise. Production output so far was GD; Imagick changes
+  resampling, not framing. Confirm on Hostpoint, and check the web
+  `memory_limit` if it turns out GD-only (a 24 MP source needs ~95 MB).
+- **Largest srcset candidate = legacy output** (longer side 2400), measured
+  box sizes justify it; smaller screens get 900/1200/1600.
+- **Cold renders** take 0.3–1.3 s each (AVIF slowest). The old pipeline had
+  the same first-hit cost. Consider an `images:warm` command for the deploy
+  (luvo's `Glide.php` mentions one).
+- **Still to do for this step:** screenshot comparison of the public pages
+  against production (the `<picture>` wrapper), and the admin image screens
+  once the SPA runs again.
 
 ### To verify at the end of the backend phase
 
@@ -169,6 +185,7 @@ based on luvo:
   `collection`).
 - Glide cache dir writable; not backed up.
 - After go-live, `storage/app/public/cache/` (old image-cache output) can go.
+- Optionally warm the Glide cache after deploy (cold renders 0.3–1.3 s each).
 
 ## Next after this project
 

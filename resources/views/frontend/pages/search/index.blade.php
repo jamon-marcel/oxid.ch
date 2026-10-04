@@ -5,7 +5,7 @@
 <section class="content-search grid-home">
   @if ($image)
     <figure class="span span-visual visual-fit is-home">
-      <img src="/img/home/{{$image->name}}" height="400" width="800">
+      {!! ImageHelper::homeImage($image) !!}
     </figure>
   @endif
   <div class="span search">

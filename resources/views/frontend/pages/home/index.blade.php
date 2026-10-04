@@ -5,7 +5,7 @@
 <section class="content-home grid-home">
   @if ($image)
     <figure class="span visual-fit is-home">
-      <img src="/img/home/{{$image->name}}" height="400" width="800">
+      {!! ImageHelper::homeImage($image) !!}
     </figure>
     
   @endif

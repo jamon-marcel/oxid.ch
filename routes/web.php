@@ -55,6 +55,13 @@ Route::get('/geschichte', [HistoryController::class, 'index'])->name('page.histo
 Route::get('/suche', [SearchController::class, 'index'])->name('page.search.index');
 Route::get('/suche/{keyword?}', [SearchController::class, 'index'])->name('page.search.index');
 
+// Images
+Route::get('/img/original/{filename}', [ImageController::class, 'original']);
+Route::get('/img/thumbnail/{filename}', [ImageController::class, 'thumbnail']);
+Route::get('/img/large/{filename}', [ImageController::class, 'large']);
+Route::get('/img/home/{filename}', [ImageController::class, 'home']);
+Route::get('/img/crop/{filename}/{maxWidth?}/{maxHeight?}/{coords?}', [ImageController::class, 'crop']);
+
 // Admin routes
 Route::view('admin', 'backend.app');
 Route::get('admin/{any}', function () {
