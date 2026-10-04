@@ -83,6 +83,38 @@ Removes: `algolia/algoliasearch-client-php` from `composer.json`, the
 matching. Plain substring only. This is a real regression and phase 2 is what
 pays it back.
 
+#### Phase 1 — done 2026-10-04, measured against production
+
+Done right after the Laravel 13 bump instead of as backend step 8: Guzzle 8
+broke the Algolia v3 client, so keyword search was a 500 on the branch.
+
+Searchable fields: `Project` — title, title_short, location, **year,
+year_works**, description, info. `Discourse` — heading, **date**, title,
+description_short, description, info. HTML is stripped and entities decoded,
+so tags like `strong` don't match. The year fields were not in the
+original plan; they were added because a search for a year should find that
+year's projects and events.
+
+Production is **oxid-architektur.ch** (still on Algolia). The same 15
+queries, run against it and against local with the same data, compared by
+result type + title:
+
+| Query | Prod | Local | Both | Reading |
+|---|---|---|---|---|
+| holz | 48 | 46 | 45 | ≈ same |
+| umbau, basel, zürich, wohn | 11 / 7 / 56 / 47 | 11 / 5 / 45 / 50 | 10 / 5 / 44 / 46 | close |
+| wohnschiff | 0 | 1 | 0 | **local better** — compound infix |
+| ausstellung | 0 | 2 | 0 | local better (Algolia index likely stale) |
+| haus, wohnen, schule | 65 / 30 / 14 | 35 / 14 / 2 | 22 / 14 / 1 | Algolia's typo-tolerant prefix (`schule` ≈ `Schul·haus`) |
+| zurich, hollz | 56 / 48 | 0 / 0 | 0 | no umlaut folding, no typos |
+| holz bau | 35 | 0 | 0 | **multi-word**: collection engine needs the literal phrase |
+| 2019, 2021 | 47 / 96 | 8 / 17 | 8 / 17 | prod matches `created_at`/`updated_at` — noise, not a loss |
+
+So, beyond the plan's list (typos, ranking, prefix), phase 1 also loses
+**umlaut folding** and **multi-word queries**. Both are covered by the phase 2
+design (normalisation, per-token scoring); add test cases for them there.
+Branch-only regression, never deployed: phase 2 lands before go-live.
+
 ### Phase 2 — own scoring search
 
 Bring back all three. At 119 records this is comfortably tractable.
@@ -106,6 +138,7 @@ Weighted fields, heaviest first:
 |---|---|
 | `title`, `title_short` | 10 |
 | `location` | 5 |
+| `year`, `year_works`, `date` | 3 |
 | `description` | 2 |
 | `info` | 1 |
 

@@ -1,8 +1,10 @@
 # Progress
 
 Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
-Backend steps 3 (dead code) and 4 (Laravel 13 + Glide dependency) done
-2026-10-04.
+Backend steps 3 (dead code), 4 (Laravel 13 + Glide dependency) and search
+phase 1 done 2026-10-04.
+
+Production: **https://oxid-architektur.ch** (www.oxid.ch is a different, static page).
 
 Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 
@@ -48,10 +50,10 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | Step | Status | Commit |
 |---|---|---|
 | Delete dead code: 6 filter classes, `dompdf`/`media`/`content` configs | ✅ done — 144 routes, config caches; `home`, `small`, `thumbnail` images 200; `tiny`, `project` 400 | `0afa861` |
-| **One commit:** Laravel 13, PHP ^8.3, drop image-cache, add Glide + Intervention 4 | ✅ done — 0 advisories; 141 routes (the 3 image-cache `/img` routes gone); all 16 public pages 200, 404 renders as 404; all 36 read-only admin API GETs 200 with a JWT; upload 200. **Keyword search 500s** — see below | this commit |
+| **One commit:** Laravel 13, PHP ^8.3, drop image-cache, add Glide + Intervention 4 | ✅ done — 0 advisories; 141 routes (the 3 image-cache `/img` routes gone); all 16 public pages 200, 404 renders as 404; all 36 read-only admin API GETs 200 with a JWT; upload 200. **Keyword search 500s** — see below | `a809fd2` |
+| Search phase 1: drop Algolia, Scout `collection` driver — **moved up from step 8**, it fixed the Guzzle 8 search 500 | ✅ done — 15 queries compared with production, see `07-search.md` | this commit |
 | Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | — | |
 | Slim skeleton, `app/User.php` → `app/Models/User.php` | — | |
-| Search phase 1: drop Algolia, Scout `collection` driver | — | |
 | JWT → Sanctum | — | |
 | Form-request validation messages (L12+ wants strings) | — | |
 | Search phase 2: own scoring search + unit tests, drop Scout | — | |
@@ -62,11 +64,10 @@ the same commit** — Composer will not resolve anything on Laravel 11. See
 
 ### Notes from step 4
 
-- **Keyword search is broken until search phase 1.** Laravel 13 lets
-  Composer pick Guzzle 8, which removed `GuzzleHttp\choose_handler()`; the
-  Algolia v3 client still calls it (`src/Http/GuzzleHttpClient.php:56`). `/suche`
-  without a keyword is fine. Not patched: the client is deleted in search
-  phase 1 anyway.
+- **Keyword search was broken until search phase 1** (fixed in the next
+  commit). Laravel 13 lets Composer pick Guzzle 8, which removed
+  `GuzzleHttp\choose_handler()`; the Algolia v3 client still calls it
+  (`src/Http/GuzzleHttpClient.php:56`).
 - **Image URLs are down until step 5**, as planned.
 - `config.platform.php` is pinned to `8.3.0`, so the lock always resolves
   for the production minimum no matter which PHP runs Composer locally
@@ -163,6 +164,9 @@ based on luvo:
 - Vite build output committed (as the Mix output is today), or a build step
   added to the deploy.
 - `php artisan optimize:clear`.
+- `.env`: remove `ALGOLIA_APP_ID` / `ALGOLIA_SECRET`, and make sure
+  `SCOUT_DRIVER` is unset or `collection` (the config default is now
+  `collection`).
 - Glide cache dir writable; not backed up.
 - After go-live, `storage/app/public/cache/` (old image-cache output) can go.
 

@@ -46,6 +46,23 @@ class Project extends Base
     return 'projects';
 	}
 
+	public function toSearchableArray()
+	{
+		// Plain text: strip the editor's HTML so tags and entities don't match
+		return array_map(
+			fn ($value) => trim(html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8')),
+			[
+				'title' => $this->title,
+				'title_short' => $this->title_short,
+				'location' => $this->location,
+				'year' => $this->year,
+				'year_works' => $this->year_works,
+				'description' => $this->description,
+				'info' => $this->info,
+			]
+		);
+	}
+
 	public function images()
 	{
 		return $this->hasMany('App\Models\ProjectImage', 'project_id', 'id');
