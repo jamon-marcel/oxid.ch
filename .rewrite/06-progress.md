@@ -66,9 +66,8 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
   4. ~~`vuedraggable` → SortableJS~~ — done, see "vuedraggable → SortableJS"
      below. Found on the way and fixed: `order` columns were `TINYINT`.
      **Production needs `php artisan migrate`** (see Deploy notes).
-  5. End-of-project QA (lists below), screenshot comparison of the public
-     site against production, then rewrite `CLAUDE.md` (still says Laravel
-     11, JWT, Algolia, image-cache).
+  5. ~~End-of-project QA, screenshot comparison, `CLAUDE.md`~~ — done,
+     see "Final QA (2026-10-04)" below; `CLAUDE.md` rewritten (`cefbaee`).
   6. `08-frontend-js.md` (public JS de-jQuery) — a separate project.
 - **Testing:** Playwright scripts in `/tmp/pw` (not in the repo; they go
   when /tmp is cleaned). The user works in the same local admin: tests
@@ -652,6 +651,66 @@ Menu: group pages sit flush under their header (no indent).
   (the old values had duplicates, so dragging back didn't restore them).
   Restored row by row from the 2026-10-04 production dump, guarded by the
   test's `updated_at`, so nothing written outside the test was touched.
+
+### Final QA (2026-10-04)
+
+Run against `cefbaee` with the local copy of the production DB and uploads.
+Scripts in `/tmp/pw` (not in the repo).
+
+**Backend**
+- 145 routes; `route:cache` OK.
+- 17 public pages 200 (incl. `/suche`, `/suche/beton`), unknown page and
+  unknown project 404. The crawl reached 125 pages, all 200.
+- `api/*` unauthenticated → 401 `{"message":"Unauthenticated."}`; session
+  and XSRF cookies on `/admin` and `/sanctum/csrf-cookie`.
+- **Image crawl: every `/img/...` URL the 125 pages emit — 6,135 — is 200,
+  decodes, has the requested format (2,045 AVIF, 2,045 WebP, 1,521 JPEG,
+  524 PNG), the right `Content-Type`, and its real width equals its srcset
+  descriptor (6,135/6,135).** The rendition guard never fired (the only
+  three "Broken … rendition" log lines are from its own unit test).
+- 24 tests pass.
+
+**Admin** (headless Chromium, temporary user, everything it created deleted
+through the UI/API)
+- 7 lists load; all 7 forms (news, project, discourse, team, job, profile,
+  contact) open and save 200; empty creates show field errors and mark the
+  tabs (422 where the client lets the request through).
+- Project images: 13 cards, 10 protected by the grid; edit overlay; cropper.
+  Discourse images: grid ↔ list view, rows draggable.
+- Home/team/job/profile images: upload → caption → crop → publish toggle →
+  delete, all 200, counts back to where they were.
+- Files: PDF upload on job 1 → save → present after reload, link serves
+  `application/pdf` → delete → gone, file removed from disk.
+- Drag reorder: news, team group, team images, grid builder (see
+  "vuedraggable → SortableJS").
+- Session expiry: dropping the session cookie sends both an SPA navigation
+  and an API call to `/admin/login`; logout, then a protected route →
+  login. Login screen: wrong password message; random published home image.
+
+**Public site vs production** (17 pages × 1280/375, full page,
+pixel-compared; production serves JPEG, local AVIF/WebP)
+- Pixel-identical or within a few px: team, history, contact, discourse
+  detail, profile, jobs, project detail.
+- Home and search pick a random image — not comparable by design.
+- Lists (`/projekte`, `/diskurs`, `/werkliste/...`) differ by **±1 px per
+  image height**: local takes the aspect ratio from the stored crop
+  (`width`/`height` attributes), production from the rendered file's
+  rounded size. Accumulates to 1–12 px per page. Accepted.
+- Same behaviour: jQuery, Swiper, fonts; same JS error on `/geschichte`.
+- Content differences are local edits: empty grid rows 584 (project 58)
+  and 585 (project 61) are the user's.
+
+**Found in passing, pre-existing, not changed**
+- `/werkliste` is a blank 200 on production and locally:
+  `WorksController::index()` has been empty since 2020. Nothing links to it.
+- `/geschichte` throws `_toggleDropDownItems is not defined` (×8) on
+  production and locally.
+
+**Test damage found and repaired:** the previous session's grid-delete test
+(15:24:55 local, the second of commit `91e0f08`) had deleted grid element
+1016 — Quellenhof's (project 58) first image — and cleared `is_grid` on
+image 930. Both restored from the 2026-10-04 production dump; it was the
+only grid element missing from the whole table.
 
 ### To verify at the end of the backend phase
 
