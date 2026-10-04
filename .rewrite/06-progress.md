@@ -530,6 +530,21 @@ after the other, so order is kept and the server isn't flooded; the zone
 counts "Hochladen… 1 / 2" over the files actually sent. Finished rows go
 2 s after the batch, rejected ones stay until the next upload. Verified
 with throttled upload (two valid, one wrong type, one too large).
+Styled like the admin's lists after feedback: 1px rows, Phosphor status
+icon (file / check / warning), name left, state right, a 2px progress line
+along the row's bottom edge.
+
+### Ja/Nein buttons → toggle (2026-10-04)
+
+`components/ui/Toggle.vue` replaces `RadioButton`: a real checkbox drawn as
+a switch (1px line like the inputs, `$color-blue` when on, as the selected
+Ja button was; focus ring), with the state ("Ja"/"Nein", or e.g.
+"light"/"dark" for the discourse image theme) next to it. Same API, 0/1
+in and out (also reads "0"/"1" and booleans). Used for every yes/no field:
+publish, project flags, discourse image preview/theme, project image plan,
+and the two project image preview flags (were two button-style
+checkboxes). The team document language DE/EN stays two buttons — a choice,
+not a yes/no.
 
 ### To verify at the end of the backend phase
 

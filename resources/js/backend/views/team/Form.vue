@@ -47,7 +47,7 @@
                     </div>
                   </div>
                   <div class="form-row is-sm is-last">
-                    <RadioButton label="Publizieren?" name="publish" v-model="record.publish" />
+                    <Toggle label="Publizieren?" name="publish" v-model="record.publish" />
                   </div>
                 </div>
               </div>
@@ -86,7 +86,7 @@ import { ref } from 'vue';
 import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
 import Tabs from '@/components/ui/Tabs.vue';
 import LabelRequired from '@/components/ui/LabelRequired.vue';
-import RadioButton from '@/components/ui/RadioButton.vue';
+import Toggle from '@/components/ui/Toggle.vue';
 import FormFooter from '@/components/ui/FormFooter.vue';
 import Uploader from '@/components/ui/Uploader.vue';
 import FileManager from '@/components/files/FileManager.vue';

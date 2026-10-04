@@ -34,58 +34,65 @@
   }
 }
 
-// One row per file: name, progress, state
+// One row per file: icon, name, state; a thin progress line at the bottom
+// while it uploads
 .uploader-queue {
   @include font-size($fs-xs);
   list-style: none;
-  margin: 10px 0 0;
+  margin: 15px 0 0;
   padding: 0;
 
   li {
     align-items: center;
-    display: grid;
-    grid-gap: 15px;
-    grid-template-columns: minmax(0, 1fr) 160px 180px;
-    padding: 4px 0;
+    border-bottom: $border-width solid $color-light-grey;
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    position: relative;
+
+    &:first-child {
+      border-top: $border-width solid $color-light-grey;
+    }
+  }
+
+  &__icon {
+    color: $color-medium-grey;
+    flex: none;
   }
 
   &__name {
+    flex: 1 1 auto;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  &__bar {
-    background-color: $color-light-grey;
-    display: block;
-    height: 3px;
-
-    span {
-      background-color: $color-dark;
-      display: block;
-      height: 100%;
-      transition: width .15s ease-out;
-    }
-  }
-
   &__state {
     color: $color-medium-grey;
+    flex: none;
+    text-align: right;
+  }
+
+  &__bar {
+    background-color: $color-dark;
+    bottom: -1px;
+    height: 2px;
+    left: 0;
+    position: absolute;
+    transition: width .15s ease-out;
   }
 
   .is-done {
-    .uploader-queue__bar span {
-      background-color: $color-success;
+    .uploader-queue__icon {
+      color: $color-success;
     }
   }
 
   .is-error {
-    .uploader-queue__bar {
-      display: none;
-    }
-
+    .uploader-queue__icon,
     .uploader-queue__state {
       color: $color-danger;
-      grid-column: 2 / 4;
     }
   }
 }

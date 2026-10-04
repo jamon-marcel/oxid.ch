@@ -1,0 +1,75 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: form/toggle
+ * Yes/no switch (Toggle component): 1px line like the inputs, blue when on
+ * like the former selected Ja/Nein button
+ * -----------------------------------------------------------------------------
+ */
+
+.toggle {
+  > label.is-sm {
+    display: block;
+  }
+}
+
+.toggle__control {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 10px;
+  margin: 0 !important;
+}
+
+// The checkbox stays in the page (focus, keyboard), the switch draws it
+.toggle__input {
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.toggle__switch {
+  background-color: $color-white;
+  border: $border-width solid $color-grey;
+  border-radius: 11px;
+  flex: none;
+  height: 22px;
+  position: relative;
+  transition: background-color .12s ease-out, border-color .12s ease-out;
+  width: 40px;
+
+  &::after {
+    background-color: $color-grey;
+    border-radius: 50%;
+    content: '';
+    height: 16px;
+    left: 2px;
+    position: absolute;
+    top: 2px;
+    transition: transform .12s ease-out, background-color .12s ease-out;
+    width: 16px;
+  }
+}
+
+.toggle__state {
+  color: $color-medium-grey;
+  @include font-size($fs-xs);
+}
+
+.toggle__input:checked + .toggle__switch {
+  background-color: $color-blue;
+  border-color: $color-blue;
+
+  &::after {
+    background-color: $color-white;
+    transform: translateX(18px);
+  }
+}
+
+.toggle__input:checked ~ .toggle__state {
+  color: $color-dark;
+}
+
+.toggle__input:focus-visible + .toggle__switch {
+  box-shadow: 0 0 0 2px $color-blue;
+}

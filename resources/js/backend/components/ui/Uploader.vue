@@ -14,15 +14,19 @@
     <span class="bubble is-restriction">{{ restrictions }}</span>
     <ul class="uploader-queue" v-if="queue.length">
       <li v-for="item in queue" :key="item.id" :class="`is-${item.state}`">
+        <PhCheckCircle v-if="item.state === 'done'" :size="18" weight="light" class="uploader-queue__icon" />
+        <PhWarningCircle v-else-if="item.state === 'error'" :size="18" weight="light" class="uploader-queue__icon" />
+        <PhFile v-else :size="18" weight="light" class="uploader-queue__icon" />
         <span class="uploader-queue__name">{{ item.name }}</span>
-        <span class="uploader-queue__bar"><span :style="{ width: `${item.progress}%` }"></span></span>
         <span class="uploader-queue__state">{{ stateLabel(item) }}</span>
+        <span class="uploader-queue__bar" v-if="item.state === 'uploading'" :style="{ width: `${item.progress}%` }"></span>
       </li>
     </ul>
   </div>
 </template>
 <script setup>
 import { ref, computed } from 'vue';
+import { PhFile, PhCheckCircle, PhWarningCircle } from '@phosphor-icons/vue';
 import http from '@/lib/http';
 
 // Drop zone + file picker. Files go up one after the other; each gets a row

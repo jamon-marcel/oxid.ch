@@ -44,10 +44,10 @@
                     </div>
                   </div>
                   <div class="form-row is-sm" v-for="flag in flags" :key="flag.key">
-                    <RadioButton :label="flag.label" :name="flag.key" v-model="record[flag.key]" />
+                    <Toggle :label="flag.label" :name="flag.key" v-model="record[flag.key]" />
                   </div>
                   <div class="form-row is-sm is-last">
-                    <RadioButton label="Publizieren?" name="publish" v-model="record.publish" />
+                    <Toggle label="Publizieren?" name="publish" v-model="record.publish" />
                   </div>
                 </div>
               </div>
@@ -87,14 +87,13 @@
               >
                 <template #fields="{ image }">
                   <div class="form-row">
-                    <label>Vorschaubild für:</label>
-                    <input type="checkbox" class="visually-hidden" v-model="image.is_preview_navigation" :true-value="1" :false-value="0" id="is_preview_navigation">
-                    <label for="is_preview_navigation" class="form-control is-auto">Navigation</label>
-                    <input type="checkbox" class="visually-hidden" v-model="image.is_preview_works" :true-value="1" :false-value="0" id="is_preview_works">
-                    <label for="is_preview_works" class="form-control is-auto">Werkliste</label>
+                    <Toggle label="Vorschaubild Navigation?" name="is_preview_navigation" v-model="image.is_preview_navigation" />
                   </div>
                   <div class="form-row">
-                    <RadioButton label="Plan?" name="is_plan" v-model="image.is_plan" />
+                    <Toggle label="Vorschaubild Werkliste?" name="is_preview_works" v-model="image.is_preview_works" />
+                  </div>
+                  <div class="form-row">
+                    <Toggle label="Plan?" name="is_plan" v-model="image.is_plan" />
                   </div>
                 </template>
               </ImageManager>
@@ -119,7 +118,7 @@ import { ref, reactive, computed } from 'vue';
 import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
 import Tabs from '@/components/ui/Tabs.vue';
 import LabelRequired from '@/components/ui/LabelRequired.vue';
-import RadioButton from '@/components/ui/RadioButton.vue';
+import Toggle from '@/components/ui/Toggle.vue';
 import FormFooter from '@/components/ui/FormFooter.vue';
 import Uploader from '@/components/ui/Uploader.vue';
 import ImageManager from '@/components/images/ImageManager.vue';

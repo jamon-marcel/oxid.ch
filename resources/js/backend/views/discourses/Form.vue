@@ -39,7 +39,7 @@
                     </div>
                   </div>
                   <div class="form-row is-sm is-last">
-                    <RadioButton label="Publizieren?" name="publish" v-model="record.publish" />
+                    <Toggle label="Publizieren?" name="publish" v-model="record.publish" />
                   </div>
                 </div>
               </div>
@@ -82,10 +82,10 @@
               >
                 <template #fields="{ image }">
                   <div class="form-row">
-                    <RadioButton label="Vorschaubild?" name="is_preview" v-model="image.is_preview" />
+                    <Toggle label="Vorschaubild?" name="is_preview" v-model="image.is_preview" />
                   </div>
                   <div class="form-row">
-                    <RadioButton label="Theme?" name="theme" label-true="light" label-false="dark" v-model="image.theme" />
+                    <Toggle label="Theme?" name="theme" label-true="light" label-false="dark" v-model="image.theme" />
                   </div>
                 </template>
               </ImageManager>
@@ -110,7 +110,7 @@ import { ref, computed } from 'vue';
 import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
 import Tabs from '@/components/ui/Tabs.vue';
 import LabelRequired from '@/components/ui/LabelRequired.vue';
-import RadioButton from '@/components/ui/RadioButton.vue';
+import Toggle from '@/components/ui/Toggle.vue';
 import FormFooter from '@/components/ui/FormFooter.vue';
 import Uploader from '@/components/ui/Uploader.vue';
 import ImageManager from '@/components/images/ImageManager.vue';
