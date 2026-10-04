@@ -3,7 +3,7 @@
 Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
 Backend steps 3 (dead code), 4 (Laravel 13 + Glide dependency), search
 phase 1, 5 (Glide images), 6 (slim skeleton), 7 (config diff) and JWT →
-Sanctum done 2026-10-04.
+Sanctum and the validation-message check done 2026-10-04.
 
 Production: **https://oxid-architektur.ch** (www.oxid.ch is a different, static page).
 
@@ -56,8 +56,8 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | ✅ done — 167 production renders compared, geometry matches 167/167; 5 routes incl. the admin's `large`/`thumbnail`/`original`; full crawl of every emitted URL: see notes | `62c73c4` |
 | Slim skeleton, `app/User.php` → `app/Models/User.php` | ✅ done — same 146 routes, same per-route middleware; all 21 public pages 200, 404 renders as 404; 32 admin API GETs 200 with a JWT, `auth/me` + `auth/refresh` OK; 422 shape unchanged; `config:cache` OK. (`route:cache` was recorded as OK here too — wrong, it failed; see step 7) | `5c014f1` |
 | Config diff against L13 (was step 7), drop `intervention/image-laravel` | ✅ done — 145 routes (duplicate `/suche` removed); `config:cache` **and `route:cache`** OK; effective config unchanged except `same_site` → `lax` and the cache key prefix; public pages, admin API GETs, throttle headers OK | `5bdc257` |
-| JWT → Sanctum, incl. the Vue 2 SPA's auth bootstrap | ✅ done — cookie flow verified with curl and in headless Chromium against the Vue 2 admin: login, 8 list screens, edit + save, upload, session expiry on navigation and on POST, logout; 145 routes, caches OK | this commit |
-| Form-request validation messages (L12+ wants strings) | — | |
+| JWT → Sanctum, incl. the Vue 2 SPA's auth bootstrap | ✅ done — cookie flow verified with curl and in headless Chromium against the Vue 2 admin: login, 8 list screens, edit + save, upload, session expiry on navigation and on POST, logout; 145 routes, caches OK | `046c9e8` |
+| Form-request validation messages (L12+ wants strings) | ✅ checked, **no change needed** — all 10 form requests already return string messages (ran each one's rules + messages through the validator: 17 errors, 0 non-string); 422 shape verified unchanged in the Sanctum run | (docs only) |
 | Search phase 2: own scoring search + unit tests, drop Scout | — | |
 | **Rethink image handling — more generic** (requested 2026-10-04, see below) | — open, design first | |
 
@@ -253,6 +253,19 @@ moved aside (framework defaults), and diff. Then decide per file.
   `updated_at` moved).
 - Pre-existing, not changed: a POST to an unknown `api/*` URL returns **405**
   JSON, not the 404 fallback, because `Route::fallback` is GET-only.
+
+### Notes from the validation-message check
+
+- luvo's 500s came from array-valued messages; oxid has none. Nothing to
+  port, no `BaseFormRequest` needed.
+- Pre-existing, **not changed**: there is no `resources/lang/de/validation.php`
+  and `fallback_locale` is `de`, so any rule without a custom message shows
+  its raw key (`validation.string`, `validation.email`). Only `required` has
+  custom messages. Fix candidates: add a German `validation.php`, or set
+  the fallback to `en` — the latter would also change which file answers
+  missing `content`/`settings` keys on the public site, so check that first.
+- Lang files still live in `resources/lang`; L13 picks that up
+  (`app()->langPath()`), moving them to `lang/` is optional.
 
 ### To verify at the end of the backend phase
 
