@@ -27,7 +27,7 @@
     a {
         @extend %v-center;
         @extend %h-center;
-        border: 2px solid $color-dark;
+        border: $border-width solid $color-dark;
         border-radius: 50%;
         display: block;
         @include font-size($fs-xs);

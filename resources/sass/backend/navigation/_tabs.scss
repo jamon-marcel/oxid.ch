@@ -33,13 +33,13 @@ nav.tabs {
 
         &:hover,
         &.is-active {
-            border-bottom: 2px solid $color-dark;
+            border-bottom: $border-width solid $color-dark;
             color: $color-dark;
         }
 
         &.has-error {
             color: $color-danger;
-            border-bottom: 2px solid $color-danger;
+            border-bottom: $border-width solid $color-danger;
         }
     }
 }

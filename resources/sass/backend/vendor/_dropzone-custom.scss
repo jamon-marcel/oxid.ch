@@ -6,7 +6,7 @@
 
 .dropzone {
   background-color: transparent;
-  border: 2px solid $color-light-grey;
+  border: $border-width solid $color-light-grey;
   border-radius: 2px;
   padding: 6px !important;
   position: relative;
@@ -112,7 +112,7 @@
   }
     
   .dz-existing-asset {
-    border: 2px solid $color-light-grey;
+    border: $border-width solid $color-light-grey;
     border-radius: 2px;
     display: inline-block;
     position: relative;

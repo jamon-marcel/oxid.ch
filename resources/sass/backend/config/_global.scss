@@ -11,10 +11,16 @@
 /* Box shadows
  * -------------------- */
 
-$box-shadow: 0 4px 6px rgba(100, 100, 100, 0.3);
-$box-shadow-xs: 0 1px 1px rgba(100, 100, 100, 0.3);
-$box-shadow-sm: 0 2px 3px rgba(100, 100, 100, 0.3);
-$box-shadow-lg: 0 6px 9px rgba(100, 100, 100, 0.8);
+// Softened with the 1px lines (09-admin-ui.md #3): less opacity, same blur
+$box-shadow: 0 2px 8px rgba(100, 100, 100, 0.15);
+$box-shadow-xs: 0 1px 1px rgba(100, 100, 100, 0.15);
+$box-shadow-sm: 0 1px 4px rgba(100, 100, 100, 0.15);
+$box-shadow-lg: 0 4px 16px rgba(100, 100, 100, 0.25);
+
+// Lines: one width everywhere (were 2px, hardcoded 58 times)
+$border-width: 1px;
+$border-color: $color-light-grey;
+$border: $border-width solid $border-color;
 
 
 /* Default easing

@@ -6,8 +6,8 @@
  */
  
 .grid-layout-selector {
-  border-bottom: 2px solid $color-light-grey;
-  border-top: 2px solid $color-light-grey;
+  border-bottom: $border-width solid $color-light-grey;
+  border-top: $border-width solid $color-light-grey;
   @include responsive-prop('margin-bottom', $space-sm);
   position: relative;
 
@@ -54,7 +54,7 @@
 }
 
 .grid-layout-row {
-  border-bottom: 2px solid $color-light-grey;
+  border-bottom: $border-width solid $color-light-grey;
 
   @include responsive-prop('margin-bottom', $space-sm);
 
@@ -66,7 +66,7 @@
     transition: background-color .12s ease-out;
 
     &:first-child {
-      border-top: 2px solid $color-light-grey;
+      border-top: $border-width solid $color-light-grey;
     }
 
     &:hover {

@@ -12,7 +12,7 @@
 			<div>
 				<a href="javascript:;" @click="toggleMenu()" class="icon-close"></a>
 			</div>
-			<ul>
+			<ul class="site-nav__menu">
 				<li>
 					<span>Home</span>
 					<ul>
@@ -67,7 +67,9 @@
 					<router-link :to="{ name: 'contact' }">Kontakt</router-link>
 				</li>
 			</ul>
-			<router-link :to="{ name: 'logout' }" class="icon-logout">Logout</router-link>
+			<div class="site-nav__footer">
+				<router-link :to="{ name: 'logout' }" class="icon-logout">Logout</router-link>
+			</div>
 		</nav>
 	</div>
 </template>

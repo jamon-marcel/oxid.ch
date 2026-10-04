@@ -8,7 +8,7 @@ table {
     width: 100%;
 
     thead {
-        border-bottom: 2px solid $color-medium-grey;
+        border-bottom: $border-width solid $color-medium-grey;
     }
 
     th {

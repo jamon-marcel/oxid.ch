@@ -73,27 +73,39 @@
 %btn-dark,
 .btn-dark {
     background-color: $color-dark;
-    border: 2px solid color--dark;
+    border: $border-width solid color--dark;
     color: $color-light;
 }
 
 %btn-light,
 .btn-light {
     background-color: $color-white;
-    border: 2px solid $color-white;
+    border: $border-width solid $color-white;
     color: $color-dark;
 }
 
 %btn-danger,
 .btn-danger {
     background-color: $color-danger;
-    border: 2px solid color--danger;
+    border: $border-width solid color--danger;
     color: $color-light;
 }
 
 %btn-info,
 .btn-info {
     background-color: $color-info;
-    border: 2px solid color--info;
+    border: $border-width solid color--info;
     color: $color-light;
+}
+
+// The buttons suppress the outline (!important above), so keyboard focus
+// needs its own ring
+%btn,
+.btn,
+%btn-ib,
+.btn-ib,
+button {
+  &:focus-visible {
+    box-shadow: 0 0 0 2px $color-blue;
+  }
 }

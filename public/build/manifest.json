@@ -4,7 +4,7 @@
     "name": "axios"
   },
   "resources/js/backend/app.js": {
-    "file": "assets/app-Cg9Yj0sx.js",
+    "file": "assets/app-Bm2buqgA.js",
     "name": "app",
     "src": "resources/js/backend/app.js",
     "isEntry": true,
@@ -31,7 +31,7 @@
     "isEntry": true
   },
   "resources/sass/backend/app.scss": {
-    "file": "assets/app-BYHSWtYq.css",
+    "file": "assets/app-ByYvccSo.css",
     "name": "app",
     "names": [
       "app.css"

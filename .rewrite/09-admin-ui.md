@@ -136,6 +136,11 @@ group-header rule doesn't depend on element nesting.
 The Sass side is 18 files in `components/icons/`, one per icon, plus
 `config/_icons.scss`.
 
+**Done differently, 2026-10-04:** Phosphor light as SVG files behind the
+existing CSS classes, not as components — see `06-progress.md`, "Notes from
+the admin UI refresh" (the `progress` mixin works on `event.target`).
+Original plan, kept for reference:
+
 **Approach — copy luvo exactly** (`13647d0`, "Use Phosphor light icons like
 strut"):
 

@@ -8,7 +8,7 @@
     @extend %btn-ib;
     @extend %btn-icon;
     background-color: $color-info;
-    border: 2px solid color--info;
+    border: $border-width solid color--info;
     color: $color-light;
     background-image: url($url-icons + 'file-plus-light.svg');
     margin-bottom: 15px;

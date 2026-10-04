@@ -13,7 +13,7 @@
   }
 
   select {
-    border: 2px solid $color-medium-grey;
+    border: $border-width solid $color-medium-grey;
   }
 }
 
@@ -46,7 +46,7 @@
 
       img {
         background-color: $color-white;
-        border: 2px solid $color-light-grey;
+        border: $border-width solid $color-light-grey;
         padding: 5px;
         display: block;
         width: auto;

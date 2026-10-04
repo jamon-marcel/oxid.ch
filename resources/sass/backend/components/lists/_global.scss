@@ -7,14 +7,14 @@
 
 // List view
 .list-items {
-    border-bottom: 2px solid $color-light-grey;
+    border-bottom: $border-width solid $color-light-grey;
 
     &.is-grouped {
         border-bottom: none;
 
         > div {
             @include responsive-prop('margin-bottom', $space-md);
-            border-bottom: 2px solid $color-light-grey;
+            border-bottom: $border-width solid $color-light-grey;
 
             &.is-hidden {
                 display: none;
@@ -22,14 +22,14 @@
         }
 
         .list-item {
-            // border-bottom: 2px solid $color-light-grey;
+            // border-bottom: $border-width solid $color-light-grey;
             // @include responsive-prop('padding-bottom', $space-xs);
         }
     }
 }
 
 .list-item {
-    border-top: 2px solid $color-light-grey;
+    border-top: $border-width solid $color-light-grey;
     display: grid;
     grid-template-columns: auto 102px;
     @include responsive-prop('padding-top', $space-xs);
@@ -162,7 +162,7 @@
 }
 
 .list-item-card {
-    border: 2px solid $color-dark;
+    border: $border-width solid $color-dark;
     border-radius: 2px;
     display: inline-block;
     padding: 10px;

@@ -7,7 +7,7 @@
  */
 
 .editor {
-  border: 2px solid $color-light-grey;
+  border: $border-width solid $color-light-grey;
   border-radius: 2px;
 
   &.editor--error {
@@ -17,7 +17,7 @@
 
 .editor__toolbar {
   background-color: $color-light;
-  border-bottom: 2px solid $color-light-grey;
+  border-bottom: $border-width solid $color-light-grey;
   display: flex;
   flex-wrap: wrap;
   gap: 2px;

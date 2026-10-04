@@ -11,7 +11,7 @@ input {
     }
 
     &.is-caption {
-        border: 2px solid $color-dark-grey;
+        border: $border-width solid $color-dark-grey;
         @include font-size($fs-xs);
         line-height: 1 !important;
         padding: 7px 5px 5px 5px;
@@ -19,7 +19,7 @@ input {
     }
 
     &.is-light {
-        border: 2px solid $color-grey;
+        border: $border-width solid $color-grey;
         color: $color-dark;
     }
 }

@@ -365,6 +365,36 @@ vuedraggable and the cropper went in together.
   size, 8070×5572), DB rows from a dump taken before the run. All test
   tables restored from dumps; temp user deleted.
 
+### Notes from the admin UI refresh
+
+- **Icons: SVG files, not components — a deliberate change from the plan.**
+  The 27 referenced icon files are now Phosphor *light* SVGs with the
+  original colours (`currentColor` → black, as it rendered in a CSS
+  background), same file names, so every `.icon-*` class and template stays
+  as it is. Reason: the `progress` mixin toggles `is-loading` on
+  `event.target`; with an inline `<svg>` component inside each link the
+  target becomes the svg and the loading state lands on the wrong element
+  (24 screens). Same look as luvo's components, no behaviour risk.
+  10 unreferenced Feather files deleted. The `grid-*.svg` layout
+  pictograms stay: they're custom diagrams, referenced dynamically
+  (`'grid-' + key`) — `09-admin-ui.md` wrongly listed them as unused.
+  `file.svg` (custom) stays.
+- **Borders:** `$border-width: 1px` (+ `$border-color`, `$border`) in
+  `config/_global.scss`; 39 hardcoded `2px solid|dashed` lines use it
+  (`09-admin-ui.md` counted 54, which included `border-radius: 2px`). CSS
+  triangles (6px/20px) untouched; the notification accent bar 5px → 3px.
+- **Focus:** inputs keep the blue border on focus plus a 1px ring
+  (`box-shadow`), so focus doesn't get fainter with the thinner border.
+  Buttons suppress `outline` (`!important`), so they get a
+  `:focus-visible` ring.
+- **Shadows** softened in the four variables only (lower opacity, similar
+  blur). No explicit call sites use the mixin.
+- **Menu:** 280px; links regular `$fs-sm`, grey → white; group labels
+  (Home, Team, Jobs, Profil) small uppercase headers; logout below a 1px
+  rule (wrapped in `.site-nav__footer`). The active marker uses
+  `.router-link-active` — the old CSS styled `.is-active`, which
+  router-link never sets, so the current page was never highlighted.
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the
@@ -382,14 +412,14 @@ vuedraggable and the cropper went in together.
 | Step | Status | Commit |
 |---|---|---|
 | Public site on Vite | ✅ done — 30 screenshots (15 pages × 1280/375) old Mix build vs Vite build: 27 pixel-identical, 3 differ only by the random home image; menu, map, Swiper, collapsible, lazysizes, scrollTo work; `vite` dev server checked | `cba7799` |
-| Admin on Vue 3 + Vite | ✅ done — headless Chromium against the real admin: all 27 screens render without errors; login (incl. wrong-password message), editor, save, drag reorder, Dropzone upload → crop → delete, grid builder (add row, pick image, delete row), session expiry, logout | this commit |
-| Dropzone v6 replacement | ✅ done, same commit — thin wrapper `global/upload/Dropzone.vue` | this commit |
-| TinyMCE → Tiptap (incl. round-trip verification) | ✅ done, same commit — 213 stored values round-trip with 0 visible differences | this commit |
-| `projects/grid/` page builder | ✅ ported in the same commit (vuedraggable 4 slot syntax; `$parent` calls are direct parents, kept) | this commit |
-| Icons → Phosphor light, during the port (`09-admin-ui.md`) | — | |
-| Border tokens, 1px lines (`09-admin-ui.md`) | — | |
-| Menu: type scale + group headers | — | |
-| Login screen / splash | — | |
+| Admin on Vue 3 + Vite | ✅ done — headless Chromium against the real admin: all 27 screens render without errors; login (incl. wrong-password message), editor, save, drag reorder, Dropzone upload → crop → delete, grid builder (add row, pick image, delete row), session expiry, logout | `15c4102` |
+| Dropzone v6 replacement | ✅ done, same commit — thin wrapper `global/upload/Dropzone.vue` | `15c4102` |
+| TinyMCE → Tiptap (incl. round-trip verification) | ✅ done, same commit — 213 stored values round-trip with 0 visible differences | `15c4102` |
+| `projects/grid/` page builder | ✅ ported in the same commit (vuedraggable 4 slot syntax; `$parent` calls are direct parents, kept) | `15c4102` |
+| Icons → Phosphor light, during the port (`09-admin-ui.md`) | ✅ done — as SVG files behind the existing CSS classes, not components (see notes) | this commit |
+| Border tokens, 1px lines (`09-admin-ui.md`) | ✅ done — `$border-width`, 39 lines; softer shadows; focus rings | this commit |
+| Menu: type scale + group headers | ✅ done | this commit |
+| Login screen / splash | ⏳ login error shown (`15c4102`); random home image as background **waits for the image agent** — it is reworking `/img/home/…` | |
 
 ### To verify at the end of the frontend phase
 

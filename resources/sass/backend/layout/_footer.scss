@@ -65,6 +65,6 @@ footer.site-footer {
   }
 
   input[type=text].search {
-    border: 2px solid $color-light-grey;
+    border: $border-width solid $color-light-grey;
   }
 }

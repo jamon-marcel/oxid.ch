@@ -22,7 +22,7 @@
   }
 
   .upload-item {
-    border: 2px solid $color-light-grey;
+    border: $border-width solid $color-light-grey;
     border-radius: 2px;
     display: inline-block;
     position: relative;
@@ -74,13 +74,13 @@
 }
 
 .upload-listing-rows {
-  border-top: 2px solid $color-light-grey;
+  border-top: $border-width solid $color-light-grey;
 
   margin-bottom: 50px;
   
   .upload-item-row {
     align-items: center;
-    border-bottom: 2px solid $color-light-grey;
+    border-bottom: $border-width solid $color-light-grey;
     cursor: move;
     display: flex;
     justify-content: space-between;

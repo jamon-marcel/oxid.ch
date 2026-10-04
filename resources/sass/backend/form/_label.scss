@@ -21,7 +21,7 @@ label {
 
     &.form-control {
         background-color: transparent;
-        border: 2px solid $color-grey;
+        border: $border-width solid $color-grey;
         border-radius: 2px;
         color: $color-grey;
         cursor: pointer;
@@ -44,6 +44,6 @@ label {
 input[type="radio"]:checked + .form-control,
 input[type="checkbox"]:checked + .form-control {
     background-color: $color-blue;
-    border: 2px solid $color-blue;
+    border: $border-width solid $color-blue;
     color: $color-white;
 }
