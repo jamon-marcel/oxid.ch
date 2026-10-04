@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <notifications classes="notification"/>
     <main class="content" role="main">
       <div>
         <h1>{{title}}</h1>
@@ -295,7 +294,6 @@
 </template>
 <script>
 // Layout
-import PageHeader from "@/layout/PageHeader.vue";
 
 // Form elements
 import FormFooter from "@/components/global/form/Footer.vue";

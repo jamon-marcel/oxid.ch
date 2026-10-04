@@ -43,8 +43,8 @@ What *does* need touching:
 
 - **1 global filter** — `filters.js`, `Vue.filter('truncate')`. Vue 3 removed
   filters. One template pipe uses it. Convert to a method or a plain import.
-- **28 files declare `mixins:`** — Vue 3 still supports mixins in the Options
-  API. Keep them. Do not refactor to composables.
+- **28 files declare `mixins:`** — ~~keep them~~. **Revised 2026-10-04:**
+  they become composables, as in luvo (`<script setup>` throughout).
 
 ## Dependency migration table
 

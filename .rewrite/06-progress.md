@@ -415,6 +415,27 @@ vuedraggable and the cropper went in together.
   `.router-link-active` — the old CSS styled `.is-active`, which
   router-link never sets, so the current page was never highlighted.
 
+### Notes from the `<script setup>` rewrite
+
+- **Why:** `.rewrite/` said "stay on Options API" — written before luvo's own
+  rewrite and never updated. Target is luvo's current code; see README.
+- **Same API, same markup.** Composables take oxid's endpoints
+  (`GET …/get`, `GET edit/{id}`, `POST create`, `POST update/{id}`,
+  `GET status/{id}`, `DELETE destroy/{id}`, `POST order`); templates keep
+  oxid's CSS classes, so the screens look as before. Action icons are
+  Phosphor components now (`ListActions`), as in luvo — the reason for
+  keeping CSS icons (`progress` on `event.target`) goes with the mixin;
+  saving shows `LoadingIndicator` instead.
+- **Validation moves to the API's 422** (Laravel's default shape,
+  `errors['title.de']`), with an optional client `validate()` for checks
+  the API doesn't make (e.g. a project needs images).
+- **`useResourceForm` fills `null` fields from the model defaults** on
+  load (luvo's behaviour) — the generic fix for the team `role: null` case.
+- Lazy routes: the admin entry chunk is 162 KB (was 907 KB in one file).
+- Converted screens live in `views/`; until an entity is converted its old
+  `components/` screen keeps running in the new `App` shell (no page
+  header / notifications of its own any more).
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the
@@ -436,9 +457,12 @@ vuedraggable and the cropper went in together.
 | Dropzone v6 replacement | ✅ done, same commit — thin wrapper `global/upload/Dropzone.vue` | `15c4102` |
 | TinyMCE → Tiptap (incl. round-trip verification) | ✅ done, same commit — 213 stored values round-trip with 0 visible differences | `15c4102` |
 | `projects/grid/` page builder | ✅ ported in the same commit (vuedraggable 4 slot syntax; `$parent` calls are direct parents, kept) | `15c4102` |
-| Icons → Phosphor light, during the port (`09-admin-ui.md`) | ✅ done — as SVG files behind the existing CSS classes, not components (see notes) | this commit |
-| Border tokens, 1px lines (`09-admin-ui.md`) | ✅ done — `$border-width`, 39 lines; softer shadows; focus rings | this commit |
-| Menu: type scale + group headers | ✅ done | this commit |
+| Icons → Phosphor light, during the port (`09-admin-ui.md`) | ✅ done — as SVG files behind the existing CSS classes, not components (see notes) | `4dfc989` |
+| Border tokens, 1px lines (`09-admin-ui.md`) | ✅ done — `$border-width`, 39 lines; softer shadows; focus rings | `4dfc989` |
+| Menu: type scale + group headers | ✅ done | `4dfc989` |
+| **`<script setup>` + composables, luvo's shape** (scope changed 2026-10-04): foundation + news | ✅ done — `lib/{http,utils,images}`, composables `useResourceForm/useListing/useOrder/useEscape`, `components/ui/*`, `App.vue` + `views/layout/PageHeader`, lazy `router.js` with the session guard; news list/create/edit/order/toggle and server-side validation verified; old screens still run inside the new shell | this commit |
+| … projects, discourses, team, jobs, profile, contact | — | |
+| … image pages, listings, grid builder | — | |
 | Login screen / splash | ⏳ login error shown (`15c4102`); random home image as background **waits for the image agent** — it is reworking `/img/home/…` | |
 
 ### To verify at the end of the frontend phase

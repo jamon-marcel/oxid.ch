@@ -18,7 +18,8 @@ behaviour. Nothing else.
 
 ## Explicitly OUT of scope
 
-- Composition API / `<script setup>` rewrite — keep Options API + mixins
+- ~~Composition API / `<script setup>` rewrite — keep Options API + mixins~~
+  **Moved into scope 2026-10-04** (match luvo); est. +1.5–2 days
 - Test suite — there is none; QA stays manual click-through
 - Any design or UX change — **except** the admin UI refresh in `09-admin-ui.md`
 - The **public site** frontend: plain JS + jQuery + Bootstrap 4, no Vue.

@@ -18,6 +18,12 @@ header.site-header {
     }
 }
 
+// Menu button (Phosphor), where .icon-menu was
+.site-header__menu {
+    position: absolute;
+    right: 20px;
+}
+
 header.auth-header {
     @include responsive-prop('margin-bottom', $space-sm);
     h1 {

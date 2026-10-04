@@ -1,7 +1,5 @@
 <template>
   <div>
-    <page-header/>
-    <notifications classes="notification"/>
     <div class="container">
       <main class="content" role="main">
         <div>
@@ -59,13 +57,11 @@
   </div>
 </template>
 <script>
-import PageHeader from "@/layout/PageHeader.vue";
 import draggable from 'vuedraggable';
 import Progress from "@/mixins/progress";
 
 export default {
   components: {
-    PageHeader: PageHeader,
     draggable,
   },
 

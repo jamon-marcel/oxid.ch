@@ -98,9 +98,18 @@ nav.site-nav {
         padding-top: 20px;
         @include responsive-prop('padding-bottom', $space-md);
 
-        .icon-logout {
-            bottom: auto;
-            top: 20px;
-        }
+    }
+
+    // Close button (Phosphor), where .icon-close was
+    .site-nav__close {
+        color: $color-white !important;
+        @include responsive-prop('left', $space-md);
+        position: absolute;
+    }
+
+    .site-nav__logout {
+        color: $color-medium-grey !important;
+        @include responsive-prop('padding-left', $space-md);
+        @include font-size($fs-xs);
     }
 }

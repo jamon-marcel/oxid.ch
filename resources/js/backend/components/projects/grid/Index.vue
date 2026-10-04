@@ -1,7 +1,5 @@
 <template>
   <div>
-    <page-header/>
-    <notifications classes="notification"/>
     <div class="container">
       <main class="content" role="main">
         <div>
@@ -68,7 +66,6 @@
   </div>
 </template>
 <script>
-import PageHeader from "@/layout/PageHeader.vue";
 import draggable from 'vuedraggable';
 import GridRow from "@/components/projects/grid/Row.vue";
 import GridSelector from "@/components/projects/grid/Selector.vue";
@@ -77,7 +74,6 @@ import Utils from "@/mixins/utils";
 export default {
   components: {
     draggable,
-    PageHeader: PageHeader,
     GridRow: GridRow,
     GridSelector: GridSelector
   },

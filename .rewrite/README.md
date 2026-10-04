@@ -58,8 +58,12 @@ are deliberately not folded into the rework total.
 
 ## Ground rule for scope
 
-Stay on Options API. Keep the mixins. No test suite. No design changes.
-Do **not** rewrite into `<script setup>` / composables while in there.
+~~Stay on Options API. Keep the mixins.~~ **Revised 2026-10-04:** the admin
+follows luvo's current code — `<script setup>`, composables instead of
+mixins, `lib/http.js`, shared `components/ui/`, `views/` per entity. This
+rule predated luvo's own rewrite and was never updated. The first port
+(`15c4102`) was Options API; the rewrite follows in steps.
+No test suite. No design changes.
 
 Four deliberate exceptions, decided 2026-10-04: TinyMCE is **replaced with
 Tiptap** rather than upgraded, the image pipeline **serves requested sizes +

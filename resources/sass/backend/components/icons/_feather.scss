@@ -1,0 +1,61 @@
+/**
+ * -----------------------------------------------------------------------------
+ * File: components/icons/feather
+ * Phosphor icon components (the class name is luvo's, from Feather days)
+ * -----------------------------------------------------------------------------
+ */
+
+.feather-icon {
+  align-items: center;
+  color: $color-dark !important;
+  display: flex;
+  @include font-regular();
+  @include font-size($fs-sm);
+  line-height: 1 !important;
+  text-decoration: none;
+  position: relative;
+
+  svg {
+    position: relative;
+  }
+
+  // Unpublished
+  .is-off {
+    color: #aaaaaa;
+  }
+
+  &.feather-icon--prepend span {
+    padding-left: 5px;
+  }
+
+  &:hover {
+    * {
+      color: $color-dark-grey;
+      transition: color .1s ease-out;
+    }
+  }
+}
+
+// Saving / loading
+.loading-indicator {
+  align-items: center;
+  background-color: rgba($color-white, .6);
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 501;
+}
+
+.loading-indicator__icon {
+  animation: rotation 2s infinite linear;
+  color: $color-dark;
+}
+
+@keyframes rotation {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(359deg); }
+}

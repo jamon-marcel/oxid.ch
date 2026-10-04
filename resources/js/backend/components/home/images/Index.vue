@@ -1,7 +1,5 @@
 <template>
   <div>
-    <page-header/>
-    <notifications classes="notification"/>
     <div class="container">
       <main class="content" role="main">
         <div>
@@ -29,7 +27,6 @@
 </template>
 <script>
 // Layout
-import PageHeader from "@/layout/PageHeader.vue";
 
 // Upload
 import ImageUpload from "@/components/global/images/Upload.vue";
@@ -41,7 +38,6 @@ import Progress from "@/mixins/progress";
 
 export default {
   components: {
-    PageHeader,
     ImageUpload,
     ImageListing,
   },
