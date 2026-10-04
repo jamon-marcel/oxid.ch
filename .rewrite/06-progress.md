@@ -62,7 +62,7 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
      / `post_max_size` / `memory_limit`, Imagick loaded? (decides 16 MB
      uploads and render memory), CLI PHP version, access-log samples
      (`/img/project`, `/img/tiny`, search queries for ranking tuning).
-  3. Image agent's open item: 16-byte AVIF renders under forked PHP workers.
+  3. ~~Broken AVIF renders~~ — guarded, see "Broken AVIF renders" below.
   4. ~~`vuedraggable` → SortableJS~~ — done, see "vuedraggable → SortableJS"
      below. Found on the way and fixed: `order` columns were `TINYINT`.
      **Production needs `php artisan migrate`** (see Deploy notes).
@@ -147,25 +147,35 @@ Details in `05-image-pipeline.md`, "Result".
   against production (the `<picture>` wrapper), and the admin image screens
   once the SPA runs again.
 
-### Open: broken AVIF renders under forked PHP workers (found 2026-10-04)
+### Broken AVIF renders (found 2026-10-04, guarded the same day)
 
-During the generic-image crawl some AVIF renditions came back as **16-byte
-files** (an ISO box header only) with status 200. 1,523 of 8,525 files in
-`storage/app/.glide-cache` were that small, most of them from the step 5
-crawl, which checked status codes only. Reproduced:
+During the generic-image crawl some AVIF renditions came back broken with
+status 200. Two shapes, both from Imagick's AVIF encoder: a **bare 16-byte
+`ftyp` box** (1,549 files) and a **HEIF container whose `pitm` points at no
+image** (2 files, 93 and 35 KB). All were written 2026-10-04 11:40–14:21,
+during the crawls.
 
-- `php artisan serve` with `PHP_CLI_SERVER_WORKERS=8` (forked workers):
-  16 bytes, every time, for e.g. `lokstadt_05.jpg` at `w=900, fm=avif`.
-- the same render in the CLI, or through a single-process `artisan serve`:
-  35,425 bytes, correct.
+**Not reproducible afterwards:** 0 broken out of 78 fresh AVIF renders —
+Herd's PHP-FPM sequential and 8 in parallel, `artisan serve` with
+`PHP_CLI_SERVER_WORKERS=4` and `=8` under parallel load, 900 to 2400 px.
+The earlier "16 bytes every time" was most likely Glide serving the
+already-cached broken file. Root cause unknown (`imagick.set_single_thread`
+is on, so not ImageMagick's OpenMP).
 
-So Imagick's AVIF encoder fails in a forked child. PHP-FPM also forks its
-workers after the extension is loaded, so **production may be affected**.
-luvo serves Imagick AVIF on Hostpoint; check its cache for tiny files. To do
-before go-live: reproduce under FPM (Herd/Hostpoint); guard `ImageController::respond()`
-against an implausibly small/undecodable rendition (delete it, fall back to
-the upload's format); clear the tiny files from the cache. Local cleanup:
-`find storage/app/.glide-cache -type f -size -100c -delete`.
+**Guard** (`ImageController::render()`): every rendition is checked with
+`getimagesizefromstring()` before it is served — that accepts all 7,214
+good cache files (JPEG, WebP, PNG, AVIF) and rejects both broken shapes,
+and only reads headers. A broken one is deleted and rendered once more;
+broken twice, the upload's own format is served with `max-age=300` instead
+of a year `immutable`, and a warning is logged ("Broken avif rendition of
+…"). So a broken file can't stick in the cache or in a browser.
+`tests/Feature/ImageRenditionTest.php` covers both paths (fails against the
+old controller). The 1,551 broken files are deleted from the local cache.
+
+**Production:** watch `laravel.log` for "Broken … rendition" after go-live.
+If it shows up often, drop `avif` from `ImageSupport::modernFormats()`
+(WebP stays). PHP ≥ 8.2 needed for AVIF in `getimagesize` — production is
+8.3+.
 
 ### Notes from step 6
 

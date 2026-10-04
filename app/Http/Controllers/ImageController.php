@@ -11,6 +11,7 @@ use App\Support\ImageSupport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use League\Glide\Server;
 use League\Glide\Signatures\SignatureException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -119,15 +120,53 @@ class ImageController extends Controller
   protected function respond(string $filename, array $params, int $maxAge, array $cacheDirectives = []): Response
   {
     $format = in_array($params['fm'] ?? null, ImageSupport::modernFormats(), true) ? $params['fm'] : $this->sourceFormat($filename);
+    $image = $this->render($filename, $params, $format);
 
+    // The encoder failed twice: the upload's own format for now, cached
+    // briefly so the modern format is tried again soon
+    if ($image === null && $format !== $this->sourceFormat($filename)) {
+      Log::warning("Broken {$format} rendition of {$filename}, served as {$this->sourceFormat($filename)}", $params);
+      $format = $this->sourceFormat($filename);
+      $image = $this->render($filename, $params, $format);
+      [$maxAge, $cacheDirectives] = [300, []];
+    }
+
+    abort_if($image === null, 500, 'Image could not be rendered');
+
+    return response($image, 200, [
+      'Content-Type' => 'image/' . ($format === 'jpg' ? 'jpeg' : $format),
+    ] + $this->cacheHeaders($maxAge, $cacheDirectives));
+  }
+
+  /**
+   * The rendition, or null if it is undecodable twice. A broken one is
+   * deleted from the cache, so the next request renders it again. Seen
+   * with Imagick's AVIF encoder: a bare 16-byte ftyp box, or a HEIF
+   * container without the image.
+   */
+  protected function render(string $filename, array $params, string $format): ?string
+  {
     $params['fm'] = $format;
     $params['q'] = self::FORMAT_QUALITY[$format];
 
-    $cachedPath = $this->server->makeImage('uploads/' . $filename, $params);
+    for ($attempt = 1; $attempt <= 2; $attempt++) {
+      $cachedPath = $this->make($filename, $params);
+      $image = $this->server->getCache()->read($cachedPath);
+      if (@getimagesizefromstring($image)) {
+        return $image;
+      }
+      $this->server->getCache()->delete($cachedPath);
+    }
 
-    return response($this->server->getCache()->read($cachedPath), 200, [
-      'Content-Type' => 'image/' . ($format === 'jpg' ? 'jpeg' : $format),
-    ] + $this->cacheHeaders($maxAge, $cacheDirectives));
+    return null;
+  }
+
+  /**
+   * Renders into the Glide cache (unless cached) and returns the cache path.
+   */
+  protected function make(string $filename, array $params): string
+  {
+    return $this->server->makeImage('uploads/' . $filename, $params);
   }
 
   /**
