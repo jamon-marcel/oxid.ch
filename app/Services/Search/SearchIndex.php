@@ -68,7 +68,7 @@ class SearchIndex
    */
   public function search(string $query): array
   {
-    $terms = Tokenizer::tokens($query);
+    $terms = Tokenizer::queryTokens($query);
     if (! $terms) {
       return [];
     }

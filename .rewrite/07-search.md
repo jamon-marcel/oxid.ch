@@ -144,6 +144,11 @@ Weighted fields, heaviest first:
 
 Tokenisation: `strip_tags` → lowercase → split on non-letters → drop tokens
 < 2 chars. Store both the raw token and a normalised form (see German notes).
+Queries also drop stopwords (`Tokenizer::STOPWORDS`: German articles,
+prepositions, conjunctions, a few English ones); a query of stopwords only
+keeps them. Without this, "das schulhaus" found 4 records instead of 9: a
+document matching every query token wins, so "das" acted as a required word.
+The index keeps stopwords.
 
 #### Scoring
 
@@ -242,7 +247,7 @@ Every loss from phase 1 is recovered; "zurich" = "zürich" exactly; "hollz"
 typo tolerance is broader. **Ranking is not yet tuned against real
 queries** — that still needs the access-log sample (`06-progress.md`).
 
-Tests: 18 unit tests in `tests/Unit/Search` — tokenisation, umlaut
+Tests: 21 unit tests in `tests/Unit/Search` — tokenisation, stopwords, umlaut
 variants, every match rule and its thresholds, compounds, multi-word, and
 ranking (title outranks description).
 

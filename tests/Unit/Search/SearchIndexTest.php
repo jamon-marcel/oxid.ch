@@ -50,6 +50,12 @@ class SearchIndexTest extends TestCase
     $this->assertSame(['project:4'], $this->keys('schule'));
   }
 
+  public function test_stopwords_do_not_narrow_the_results(): void
+  {
+    $this->assertSame($this->keys('holz'), $this->keys('das Holz'));
+    $this->assertSame(['project:4'], $this->keys('ein Schulhaus in Zürich'));
+  }
+
   public function test_a_typo_at_the_start_of_a_longer_word(): void
   {
     $this->assertSame(SearchIndex::TYPO_PREFIX, SearchIndex::match('hollz', 'holzbauweise'));
