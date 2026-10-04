@@ -13,7 +13,7 @@ table {
 
     th {
         color: $color-medium-grey;
-        @include font-bold();
+        @include font-regular();
         @include font-size($fs-sm);
         text-align: left;
         vertical-align: middle;

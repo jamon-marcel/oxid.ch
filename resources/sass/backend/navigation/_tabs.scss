@@ -24,7 +24,7 @@ nav.tabs {
     a {
         color: $color-medium-grey;
         display: block;
-        @include font-bold();
+        @include font-regular();
         letter-spacing: 0.05em;
         @include responsive-prop('padding-bottom', $space-xs);
         @include responsive-prop('padding-top', $space-xs);

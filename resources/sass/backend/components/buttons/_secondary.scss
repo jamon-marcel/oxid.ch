@@ -11,7 +11,7 @@
 	border: none;
     color: $color-white;
 	@include font-size($fs-sm);
-	@include font-bold();
+	@include font-regular();
 	padding: 12px 24px;
 	width: auto;
 	@include transition(background-color .16s ease-out);

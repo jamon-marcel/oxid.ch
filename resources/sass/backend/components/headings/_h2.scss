@@ -5,7 +5,7 @@
  */
 
 h2 {
-    @include font-regular();
+    @include font-bold();
     @include font-size($fs-md);
     @include responsive-prop('margin-bottom', $space-xxs);
 }

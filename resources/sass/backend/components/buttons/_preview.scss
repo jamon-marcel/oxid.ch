@@ -15,7 +15,7 @@
   border: none;
   color: $color-white;
   @include font-size($fs-sm);
-  @include font-bold();
+  @include font-regular();
   line-height: 1 !important;
   padding: 12px 24px 12px 36px;
   width: auto;
