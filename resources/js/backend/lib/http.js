@@ -15,7 +15,9 @@ const http = axios.create({
 export function handleErrors(router) {
   http.interceptors.response.use(response => response, error => {
     const response = error.response;
-    if ((error.config?.url ?? '').includes('/api/auth/')) {
+    // Auth calls handle their own errors; so does a caller that passes
+    // { handleErrors: false } (the uploader shows the API's message)
+    if ((error.config?.url ?? '').includes('/api/auth/') || error.config?.handleErrors === false) {
       return Promise.reject(error);
     }
 

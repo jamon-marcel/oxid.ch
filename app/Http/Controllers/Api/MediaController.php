@@ -1,8 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use App\Support\ImageSupport;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
@@ -10,6 +9,12 @@ use App\Http\Controllers\Controller;
 
 class MediaController extends Controller
 {
+  /**
+   * Largest upload in KB. The admin's uploaders show and check the same
+   * limit (resources/js/backend/composables/useImages.js, useFiles.js).
+   */
+  public const MAX_KB = 8 * 1024;
+
   protected $upload_path;
 
   protected $prefix = 'oxid';
@@ -35,6 +40,20 @@ class MediaController extends Controller
    */
   public function upload(Request $request)
   {
+    // Was checked only in the browser; the API took any file of any size.
+    // Content (mimes) and name (extensions): a JPEG named .php passes
+    // mimes alone and would be stored as .php in the public uploads.
+    $request->validate([
+      'file' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'extensions:jpg,jpeg,png,pdf', 'max:' . self::MAX_KB],
+    ], [
+      'file.required' => 'Keine Datei erhalten.',
+      'file.file' => 'Keine Datei erhalten.',
+      'file.uploaded' => 'Die Datei konnte nicht hochgeladen werden (zu gross für den Server?).',
+      'file.mimes' => 'Dateityp nicht erlaubt (erlaubt: jpg, png, pdf).',
+      'file.extensions' => 'Dateityp nicht erlaubt (erlaubt: jpg, png, pdf).',
+      'file.max' => 'Datei ist zu gross (max. ' . (self::MAX_KB / 1024) . ' MB).',
+    ]);
+
     $file = $request->file('file');
     $name = $this->sanitize(trim($file->getClientOriginalName()));
     $name = uniqid()  . '_' . $name;
@@ -45,9 +64,10 @@ class MediaController extends Controller
     $orientation = '';
     if (in_array($filetype, $image_types))
     {
-      $manager = new ImageManager(new Driver());
-      $img = $manager->decodePath(storage_path('app/public/uploads/') . $name);
-      $orientation = $img->width() >= $img->height() ? 'l' : 'p';
+      // From the file header (EXIF rotation included), not a full decode:
+      // GD needs ~4 bytes per pixel, 269 MB for a 65 MP floor plan
+      [$width, $height] = ImageSupport::dimensions($this->upload_path . '/' . $name) ?? [1, 0];
+      $orientation = $width >= $height ? 'l' : 'p';
     }
     return response()->json(['name' => $name, 'filetype' => $filetype, 'orientation' => $orientation], 200);
   }

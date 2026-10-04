@@ -500,6 +500,27 @@ vuedraggable and the cropper went in together.
   stays below it.
 - Admin entry chunk 156 KB.
 
+### Notes from the upload check (2026-10-04)
+
+- **The 8 MB limit was only checked in the browser.** `MediaController::upload`
+  validated nothing: any type, any size up to PHP's limits. Now: `mimes`
+  (content) **and** `extensions` (name) jpg/jpeg/png/pdf, `max` 8 MB
+  (`MediaController::MAX_KB`), German messages; the Uploader shows the
+  API's message. `mimes` alone let a JPEG named `.exe` (or a JPEG/PHP
+  polyglot named `.php`) through and stored it under that name in the
+  public uploads — verified, now 422. Existing uploads: 730 jpg, 328 png,
+  5 pdf, nothing else.
+- **Orientation without decoding.** The upload decoded the whole image
+  with GD just for portrait/landscape — 269 MB for the 65 MP floor plan
+  `6221f934848dd_18-grundriss-erdgeschoss-kopie.jpg` (7.7 MB file).
+  `ImageSupport::dimensions()` reads the header + EXIF instead; same
+  answer as the stored value for all 656 project images.
+- **Memory follows pixels, not bytes.** Glide still decodes the whole
+  source when it renders. With GD that is ~4 bytes/pixel, so a 16 MB JPEG
+  (easily 100+ MP) needs 400 MB+. Raising the limit needs production's
+  web `upload_max_filesize` / `post_max_size` / `memory_limit` and whether
+  Imagick is loaded (open item above).
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the

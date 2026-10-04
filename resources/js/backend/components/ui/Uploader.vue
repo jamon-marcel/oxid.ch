@@ -62,6 +62,18 @@ function rejection(file) {
   return null;
 }
 
+function failure(error) {
+  const response = error.response;
+  if (response?.status === 413) {
+    return 'Datei ist zu gross für den Server.';
+  }
+  // The API's validation message (type, size)
+  if (response?.status === 422) {
+    return Object.values(response.data.errors ?? {}).flat()[0] ?? 'Datei abgelehnt.';
+  }
+  return `Upload fehlgeschlagen (${response?.status ?? 'Netzwerk'}).`;
+}
+
 async function upload(files) {
   if (files.length > props.maxFiles) {
     notify({ type: 'error', text: `Zu viele Dateien (max. ${props.maxFiles} auf einmal).` });
@@ -77,12 +89,11 @@ async function upload(files) {
     const data = new FormData();
     data.append('file', file);
     try {
-      const response = await http.post(props.url, data);
+      const response = await http.post(props.url, data, { handleErrors: false });
       emit('uploaded', response.data);
     }
     catch (error) {
-      const status = error.response?.status;
-      notify({ type: 'error', text: `«${file.name}»: ${status === 413 ? 'Datei ist zu gross für den Server.' : `Upload fehlgeschlagen (${status ?? 'Netzwerk'}).`}` });
+      notify({ type: 'error', text: `«${file.name}»: ${failure(error)}` });
     }
   }
   uploading.value = null;
