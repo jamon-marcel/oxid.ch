@@ -116,6 +116,9 @@ attributes for behaviour hooks grouped by module
   (2026-10-04). People edit content in the local admin while you work:
   tests must clean up after themselves (create → delete), never restore
   whole tables.
+- Admin API tests (`tests/Feature/Admin/`) extend `AdminTestCase`: in-memory
+  SQLite + faked local disk, so they may write freely. Put new tests that
+  write data there.
 - Reorder endpoints rewrite `order` for every row of a list; check
   bulk-writing endpoints inside a rolled-back transaction instead of
   against live rows.

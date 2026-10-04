@@ -2,12 +2,13 @@
 namespace App\Models;
 use App\Models\Base;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Translatable\HasTranslations;
 use App\Services\Search\SearchService;
 
 class Project extends Base
 {
-	use HasTranslations;
+	use HasFactory, HasTranslations;
 
 	public $translatable = [
 		'title',

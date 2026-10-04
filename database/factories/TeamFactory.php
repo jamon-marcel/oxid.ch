@@ -1,13 +1,22 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Models\Team;
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(Team::class, function (Faker $faker) {
-    return [
-        'name' => $faker->lastName,
-        'firstname' => $faker->firstName,
-        'category' => $faker->numberBetween(1,3),
-    ];
-});
+use App\Models\Team;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<Team>
+ */
+class TeamFactory extends Factory
+{
+    public function definition(): array
+    {
+        return [
+            'name' => fake()->lastName(),
+            'firstname' => fake()->firstName(),
+            'category' => fake()->numberBetween(1, 5),
+            'publish' => 1,
+        ];
+    }
+}

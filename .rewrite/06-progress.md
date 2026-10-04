@@ -794,6 +794,47 @@ only grid element missing from the whole table.
   `#1984/#2000/#2020` and the active footer link; setting the hash scrolls
   to the period on both widths.
 
+### Admin API tests (2026-10-04)
+
+`tests/Feature/Admin/`: 84 feature tests over the JSON API: auth, CRUD +
+validation + status + order + delete for every resource, the four image
+libraries, project/discourse images, documents, uploads, the grid builder,
+settings, and the search-index flush.
+
+- **They run on in-memory SQLite, not the local MySQL copy.**
+  `AdminTestCase` switches the default connection in
+  `beforeRefreshingDatabase()` (all 53 migrations run on SQLite) and
+  asserts the driver before every test, so a misconfiguration fails
+  instead of writing to live rows (cf. the grid-delete damage under "Final
+  QA"). The local disk is faked as well: the image and document
+  controllers delete from every directory under `public/`.
+  `MediaUploadTest` is the exception (the uploader writes to
+  `storage/app/public/uploads` directly) and deletes what it stores.
+- The older tests (`PublicPagesTest`, `ImageRenditionTest`) still read the
+  local MySQL DB.
+- `phpunit.xml` used `CACHE_DRIVER`/`MAIL_DRIVER`, which Laravel 11+
+  ignores, so tests used the file cache and forgot the real search index.
+  Renamed them to `CACHE_STORE`/`MAIL_MAILER`.
+- Class-based factories for `Project`, `Discourse`, `Team`, `Job` (with
+  `HasFactory`) replace the pre-Laravel-8 `$factory->define` files, which
+  had stopped loading; the seeders call `::factory()` and work again.
+- **Fixed:** deleting a home/team/job library image whose record was
+  already gone (another tab, or an upload removed before saving) 500'd on
+  `$image->name` of `null` and left the file behind. These controllers now
+  use the requested file name, as the profile/project/discourse ones
+  already did.
+- Checked that the tests catch a regression: breaking `is_grid` cleanup in
+  `GridController::destroy` fails a test. Removing the documents cleanup in
+  `ProjectObserver` doesn't, because the `ON DELETE CASCADE` foreign keys
+  (present in the live MySQL schema too) delete them anyway.
+- Found, not changed: `ProfileController` stores `images` with a
+  `profile_id` that `profile_images` doesn't have (dead code: profile
+  images are a separate library), and `Profile::images()`/`ProfileObserver`
+  point at that missing column (unreachable: profiles have no delete
+  route). Deleting a project image that a grid uses would hit the
+  `grid_elements` foreign key (500); the admin prevents it by protecting
+  `is_grid` images.
+
 ## Public site JS (separate project — `08-frontend-js.md`)
 
 | Step | Status | Commit |
