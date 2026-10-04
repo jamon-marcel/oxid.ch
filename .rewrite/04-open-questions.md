@@ -47,39 +47,16 @@ static helpers, so the markup change is contained to that one file.
 Pair it with `ImageSupport::modernFormats()` (see #1) so the extra `<source>`
 elements only appear when the server can actually write those formats.
 
-## 3. Are `/img/project/` and `/img/tiny/` dead? — STILL OPEN
+## 3. `/img/project/` and `/img/tiny/` — ANSWERED 2026-10-04: not in use. Delete.
 
-**What this is about.** `config/image-cache.php` registers twelve named image
-templates. A request to `/img/<template>/<filename>` runs that template. Three
-of them are oxid's own: `home`, `project`, `tiny`.
+Delete `app/Filters/Image/Template/Project.php` and `Tiny.php`, and their
+entries in `config/image-cache.php`. Only `home` survives of the three app
+templates, and it moves into the Glide controller
+(`05-image-pipeline.md`).
 
-Searching `app/`, `resources/views/` and `resources/js/` for emitted URLs
-finds `/img/crop/` (12 call sites) and `/img/home/` (2). **Nothing emits
-`/img/project/` or `/img/tiny/`.**
-
-**Why it is a question and not just a deletion.** The grep only proves *this
-repo* does not link them. A route is reachable by anyone who knows the URL.
-If a newsletter template, a PDF export, a partner site or an old cached page
-still points at `/img/project/...`, deleting the template turns those into
-404s — silently, because nothing here would break.
-
-**How to answer it.** Grep the production access logs for `/img/project/` and
-`/img/tiny/` over the last 6–12 months:
-
-```
-grep -c '/img/project/' access.log*
-grep -c '/img/tiny/'    access.log*
-```
-
-Zero hits over a year → delete both with confidence. Any hits → keep
-`Project.php` and port it to Glide alongside `Home.php` (it has the same
-database-lookup shape).
-
-**Note on `tiny` specifically:** it is registered in config but implements
-Intervention **v2**'s `FilterInterface`, removed in v3. If anything had called
-it, it would already be erroring. So a non-zero log count for `/img/tiny/`
-means "something is requesting a URL that is already broken", not "this
-works and must be preserved".
+That takes `app/Filters/` down to `Home.php` plus the
+`ImageFilenameExtractor` trait it uses — and once `Home.php` becomes
+controller-side coord resolution, the whole `app/Filters/` tree goes.
 
 ## 4. TinyMCE — ANSWERED 2026-10-04: replace with Tiptap
 
@@ -114,72 +91,34 @@ query string that Mix's `.version()` currently produces in
 `mix-manifest.json`. Today that hash is only in the manifest; whoever links
 the file may or may not be reading it.
 
-## 6. Orphan configs — PARTLY RESOLVED, one still open
+## 6. Orphan configs — ANSWERED 2026-10-04: dead code. Delete.
 
-**What this is about.** Four config files looked unreferenced. On a closer
-pass with `config('x.')`, `Config::get('x.')` and `config()->get('x.')` across
-`app/`, `resources/`, `routes/`, `database/` and `bootstrap/`, here is the
-real picture:
+| File | Action |
+|---|---|
+| `config/dompdf.php` | delete — dompdf is not in `composer.lock` at all |
+| `config/media.php` | delete — describes a `storage/app/public/media/` layout the app does not use |
+| `config/content.php` | delete — `content_keys` referenced nowhere |
+| `config/image.php` | **keep** — it is `intervention/image-laravel`'s own config, not an orphan |
 
-| File | Reads in app code | Verdict |
-|---|---|---|
-| `config/dompdf.php` | 0 | **Delete.** dompdf is not in `composer.lock` at all. Pure leftover. |
-| `config/content.php` | 0 | **Delete**, with one caveat below. |
-| `config/media.php` | 0 | **Delete.** Defines `storage_paths` under `storage/app/public/media/` — a path layout the app does not use; uploads live in `storage/app/public/uploads/`. |
-| `config/image.php` | 0 **in app code** | **Keep the file, but see below.** Not an orphan — it is `intervention/image-laravel`'s own config and the package's ServiceProvider reads `config('image.driver')`. |
+`CLAUDE.md` claims "Custom content settings in `config/content.php`". That
+line is stale; remove it in the same commit so the docs and the tree agree.
 
-**The caveat on `content.php`:** `CLAUDE.md` states "Custom content settings
-in `config/content.php`", which suggests it mattered once. Its `content_keys`
-array is referenced nowhere (`grep content_keys` → 0 hits). It looks genuinely
-dead and `CLAUDE.md` looks stale — but since the documentation disagrees with
-the code, confirm before deleting, and fix `CLAUDE.md` either way.
+Finding recorded under `config/image.php`, kept here because it explains a
+latent bug: it sets `'driver' => 'gd'` as a *string* where the package
+expects a class-string. It never fires, because nothing resolves
+`ImageManager` from the container — see `05-image-pipeline.md`.
 
-**The finding under `config/image.php`** — this one is worth knowing
-regardless of the deletion question:
+## 7. Algolia — ANSWERED 2026-10-04: drop it, build our own
 
-- It sets `'driver' => 'gd'` as a **string**. The package default is a
-  class-string (`\Intervention\Image\Drivers\Gd\Driver::class`). The
-  string form would not resolve.
-- It never fires, because nothing resolves `ImageManager` from the container.
-  Both places that use Intervention construct it directly:
-  `marceli-to/image-cache` hardcodes `new ImageManager(new GdDriver())`, and
-  `app/Http/Controllers/Api/MediaController.php:48` does
-  `new ImageManager(new Driver())` with the GD driver imported.
+Superseded by `07-search.md`. The index-settings export question is moot:
+Algolia goes away entirely.
 
-So it is the same family of latent bug as `Tiny.php`: wrong, but unreachable.
-
-**The real takeaway: the entire image pipeline runs on GD today**, hardcoded
-in two places, not configured. That is useful for #1 — luvo's crop-equivalence
-comparison was also run on GD, so it matches oxid's current behaviour exactly.
-Moving to Imagick would be a genuine driver change, and should be a deliberate
-decision rather than a side effect of adopting Glide.
-
-## 7. Algolia index settings — STILL OPEN
-
-**What this is about.** An Algolia index has two separate things: the
-**records** (pushed from your app) and the **settings** — searchable
-attributes, custom ranking, facets, synonyms, typo tolerance, stop words.
-
-Scout pushes records. Settings are configured either in code (and applied on
-deploy) or by hand in the Algolia dashboard. **If they were tuned in the
-dashboard, they exist nowhere in this repository.**
-
-`config/scout.php` is the place code-side settings would live, and `Searchable`
-is on exactly two models: `app/Models/Project.php` and
-`app/Models/Discourse.php`.
-
-**Why it matters for this project.** The upgrade bumps Scout 10 → 11 *and*
-rewrites against Algolia client v4. Re-indexing is a normal part of that
-(`scout:flush` + `scout:import`, or a fresh index). A flush-and-reimport
-preserves settings; creating a new index, or certain `setSettings` calls
-during the v4 migration, does not. Hand-tuned relevance can be wiped with no
-error and no obvious symptom — search just quietly gets worse.
-
-**How to answer it.** Before touching Scout, export the live settings for
-both indices from the Algolia dashboard (Index → Configuration → "Export
-configuration" produces JSON), and commit them. Then after re-indexing,
-diff against that export. If the settings turn out to be code-managed in
-`config/scout.php`, say so and this question closes with no action.
+Short version — 119 searchable records behind a plain GET form, no
+instant-search, no facets, no client-side Algolia. Phase 1 switches Scout to
+its `collection` driver (one line, reversible). Phase 2 is an own scoring
+search bringing back typo tolerance, relevance ranking and prefix matching,
+plus compound-word handling that suits German better than the stock Algolia
+config. ~+1 day over keeping Algolia.
 
 ## 8. Deployment — ANSWERED 2026-10-04: same as luvo
 
@@ -225,11 +164,11 @@ depends on having real data locally.
 | 1 | PHP 8.3+ on production? | **yes — 8.3 up to 8.5. Gate cleared.** |
 | 1b | Imagick or GD? | likely Hostpoint + Imagick (same as luvo), unconfirmed; detect at runtime regardless |
 | 2 | Fix the 2400 px issue? | **yes** |
-| 3 | `/img/project/` and `/img/tiny/` dead? | _open — check access logs_ |
+| 3 | `/img/project/` and `/img/tiny/` dead? | **yes — delete both** |
 | 4 | TinyMCE 8 or Tiptap? | **Tiptap** |
 | 5 | What consumes `busu.css`? | **another site — keep, preserve the output path** |
-| 6 | Orphan configs safe to delete? | `dompdf` + `media` yes; `content` likely (confirm vs CLAUDE.md); `image.php` is package config, keep |
-| 7 | Algolia index config in code or dashboard? | _open — export settings before re-indexing_ |
+| 6 | Orphan configs safe to delete? | **yes — `dompdf`, `media`, `content`. Keep `image.php` (package config).** |
+| 7 | Algolia index config in code or dashboard? | **moot — Algolia dropped, see `07-search.md`** |
 | 8 | Deploy / rollback? | **SSH + git pull, commit the Vite build** |
 | 9 | Sequenced? | assumed yes |
 | 10 | Snapshot taken? | not yet |

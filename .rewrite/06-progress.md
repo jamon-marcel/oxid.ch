@@ -15,8 +15,9 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
       just the web one.
 - [ ] Grep production access logs for `/img/project/` and `/img/tiny/`
       (`04-open-questions.md` #3).
-- [ ] Export both Algolia indices' settings from the dashboard and commit
-      them (`04-open-questions.md` #7).
+- [ ] Collect 20–30 real search queries from the production access logs —
+      the search page is a `GET`, so `?keyword=` is in there. Needed to tune
+      the ranking in `07-search.md` phase 2.
 - [ ] Snapshot the production DB + `storage/` locally, as baseline and
       rollback point. The image verification depends on it.
 - [ ] Record the current state for comparison: route list, the `/img/...` URLs
@@ -32,7 +33,8 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | Requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | — | |
 | Laravel 13, PHP ^8.3, Carbon 3, Intervention 4 | — | |
 | Slim skeleton, `app/User.php` → `app/Models/User.php` | — | |
-| Algolia client v4, Scout 11 | — | |
+| Search phase 1: drop Algolia, Scout `collection` driver | — | |
+| Search phase 2: own scoring search + unit tests | — | |
 | JWT → Sanctum | — | |
 | Form-request validation messages (L12+ wants strings) | — | |
 

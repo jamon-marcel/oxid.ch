@@ -9,7 +9,7 @@ behaviour. Nothing else.
 - Legacy L8 skeleton → slim L11+ skeleton (`bootstrap/app.php`)
 - **JWT → Sanctum** (decided 2026-10-04)
 - `marceli-to/image-cache` → `league/glide`
-- Algolia client v3 → v4, Scout 10 → 11
+- **Algolia dropped**, own search implementation (`07-search.md`)
 - Vue 2.7 → Vue 3, vue-router 3 → 4, drop Vuex
 - Laravel Mix → Vite
 - Replace every Vue 2-only package
@@ -30,9 +30,9 @@ behaviour. Nothing else.
 
 | Phase | Days |
 |---|---|
-| Backend L11 → L13 + Sanctum + Glide + Algolia | **3.5 – 4.5** |
+| Backend L11 → L13 + Sanctum + Glide + search | **4.25 – 5.5** |
 | Frontend Vue 3 + Vite + Tiptap | **7 – 8.5** |
-| **Total** | **10.5 – 13** |
+| **Total** | **11.25 – 14** |
 
 Add review and click-through QA → **~3 weeks calendar** if reviewed as we go.
 
@@ -49,7 +49,8 @@ Up from the 9–12 first written on 2026-10-04: the answers to questions 2 and
 | Requested sizes + WebP/AVIF: rewrite `ImageHelper` to `<picture>`, runtime format detection (Q2) | 0.5 |
 | Skeleton migration (Kernel → `bootstrap/app.php`, providers, handler, `app/User.php` → `app/Models/`) | 0.5 |
 | JWT → Sanctum (backend half) | 0.5 |
-| Algolia v3 → v4 + Scout 11, re-verify both indices | 0.5 |
+| Search: drop Algolia, Scout `collection` driver, `toSearchableArray()` | 0.25 |
+| Own scoring search: typo tolerance, ranking, prefix + compound matching | 1 – 1.25 |
 | PHP 8.3, Carbon 3, `config/` diffs, form-request validation messages | 0.5 |
 | Smoke test every route + CRUD path | 0.5 |
 
@@ -75,7 +76,7 @@ luvo's comparable figure was 7–9 days for 11→13 + Vue 2→3. oxid is +2 to +
 | Item | Days | Why |
 |---|---|---|
 | JWT → Sanctum | +1 | luvo never had JWT; no precedent to copy |
-| Algolia v4 | +0.5 | luvo has no search |
+| Own search implementation | +1.25 | luvo has no search at all |
 | `projects/grid/` builder | +0.75 – 1 | no equivalent in luvo |
 | Dropzone: 6 files vs 2 | +0.5 | |
 | `vuedraggable`: 13 files vs 9 | +0.25 | |

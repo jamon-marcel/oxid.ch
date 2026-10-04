@@ -45,7 +45,7 @@ Every one of the 16 direct dependencies is out of date. None is abandoned.
 | `laravel/framework` | v11.44.2 | **v13.34.0** | ✅ | needs PHP ^8.3 |
 | `php-open-source-saver/jwt-auth` | v2.8.2 | **v2.9.3** | ✅ `illuminate ^12\|^13` | being removed — see below |
 | `laravel/scout` | v10.14.0 | **v11.8.0** | ✅ `illuminate ...^13.0` | |
-| `algolia/algoliasearch-client-php` | 3.4.2 | **4.49.0** | ✅ | **v4 is an API rewrite** |
+| `algolia/algoliasearch-client-php` | 3.4.2 | — | n/a | **being removed** — see `07-search.md` |
 | `intervention/image` | 3.11.2 | **4.3.3** | ✅ | |
 | `intervention/image-laravel` | 1.5.5 | **4.1.1** | ✅ | big renumber, v3 API already in use |
 | `laravel/tinker` | v2.10.1 | **v3.0.2** | ✅ | major |
@@ -68,14 +68,28 @@ dependency entirely and fixes three live image bugs in the same move. That work
 is done and verified over there; see `05-image-pipeline.md` for what ports
 directly and the one place oxid differs.
 
-### Algolia is the oxid-specific extra
+### Algolia is being dropped
 
-luvo has no search. Here, `laravel/scout` 10 → 11 is routine, but
-`algolia/algoliasearch-client-php` 3 → 4 is a full client rewrite. Surface is
-small — `Searchable` on **two models** (`app/Models/Project.php`,
-`app/Models/Discourse.php`) — but the client calls need rewriting against the
-v4 API, and the index configuration should be re-verified against the live
-indices rather than assumed.
+**Decided 2026-10-04: remove Algolia, implement search in-process.**
+See `07-search.md` for the reasoning, the design and the staging.
+
+Correcting an earlier draft of this file, which called the client v3 → v4
+step "a full client rewrite" and budgeted 0.5 day: that was wrong. Scout
+picks its engine from whichever client class is installed
+(`EngineManager.php:44`), Scout 10.14 already ships `Algolia4Engine`, and no
+app code touches the client directly. Staying would have been close to a
+package bump. The decision rests on proportionality — 119 searchable records
+behind a plain GET form — and on four concrete issues listed in `07-search.md`,
+not on migration cost.
+
+Consequences here:
+
+- Drop `algolia/algoliasearch-client-php` from `composer.json`.
+- Drop the `algolia` block from `config/scout.php`, and
+  `ALGOLIA_APP_ID` / `ALGOLIA_SECRET` from `.env`.
+- `laravel/scout` 10 → 11 still happens in phase 1 (the `collection` driver
+  lives in Scout), then Scout itself goes in phase 2.
+- The index-settings export question (`04-open-questions.md` #7) is moot.
 
 ## JWT → Sanctum
 
@@ -152,7 +166,8 @@ template; drop its `DetectRequestLocale` and multilingual bits.
    lean `config/app.php`. Move `app/User.php` → `app/Models/User.php`.
 7. Diff `config/*` against a fresh L13 skeleton. Preserve: `content.php`,
    `seo.php`, `settings.php`, `scout.php`, `translatable.php`.
-8. Algolia client v3 → v4; re-verify both indices against the live ones.
+8. Search: `SCOUT_DRIVER=collection`, drop the Algolia client, add explicit
+   `toSearchableArray()` (phase 1 of `07-search.md`).
 9. **JWT → Sanctum** per above.
 10. Carbon 2 → 3: one call site in `app/` (`Models/News.php`), but check
     vendor fallout.
