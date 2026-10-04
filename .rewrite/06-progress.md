@@ -112,6 +112,8 @@ Details in `05-image-pipeline.md`, "Result".
 - **Cold renders** take 0.3–1.3 s each (AVIF slowest). The old pipeline had
   the same first-hit cost. Consider an `images:warm` command for the deploy
   (luvo's `Glide.php` mentions one).
+- **Full crawl done:** all 6,187 `/img/...` URLs the public pages emit
+  (at `62c73c4`) return 200 — 2,054 AVIF, 2,054 WebP, 1,551 JPEG, 528 PNG.
 - **Still to do for this step:** screenshot comparison of the public pages
   against production (the `<picture>` wrapper), and the admin image screens
   once the SPA runs again.
