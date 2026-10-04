@@ -521,6 +521,16 @@ vuedraggable and the cropper went in together.
   web `upload_max_filesize` / `post_max_size` / `memory_limit` and whether
   Imagick is loaded (open item above).
 
+### Upload progress (2026-10-04)
+
+The Uploader lists every file of a batch below the drop zone: name,
+progress bar with percent (axios `onUploadProgress`), then "fertig" or the
+reason it was rejected (browser check or the API's 422). Files go up one
+after the other, so order is kept and the server isn't flooded; the zone
+counts "Hochladen… 1 / 2" over the files actually sent. Finished rows go
+2 s after the batch, rejected ones stay until the next upload. Verified
+with throttled upload (two valid, one wrong type, one too large).
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the
