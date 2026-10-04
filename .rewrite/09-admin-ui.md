@@ -48,7 +48,7 @@ has loaded and executed.
   wordmark from `PageHeader.vue`, already inline as SVG). Serve it as AVIF/WebP
   with a JPEG fallback, sized for the viewport, rather than a single 265 KB
   JPEG. Card styled with the new 1px borders and type scale.
-- **Pre-mount splash (optional):** a few lines of static HTML + CSS inside
+- ~~**Pre-mount splash (optional):**~~ *Dropped 2026-10-04 — not wanted.* a few lines of static HTML + CSS inside
   `<div id="app">` in `backend/app.blade.php` — wordmark, centred, on the
   brand background. Vue replaces it on mount. No JS, no flash of blank page.
   After the Vue 3 port the admin bundle should shrink (luvo's went from
@@ -202,7 +202,7 @@ shadows may look unbalanced.
 |---|---|---|
 | Icons | **during** the Vue 3 port | same 25 files, open anyway |
 | Login screen + error message | **during** the Sanctum switch | the login is rewritten then |
-| Borders, menu, pre-mount splash | **after** the Vue 3 port, **before** final QA | Sass-only; one QA pass covers them |
+| Borders, shadows, menu | **after** the Vue 3 port, **before** final QA | Sass-only; one QA pass covers them |
 
 Do the border token step first of the Sass items. It's the widest change
 (24 files) and the purely mechanical one, and getting it in early means the
@@ -214,10 +214,10 @@ menu and login are styled against the final line weight.
 |---|---|
 | Icons: 18 classes across 25 files, CSS-background SVGs, cleanup | 0.5 – 0.75 |
 | Menu: type scale, group headers, width, active marker | 0.25 – 0.5 |
-| Splash: login screen restyle, responsive image, pre-mount splash | 0.25 – 0.5 |
+| Splash: login screen restyle, responsive image | 0.25 |
 | Borders: tokens, 58 replacements, focus rings, shadow check | 0.5 |
 | Visual pass across all 30 screens | 0.25 |
-| **Total** | **1.75 – 2.5** |
+| **Total** | **1.75 – 2.25** |
 
 The visual pass overlaps with the main project's admin QA day. Do them as
 one pass, not two.
@@ -227,7 +227,7 @@ one pass, not two.
 | # | Question | Answer (2026-10-04) |
 |---|---|---|
 | 1 | Login image | **Client provides a new splash image.** Replaces `splash.jpg`; serve as AVIF/WebP + JPEG fallback, sized for the viewport. Blocks only the login-screen item, nothing else. |
-| 2 | Pre-mount splash | _open_ |
+| 2 | Pre-mount splash | **Not wanted** — restyling the login screen is enough. |
 | 3 | Box shadows | **Soften them** along with the borders. |
 | 4 | Brand colour / typeface | **Unchanged** — Euclid Circular A (Regular + Medium), palette in `config/_colors.scss`. |
 
