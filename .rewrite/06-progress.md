@@ -759,6 +759,33 @@ only grid element missing from the whole table.
   completely different from the JWT refresh flow it replaces, and it is the
   single most likely thing to be wrong and not noticed.
 
+### Public controllers (2026-10-04)
+
+- **Unpublished projects and discourse entries 404 for visitors**; before,
+  `/projekt/{id}` and `/diskurs/{id}` rendered them for anyone with the URL.
+  A logged-in admin still sees them: the grid builder's "Vorschau" links to
+  `/projekt/{id}`, and the admin's Sanctum login is the same `web` session.
+  `/projekte` now opens on the first *published* project (it ignored
+  `publish`).
+- **`/werkliste` 301s to `/werkliste/autorenschaft`** (it was an empty 200).
+  The unused `{isSearch?}` segment is gone from that route; the search page
+  links with `?search=1`, which is unchanged.
+- Rewritten in the shape of `AuthController`: no `BaseController`, no model
+  injection, typed returns. Deleted `BaseController`, `DataController` (no
+  route), `App\Services\Menu` (now a view composer on
+  `menu/items/projects`, memoised with `once()` because the partial renders
+  twice on project pages), `works/index.blade.php`, the unused `showInfo`
+  variable and `WorksController::year`'s discarded `$data` filter.
+- Fewer queries: a project page 15 → 11 (no reload of the bound model, the
+  prev/next projects picked from the list already loaded), home/search pick
+  the random image in SQL.
+- **Verified:** HTML of all 155 public URLs (every project and discourse
+  id) before vs after, CSRF token masked: identical except the random home
+  image, `/werkliste` (now 301), and `og:image` on 15 projects. That one is
+  a fix: it came from the grid row created first, now from the first row in
+  display order, which matches the first image on the page (checked on 4).
+  `tests/Feature/PublicPagesTest.php`.
+
 ## Public site JS (separate project — `08-frontend-js.md`)
 
 | Step | Status | Commit |

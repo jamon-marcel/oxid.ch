@@ -1,43 +1,17 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Http\Controllers\BaseController;
+
 use App\Models\Contact;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
-class ContactController extends BaseController
+class ContactController extends Controller
 {
-  protected $pageFooter = 'contact';
-  protected $viewPath   = 'frontend.pages.contact.index';
-  
-  // Models
-  protected $contact;
-
-  /**
-   * Constructor
-   * 
-   */
-
-  public function __construct(Contact $contact)
+  public function index(): View
   {
-    parent::__construct();
-    $this->contact = $contact;
-  }
-
-  /**
-   * Show the team page
-   *
-   * @return \Illuminate\Http\Response
-   */
-
-  public function index()
-  {
-    return 
-      view($this->viewPath,
-      [
-        'contact' => $this->contact->get()->first(),
-        'pageFooter' => $this->pageFooter,
-        'showInfo' => FALSE,
-      ]
-    );
+    return view('frontend.pages.contact.index', [
+      'pageFooter' => 'contact',
+      'contact' => Contact::first(),
+    ]);
   }
 }

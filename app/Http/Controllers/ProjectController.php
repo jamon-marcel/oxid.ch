@@ -1,129 +1,61 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Http\Controllers\BaseController;
+
 use App\Models\Project;
-use App\Models\ProjectImage;
-use App\Models\ProjectDocument;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
-class ProjectController extends BaseController
+class ProjectController extends Controller
 {
-  protected $pageFooter = 'projects';
-  protected $viewPath   = 'frontend.pages.project.';
-
-  // Models
-  protected $project;
-
   /**
-   * Constructor
-   * 
+   * The project listing opens on the first published project.
    */
-
-  public function __construct(Project $project)
+  public function index(): View
   {
-    parent::__construct();
-    $this->project = $project;
+    return $this->render(Project::published()->orderBy('order')->firstOrFail());
   }
 
   /**
-   * Show the project listing
-   *
-   * @return \Illuminate\Http\Response
+   * A project. Unpublished ones are visible to admins only (the grid builder's preview).
    */
-
-  public function index()
+  public function show(Project $project, ?string $slug = null): View
   {
-   
-    // get first project
-    $project      = $this->project->with('publishedDocuments')->with('grids.layout')->with('grids.elements.image')->orderBy('order')->first();
-    $project_grid = $project->with('grids.layout')->with('grids.elements.image')->findOrFail($project->id);
+    abort_unless($project->publish || auth()->check(), 404);
 
-    // get teaser images
-    $projectTeasers = $this->project->published()->with('teaserImage')->get();
-    
-    return 
-      view($this->viewPath . 'show',
-      [
-        'pageFooter'      => $this->pageFooter,
-        'project'         => $project,
-        'project_grid'    => $project_grid->grids->sortBy('order'),
-        'project_teasers' => $projectTeasers,
-        'project_og'      => $this->getOpenGraphImage($project_grid),
-        'navBrowse'       => $this->getBrowse($project->id),
-      ]
-    );
+    return $this->render($project);
+  }
+
+  private function render(Project $project): View
+  {
+    $project->load([
+      'publishedDocuments',
+      'grids' => fn ($query) => $query->orderBy('order'),
+      'grids.layout',
+      'grids.elements.image',
+    ]);
+
+    return view('frontend.pages.project.show', [
+      'pageFooter' => 'projects',
+      'project' => $project,
+      'project_grid' => $project->grids,
+      'project_og' => $project->grids->first()?->elements->first()?->image,
+      'project_teasers' => Project::published()->with('teaserImage')->get(),
+      'navBrowse' => $this->neighbours($project),
+    ]);
   }
 
   /**
-   * Show a project
-   *
-   * @param String $slug
-   * @param Project $project
-   * @return \Illuminate\Http\Response
+   * The previous and next project with a detail page, wrapping around.
    */
-
-  public function show(Project $project, $slug = NULL)
+  private function neighbours(Project $project): array
   {
-    $project      = $project->with('publishedDocuments')->findOrFail($project->id);
-    $project_grid = $project->with('grids.layout')->with('grids.elements.image')->findOrFail($project->id);
-    
-    // get teaser images
-    $projectTeasers = $this->project->published()->with('teaserImage')->get();
+    $projects = Project::hasDetail()->orderBy('order')->get()->values();
+    $count = $projects->count();
+    $key = (int) $projects->search(fn ($p) => $p->is($project));
 
-    return 
-      view($this->viewPath . 'show',
-      [
-        'pageFooter'   => $this->pageFooter,
-        'project'      => $project,
-        'project_grid' => $project_grid->grids->sortBy('order'),
-        'project_og'      => $this->getOpenGraphImage($project_grid),
-        'project_teasers' => $projectTeasers,
-        'navBrowse'    => $this->getBrowse($project->id),
-      ]
-    );
-  }
-
-  protected function getBrowse($id = NULL)
-  {
-    // Build project nav
-    $projects = $this->project->hasDetail()->orderBy('order', 'ASC')->get();
-    $keys     = [];
-    $items    = [];
-
-    foreach($projects as $p)
-    {
-      $keys[] = (int) $p->id;
-    }
-
-    // Get current key
-    $key = array_search($id, $keys);
-
-    if ($key == 0)
-    {
-      $prevId = end($keys);
-      $nextId = isset($keys[$key+1]) ? $keys[$key+1] : NULL;
-    }
-    else if ($key == count($keys) - 1)
-    {
-      $prevId = $keys[$key-1];
-      $nextId = $keys[0];
-    }
-    else
-    {
-      $prevId = $keys[$key-1];
-      $nextId = $keys[$key+1];
-    }
-
-    $items = [
-      'prev' => $this->project->find($prevId),
-      'next' => $this->project->find($nextId),
+    return [
+      'prev' => $projects->get(($key - 1 + $count) % max($count, 1)),
+      'next' => $projects->get(($key + 1) % max($count, 1)),
     ];
-
-    return $items;
-  }
-
-  protected function getOpenGraphImage($data)
-  {
-    return isset($data->grids[0]->elements[0]->image) ? $data->grids[0]->elements[0]->image : NULL;
   }
 }

@@ -29,7 +29,7 @@ Route::get('/projekt/{project}/{slug?}', [ProjectController::class, 'show'])->na
 
 // Works routes
 Route::get('/werkliste', [WorksController::class, 'index'])->name('page.works');
-Route::get('/werkliste/autorenschaft/{isSearch?}', [WorksController::class, 'authors'])->name('page.works.authors');
+Route::get('/werkliste/autorenschaft', [WorksController::class, 'authors'])->name('page.works.authors');
 Route::get('/werkliste/jahr', [WorksController::class, 'year'])->name('page.works.year');
 Route::get('/werkliste/programm', [WorksController::class, 'program'])->name('page.works.program');
 Route::get('/werkliste/status', [WorksController::class, 'state'])->name('page.works.state');

@@ -1,123 +1,55 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Http\Controllers\BaseController;
+
 use App\Models\Discourse;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\View\View;
 
-class DiscourseController extends BaseController
+class DiscourseController extends Controller
 {
-  protected $pageFooter = 'discourse';
-  protected $viewPath   = 'frontend.pages.discourse.';
-
-  // Models
-  protected $discourse;
-
-  /**
-   * Constructor
-   * 
-   */
-
-  public function __construct(Discourse $discourse)
+  public function index(): View
   {
-    parent::__construct();
-    $this->discourse = $discourse;
+    return $this->listing(Discourse::with('previewImage')->published(), '');
+  }
+
+  public function research(): View
+  {
+    return $this->listing(Discourse::with('publishedImages')->research(), 'Recherche');
+  }
+
+  public function events(): View
+  {
+    return $this->listing(Discourse::with('publishedImages')->events(), 'Veranstaltungen');
+  }
+
+  public function publications(): View
+  {
+    return $this->listing(Discourse::with('publishedImages')->publications(), 'Publikationen');
   }
 
   /**
-   * Show all entries
-   *
-   * @return \Illuminate\Http\Response
+   * A discourse entry. Unpublished ones are visible to admins only.
    */
-
-  public function index()
+  public function show(Discourse $discourse, ?string $slug = null): View
   {
-    $discourse = $this->discourse->with('previewImage')->published()->orderBy('order')->get();
-    return 
-      view($this->viewPath . 'index', 
-        [
-          'pageFooter' => $this->pageFooter,
-          'pageTitle'  => '',
-          'discourse'  => $discourse
-        ]
-    );
+    abort_unless($discourse->publish || auth()->check(), 404);
+
+    $discourse->load('publishedImages');
+
+    return view('frontend.pages.discourse.show', [
+      'pageFooter' => false,
+      'discourse' => $discourse,
+      'discourse_og' => $discourse->publishedImages->first(),
+    ]);
   }
 
-  /**
-   * Show entries by categorie 'research'
-   *
-   * @return \Illuminate\Http\Response
-   */
-
-  public function research()
+  private function listing(Builder $query, string $title): View
   {
-    $discourse = $this->discourse->with('publishedImages')->research()->orderBy('order')->get();
-    return 
-      view($this->viewPath . 'index', 
-        [
-          'pageFooter' => $this->pageFooter,
-          'pageTitle'  => 'Recherche',
-          'discourse'  => $discourse
-        ]
-    );
+    return view('frontend.pages.discourse.index', [
+      'pageFooter' => 'discourse',
+      'pageTitle' => $title,
+      'discourse' => $query->orderBy('order')->get(),
+    ]);
   }
-
-  /**
-   * Show entries by categorie 'events'
-   *
-   * @return \Illuminate\Http\Response
-   */
-
-  public function events()
-  {
-    $discourse = $this->discourse->with('publishedImages')->events()->orderBy('order')->get();
-    return 
-      view($this->viewPath . 'index', 
-        [
-          'pageFooter' => $this->pageFooter,
-          'pageTitle'  => 'Veranstaltungen',
-          'discourse'  => $discourse
-        ]
-    );
-  }
-
-  /**
-   * Show entries by categorie 'publications'
-   *
-   * @return \Illuminate\Http\Response
-   */
-
-  public function publications()
-  {
-    $discourse = $this->discourse->with('publishedImages')->publications()->orderBy('order')->get();
-    return 
-      view($this->viewPath . 'index', 
-        [
-          'pageFooter' => $this->pageFooter,
-          'pageTitle'  => 'Publikationen',
-          'discourse'  => $discourse
-        ]
-    );
-  }
-
-  /**
-   * Show a discourse item
-   *
-   * @param String $slug
-   * @param Project $project
-   * @return \Illuminate\Http\Response
-   */
-
-  public function show(Discourse $discourse, $slug = NULL)
-  {
-    $discourse = $this->discourse->with('publishedImages')->findOrFail($discourse->id);
-    return 
-      view($this->viewPath . 'show',
-      [
-        'pageFooter'   => FALSE,
-        'discourse'    => $discourse,
-        'discourse_og' => isset($discourse->publishedImages[0]) ? $discourse->publishedImages[0] : null,
-      ]
-    );
-  }
-
 }

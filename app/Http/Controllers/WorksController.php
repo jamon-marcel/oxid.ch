@@ -1,126 +1,65 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Http\Controllers\BaseController;
+
 use App\Models\Project;
-use App\Models\ProjectImage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
-class WorksController extends BaseController
+class WorksController extends Controller
 {
-  protected $pageFooter = 'works';
-  protected $viewPath   = 'frontend.pages.works.';
-
-  // Models
-  protected $project;
-
   /**
-   * Constructor
-   * 
+   * There is no overview page; the menu links to the authors list.
    */
-
-  public function __construct(Project $project)
+  public function index(): RedirectResponse
   {
-    parent::__construct();
-    $this->project = $project;
+    return redirect()->route('page.works.authors', status: 301);
   }
 
   /**
-   * Show all entries
-   *
-   * @return \Illuminate\Http\Response
+   * Grouped by author. Coming from the search (?search=1), every group is expanded.
    */
-
-  public function index()
+  public function authors(Request $request): View
   {
+    return $this->render('authors', 'author', [
+      'search' => $request->input('search'),
+    ]);
+  }
+
+  public function year(): View
+  {
+    return $this->render('years', 'year');
+  }
+
+  public function program(): View
+  {
+    return $this->render('program', 'program');
+  }
+
+  public function state(): View
+  {
+    return $this->render('state', 'state');
   }
 
   /**
-   * Show entries by authors
-   *
-   * @param Boolean search
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
+   * Published projects grouped by $column, newest work first within a group.
+   * Authors and years are listed descending, programs and states ascending.
    */
-
-  public function authors(Request $request, $search = false)
+  private function render(string $view, string $column, array $data = []): View
   {
-    $projects = $this->project->with('workImage')->published()->orderBy('author', 'DESC')->orderBy('year_works', 'DESC')->get();
-    return 
-      view($this->viewPath . 'authors', 
-        [
-          'pageFooter' => $this->pageFooter,
-          'projects'   => $projects->groupBy('author'),
-          'search'   => $request->input('search')
-        ]
-    );
-  }
+    $direction = in_array($column, ['author', 'year']) ? 'desc' : 'asc';
 
-  /**
-   * Show entries by year
-   *
-   * @return \Illuminate\Http\Response
-   */
+    $projects = Project::with('workImage')
+      ->published()
+      ->orderBy($column, $direction)
+      ->orderBy('year_works', 'desc')
+      ->get();
 
-  public function year()
-  {
-    $projects = $this->project->with('workImage')->published()->orderBy('year', 'DESC')->orderBy('year_works', 'DESC')->get();
-    $projects = $projects->groupBy('year');
-    $data = [];
-    
-    // Filter out projects without preview image
-    foreach($projects as $key => $project)
-    {
-      foreach($project as $p)
-      {
-        if ($p->workImage)
-        {
-          $data[$key][] = $p;
-        }
-      }
-    }
-
-    return 
-      view($this->viewPath . 'years', 
-        [
-          'pageFooter' => $this->pageFooter,
-          'projects'   => $projects,
-        ]
-    );
-  }
-
-  /**
-   * Show entries by program
-   *
-   * @return \Illuminate\Http\Response
-   */
-
-  public function program()
-  {
-    $projects = $this->project->with('workImage')->published()->orderBy('program')->orderBy('year_works', 'DESC')->get();
-    return 
-      view($this->viewPath . 'program', 
-        [
-          'pageFooter' => $this->pageFooter,
-          'projects'   => $projects->groupBy('program')
-        ]
-    );
-  }
-
-  /**
-   * Show entries by state
-   *
-   * @return \Illuminate\Http\Response
-   */
-
-  public function state()
-  {
-    $projects = $this->project->with('workImage')->published()->orderBy('state')->orderBy('year_works', 'DESC')->get();
-    return 
-      view($this->viewPath . 'state', 
-        [
-          'pageFooter' => $this->pageFooter,
-          'projects'   => $projects->groupBy('state')
-        ]
-    ); 
+    return view("frontend.pages.works.{$view}", [
+      'pageFooter' => 'works',
+      'projects' => $projects->groupBy($column),
+      ...$data,
+    ]);
   }
 }

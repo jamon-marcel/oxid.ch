@@ -1,63 +1,32 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Http\Controllers\Controller;
+
 use App\Models\Team;
 use App\Models\TeamImage;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
-class TeamController extends BaseController
+class TeamController extends Controller
 {
-  protected $pageFooter = 'office';
-  protected $viewPath   = 'frontend.pages.office.team';
-
-  // Models
-  protected $teamImages;
-  protected $team;
-
   /**
-   * Constructor
-   * 
+   * The team page; alumni are grouped by initial and split into two columns.
    */
-
-  public function __construct(Team $team, TeamImage $teamImages)
+  public function index(): View
   {
-    parent::__construct();
-    $this->teamImages  = $teamImages;
-    $this->team        = $team;
-  }
+    $members = fn (string $category) => Team::with('documents')->published()->{$category}()->get();
 
-  /**
-   * Show the team page
-   *
-   * @return \Illuminate\Http\Response
-   */
+    $alumni = $members('alumni')->groupBy(fn ($member) => substr(strtoupper($member->name), 0, 1));
 
-  public function index()
-  {
-    $alumni = [];
-    $alumnis = $this->team->with('documents')->published()->alumni()->get();
-
-    foreach($alumnis as $a)
-    {
-      $alumni[substr(strtoupper($a->name), 0, 1)][] = $a;
-    }
-
-    $chunks = collect($alumni)->chunk(ceil(count($alumni)/2));
-
-    return 
-      view($this->viewPath, 
-        [
-          'images'  => $this->teamImages->published()->orderBy('order')->get(),
-          'team'    => [
-            'partner'  => $this->team->with('documents')->published()->partner()->get(),
-            'associate' => $this->team->with('documents')->published()->associate()->get(),
-            'seniorStaff' => $this->team->with('documents')->published()->seniorStaff()->get(),
-            'employee' => $this->team->with('documents')->published()->employee()->get(),
-            'alumni'   => $chunks,
-          ],
-          'pageFooter' => $this->pageFooter,
-          'showInfo' => TRUE,
-        ]
-    );
+    return view('frontend.pages.office.team', [
+      'pageFooter' => 'office',
+      'images' => TeamImage::published()->orderBy('order')->get(),
+      'team' => [
+        'partner' => $members('partner'),
+        'associate' => $members('associate'),
+        'seniorStaff' => $members('seniorStaff'),
+        'employee' => $members('employee'),
+        'alumni' => $alumni->chunk(ceil($alumni->count() / 2)),
+      ],
+    ]);
   }
 }

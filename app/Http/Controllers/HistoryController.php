@@ -1,29 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Http\Controllers\BaseController;
-use App\Models\HomeImage;
-use App\Models\News;
-use Illuminate\Http\Request;
 
-class HistoryController extends BaseController
+use Illuminate\View\View;
+
+class HistoryController extends Controller
 {
-  protected $viewPath   = 'frontend.pages.history.index';
-  protected $pageFooter = 'history';
-
-  /**
-   * Show the history page
-   *
-   * @return \Illuminate\Http\Response
-   */
-
-  public function index()
+  public function index(): View
   {
-    return 
-      view(
-        $this->viewPath,
-        [
-          'pageFooter' => $this->pageFooter
-        ]
-    );
+    return view('frontend.pages.history.index', ['pageFooter' => 'history']);
   }
 }

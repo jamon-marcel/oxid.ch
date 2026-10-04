@@ -7,8 +7,8 @@
       <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
       <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
     </li>
-    @if ($menuItems['project'])
-      @foreach($menuItems['project'] as $item)
+    @if ($menuProjects)
+      @foreach($menuProjects as $item)
         <li>
         <a 
           href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 
@@ -37,8 +37,8 @@
         <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
       </li>
-      @if ($menuItems['project'])
-        @foreach($menuItems['project'] as $item)
+      @if ($menuProjects)
+        @foreach($menuProjects as $item)
           <li>
             <a 
               href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 
@@ -62,8 +62,8 @@
         <a href="javascript:;" class="js-filter-btn is-active" data-filter="reuse">Umnutzung</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
       </li>
-      @if ($menuItems['project'])
-        @foreach($menuItems['project'] as $item)
+      @if ($menuProjects)
+        @foreach($menuProjects as $item)
           <li>
             <a 
               href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 
@@ -87,8 +87,8 @@
         <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
         <a href="javascript:;" class="js-filter-btn is-active" data-filter="area">Areal</a>
       </li>
-      @if ($menuItems['project'])
-        @foreach($menuItems['project'] as $item)
+      @if ($menuProjects)
+        @foreach($menuProjects as $item)
           <li>
             <a 
               href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 
@@ -112,8 +112,8 @@
         <a href="javascript:;" class="js-filter-btn" data-filter="reuse">Umnutzung</a>
         <a href="javascript:;" class="js-filter-btn" data-filter="area">Areal</a>
       </li>
-      @if ($menuItems['project'])
-        @foreach($menuItems['project'] as $item)
+      @if ($menuProjects)
+        @foreach($menuProjects as $item)
           <li>
             <a 
               href="{{ route('page.project', ['slug' => AppHelper::slug($item->title_short), 'project' => $item->id]) }}" 

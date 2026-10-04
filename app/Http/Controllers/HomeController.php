@@ -1,56 +1,21 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Http\Controllers\BaseController;
+
 use App\Models\HomeImage;
 use App\Models\News;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
-class HomeController extends BaseController
+class HomeController extends Controller
 {
-  protected $viewPath = 'frontend.pages.home.index';
-  
-  // Models
-  protected $image;
-  protected $news;
-
   /**
-   * Constructor
-   * 
+   * The homepage: a random published image and the news.
    */
-
-  public function __construct(
-    HomeImage $image,
-    News $news)
+  public function index(): View
   {
-    parent::__construct();
-    $this->image   = $image;
-    $this->news    = $news;
-  }
-
-  /**
-   * Show the homepage
-   *
-   * @return \Illuminate\Http\Response
-   */
-
-  public function index()
-  {
-    $images = $this->image->published()->get();
-    $news = $this->news->published()->orderBy('order', 'asc')->get();
-   
-    $image = null;
-    if (count($images) > 0)
-    {
-      $random = count($images) > 1 ? mt_rand(0, count($images)-1) : 0;
-      $image  = $images[$random];
-    }
-
-    return 
-      view($this->viewPath, 
-        [
-          'image'     => $image,
-          'news'      => $news,
-        ]
-    );
+    return view('frontend.pages.home.index', [
+      'image' => HomeImage::published()->inRandomOrder()->first(),
+      'news' => News::published()->orderBy('order')->get(),
+    ]);
   }
 }

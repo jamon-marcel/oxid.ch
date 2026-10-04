@@ -1,46 +1,19 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Http\Controllers\BaseController;
+
 use App\Models\Job;
 use App\Models\JobImage;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
-class JobController extends BaseController
+class JobController extends Controller
 {
-  protected $pageFooter = 'office';
-  protected $viewPath   = 'frontend.pages.office.job';
-
-  // Models
-  protected $job;
-  protected $jobImage;
-
-  /**
-   * Constructor
-   * 
-   */
-
-  public function __construct(Job $job, JobImage $jobImage)
+  public function index(): View
   {
-    parent::__construct();
-    $this->job = $job;
-    $this->jobImage = $jobImage;
-  }
-
-  /**
-   * Show the team page
-   *
-   * @return \Illuminate\Http\Response
-   */
-
-  public function index()
-  {
-    return 
-      view($this->viewPath, 
-        [
-          'images'      => $this->jobImage->published()->orderBy('order')->get(),
-          'jobs'        => $this->job->orderBy('order', 'ASC')->with('documents')->published()->get(),
-          'pageFooter'  => $this->pageFooter,
-        ]
-    );
+    return view('frontend.pages.office.job', [
+      'pageFooter' => 'office',
+      'images' => JobImage::published()->orderBy('order')->get(),
+      'jobs' => Job::with('documents')->published()->orderBy('order')->get(),
+    ]);
   }
 }
