@@ -310,3 +310,10 @@ every public page), `glide-render.php` (renders a `map.txt` through an
 `ImageController` subclass forced to the legacy size), `image-compare.sh`
 (dimensions + PSNR). They expect a scratch dir (`/tmp/oxid-img/` was used)
 holding `paths.txt`, `map.txt` and the production renders in `prod/`.
+
+## To rethink: make it generic (2026-10-04)
+
+The user finds the shape from step 5 too special-cased: a controller action
+per image purpose and a helper method per page use. To be redesigned as a
+more generic pipeline — design here first, then implement. Tracked in
+`06-progress.md`, "Deferred: generic image handling".

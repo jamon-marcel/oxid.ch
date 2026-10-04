@@ -52,7 +52,6 @@ Route::get('/kontakt', [ContactController::class, 'index'])->name('page.contact'
 Route::get('/geschichte', [HistoryController::class, 'index'])->name('page.history');
 
 // Search
-Route::get('/suche', [SearchController::class, 'index'])->name('page.search.index');
 Route::get('/suche/{keyword?}', [SearchController::class, 'index'])->name('page.search.index');
 
 // Images

@@ -191,7 +191,7 @@ from before questions 3, 6 and 7 were answered.
     (`30baa00`) and fixed it with a `BaseFormRequest` preserving the same 422
     shape. You have **10 form requests, 414 LOC** — check all of them, and keep
     the response shape identical or the SPA's error handling breaks.
-12. Smoke test: all 144 routes, login, every admin CRUD path.
+12. Smoke test: all routes (145 since step 7), login, every admin CRUD path.
 13. **Search phase 2**: own scoring search, drop Scout. Last, because it is the
     one backend item that is a new feature rather than an upgrade.
 

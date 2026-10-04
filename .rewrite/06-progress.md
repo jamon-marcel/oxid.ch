@@ -2,7 +2,8 @@
 
 Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
 Backend steps 3 (dead code), 4 (Laravel 13 + Glide dependency), search
-phase 1, 5 (Glide images) and 6 (slim skeleton) done 2026-10-04.
+phase 1, 5 (Glide images), 6 (slim skeleton) and 7 (config diff) done
+2026-10-04.
 
 Production: **https://oxid-architektur.ch** (www.oxid.ch is a different, static page).
 
@@ -53,14 +54,29 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | **One commit:** Laravel 13, PHP ^8.3, drop image-cache, add Glide + Intervention 4 | ✅ done — 0 advisories; 141 routes (the 3 image-cache `/img` routes gone); all 16 public pages 200, 404 renders as 404; all 36 read-only admin API GETs 200 with a JWT; upload 200. **Keyword search 500s** — see below | `a809fd2` |
 | Search phase 1: drop Algolia, Scout `collection` driver — **moved up from step 8**, it fixed the Guzzle 8 search 500 | ✅ done — 15 queries compared with production, see `07-search.md` | `e9d5dde` |
 | Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | ✅ done — 167 production renders compared, geometry matches 167/167; 5 routes incl. the admin's `large`/`thumbnail`/`original`; full crawl of every emitted URL: see notes | `62c73c4` |
-| Slim skeleton, `app/User.php` → `app/Models/User.php` | ✅ done — same 146 routes, same per-route middleware; all 21 public pages 200, 404 renders as 404; 32 admin API GETs 200 with a JWT, `auth/me` + `auth/refresh` OK; 422 shape unchanged; `config:cache` + `route:cache` OK | this commit |
+| Slim skeleton, `app/User.php` → `app/Models/User.php` | ✅ done — same 146 routes, same per-route middleware; all 21 public pages 200, 404 renders as 404; 32 admin API GETs 200 with a JWT, `auth/me` + `auth/refresh` OK; 422 shape unchanged; `config:cache` OK. (`route:cache` was recorded as OK here too — wrong, it failed; see step 7) | `5c014f1` |
+| Config diff against L13 (was step 7), drop `intervention/image-laravel` | ✅ done — 145 routes (duplicate `/suche` removed); `config:cache` **and `route:cache`** OK; effective config unchanged except `same_site` → `lax` and the cache key prefix; public pages, admin API GETs, throttle headers OK | this commit |
 | JWT → Sanctum | — | |
 | Form-request validation messages (L12+ wants strings) | — | |
 | Search phase 2: own scoring search + unit tests, drop Scout | — | |
+| **Rethink image handling — more generic** (requested 2026-10-04, see below) | — open, design first | |
 
 The Laravel 13 bump and the image-cache → Glide dependency swap **must be
 the same commit** — Composer will not resolve anything on Laravel 11. See
 `02-backend-laravel13.md`, "Why step 4 must be one commit".
+
+### Deferred: generic image handling
+
+Requested by the user on 2026-10-04, after step 7: the step 5 result —
+`ImageController` (5 per-purpose actions: `original`, `thumbnail`, `large`,
+`home`, `crop`) plus `ImageHelper` (one static method per page use:
+`largeImage`, `previewImage`, `teaserImage`, `homeImage`, `openGraphImage`) —
+is too special-cased and should become **more generic**. Not decided how;
+write the design up in `05-image-pipeline.md` first, then implement. Step 5's
+verified behaviour (framing matches production 167/167, the URL shapes the
+public pages emit) is the regression baseline for it. Do it after the
+remaining backend steps, before the frontend port touches the admin's image
+screens.
 
 ### Notes from step 4
 
@@ -147,9 +163,50 @@ Details in `05-image-pipeline.md`, "Result".
   `images:clear`. Fixed. The rest of `CLAUDE.md` (Algolia, image-cache,
   Laravel 11) is rewritten at the end of the project.
 
+### Notes from step 7
+
+Method: dump the resolved `config('<file>')` with the file present and with it
+moved aside (framework defaults), and diff. Then decide per file.
+
+- **Deleted, defaults are equivalent or the subsystem is unused:** `view`
+  (identical), `database` (the `mysql` connection resolves the same; only the
+  unused redis/sqlite/pgsql blocks differ), `queue` (nothing is queued),
+  `broadcasting` (nothing broadcasts), `hashing` (bcrypt 10 → 12 rounds;
+  existing hashes still verify and are rehashed on login), `mail` (the app
+  sends **no** mail — no `Mail::` anywhere; the file's L6-era top-level
+  `driver`/`host`/`encryption` keys were already ignored since Laravel 11),
+  `services` (only stale mailgun/sparkpost/stripe stubs).
+- **Republished from L13 (`config:publish --force`), with customisations re-applied:**
+  - `cache`: default store **`file`**, not `database`. This one is load-bearing:
+    the API's `throttle:200,1` uses the default store, and there is no `cache`
+    table, so the L13 default would 500 every API call.
+  - `session`: driver `file`; cookie name kept as `oxid_architektur_gmbh_session`
+    (the L13 default would produce `oxid_architektur_gmb_h_session`).
+    `same_site` is now `lax` (was `null`) — deliberately adopted; it is what
+    the Sanctum step needs.
+  - `logging`: stack channel `daily`, as before.
+  - `filesystems`: the `local` disk root stays **`storage/app`** (L13: `app/private`)
+    and `serve` stays off. Load-bearing: every image/document delete endpoint
+    and `images:clear` call `Storage::allDirectories('public')` /
+    `Storage::delete('public/…')` on the default disk.
+- **Left as is:** `auth`, `jwt` (rewritten in the Sanctum step), `scout`
+  (goes in search phase 2), `seo`, `settings`, `app` (done in step 6).
+  `cors` is not published; the framework default applies (see step 6 notes).
+- **`intervention/image-laravel` removed**, with `config/image.php`: nothing used
+  its facade or config. `intervention/image` stays (MediaController, Glide).
+  `composer audit` clean.
+- **`route:cache` failed — pre-existing on `master`, fixed.** `/suche` and
+  `/suche/{keyword?}` were both named `page.search.index`. The first route
+  went; the second matches `/suche` too, and `route('page.search.index')`
+  still yields `/suche`. So production has never been able to cache its
+  routes. 146 → 145 routes.
+- Pre-existing, not changed: `/suche/{keyword}` ignores the path segment —
+  `SearchController` only reads `?keyword=`. Revisit in search phase 2.
+
 ### To verify at the end of the backend phase
 
-- Same 144 routes (116 api, 28 web).
+- Same routes as the baseline: 145 since step 7 (146 before minus the
+  duplicate `/suche`).
 - Every public page 200.
 - `api/*` → 401 JSON when unauthenticated; session + XSRF cookies set.
 - 404 renders as 404, not 500. (luvo hit a 500 here after its dependency bump
@@ -230,6 +287,18 @@ based on luvo:
 - `.env`: remove `ALGOLIA_APP_ID` / `ALGOLIA_SECRET`, and make sure
   `SCOUT_DRIVER` is unset or `collection` (the config default is now
   `collection`).
+- `.env`, after step 7 (Laravel 11+ env names; the config files that read the
+  old names are gone):
+  - **`DB_CONNECTION=mysql` must be set** — the framework default is `sqlite`.
+  - `CACHE_DRIVER` → `CACHE_STORE` (default is `file` now, so only needed if
+    production uses something else). Same for `FILESYSTEM_DRIVER` →
+    `FILESYSTEM_DISK` (default `local`).
+  - `QUEUE_CONNECTION=sync` — nothing is queued, but the framework default
+    is `database`.
+  - Unused, can go: `BROADCAST_DRIVER`, `PUSHER_*`, `MIX_PUSHER_*`,
+    `REDIS_*`, `MAIL_*`.
+- `php artisan optimize` (config + route + view cache) works since step 7;
+  it never did before because of the duplicate route name.
 - Glide cache dir writable; not backed up.
 - After go-live, `storage/app/public/cache/` (old image-cache output) can go.
 - Optionally warm the Glide cache after deploy (cold renders 0.3–1.3 s each).
