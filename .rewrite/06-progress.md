@@ -25,7 +25,16 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
       every content table) backed up to
       `~/backups/oxid-local-before-prod-2026-10-04/oxid-local.sql`; the prod
       dump is kept beside it as `oxid-prod-2026-10-04.sql`.
-- [ ] **Production `storage/` → local** — download in progress.
+- [x] **Production `storage/` → local** (2026-10-04).
+      `storage/app/public/uploads`: 1,063 files, 1.8 GB, flat (no subdirs).
+      **Every file the DB references is present** — 943 records across the
+      6 image tables and `team_documents`, 0 missing.
+      **120 files (158 MB: 65 jpg, 54 png, 1 pdf) are referenced nowhere** —
+      not by any table, not anywhere else in the dump, not in code. Likely
+      leftovers from uploads whose records were never saved or were deleted by
+      older code (the current delete endpoints do remove files). Harmless:
+      nothing emits their URLs. Not touched; a cleanup candidate after
+      go-live, not part of this project.
 - [ ] Decide on the dev/prod database mismatch: production is **MariaDB
       10.11**, local is **MySQL 5.7** (EOL). The dump imported cleanly, but
       check Laravel 13's minimum MySQL version before the framework bump.

@@ -171,7 +171,7 @@ depends on having real data locally.
 | 7 | Algolia index config in code or dashboard? | **moot — Algolia dropped, see `07-search.md`** |
 | 8 | Deploy / rollback? | **SSH + git pull, commit the Vite build** |
 | 9 | Sequenced? | assumed yes |
-| 10 | Snapshot taken? | **DB yes** (2026-10-04); `storage/` in progress |
+| 10 | Snapshot taken? | **yes** — DB and `storage/`, 2026-10-04 |
 
 **Decided 2026-10-04:** JWT → Sanctum, as part of this project. See
 `02-backend-laravel13.md`. Note that luvo is not precedent for the migration
