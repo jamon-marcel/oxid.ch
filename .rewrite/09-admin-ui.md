@@ -214,10 +214,10 @@ menu and login are styled against the final line weight.
 |---|---|
 | Icons: 18 classes across 25 files, CSS-background SVGs, cleanup | 0.5 – 0.75 |
 | Menu: type scale, group headers, width, active marker | 0.25 – 0.5 |
-| Splash: login screen restyle, responsive image | 0.25 |
+| Splash: login restyle, random home image via `--splash`, delete `splash.jpg` | 0.25 – 0.5 |
 | Borders: tokens, 58 replacements, focus rings, shadow check | 0.5 |
 | Visual pass across all 30 screens | 0.25 |
-| **Total** | **1.75 – 2.25** |
+| **Total** | **1.75 – 2.5** |
 
 The visual pass overlaps with the main project's admin QA day. Do them as
 one pass, not two.
@@ -226,7 +226,7 @@ one pass, not two.
 
 | # | Question | Answer (2026-10-04) |
 |---|---|---|
-| 1 | Login image | **Client provides a new splash image.** Replaces `splash.jpg`; serve as AVIF/WebP + JPEG fallback, sized for the viewport. Blocks only the login-screen item, nothing else. |
+| 1 | Login image | **A random published home image** (revised 2026-10-04; replaces "client provides one"). Nothing to deliver, nothing blocking. See below. |
 | 2 | Pre-mount splash | **Not wanted** — restyling the login screen is enough. |
 | 3 | Box shadows | **Soften them** along with the borders. |
 | 4 | Brand colour / typeface | **Unchanged** — Euclid Circular A (Regular + Medium), palette in `config/_colors.scss`. |
@@ -240,9 +240,46 @@ still lift off the page but don't look heavy next to 1px lines. Do it in the
 two variables first. Then check the 5 explicit call sites; any that don't
 need custom values should switch to the variables.
 
-### On #1: what to deliver
+### On #1: a random home image as the login background
 
-A single high-resolution image, at least 2400 px on the long edge, landscape,
-is enough. The build produces the AVIF/WebP/JPEG variants. If the subject
-has a focal point that must stay visible on narrow screens, say where, so
-`background-position` can be set to keep it in frame.
+Same idea the public search page already uses (`SearchController:53-58` picks
+a random published `HomeImage`). 9 of 12 home images are published today.
+
+**How:**
+
+- `/admin` is served by `Route::view('admin', 'backend.app')` in
+  `routes/web.php`, with no controller. Turn it into a small closure (or a view
+  composer) that picks one image:
+  `HomeImage::published()->inRandomOrder()->first()`. That's one query,
+  instead of the load-all-then-`mt_rand` pattern in `SearchController`.
+- In `backend/app.blade.php`, expose it as a CSS custom property on `<body>`:
+  `style="--splash: url('/img/home/{{ $splash->name }}')"`.
+- `.container-auth` uses `background-image: var(--splash, none)` over the
+  brand background colour.
+
+So the Vue login component needs **no API call and no JS**. It works before
+authentication, which an API route would have had to allow for anyway.
+
+**Delete `public/assets/backend/img/splash.jpg`** (265 KB, from 2020) once
+this is in.
+
+**Details to get right:**
+
+- **Published only.** The login page is reachable without logging in, so
+  unpublished images must never appear. `published()` handles it; keep it.
+- **Fallback.** With zero published images, `--splash` is unset and the
+  brand colour shows. No broken image.
+- **Size and format.** `/img/home/` goes through the Glide controller after
+  step 5 of the backend plan, with the `Home` crop applied from the
+  database. Request a viewport-appropriate size with AVIF/WebP via
+  `image-set()`, instead of the 2000×1250 cap the `Home` template uses today.
+- **Framing.** The home-image crops are composed for the homepage. As a
+  full-viewport `cover` background on a portrait phone, the sides get cut.
+  `background-position: center` is the honest default; there's no per-image
+  focal point to use.
+- **Legibility.** The images vary in brightness, so the login card needs
+  its own solid background (white, 1px border, softened shadow), not
+  transparency over the photo.
+- **Caching.** Pages under `/admin` must not be cached at the HTTP level
+  anyway, so each visit gets a fresh pick. The image itself is cached by
+  Glide.

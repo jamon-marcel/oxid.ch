@@ -33,8 +33,8 @@ behaviour. Nothing else.
 |---|---|
 | Backend L11 → L13 + Sanctum + Glide + search | **5 – 5.5** |
 | Frontend Vue 3 + Vite + Tiptap | **7.5 – 8.25** |
-| Admin UI refresh (`09-admin-ui.md`) | **1.75 – 2.25** |
-| **Total** | **14.25 – 16** |
+| Admin UI refresh (`09-admin-ui.md`) | **1.75 – 2.5** |
+| **Total** | **14.25 – 16.25** |
 
 Add review and click-through QA → **~3 weeks calendar** if reviewed as we go.
 
