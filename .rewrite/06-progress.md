@@ -704,7 +704,7 @@ pixel-compared; production serves JPEG, local AVIF/WebP)
 - `/werkliste` is a blank 200 on production and locally:
   `WorksController::index()` has been empty since 2020. Nothing links to it.
 - `/geschichte` throws `_toggleDropDownItems is not defined` (×8) on
-  production and locally.
+  production and locally. **Fixed 2026-10-04:** see "Public controllers".
 
 **Test damage found and repaired:** the previous session's grid-delete test
 (15:24:55 local, the second of commit `91e0f08`) had deleted grid element
@@ -785,6 +785,14 @@ only grid element missing from the whole table.
   a fix: it came from the grid row created first, now from the first row in
   display order, which matches the first image on the page (checked on 4).
   `tests/Feature/PublicPagesTest.php`.
+- **`/geschichte` JS error fixed.** `history.js` still called
+  `_toggleDropDownItems()` from the scroll handler after the function (and
+  the history footer dropdown) had been commented out. The throw also
+  skipped the `history.replaceState` after it, so the URL hash never
+  followed the scroll. Removed the call and the dead code. Verified in
+  headless Chromium at 1280/375: no errors; at 1280 scrolling sets
+  `#1984/#2000/#2020` and the active footer link; setting the hash scrolls
+  to the period on both widths.
 
 ## Public site JS (separate project — `08-frontend-js.md`)
 

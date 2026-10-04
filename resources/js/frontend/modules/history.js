@@ -7,7 +7,6 @@ var ImageScroll = (function() {
     html:    'html',
     body:    'body',
     item:    '.js-btn-history',
-    dropdown: '.js-dropdown',
     menu:    '.js-menu',
     menuBar: '.js-menu-bar',
   };
@@ -51,7 +50,6 @@ var ImageScroll = (function() {
     var hash = window.location.hash.substr(1);
     _toggleMenu();
     _toggleMenuItems(hash);
-    //_toggleDropDownItems(hash);
     _scrollTo(hash);
   };
 
@@ -68,30 +66,6 @@ var ImageScroll = (function() {
     $('a[href="#'+hash+'"]').addClass(classes.active);
   };
 
-  // var _toggleDropDownItems = function(hash) {
-  //   if ($(selectors.dropdown).hasClass(classes.open)) {
-
-  //     // Button already selected
-  //     if ($(selectors.dropdown).find('a[href="#'+hash+'"]').hasClass('btn-dropdown')){
-  //       return;
-  //     }
-
-  //     $(selectors.dropdown).find('li').each(function(){
-  //       $(this).removeClass(classes.selected);
-  //     });
-
-  //     $(selectors.dropdown).find('a').each(function(){
-  //       $(this).removeClass('btn-dropdown js-btn-dropdown');
-  //     });
-
-  //     $(selectors.dropdown).find('a[href="#'+hash+'"]').addClass('btn-dropdown js-btn-dropdown');
-  //     $(selectors.dropdown).find('a[href="#'+hash+'"]').parents('li').addClass(classes.selected);
-  //     $(selectors.dropdown).removeClass(classes.open);
-  //   }
-
-  // };
-
-
   var _scrollTo = function(target){
     $.scrollTo('[data-period="'+target+'"]', 800);
   };
@@ -104,7 +78,6 @@ var ImageScroll = (function() {
           var hash = match.dataset.period;
           _toggleMenu();
           _toggleMenuItems(hash);
-          _toggleDropDownItems(hash);
           history.replaceState(null, null, document.location.pathname + '#' + hash);
 
         }
