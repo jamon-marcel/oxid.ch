@@ -15,13 +15,15 @@ nav.site-nav {
         transition: opacity .1s .3s ease-out;
     }
 
-    // Close button row, as high as the page header
+    // Close button row, as high as the page header; the X sits where the
+    // menu button was (top right)
     > div:first-child {
         align-items: center;
         display: flex;
         flex: none;
         @include responsive-prop('height', $header-heights);
-        @include responsive-prop('padding-left', $space-md);
+        justify-content: flex-end;
+        padding-right: 20px;
     }
 
     background-color: $color-dark;
