@@ -1,121 +1,121 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code (claude.ai/code) in this repository.
 
-## Architecture Overview
+## What this is
 
-This is a Laravel 11 application with a Vue.js 2 frontend for the admin panel. The application manages an architecture portfolio website with both public frontend and admin backend interfaces.
+The website of Oxid Architektur (production: **https://oxid-architektur.ch**;
+www.oxid.ch is a different, static page). A Laravel 13 app with two faces:
 
-### Key Structure
-- **Frontend**: Public-facing website with project galleries, discourse articles, team info, and contact forms
-- **Backend**: Vue.js 2 admin panel for content management (accessed via `/admin`)
-- **Models**: Core entities include Project, Discourse, Team, Profile, Job, News, and various image/document models
-- **Image Management**: Heavy use of image processing with cropping, caching, and multiple formats using Intervention Image
-- **API**: RESTful API endpoints in `routes/api.php` for admin panel data management
+- **Public site:** Blade templates (`resources/views/frontend/`), Sass, and
+  jQuery-based modules (`resources/js/frontend/modules/`). Projects with a
+  per-project grid layout, the works list (`/werkliste/...`), discourse,
+  team, profile, jobs, history, contact, and search.
+- **Admin:** a Vue 3 SPA under `/admin` (`resources/js/backend/`), talking
+  to the JSON API in `routes/api.php`.
 
-### Key Technologies
-- Laravel 11 with PHP 8.2+
-- Vue.js 2 with Vue Router and Vuex for admin panel
-- Laravel Mix for asset compilation
-- Bootstrap 4 for admin styling
-- JWT authentication for API
-- Algolia Scout for search functionality
-- Image processing and caching system
+The 2026 rework (Laravel 11 → 13, Vue 2 → 3, Mix → Vite, JWT → Sanctum,
+Algolia → own search, image-cache → Glide) is planned and logged in
+`.rewrite/`. **`.rewrite/06-progress.md` is the logbook**: decisions, what
+was verified and how, known issues, and the deploy notes.
 
-## Development Commands
+## Stack
 
-### Frontend Assets
+- PHP ^8.3 (production on Hostpoint: PHP 8.3–8.5, MariaDB 10.11),
+  Laravel 13, Sanctum 4, Glide 4 + Intervention Image 4,
+  spatie/laravel-translatable (de/en fields as JSON).
+- Vite 8 with `laravel-vite-plugin`; Vue 3.5, vue-router, axios, Tiptap,
+  vue-advanced-cropper, SortableJS, Phosphor icons.
+- Public JS: jQuery, Swiper, lazysizes (de-jQuery is planned separately in
+  `.rewrite/08-frontend-js.md`).
+
+## Commands
+
 ```bash
-# Development build with file watching
-npm run dev
-# or
-npm run watch
-
-# Production build
-npm run prod
-
-# Development with hot reload
-npm run hot
-```
-
-### Laravel Commands
-```bash
-# Run migrations
+npm run dev          # Vite dev server (writes public/hot — remove it if the server dies)
+npm run build        # public site + admin into public/build, plus busu.css
+php artisan test     # PHPUnit 12 (tests/Unit, tests/Feature)
+./vendor/bin/pint    # code style
 php artisan migrate
-
-# Seed database
-php artisan db:seed
-
-# Clear application cache
-php artisan cache:clear
-
-# Generate application key
-php artisan key:generate
-
-# Queue worker (if using queues)
-php artisan queue:work
-
-# Custom command to clear images
-php artisan images:clear
+php artisan optimize # config/route/view cache — works, keep it that way
 ```
 
-### Testing
-```bash
-# Run all tests
-./vendor/bin/phpunit
+`public/build/` and `public/assets/css/busu.css` are **committed**: run
+`npm run build` and commit the output with the change that needs it.
+`busu.css` (from `resources/sass/frontend-busu/`) is consumed by another
+site; keep its output path.
 
-# Run specific test suite
-./vendor/bin/phpunit --testsuite=Feature
-./vendor/bin/phpunit --testsuite=Unit
+## Architecture notes
 
-# Alternative using artisan
-php artisan test
-```
+### Routing and auth
 
-### Code Quality
-```bash
-# Laravel Pint for code formatting
-./vendor/bin/pint
+- `routes/web.php`: public pages, the `/img/...` image routes, and
+  `admin/{any?}`, which serves the SPA shell (`backend/app.blade.php`) and
+  picks a random published home image for the login background.
+- `routes/api.php`: everything behind `auth:sanctum`, cookie-based
+  (stateful SPA): `GET /sanctum/csrf-cookie`, then `POST /api/auth/login`.
+  `bootstrap/app.php` renders every `api/*` exception as JSON (401
+  included). `APP_URL` must be the exact origin for Sanctum's stateful
+  check.
 
-# Check code style without fixing
-./vendor/bin/pint --test
-```
+### Images
 
-## Key Configuration
+- Uploads live flat in `storage/app/public/uploads/`. Image models
+  (`ProjectImage`, `DiscourseImage`, `HomeImage`, `TeamImage`, `JobImage`,
+  `ProfileImage`) use the `App\Models\Concerns\IsImage` trait: crop
+  (`coords_w/h/x/y`), stored `width`/`height`, `url($size, $format)`,
+  `srcset()`.
+- `App\Support\Glide` builds **signed** `/img/{file}?w&h&fit&crop&fm&s`
+  URLs; `ImageController` renders them into `storage/app/.glide-cache`
+  (Imagick if loaded, else GD). Every rendition is checked before it is
+  served; a broken one is re-rendered, then falls back to the upload's
+  format (see `06-progress.md`, "Broken AVIF renders").
+- Blade: `<x-image :image="$image" preset="large" />` → `<picture>` with
+  AVIF/WebP sources where the server can write them
+  (`ImageSupport::modernFormats()`). Presets in `config/images.php`.
+- The admin uses the fixed `/img/thumbnail|large|original/{file}` routes
+  (`resources/js/backend/lib/images.js`). `/img/crop/...` and
+  `/img/home/...` are legacy URLs that 301 to signed ones.
+- `php artisan images:clear` is a leftover that deletes directories which
+  no longer exist; the Glide cache is `storage/app/.glide-cache`.
 
-### Environment Setup
-- Copy `.env.example` to `.env` and configure database, Algolia keys, and JWT secret
-- Image cache configuration in `config/image-cache.php`
+### Search
 
-### Database
-- Uses MySQL/MariaDB
-- Extensive migration history with image and document relationships
-- Seeders available for Discourse, Projects, and Team data
+Own scoring search in `app/Services/Search/` (`SearchIndex`, `Tokenizer`,
+`SearchService`), no Scout/Algolia. The index is flushed when a record is
+saved. See `.rewrite/07-search.md`.
 
-### Image System
-- Custom image filtering and caching via `marceli-to/image-cache` package
-- Image templates defined in `app/Filters/Image/Template/`
-- Cropping coordinates stored in database for responsive images
-- Public uploads stored in `storage/app/public/uploads/`
+### Admin SPA (`resources/js/backend/`)
 
-### Admin Panel
-- Single-page Vue.js application served at `/admin`
-- API-driven with JWT authentication
-- Drag-and-drop file uploads using vue2-dropzone
-- Image cropping with vue-advanced-cropper
-- TinyMCE integration for rich text editing
+Built in the shape of the luvo project (github.com/marceli-to/luvo):
+`<script setup>` only, no Options API or mixins.
 
-### Frontend Structure
-- Blade templates in `resources/views/frontend/`
-- SCSS organized by components and views
-- Separate builds for main site and "busu" variant
-- Responsive image system with multiple breakpoints
+- `lib/`: `http` (axios instance, XSRF, error notifications), `notify`,
+  `images`, `utils`.
+- `composables/`: `useResourceForm`, `useListing`, `useOrder`,
+  `useImages`, `useImageLibrary`, `useFiles`, `useEscape`.
+- `components/ui/`: `Card`, `Lightbox` (native `<dialog>`), `Toggle`,
+  `Tabs`, `Uploader`, `SortableList` (drag ordering via SortableJS),
+  `ListActions`, `Notifications`, Tiptap `editor/`.
+- `views/<resource>/{Index,Form}.vue`; `router.js` is lazy-loaded with a
+  session guard. Styles: `resources/sass/backend/` (1px `$border` tokens).
+- The admin is desktop-only (`$page-min-width: 840px`).
 
-## Important Notes
+### Public JS (`resources/js/frontend/`)
 
-- Admin routes catch-all in `web.php` serves the Vue SPA
-- API routes are prefixed and return JSON for admin consumption
-- Image processing is CPU-intensive; consider queue usage in production
-- The application supports multiple themes/variants (evident from "busu" assets)
-- Search functionality requires Algolia configuration
-- JWT tokens used for admin authentication (not Laravel's default session auth)
+When writing or modernising it: `let`/`const`, ES modules, `data-`
+attributes for behaviour hooks grouped by module
+(`[data-collapsible="btn"]`), keep `is-*`/`has-*` state classes.
+
+## Local environment
+
+- Served by Laravel Herd (PHP-FPM) at https://oxid.ch.test. The database is
+  MAMP MySQL 5.7 over the socket `/Applications/MAMP/tmp/mysql/mysql.sock`
+  (production is MariaDB 10.11).
+- The local DB and `storage/app/public/uploads` are copies of production
+  (2026-10-04). People edit content in the local admin while you work:
+  tests must clean up after themselves (create → delete), never restore
+  whole tables.
+- Reorder endpoints rewrite `order` for every row of a list; check
+  bulk-writing endpoints inside a rolled-back transaction instead of
+  against live rows.
