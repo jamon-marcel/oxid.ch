@@ -842,7 +842,8 @@ settings, and the search-index flush.
 | Delete dead code: fancyBox (JS **and** Sass), axios | done | `046a170` |
 | jQuery → vanilla, 9 modules + `bootstrap.js`, `js-` → `data-` | done | `ccbfa36` |
 | `maps.js` de-jQuery | done (with step 2) | `ccbfa36` |
-| Swiper 5.3.8 → 14.3 | done | see below |
+| Swiper 5.3.8 → 14.3 | done | `127b04e` |
+| Cross-browser QA (WebKit, Firefox) | done, no real devices | see below |
 
 **Baseline and how it is checked.** Playwright scripts in `~/oxid-qa`
 (outside the repo; `playwright`, `pngjs`, `pixelmatch` installed there):
@@ -941,6 +942,15 @@ published entries have two or more images.
 
 Bundle: `app.js` 147.6 KB → **83.5 KB** (gzip 40.0 → 26.6 KB); 238.8 KB
 (71.0 KB gzip) before this project. Public CSS 79.3 → 71.1 KB.
+
+**Step 5, cross-browser QA** (Playwright 1.6x engines, `ENGINE=webkit|firefox`,
+built assets): `behave.js` in WebKit and Firefox matches the Chromium run
+except for scroll positions a few px apart (font metrics; the scroll targets
+still land at `top` 0–1 px). `swiper-check.js` passes in both. 0 page
+errors. Firefox warns that `assets/js/modernizr.min.js` (head, pre-existing)
+forces layout before the CSS has loaded. Not done: real iOS/Android
+devices. The scroll-position modules (`history`, `sections`) only run from
+960 px up, so a desktop Safari check by hand is the useful remaining one.
 
 **Found on the way, left alone:** the office footer dropdown
 (`menu/footer/office.blade.php`) is inside an HTML comment, so it ships in

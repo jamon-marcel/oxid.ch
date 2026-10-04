@@ -8,7 +8,7 @@ The website of Oxid Architektur (production: **https://oxid-architektur.ch**;
 www.oxid.ch is a different, static page). A Laravel 13 app with two faces:
 
 - **Public site:** Blade templates (`resources/views/frontend/`), Sass, and
-  jQuery-based modules (`resources/js/frontend/modules/`). Projects with a
+  vanilla ES modules (`resources/js/frontend/modules/`). Projects with a
   per-project grid layout, the works list (`/werkliste/...`), discourse,
   team, profile, jobs, history, contact, and search.
 - **Admin:** a Vue 3 SPA under `/admin` (`resources/js/backend/`), talking
@@ -26,8 +26,8 @@ was verified and how, known issues, and the deploy notes.
   spatie/laravel-translatable (de/en fields as JSON).
 - Vite 8 with `laravel-vite-plugin`; Vue 3.5, vue-router, axios, Tiptap,
   vue-advanced-cropper, SortableJS, Phosphor icons.
-- Public JS: jQuery, Swiper, lazysizes (de-jQuery is planned separately in
-  `.rewrite/08-frontend-js.md`).
+- Public JS: no framework; Swiper 14 (discourse detail slider), lazysizes,
+  Google Maps JS API on the contact page (`maps.js`, its own entry).
 
 ## Commands
 
@@ -103,9 +103,19 @@ Built in the shape of the luvo project (github.com/marceli-to/luvo):
 
 ### Public JS (`resources/js/frontend/`)
 
-When writing or modernising it: `let`/`const`, ES modules, `data-`
-attributes for behaviour hooks grouped by module
-(`[data-collapsible="btn"]`), keep `is-*`/`has-*` state classes.
+Each module exports `init()`; `app.js` imports and calls them. Behaviour
+hooks are `data-` attributes grouped by module (`[data-collapsible="btn"]`,
+`[data-filter="item"]`); `is-*`/`has-*` state classes stay classes because
+the Sass styles them. Show/hide with the `hidden` attribute (backed by
+`[hidden] { display: none !important }`), scroll with
+`window.scrollTo({ behavior: 'smooth' })`. Shared helpers live in `lib/`
+(`utils.js`, `sections.js` for the prev/next section scrollers). No jQuery
+— don't reintroduce it.
+
+The baseline scripts used for the de-jQuery (Playwright behaviour log and
+screenshots) are described in `.rewrite/06-progress.md`, "Public site JS".
+After changing a JS dependency, restart the Vite dev server with
+`npx vite --force`, or the public pages get 504s on stale pre-bundled deps.
 
 ## Local environment
 
