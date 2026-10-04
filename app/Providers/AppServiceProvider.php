@@ -4,12 +4,10 @@ use App\Models\Project;
 use App\Models\Discourse;
 use App\Models\Team;
 use App\Models\Job;
-use App\Models\Profile;
 use App\Observers\ProjectObserver;
 use App\Observers\DiscourseObserver;
 use App\Observers\TeamObserver;
 use App\Observers\JobObserver;
-use App\Observers\ProfileObserver;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
@@ -44,7 +42,6 @@ class AppServiceProvider extends ServiceProvider
         Discourse::observe(DiscourseObserver::class);
         Team::observe(TeamObserver::class);
         Job::observe(JobObserver::class);
-        Profile::observe(ProfileObserver::class);
 
         // The highlighted projects in the menu; the partial can render twice per page
         View::composer('frontend.partials.menu.items.projects', function ($view) {

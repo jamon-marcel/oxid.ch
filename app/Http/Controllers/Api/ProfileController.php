@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers\Api;
 use App\Models\Profile;
-use App\Models\ProfileImage;
 use App\Http\Resources\DataCollection;
 use App\Http\Requests\ProfileStoreRequest;
 use App\Http\Controllers\Controller;
@@ -10,7 +9,6 @@ use Illuminate\Http\Request;
 class ProfileController extends Controller
 {
   protected $profile;
-  protected $profileImage;
   
   /**
    * Constructor
@@ -18,10 +16,9 @@ class ProfileController extends Controller
    * @param Profile $profile
    */
 
-  public function __construct(Profile $profile, ProfileImage $profileImage)
+  public function __construct(Profile $profile)
   {
     $this->profile = $profile;
-    $this->profileImage = $profileImage;
   }
 
   /**
@@ -56,24 +53,6 @@ class ProfileController extends Controller
       'publish'  => $request->input('publish'),
     ]);
     $profile->save();
-
-    // Images
-    if (!empty($request->images))
-    {
-      foreach($request->images as $i)
-      {
-        $document = new ProfileImage([
-          'profile_id' => $profile->id,
-          'name' => $i['name'],
-          'caption' => [
-            'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
-            'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
-          ],
-          'publish' => $i['publish'],
-        ]);
-        $document->save();
-      }
-    }
 
     return response()->json(['profileId' => $profile->id]);
   }
@@ -111,26 +90,6 @@ class ProfileController extends Controller
     $profile->publish  = $request->input('publish');
     $profile->save();
     
-    // Images
-    if (!empty($request->images))
-    {
-      foreach($request->images as $i)
-      {
-        $document = ProfileImage::updateOrCreate(
-          ['id' => $i['id']], 
-          [
-            'profile_id' => $profile->id,
-            'name' => $i['name'],
-            'caption' => [
-              'de' => isset($i['caption']['de']) ? $i['caption']['de'] : null,
-              'en' => isset($i['caption']['en']) ? $i['caption']['en'] : null,
-            ],
-            'publish' => $i['publish'] ? $i['publish'] : 0,
-          ]
-        );
-      }
-    }
-
     return response()->json('successfully updated');
   }
 

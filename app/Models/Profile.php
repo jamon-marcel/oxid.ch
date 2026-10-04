@@ -20,9 +20,4 @@ class Profile extends Base
 		'description',
 		'publish',
   ];
-
-	public function images()
-	{
-		return $this->hasMany('App\Models\ProfileImage', 'profile_id', 'id')->orderBy('order');
-	}
 }

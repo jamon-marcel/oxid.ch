@@ -827,11 +827,12 @@ settings, and the search-index flush.
   `GridController::destroy` fails a test. Removing the documents cleanup in
   `ProjectObserver` doesn't, because the `ON DELETE CASCADE` foreign keys
   (present in the live MySQL schema too) delete them anyway.
-- Found, not changed: `ProfileController` stores `images` with a
-  `profile_id` that `profile_images` doesn't have (dead code: profile
-  images are a separate library), and `Profile::images()`/`ProfileObserver`
-  point at that missing column (unreachable: profiles have no delete
-  route). Deleting a project image that a grid uses would hit the
+- **Removed:** `Api\ProfileController` saved `images` with a `profile_id`
+  that `profile_images` doesn't have. The form never sends `images`
+  (profile images are a separate library), so it was dead code. Removed
+  along with `Profile::images()` and `ProfileObserver`, which only deleted
+  through that relation (profiles have no delete route).
+- Found, not changed: deleting a project image that a grid uses would hit the
   `grid_elements` foreign key (500); the admin prevents it by protecting
   `is_grid` images.
 
