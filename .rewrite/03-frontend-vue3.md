@@ -52,7 +52,7 @@ What *does* need touching:
 |---|---|---|---|---|
 | **`vue2-dropzone`** | ^3.6.0 | **no Vue 3 port — rewrite** | **6** | **highest risk** |
 | `vuedraggable` | ^2.24.3 | `vuedraggable@^4` | **13** | slot API changed |
-| `tinymce` + `@tinymce/tinymce-vue` | 5.10.9 / ^3.2.8 | `^8` + `@tinymce/tinymce-vue@^6`, **or Tiptap** | 7 | see below |
+| `tinymce` + `@tinymce/tinymce-vue` | 5.10.9 / ^3.2.8 | **removed — Tiptap 3** | 7 | decided; see below |
 | `vue-advanced-cropper` | ^0.16.5 | `^2` (has Vue 3 support) | 2 | easy |
 | `vue-router` | ^3.6.5 | `^4` | `routes.js`, 30 named routes | mechanical |
 | `vue-notification` | ^1.3.20 | `@kyvg/vue3-notification` | `app.js` | drop-in |
@@ -99,23 +99,29 @@ conversion in the same pass rather than preserving the coupling.
 **`vue-advanced-cropper`** (2): `components/projects/images/Listing.vue`,
 `components/projects/upload/ImageUpload.vue`
 
-### TinyMCE: upgrade or replace?
+### TinyMCE → Tiptap (decided 2026-10-04)
 
-TinyMCE 5 went **EOL in April 2023** and carries unpatched XSS (iframe
-handling, external SVG via object/embed). It renders admin-authored content on
-the public site, so this is the one genuinely user-facing security item in the
-whole survey. Two routes:
+TinyMCE 5 went EOL in April 2023 and carries unpatched XSS (iframe handling,
+external SVG via object/embed). It renders admin-authored content on the
+public site, so it is the one genuinely user-facing security item in this
+survey. Replacing rather than upgrading was chosen — see
+`04-open-questions.md` #4.
 
-- **TinyMCE 5 → 8** + `@tinymce/tinymce-vue` 3 → 6. Smaller diff, keeps the
-  editor your users know, keeps the CVE treadmill.
-- **Replace with Tiptap 3**, as luvo did (`3bf1067`). Deletes 7.5 MB of
-  self-hosted assets. luvo verified all 197 of its stored rich-text values
-  round-trip with identical visible text, links, headings and lists, using
-  a script that is reusable here. Bigger diff, and the toolbar has to be
-  rebuilt to match.
+Port from luvo (`3bf1067`): `components/ui/editor/` — `Editor`, `Toolbar`,
+`LinkDialog`, `smallText`. Its link dialog offers URL / E-Mail / Telefon /
+Datei, the last picking from uploaded files; check which of those oxid's
+`config/tinyconfig.js` actually needs before copying it wholesale.
 
-This is a scope decision, not a technical one — see `04-open-questions.md` #4.
-The minimum-scope answer is TinyMCE 8.
+**Do the round-trip verification before switching, not after.** Export every
+stored rich-text value, run it through Tiptap, diff visible text, links,
+headings and lists. luvo did this across 197 values
+(`.rewrite/tools/tiptap-roundtrip.mjs`, needs `@tiptap/html` + `happy-dom`).
+The 6 editor-bearing forms here are contact, discourses, home/news, jobs,
+profile/text and projects.
+
+Expected side effect, same as luvo: saving strips Word/Outlook paste junk, so
+pasted inline fonts (Segoe UI, 12pt) disappear and those texts revert to the
+site font. An improvement, but visible — tell the editors before go-live.
 
 ### Vuex
 

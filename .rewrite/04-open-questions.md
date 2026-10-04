@@ -34,77 +34,171 @@ either way:
    That makes the pipeline correct on Hostpoint, on GD-only hosting, and on a
    dev machine, without a config switch. 48 LOC, reusable as-is.
 
-## 2. Image sizes: strict port, or fix the 2400 px issue?
+## 2. Image sizes — ANSWERED 2026-10-04: fix it
 
-Today every crop is served at up to 2400 px regardless of what the markup
-requests — `ImageHelper` emits a `srcset` whose 900w and 2400w candidates
-resolve to the same file (`05-image-pipeline.md`, rule 3).
+Serve the size the markup actually asks for, plus WebP/AVIF. Same decision
+luvo made, which took it from 20 MB to 4.4–6.1 MB across the pages measured.
 
-Fixing it means serving the requested size plus WebP/AVIF. luvo did exactly
-this and went from 20 MB to 4.4–6.1 MB across the pages measured. It changes
-what visitors download and what the pages look like at the margins, so it is
-a client decision, not a silent port.
+Scope this adds: `app/Helpers/ImageHelper.php` currently emits `<img srcset>`
+strings. Modern formats need `<picture>` with `<source type="image/avif">` /
+`image/webp` and a jpeg fallback. All ~10 blade call sites go through the
+static helpers, so the markup change is contained to that one file.
 
-**Recommendation: fix it.** It is the single largest user-visible win in this
-whole project and the marginal cost is low once Glide is in.
+Pair it with `ImageSupport::modernFormats()` (see #1) so the extra `<source>`
+elements only appear when the server can actually write those formats.
 
-## 3. Is `/img/project/` really dead?
+## 3. Are `/img/project/` and `/img/tiny/` dead? — STILL OPEN
 
-`Project.php` is registered in `config/image-cache.php` but no URL in
-`app/`, `resources/views/` or `resources/js/` emits `/img/project/`. Before
-deleting it: is anything outside this repo — a newsletter template, an export,
-a third-party integration — hitting that route? Check the access logs.
+**What this is about.** `config/image-cache.php` registers twelve named image
+templates. A request to `/img/<template>/<filename>` runs that template. Three
+of them are oxid's own: `home`, `project`, `tiny`.
 
-Same question for `/img/tiny/`, though that one is a v2-API class that would
-already be failing if anything called it.
+Searching `app/`, `resources/views/` and `resources/js/` for emitted URLs
+finds `/img/crop/` (12 call sites) and `/img/home/` (2). **Nothing emits
+`/img/project/` or `/img/tiny/`.**
 
-## 4. TinyMCE: upgrade to 8, or replace with Tiptap?
+**Why it is a question and not just a deletion.** The grep only proves *this
+repo* does not link them. A route is reachable by anyone who knows the URL.
+If a newsletter template, a PDF export, a partner site or an old cached page
+still points at `/img/project/...`, deleting the template turns those into
+404s — silently, because nothing here would break.
 
-TinyMCE 5 is EOL since April 2023 with unpatched XSS. It has to move either
-way. Upgrading to 8 is the smaller diff; replacing with Tiptap is what luvo
-did, deletes 7.5 MB of assets, and has a verified round-trip script to reuse
-— but the toolbar gets rebuilt and editors notice.
+**How to answer it.** Grep the production access logs for `/img/project/` and
+`/img/tiny/` over the last 6–12 months:
 
-Minimum scope says TinyMCE 8. Worth an explicit decision because it is the
-difference between ~0.25 and ~1 day, and because it affects the people who
-use the admin daily.
+```
+grep -c '/img/project/' access.log*
+grep -c '/img/tiny/'    access.log*
+```
 
-## 5. What consumes `busu.css`?
+Zero hits over a year → delete both with confidence. Any hits → keep
+`Project.php` and port it to Glide alongside `Home.php` (it has the same
+database-lookup shape).
 
-`resources/sass/frontend-busu/` is a 1,569-line Sass tree compiled to
-`public/assets/css/busu.css`, and **nothing in this repo references it**.
-Either something outside the repo serves that built file, or it is dead.
+**Note on `tiny` specifically:** it is registered in config but implements
+Intervention **v2**'s `FilterInterface`, removed in v3. If anything had called
+it, it would already be erroring. So a non-zero log count for `/img/tiny/`
+means "something is requesting a URL that is already broken", not "this
+works and must be preserved".
 
-Do not drop it from the Vite config on assumption — if an external consumer
-exists, the output path and filename have to be preserved exactly.
+## 4. TinyMCE — ANSWERED 2026-10-04: replace with Tiptap
 
-## 6. Orphan configs
+Not the minimum-scope answer; adds ~0.75 day over a TinyMCE 5 → 8 bump.
+Buys: 7.5 MB of self-hosted assets deleted, and off the TinyMCE CVE treadmill
+for good.
 
-`config/dompdf.php` is safe to delete — dompdf is not in `composer.lock` at
-all. But `config/media.php`, `config/content.php` and `config/image.php` have
-zero `config()` reads in the codebase. Confirm nothing reads them dynamically
-before removing.
+Port luvo's `components/ui/editor/` (Editor, Toolbar, LinkDialog, smallText)
+and, importantly, its **round-trip verification**: export every stored
+rich-text value, run it through Tiptap, and diff the visible text, links,
+headings and lists. luvo did this across 197 values before switching. Script
+is `.rewrite/tools/tiptap-roundtrip.mjs` in that repo (needs `@tiptap/html`
+and `happy-dom`).
 
-## 7. Algolia: re-index, or preserve the live indices?
+Expect the same side effect luvo saw: saving a text strips Word/Outlook paste
+junk, so pasted inline fonts disappear and those texts revert to the site
+font. That is an improvement, but it is a visible change — warn the editors.
 
-Scout 10 → 11 plus the Algolia client v3 → v4 rewrite touches `Project` and
-`Discourse`. Does the live index configuration (ranking, facets, synonyms)
-live in the Algolia dashboard or in code? If the dashboard, a careless
-re-index can wipe tuning that is not in version control. Export it first.
+## 5. `busu.css` — ANSWERED 2026-10-04: another site consumes it. Keep.
 
-## 8. Deployment and rollback
+`resources/sass/frontend-busu/` (1,569 LOC) compiles to
+`public/assets/css/busu.css` and is served to a different site.
 
-What does deploy look like today, and what is the rollback if the upgraded
-build misbehaves?
+**Consequence for the Vite migration:** the output path and filename must stay
+exactly `public/assets/css/busu.css`. Vite's default is hashed filenames under
+`public/build/`, so this bundle needs an explicit exception — a fixed
+`rollupOptions.output` entry, or keep it as a separate build step. Do not let
+it get swept into the manifest with the rest.
 
-Specifically: built assets are currently committed (`public/assets/**`), so
-Vite output has to be committed too, or the deploy has to grow a build step.
-`vendor/` is gitignored, so the server needs `composer install` on the release
-that switches to Laravel 13 — with a PHP 8.3+ CLI.
+Worth confirming with the consuming site whether it also expects the `?id=`
+query string that Mix's `.version()` currently produces in
+`mix-manifest.json`. Today that hash is only in the manifest; whoever links
+the file may or may not be reading it.
 
-luvo's answer: SSH + `git pull`, commit the build output, `composer install
---no-dev`, `php artisan optimize:clear`. If oxid deploys the same way, say so
-and the plan carries over.
+## 6. Orphan configs — PARTLY RESOLVED, one still open
+
+**What this is about.** Four config files looked unreferenced. On a closer
+pass with `config('x.')`, `Config::get('x.')` and `config()->get('x.')` across
+`app/`, `resources/`, `routes/`, `database/` and `bootstrap/`, here is the
+real picture:
+
+| File | Reads in app code | Verdict |
+|---|---|---|
+| `config/dompdf.php` | 0 | **Delete.** dompdf is not in `composer.lock` at all. Pure leftover. |
+| `config/content.php` | 0 | **Delete**, with one caveat below. |
+| `config/media.php` | 0 | **Delete.** Defines `storage_paths` under `storage/app/public/media/` — a path layout the app does not use; uploads live in `storage/app/public/uploads/`. |
+| `config/image.php` | 0 **in app code** | **Keep the file, but see below.** Not an orphan — it is `intervention/image-laravel`'s own config and the package's ServiceProvider reads `config('image.driver')`. |
+
+**The caveat on `content.php`:** `CLAUDE.md` states "Custom content settings
+in `config/content.php`", which suggests it mattered once. Its `content_keys`
+array is referenced nowhere (`grep content_keys` → 0 hits). It looks genuinely
+dead and `CLAUDE.md` looks stale — but since the documentation disagrees with
+the code, confirm before deleting, and fix `CLAUDE.md` either way.
+
+**The finding under `config/image.php`** — this one is worth knowing
+regardless of the deletion question:
+
+- It sets `'driver' => 'gd'` as a **string**. The package default is a
+  class-string (`\Intervention\Image\Drivers\Gd\Driver::class`). The
+  string form would not resolve.
+- It never fires, because nothing resolves `ImageManager` from the container.
+  Both places that use Intervention construct it directly:
+  `marceli-to/image-cache` hardcodes `new ImageManager(new GdDriver())`, and
+  `app/Http/Controllers/Api/MediaController.php:48` does
+  `new ImageManager(new Driver())` with the GD driver imported.
+
+So it is the same family of latent bug as `Tiny.php`: wrong, but unreachable.
+
+**The real takeaway: the entire image pipeline runs on GD today**, hardcoded
+in two places, not configured. That is useful for #1 — luvo's crop-equivalence
+comparison was also run on GD, so it matches oxid's current behaviour exactly.
+Moving to Imagick would be a genuine driver change, and should be a deliberate
+decision rather than a side effect of adopting Glide.
+
+## 7. Algolia index settings — STILL OPEN
+
+**What this is about.** An Algolia index has two separate things: the
+**records** (pushed from your app) and the **settings** — searchable
+attributes, custom ranking, facets, synonyms, typo tolerance, stop words.
+
+Scout pushes records. Settings are configured either in code (and applied on
+deploy) or by hand in the Algolia dashboard. **If they were tuned in the
+dashboard, they exist nowhere in this repository.**
+
+`config/scout.php` is the place code-side settings would live, and `Searchable`
+is on exactly two models: `app/Models/Project.php` and
+`app/Models/Discourse.php`.
+
+**Why it matters for this project.** The upgrade bumps Scout 10 → 11 *and*
+rewrites against Algolia client v4. Re-indexing is a normal part of that
+(`scout:flush` + `scout:import`, or a fresh index). A flush-and-reimport
+preserves settings; creating a new index, or certain `setSettings` calls
+during the v4 migration, does not. Hand-tuned relevance can be wiped with no
+error and no obvious symptom — search just quietly gets worse.
+
+**How to answer it.** Before touching Scout, export the live settings for
+both indices from the Algolia dashboard (Index → Configuration → "Export
+configuration" produces JSON), and commit them. Then after re-indexing,
+diff against that export. If the settings turn out to be code-managed in
+`config/scout.php`, say so and this question closes with no action.
+
+## 8. Deployment — ANSWERED 2026-10-04: same as luvo
+
+SSH onto the server, `git pull`, `composer install --no-dev` (PHP 8.3+ CLI),
+`php artisan optimize:clear`. Built assets are committed, so **Vite output
+gets committed too**, exactly as the Mix output is today.
+
+Implications to carry into the Vite work:
+
+- `public/build/` goes into git; remove `public/assets/backend/**` and the
+  Mix-built frontend bundles once nothing references them.
+- `busu.css` keeps its current path (#5), so it stays outside the manifest.
+- The release that switches to Laravel 13 is the one that needs
+  `composer install` with an 8.3+ CLI — confirm which PHP version the
+  server's *CLI* runs, not just the web SAPI. On shared hosting these
+  routinely differ.
+- Rollback is `git checkout <previous sha>` + `composer install`, so the
+  pre-upgrade DB snapshot (#10) is the real safety net — migrations are the
+  part a git revert will not undo.
 
 ## 9. Backend and frontend together, or sequenced?
 
@@ -130,13 +224,13 @@ depends on having real data locally.
 |---|---|---|
 | 1 | PHP 8.3+ on production? | **yes — 8.3 up to 8.5. Gate cleared.** |
 | 1b | Imagick or GD? | likely Hostpoint + Imagick (same as luvo), unconfirmed; detect at runtime regardless |
-| 2 | Fix the 2400 px issue? | _unanswered_ |
-| 3 | `/img/project/` dead? | _unanswered_ |
-| 4 | TinyMCE 8 or Tiptap? | _unanswered_ |
-| 5 | What consumes `busu.css`? | _unanswered_ |
-| 6 | Orphan configs safe to delete? | _unanswered_ |
-| 7 | Algolia index config in code or dashboard? | _unanswered_ |
-| 8 | Deploy / rollback? | _unanswered_ |
+| 2 | Fix the 2400 px issue? | **yes** |
+| 3 | `/img/project/` and `/img/tiny/` dead? | _open — check access logs_ |
+| 4 | TinyMCE 8 or Tiptap? | **Tiptap** |
+| 5 | What consumes `busu.css`? | **another site — keep, preserve the output path** |
+| 6 | Orphan configs safe to delete? | `dompdf` + `media` yes; `content` likely (confirm vs CLAUDE.md); `image.php` is package config, keep |
+| 7 | Algolia index config in code or dashboard? | _open — export settings before re-indexing_ |
+| 8 | Deploy / rollback? | **SSH + git pull, commit the Vite build** |
 | 9 | Sequenced? | assumed yes |
 | 10 | Snapshot taken? | not yet |
 

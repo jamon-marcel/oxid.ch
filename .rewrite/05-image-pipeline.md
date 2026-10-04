@@ -102,18 +102,45 @@ differs from `Crop`'s 2400/1600. Preserve per-route, do not unify by accident.
 | `Project.php` | v3 | yes | confirm dead, then delete |
 | `Home.php` | v3 | yes | port to the Glide controller |
 
-## Known behaviour to decide on
+## Decisions (2026-10-04)
 
-1. **Every crop served at up to 2400 px** (rule 3 above). Fixing it — serving
-   the size the markup actually asks for, plus WebP/AVIF — is what gave luvo
-   its 20 MB → ~5 MB reduction. It changes what visitors download, so it is
-   your call, not a silent port. See `04-open-questions.md` #2.
-2. **Coordinate type.** Coords are stored as doubles and the route accepts
-   them as a string segment; `Crop` int-casts. `Home.php` uses
-   `floor(floatval(...))`. Keep the same rounding or crops shift by a pixel.
-3. **Cache location.** Today `storage/app/public/cache` (`lifetime` 43200 min).
-   Glide would use `storage/app/.glide-cache`, outside the public disk. After
-   go-live the old directory can be deleted.
+- **Fix the 2400 px issue.** Serve the size the markup asks for, plus
+  WebP/AVIF. `app/Helpers/ImageHelper.php` moves from `<img srcset>` to
+  `<picture>` with `<source type="image/avif">` / `image/webp` and a jpeg
+  fallback. All ~10 blade call sites go through its static methods, so the
+  change is contained to that one file.
+- **Gate the modern formats on `ImageSupport::modernFormats()`** so the extra
+  `<source>` elements only appear when the server can write them.
+- **Driver: detect, do not hardcode.** See below.
+
+### Still to decide / preserve
+
+1. **Coordinate rounding.** Coords are stored as doubles; `Crop` int-casts,
+   `Home.php` uses `floor(floatval(...))`. Keep the same rounding per route
+   or crops shift by a pixel.
+2. **Cache location.** Today `storage/app/public/cache` (`lifetime` 43200
+   min). Glide uses `storage/app/.glide-cache`, outside the public disk.
+   After go-live the old directory can be deleted.
+3. **`/img/project/` and `/img/tiny/`** — pending the access-log check,
+   `04-open-questions.md` #3.
+
+## The pipeline runs on GD today
+
+Worth stating plainly, because it is not configured anywhere obvious:
+
+- `marceli-to/image-cache` hardcodes `new ImageManager(new GdDriver())`.
+- `app/Http/Controllers/Api/MediaController.php:48` does the same with the GD
+  driver imported directly.
+- `config/image.php` sets `'driver' => 'gd'` — as a *string*, where the
+  package expects a class-string — but it never fires, because nothing
+  resolves `ImageManager` from the container. Same family of latent bug as
+  `Tiny.php`: wrong, but unreachable.
+
+So today's output is GD output. luvo's crop-equivalence comparison was also
+run on GD, which means its verified geometry rules describe oxid's current
+behaviour exactly. Switching to Imagick is a real change in rendering, not a
+neutral implementation detail — decide it deliberately rather than inheriting
+it from luvo's `Glide.php`.
 
 ## Verification plan (mirrors what luvo actually did)
 

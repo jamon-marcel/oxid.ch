@@ -25,9 +25,9 @@ those *after* the upgrade landed. Same order applies.
 
 ## The 30-second version
 
-- **9–12 working days** of focused work. Backend 3–4, frontend 6–7.5.
+- **10.5–13 working days** of focused work. Backend 3.5–4.5, frontend 7–8.5.
   luvo's comparable number was 7–9; the delta is JWT→Sanctum, Algolia v4,
-  the project grid builder, and a frontend that is ~15% bigger.
+  the project grid builder, Tiptap, and a frontend that is ~15% bigger.
 - **Laravel 11 is EOL with unpatched CVEs.** `composer update` refuses to run
   at all today. This is not a nice-to-have.
 - Backend is in decent shape: every third-party dep already has a Laravel 13
@@ -41,10 +41,16 @@ those *after* the upgrade landed. Same order applies.
   The image driver (Imagick vs GD) is still unconfirmed, but the pipeline
   detects it at runtime, so it does not gate anything.
 
-## Ground rule for "minimum"
+## Ground rule for scope
 
 Stay on Options API. Keep the mixins. No test suite. No design changes.
 Do **not** rewrite into `<script setup>` / composables while in there.
+
+Two deliberate exceptions, decided 2026-10-04 (`04-open-questions.md`):
+TinyMCE is **replaced with Tiptap** rather than upgraded, and the image
+pipeline **serves requested sizes + WebP/AVIF** rather than porting today's
+behaviour 1:1. Together +1.5 days, both chosen as the better outcome over
+the smaller diff.
 
 Worth knowing: luvo set this same rule, then broke it afterwards
 (`fc4583f`: 6.9k → 2.2k LOC, 639 KB → 216 KB bundle) and replaced TinyMCE with

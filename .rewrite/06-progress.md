@@ -11,7 +11,12 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
       Gate cleared 2026-10-04. The driver question (Imagick vs GD) stays open
       but does not block: the pipeline detects formats at runtime.
 - [ ] Run the driver one-liner from `04-open-questions.md` #1 on the server,
-      and record the result here.
+      and record the result here. Also check the **CLI** PHP version, not
+      just the web one.
+- [ ] Grep production access logs for `/img/project/` and `/img/tiny/`
+      (`04-open-questions.md` #3).
+- [ ] Export both Algolia indices' settings from the dashboard and commit
+      them (`04-open-questions.md` #7).
 - [ ] Snapshot the production DB + `storage/` locally, as baseline and
       rollback point. The image verification depends on it.
 - [ ] Record the current state for comparison: route list, the `/img/...` URLs
@@ -24,6 +29,7 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 |---|---|---|
 | Delete dead v2 filters + orphan configs | — | |
 | Glide replaces `marceli-to/image-cache` | — | |
+| Requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | — | |
 | Laravel 13, PHP ^8.3, Carbon 3, Intervention 4 | — | |
 | Slim skeleton, `app/User.php` → `app/Models/User.php` | — | |
 | Algolia client v4, Scout 11 | — | |
@@ -48,7 +54,7 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | Public site on Vite | — | |
 | Admin on Vue 3 + Vite | — | |
 | Dropzone v6 replacement | — | |
-| TinyMCE 5 → 8 | — | |
+| TinyMCE → Tiptap (incl. round-trip verification) | — | |
 | `projects/grid/` page builder | — | |
 
 ### To verify at the end of the frontend phase

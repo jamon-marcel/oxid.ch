@@ -79,12 +79,19 @@ Nothing requests `/img/tiny/`, so it has never fired.
 
 - `config/dompdf.php` — dompdf is **not in `composer.lock` at all**. Delete.
   (luvo had the identical orphan.)
-- `config/media.php`, `config/content.php`, `config/image.php` — 0 `config()`
-  reads. Verify against blades before deleting.
+- `config/media.php` — 0 reads; describes a `storage/app/public/media/` path
+  layout the app does not use. Delete.
+- `config/content.php` — 0 reads, and `content_keys` is referenced nowhere.
+  Delete, but note `CLAUDE.md` claims it is in use; fix that too.
+- `config/image.php` — **not an orphan.** It is `intervention/image-laravel`'s
+  config and the package's ServiceProvider reads `config('image.driver')`.
+  Keep. See `05-image-pipeline.md` for why its `'driver' => 'gd'` never
+  actually takes effect.
 - `config/jwt.php` — goes with the Sanctum switch.
 
-Kept, in use: `settings.php` (2 reads), `seo.php` (5 reads), `image-cache.php`,
-`scout.php` (read by the package, not by app code).
+Kept, in use: `settings.php` (2 reads, both in `pages/works/*.blade.php`),
+`seo.php` (5 reads in `partials/head.blade.php`), `image-cache.php`,
+`image.php` and `scout.php` (read by their packages, not by app code).
 
 **Unused npm packages**: `cleave.js` (`v-cleave` used 0 times),
 `vuejs-datepicker` (0 imports), `nth-check` (a transitive pin, not a direct

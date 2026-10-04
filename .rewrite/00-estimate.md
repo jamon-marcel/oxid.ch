@@ -13,12 +13,12 @@ behaviour. Nothing else.
 - Vue 2.7 → Vue 3, vue-router 3 → 4, drop Vuex
 - Laravel Mix → Vite
 - Replace every Vue 2-only package
-- TinyMCE 5 → 8 (it is EOL with unpatched XSS; moving is not optional)
+- **TinyMCE → Tiptap** (decided; TinyMCE 5 is EOL with unpatched XSS)
+- **Serve requested image sizes + WebP/AVIF** (decided), not a strict 1:1 port
 
 ## Explicitly OUT of scope
 
 - Composition API / `<script setup>` rewrite — keep Options API + mixins
-- Tiptap instead of TinyMCE (that is the non-minimum answer to question 4)
 - Test suite — there is none; QA stays manual click-through
 - Any design or UX change
 - The **public site** frontend: plain JS + jQuery + Bootstrap 4, no Vue.
@@ -30,11 +30,15 @@ behaviour. Nothing else.
 
 | Phase | Days |
 |---|---|
-| Backend L11 → L13 + Sanctum + Glide + Algolia | **3 – 4** |
-| Frontend Vue 3 + Vite | **6 – 7.5** |
-| **Total** | **9 – 12** |
+| Backend L11 → L13 + Sanctum + Glide + Algolia | **3.5 – 4.5** |
+| Frontend Vue 3 + Vite + Tiptap | **7 – 8.5** |
+| **Total** | **10.5 – 13** |
 
-Add review and click-through QA → **~2.5 weeks calendar** if reviewed as we go.
+Add review and click-through QA → **~3 weeks calendar** if reviewed as we go.
+
+Up from the 9–12 first written on 2026-10-04: the answers to questions 2 and
+4 both chose the better outcome over the smaller diff. Worth it, but it is
++1.5 days and should not arrive as a surprise later.
 
 ### Backend breakdown
 
@@ -42,6 +46,7 @@ Add review and click-through QA → **~2.5 weeks calendar** if reviewed as we go
 |---|---|
 | Dependency bump + conflict resolution | 0.5 |
 | Glide replacement + verification against production images | 0.75 – 1 |
+| Requested sizes + WebP/AVIF: rewrite `ImageHelper` to `<picture>`, runtime format detection (Q2) | 0.5 |
 | Skeleton migration (Kernel → `bootstrap/app.php`, providers, handler, `app/User.php` → `app/Models/`) | 0.5 |
 | JWT → Sanctum (backend half) | 0.5 |
 | Algolia v3 → v4 + Scout 11, re-verify both indices | 0.5 |
@@ -57,7 +62,7 @@ Add review and click-through QA → **~2.5 weeks calendar** if reviewed as we go
 | Sanctum auth in the SPA (replaces ~200 LOC of token machinery) | 0.5 |
 | **Dropzone replacement** (6 files + 2 configs) | 1 – 1.25 |
 | `vuedraggable` 2 → 4 across 13 files | 0.75 |
-| TinyMCE 5 → 8 across 7 files | 0.25 |
+| **TinyMCE → Tiptap** across 7 files, incl. round-trip verification (Q4) | 1 |
 | Cropper + the project image listing | 0.5 |
 | **`projects/grid/` page builder** (6 components, `$parent`-coupled) | 0.75 – 1 |
 | Remaining ~40 components: filters, emits, `$parent`, mechanical fixes | 1.25 |
@@ -92,5 +97,7 @@ the parts oxid shares with luvo should run faster than they did the first time.
 3. **Dropzone.** The only piece with no migration path. Six files, three of
    them `$parent`-coupled to their hosts, and the upload flow has to be
    re-tested against the image and file endpoints.
-4. **Tiptap instead of TinyMCE** would add ~0.75 day and is not in these
-   numbers.
+4. **Tiptap round-trip.** luvo verified 197 stored values before switching.
+   oxid has 6 editor-bearing forms; if the stored HTML turns out to be
+   messier than luvo's, the round-trip pass is where that surfaces, and it
+   is the kind of thing that turns 1 day into 2.
