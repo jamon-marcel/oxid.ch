@@ -26,15 +26,18 @@
                   v-model="images" 
                   @end="order"
                   ghost-class="draggable-ghost"
-                  draggable=".is-draggable">
-                  <div class="upload-item-row is-draggable" v-for="(image) in images" :key="image.id">
-                    <figure>
-                      <img :src="getSource(image.name, 'thumbnail')" height="300" width="300">
-                    </figure>
-                    <div>
-                      <span class="icon-move"></span>
+                  draggable=".is-draggable"
+                  item-key="name">
+                  <template #item="{ element: image }">
+                    <div class="upload-item-row is-draggable">
+                      <figure>
+                        <img :src="getSource(image.name, 'thumbnail')" height="300" width="300">
+                      </figure>
+                      <div>
+                        <span class="icon-move"></span>
+                      </div>
                     </div>
-                  </div>
+                  </template>
                 </draggable>
               </div>
             </template>

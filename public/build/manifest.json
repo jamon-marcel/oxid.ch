@@ -1,14 +1,42 @@
 {
+  "_axios-NbTqHwey.js": {
+    "file": "assets/axios-NbTqHwey.js",
+    "name": "axios"
+  },
+  "resources/js/backend/app.js": {
+    "file": "assets/app-Cg9Yj0sx.js",
+    "name": "app",
+    "src": "resources/js/backend/app.js",
+    "isEntry": true,
+    "imports": [
+      "_axios-NbTqHwey.js"
+    ],
+    "css": [
+      "assets/app-47-yVckD.css"
+    ]
+  },
   "resources/js/frontend/app.js": {
-    "file": "assets/app-DKOZInbx.js",
+    "file": "assets/app-CIP1ObrO.js",
     "name": "app",
     "src": "resources/js/frontend/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_axios-NbTqHwey.js"
+    ]
   },
   "resources/js/frontend/maps.js": {
     "file": "assets/maps-IhyfSzuj.js",
     "name": "maps",
     "src": "resources/js/frontend/maps.js",
+    "isEntry": true
+  },
+  "resources/sass/backend/app.scss": {
+    "file": "assets/app-BYHSWtYq.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/sass/backend/app.scss",
     "isEntry": true
   },
   "resources/sass/frontend/app.scss": {

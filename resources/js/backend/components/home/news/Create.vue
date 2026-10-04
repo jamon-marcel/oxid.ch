@@ -6,7 +6,7 @@
 </template>
 <script>
 import PageHeader from '@/layout/PageHeader.vue';
-import newsForm from '@/components/home/news/form.vue';
+import newsForm from '@/components/home/news/Form.vue';
   export default {
     components: {
       PageHeader: PageHeader,

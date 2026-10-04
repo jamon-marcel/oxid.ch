@@ -39,19 +39,11 @@
                 </div>
                 <div class="form-row">
                   <label>Beschreibung</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="project.description.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="project.description.de"></rich-text>
                 </div>
                 <div class="form-row">
                   <label>Info</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="project.info.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="project.info.de"></rich-text>
                 </div>
                 <h3 class="is-label">Infos Werkliste</h3>
                 <div class="form-row">
@@ -256,19 +248,11 @@
                 </div>
                 <div class="form-row">
                   <label>Beschreibung</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="project.description.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="project.description.en"></rich-text>
                 </div>
                 <div class="form-row is-last">
                   <label>Info</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="project.info.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="project.info.en"></rich-text>
                 </div>
               </div>
             </div>
@@ -325,9 +309,7 @@ import ImageListing from "@/components/projects/images/Listing.vue";
 import FileUpload from "@/components/global/files/Upload.vue";
 import FileListing from "@/components/global/files/Listing.vue";
 
-// TinyMCE
-import tinyConfig from "@/config/tinyconfig.js";
-import TinymceEditor from "@tinymce/tinymce-vue";
+import RichText from "@/components/global/editor/Editor.vue";
 
 // Mixins
 import Utils from "@/mixins/utils";
@@ -340,7 +322,7 @@ import projectErrors from "@/components/projects/config/errors.js";
 export default {
   components: {
     FormFooter,
-    TinymceEditor,
+    RichText,
     FileUpload,
     FileListing,
     ImageUpload,
@@ -408,10 +390,6 @@ export default {
       programs: [],
       states: [],
       authors: [],
-
-      // TinyMCE
-      tinyConfig: tinyConfig,
-      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
     };
   },
 

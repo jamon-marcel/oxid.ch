@@ -6,7 +6,7 @@
 </template>
 <script>
 import PageHeader from '@/layout/PageHeader.vue';
-import ContactForm from '@/components/contact/form.vue';
+import ContactForm from '@/components/contact/Form.vue';
   export default {
     components: {
       PageHeader: PageHeader,

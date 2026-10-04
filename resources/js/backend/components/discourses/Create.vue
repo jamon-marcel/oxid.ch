@@ -6,7 +6,7 @@
 </template>
 <script>
 import PageHeader from '@/layout/PageHeader.vue';
-import DiscourseForm from '@/components/discourses/form.vue';
+import DiscourseForm from '@/components/discourses/Form.vue';
   export default {
     components: {
       PageHeader: PageHeader,

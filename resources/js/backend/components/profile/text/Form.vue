@@ -16,11 +16,7 @@
                 </div>
                 <div class="form-row">
                   <label>Text</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="profile.description.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="profile.description.de" class="is-tall"></rich-text>
                 </div>
               </div>
               <div class="column-sidebar">
@@ -61,11 +57,7 @@
                 </div>
                 <div class="form-row">
                   <label>Text *</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="profile.description.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="profile.description.en" class="is-tall"></rich-text>
                 </div>
               </div>
             </div>
@@ -87,8 +79,7 @@ import FormFooter from "@/components/global/form/Footer.vue";
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
 // Editor
-import TinymceEditor from "@tinymce/tinymce-vue";
-import tinyConfig from "@/config/tinyconfig.js";
+import RichText from "@/components/global/editor/Editor.vue";
 
 // Mixins
 import Utils from "@/mixins/utils";
@@ -102,7 +93,7 @@ import profileErrors from "@/components/profile/text/config/errors.js";
 export default {
   components: {
     FormFooter,
-    TinymceEditor,
+    RichText,
     Tabs,
   },
 
@@ -123,10 +114,6 @@ export default {
 
       // profile model
       profile: profileModel,
-
-      // tinymce config
-      tinyConfig: tinyConfig,
-      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
     };
   },
 
@@ -139,7 +126,6 @@ export default {
       });
 
       // set editor height
-      this.tinyConfig.height = '480px';
     }
   },
 

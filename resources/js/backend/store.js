@@ -1,19 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { reactive } from 'vue';
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-  state: {
-    isLoggedIn: false,
-    hasChanges: false,
-  },
-  mutations: {
-    loginUser (state) {
-      state.isLoggedIn = true;
-    },
-    logoutUser (state) {
-      state.isLoggedIn = false;
-    },
-  }
+// What Vuex held: whether the session is known to be logged in
+export default reactive({
+  isLoggedIn: false,
 });

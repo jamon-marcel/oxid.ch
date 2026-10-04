@@ -15,31 +15,32 @@
               v-model="jobs" 
               @end="order()"
               ghost-class="draggable-ghost"
-              draggable=".list-item">
-              <div
-                :class="[j.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
-                v-for="j in jobs"
-                :key="j.id"
-                data-icons="3"
-              >
-                <div class="list-item-body">{{ j.title.de }}</div>
-                <div class="list-item-action" data-icons="3">
-                  <a
-                    href="javascript:;"
-                    :class="[j.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
-                    @click.prevent="toggle(j.id,$event)"
-                  ></a>
-                  <router-link
-                    :to="{name: 'job-edit', params: { id: j.id }}"
-                    class="icon-edit icon-mini"
-                  ></router-link>
-                  <a
-                    href="javascript:;"
-                    class="icon-trash icon-mini"
-                    @click.prevent="destroy(j.id,$event)"
-                  ></a>
+              draggable=".list-item"
+              item-key="id">
+              <template #item="{ element: j }">
+                <div
+                  :class="[j.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
+                  data-icons="3"
+                >
+                  <div class="list-item-body">{{ j.title.de }}</div>
+                  <div class="list-item-action" data-icons="3">
+                    <a
+                      href="javascript:;"
+                      :class="[j.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
+                      @click.prevent="toggle(j.id,$event)"
+                    ></a>
+                    <router-link
+                      :to="{name: 'job-edit', params: { id: j.id }}"
+                      class="icon-edit icon-mini"
+                    ></router-link>
+                    <a
+                      href="javascript:;"
+                      class="icon-trash icon-mini"
+                      @click.prevent="destroy(j.id,$event)"
+                    ></a>
+                  </div>
                 </div>
-              </div>
+              </template>
             </draggable>
           </div>
           <div v-else>

@@ -14,7 +14,7 @@
               data-icons="1"
             >
               <div class="list-item-body">
-                <div v-html="c.address.de">{{ c.address.de }}</div>
+                <div v-html="c.address.de"></div>
               </div>
               <div class="list-item-action" data-icons="1">
                 <router-link

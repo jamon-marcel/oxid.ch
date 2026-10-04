@@ -18,3 +18,8 @@
     color: $color-danger;
   }
 }
+
+// Failed login
+.form-row.is-error {
+  color: $color-danger;
+}

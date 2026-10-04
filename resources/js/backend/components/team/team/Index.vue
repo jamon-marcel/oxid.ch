@@ -10,42 +10,45 @@
             <span>Hinzufügen</span>
           </router-link>
           <div class="list-items is-grouped" v-if="teams">
-            <div v-for="categoryId in displayOrder" :key="categoryId" v-if="teams[categoryId]">
-              <h3 class="list-item-header">{{categories[categoryId]}}</h3>
-              <draggable 
-                :disabled="false"
-                v-model="teams[categoryId]" 
-                @end="order(categoryId)"
-                ghost-class="draggable-ghost"
-                draggable=".list-item">
-                <div
-                  :class="[t.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
-                  v-for="t in teams[categoryId]"
-                  :key="t.id"
-                  data-icons="3"
-                >
-                  <div class="list-item-body">
-                    {{ t.firstname }} {{ t.name }}
-                  </div>
-                  <div class="list-item-action" data-icons="3">
-                    <a
-                      href="javascript:;"
-                      :class="[t.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
-                      @click.prevent="toggle(t.id,$event)"
-                    ></a>
-                    <router-link
-                      :to="{name: 'team-edit', params: { id: t.id }}"
-                      class="icon-edit icon-mini"
-                    ></router-link>
-                    <a
-                      href="javascript:;"
-                      class="icon-trash icon-mini"
-                      @click.prevent="destroy(t.id,$event)"
-                    ></a>
-                  </div>
-                </div>
-              </draggable>
-            </div>
+            <template v-for="categoryId in displayOrder" :key="categoryId">
+              <div v-if="teams[categoryId]">
+                <h3 class="list-item-header">{{categories[categoryId]}}</h3>
+                <draggable 
+                  :disabled="false"
+                  v-model="teams[categoryId]" 
+                  @end="order(categoryId)"
+                  ghost-class="draggable-ghost"
+                  draggable=".list-item"
+                  item-key="id">
+                  <template #item="{ element: t }">
+                    <div
+                      :class="[t.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
+                      data-icons="3"
+                    >
+                      <div class="list-item-body">
+                        {{ t.firstname }} {{ t.name }}
+                      </div>
+                      <div class="list-item-action" data-icons="3">
+                        <a
+                          href="javascript:;"
+                          :class="[t.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
+                          @click.prevent="toggle(t.id,$event)"
+                        ></a>
+                        <router-link
+                          :to="{name: 'team-edit', params: { id: t.id }}"
+                          class="icon-edit icon-mini"
+                        ></router-link>
+                        <a
+                          href="javascript:;"
+                          class="icon-trash icon-mini"
+                          @click.prevent="destroy(t.id,$event)"
+                        ></a>
+                      </div>
+                    </div>
+                  </template>
+                </draggable>
+              </div>
+            </template>
           </div>
           <div v-else>
             <p>Es sind noch keine Teammitglieder vorhanden...</p>

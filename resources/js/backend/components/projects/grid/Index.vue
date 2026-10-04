@@ -29,24 +29,27 @@
               v-model="grids" 
               @end="updateOrder"
               ghost-class="draggable-ghost"
-              draggable=".grid-layout-row">
-              <div class="grid-layout-row  is-list is-draggable" v-for="grid in grids" :key="grid.id">
-                <span class="icon-grid-list">
-                  <img :src="'/assets/backend/img/icons/grid-' + grid.layout.key + '.svg'" height="172" width="126">
-                </span>
-                <template v-if="grid.elements">
-                  <div class="grid-layout-row__images">
-                    <div v-for="element in grid.elements" :key="element.id">
-                      <img 
-                        :src="getSource(element.image.name, 'thumbnail')" 
-                        height="300" 
-                        width="300"
-                        style="height: 50px; width: auto; display: block; margin: 0 4px"
-                        v-if="element.image">       
+              draggable=".grid-layout-row"
+              item-key="id">
+              <template #item="{ element: grid }">
+                <div class="grid-layout-row  is-list is-draggable">
+                  <span class="icon-grid-list">
+                    <img :src="'/assets/backend/img/icons/grid-' + grid.layout.key + '.svg'" height="172" width="126">
+                  </span>
+                  <template v-if="grid.elements">
+                    <div class="grid-layout-row__images">
+                      <div v-for="element in grid.elements" :key="element.id">
+                        <img 
+                          :src="getSource(element.image.name, 'thumbnail')" 
+                          height="300" 
+                          width="300"
+                          style="height: 50px; width: auto; display: block; margin: 0 4px"
+                          v-if="element.image">       
+                      </div>
                     </div>
-                  </div>
-                </template>
-              </div>
+                  </template>
+                </div>
+              </template>
             </draggable>
           </div>
           <footer class="site-footer">

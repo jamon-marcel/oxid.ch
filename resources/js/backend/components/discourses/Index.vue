@@ -16,33 +16,33 @@
               @end="order()"
               ghost-class="draggable-ghost"
               draggable=".list-item"
-            >
-              <div
-                :class="[d.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
-                v-for="d in discourses"
-                :key="d.id"
-                data-icons="3"
-              >
+              item-key="id">
+              <template #item="{ element: d }">
                 <div
-                  class="list-item-body"
-                >{{ d.title.de }} - ({{ d.heading.de }}, {{ d.date.de }}) - {{categories[d.category]}}</div>
-                <div class="list-item-action" data-icons="3">
-                  <a
-                    href="javascript:;"
-                    :class="[d.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
-                    @click.prevent="toggle(d.id,$event)"
-                  ></a>
-                  <router-link
-                    :to="{name: 'discourse-edit', params: { id: d.id }}"
-                    class="icon-edit icon-mini"
-                  ></router-link>
-                  <a
-                    href="javascript:;"
-                    class="icon-trash icon-mini"
-                    @click.prevent="destroy(d.id,$event)"
-                  ></a>
+                  :class="[d.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
+                  data-icons="3"
+                >
+                  <div
+                    class="list-item-body"
+                  >{{ d.title.de }} - ({{ d.heading.de }}, {{ d.date.de }}) - {{categories[d.category]}}</div>
+                  <div class="list-item-action" data-icons="3">
+                    <a
+                      href="javascript:;"
+                      :class="[d.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
+                      @click.prevent="toggle(d.id,$event)"
+                    ></a>
+                    <router-link
+                      :to="{name: 'discourse-edit', params: { id: d.id }}"
+                      class="icon-edit icon-mini"
+                    ></router-link>
+                    <a
+                      href="javascript:;"
+                      class="icon-trash icon-mini"
+                      @click.prevent="destroy(d.id,$event)"
+                    ></a>
+                  </div>
                 </div>
-              </div>
+              </template>
             </draggable>
           </div>
           <div v-else>

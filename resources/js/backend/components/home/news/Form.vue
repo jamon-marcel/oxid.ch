@@ -20,11 +20,7 @@
                 </div>
                 <div class="form-row is-last">
                   <label>Text</label>
-                  <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
-                    :init="tinyConfig"
-                    v-model="news.text.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="news.text.de"></rich-text>
                 </div>
               </div>
               <div class="column-sidebar">
@@ -54,14 +50,13 @@
                   </div>
                   <div class="form-row is-sm is-last">
                     <label class="is-sm">Publizieren bis</label>
-                    <the-mask
-                      mask="##.##.####"
+                    <input
+                      v-maska="'##.##.####'"
                       class="is-light"
                       v-model="news.date_end"
                       type="text"
-                      :masked="true"
                       placeholder="z.B. 01.06.2020"
-                    ></the-mask>
+                    >
                   </div>
                 </div>
               </div>
@@ -80,11 +75,7 @@
                 </div>
                 <div class="form-row is-last">
                   <label>Text</label>
-                  <tinymce-editor
-                    api-key="vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro"
-                    :init="tinyConfig"
-                    v-model="news.text.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="news.text.en"></rich-text>
                 </div>
               </div>
             </div>
@@ -100,10 +91,10 @@ import PageHeader from "@/layout/PageHeader.vue";
 import FormFooter from "@/components/global/form/Footer.vue";
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
-import { TheMask } from "vue-the-mask";
-import tinyConfig from "@/config/tinyconfig.js";
-import Editor from "@tinymce/tinymce-vue";
+import { vMaska } from "maska/vue";
+import RichText from "@/components/global/editor/Editor.vue";
 import Utils from "@/mixins/utils";
+import { formatDate } from "@/utils/date";
 import Progress from "@/mixins/progress";
 
 import newsModel from "@/components/home/news/config/model.js";
@@ -114,8 +105,11 @@ export default {
   components: {
     FormFooter,
     Tabs: Tabs,
-    tinymceEditor: Editor,
-    TheMask
+    RichText,
+  },
+
+  directives: {
+    maska: vMaska
   },
 
   props: {
@@ -135,9 +129,6 @@ export default {
 
       // model
       news: newsModel,
-
-      // tinymce config
-      tinyConfig: tinyConfig
     };
   },
 
@@ -146,7 +137,7 @@ export default {
       let uri = `/api/news/edit/${this.$route.params.id}`;
       this.axios.get(uri).then(response => {
         this.news = response.data;
-        this.news.date_end = moment(this.news.date_end).format('DD.MM.YYYY')
+        this.news.date_end = formatDate(this.news.date_end);
       });
     }
   },

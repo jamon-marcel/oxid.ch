@@ -15,39 +15,40 @@
               v-model="projects" 
               @end="order()"
               ghost-class="draggable-ghost"
-              draggable=".list-item">
-              <div
-                :class="[p.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
-                v-for="p in projects"
-                :key="p.id"
-                data-icons="4"
-              >
-                <div class="list-item-body">
-                  <strong>{{ p.title_short.de }}</strong>, {{ p.location.de }}
-                  <em v-if="p.is_highlight" class="icon-sticky"></em>
+              draggable=".list-item"
+              item-key="id">
+              <template #item="{ element: p }">
+                <div
+                  :class="[p.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']"
+                  data-icons="4"
+                >
+                  <div class="list-item-body">
+                    <strong>{{ p.title_short.de }}</strong>, {{ p.location.de }}
+                    <em v-if="p.is_highlight" class="icon-sticky"></em>
+                  </div>
+                  <div class="list-item-action" data-icons="4">
+                    <router-link
+                      :to="{name: 'project-grids', params: { id: p.id }}"
+                      :class="[p.images.length > 0 ? '' : 'is-disabled', 'icon-grid icon-mini']"
+                      title="Layout"
+                    ></router-link>
+                    <a
+                      href="javascript:;"
+                      :class="[p.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
+                      @click.prevent="toggle(p.id,$event)"
+                    ></a>
+                    <router-link
+                      :to="{name: 'project-edit', params: { id: p.id }}"
+                      class="icon-edit icon-mini"
+                    ></router-link>
+                    <a
+                      href="javascript:;"
+                      class="icon-trash icon-mini"
+                      @click.prevent="destroy(p.id,$event)"
+                    ></a>
+                  </div>
                 </div>
-                <div class="list-item-action" data-icons="4">
-                  <router-link
-                    :to="{name: 'project-grids', params: { id: p.id }}"
-                    :class="[p.images.length > 0 ? '' : 'is-disabled', 'icon-grid icon-mini']"
-                    title="Layout"
-                  ></router-link>
-                  <a
-                    href="javascript:;"
-                    :class="[p.publish == 1 ? 'icon-eye' : 'icon-eye-off', 'icon-mini']"
-                    @click.prevent="toggle(p.id,$event)"
-                  ></a>
-                  <router-link
-                    :to="{name: 'project-edit', params: { id: p.id }}"
-                    class="icon-edit icon-mini"
-                  ></router-link>
-                  <a
-                    href="javascript:;"
-                    class="icon-trash icon-mini"
-                    @click.prevent="destroy(p.id,$event)"
-                  ></a>
-                </div>
-              </div>
+              </template>
             </draggable>
           </div>
           <div v-else>

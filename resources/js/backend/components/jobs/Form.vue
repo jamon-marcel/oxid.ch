@@ -20,11 +20,7 @@
                   @mouseenter="removeError('description', 'de')"
                 >
                   <label>Beschreibung *</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="job.description.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="job.description.de"></rich-text>
                   <div class="is-required">Pflichtfeld</div>
                 </div>
                 <div
@@ -33,11 +29,7 @@
                   @mouseenter="removeError('info', 'de')"
                 >
                   <label>Info *</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="job.info.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="job.info.de"></rich-text>
                   <div class="is-required">Pflichtfeld</div>
                 </div>
               </div>
@@ -79,19 +71,11 @@
                 </div>
                 <div class="form-row">
                   <label>Beschreibung</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="job.description.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="job.description.en"></rich-text>
                 </div>
                 <div class="form-row is-last">
                   <label>Info</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="job.info.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="job.info.en"></rich-text>
                 </div>
               </div>
             </div>
@@ -131,9 +115,7 @@ import Tabs from "@/components/global/tabs/Tabs.vue";
 import FileUpload from "@/components/global/files/Upload.vue";
 import FileListing from "@/components/global/files/Listing.vue";
 
-// TinyMCE
-import tinyConfig from "@/config/tinyconfig.js";
-import TinymceEditor from "@tinymce/tinymce-vue";
+import RichText from "@/components/global/editor/Editor.vue";
 
 // Mixins
 import Utils from "@/mixins/utils";
@@ -146,7 +128,7 @@ import jobErrors from "@/components/jobs/config/errors.js";
 export default {
   components: {
     FormFooter,
-    TinymceEditor,
+    RichText,
     FileUpload,
     FileListing,
     Tabs
@@ -186,10 +168,6 @@ export default {
 
       // settings
       categories: [],
-
-      // TinyMCE
-      tinyConfig: tinyConfig,
-      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
     };
   },
 

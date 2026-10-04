@@ -197,7 +197,12 @@ export default {
     if (this.$props.type == "edit") {
       let uri = `/api/team/edit/${this.$route.params.id}`;
       this.axios.get(uri).then(response => {
-        this.team = response.data;
+        // 210 older members have no role/position at all (null, not {de, en})
+        this.team = {
+          ...response.data,
+          role: response.data.role ?? { de: null, en: null },
+          position: response.data.position ?? { de: null, en: null },
+        };
         this.tabs.data.active = true;
       });
     }

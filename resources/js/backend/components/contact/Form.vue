@@ -11,11 +11,7 @@
               <div class="column-main">
                 <div class="form-row">
                   <label>Adresse</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="contact.address.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="contact.address.de" class="is-tall"></rich-text>
                 </div>
                 <div class="form-row">
                   <label>Google Maps URL</label>
@@ -23,27 +19,15 @@
                 </div>
                 <div class="form-row">
                   <label>Kontakte</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="contact.contacts.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="contact.contacts.de" class="is-tall"></rich-text>
                 </div>
                 <div class="form-row">
                   <label>Info</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="contact.info.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="contact.info.de" class="is-tall"></rich-text>
                 </div>
                 <div class="form-row">
                   <label>Impressum</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="contact.imprint.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="contact.imprint.de" class="is-tall"></rich-text>
                 </div>
               </div>
             </div>
@@ -53,35 +37,19 @@
               <div class="column-main">
                 <div class="form-row">
                   <label>Adresse</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="contact.address.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="contact.address.en" class="is-tall"></rich-text>
                 </div>
                 <div class="form-row">
                   <label>Kontakte</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="contact.contacts.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="contact.contacts.en" class="is-tall"></rich-text>
                 </div>
                 <div class="form-row">
                   <label>Info</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="contact.info.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="contact.info.en" class="is-tall"></rich-text>
                 </div>
                 <div class="form-row">
                   <label>Impressum</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="contact.imprint.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="contact.imprint.en" class="is-tall"></rich-text>
                 </div>
               </div>
             </div>
@@ -103,8 +71,7 @@ import FormFooter from "@/components/global/form/Footer.vue";
 import Tabs from "@/components/global/tabs/Tabs.vue";
 
 // Editor
-import TinymceEditor from "@tinymce/tinymce-vue";
-import tinyConfig from "@/config/tinyconfig.js";
+import RichText from "@/components/global/editor/Editor.vue";
 
 // Utils
 import Utils from "@/mixins/utils";
@@ -117,7 +84,7 @@ import contactErrors from "@/components/contact/config/errors.js";
 export default {
   components: {
     FormFooter,
-    TinymceEditor,
+    RichText,
     Tabs,
   },
 
@@ -156,10 +123,6 @@ export default {
           en: null,
         },
       },
-      
-      // TinyMCE
-      tinyConfig: tinyConfig,
-      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
     };
   },
 
@@ -175,7 +138,6 @@ export default {
       });
 
       // set editor height
-      this.tinyConfig.height = '480px';
     }
   },
 

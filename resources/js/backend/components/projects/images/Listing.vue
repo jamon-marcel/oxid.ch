@@ -113,7 +113,7 @@
             :defaultPosition="defaultPosition"
             :defaultSize="defaultSize"
             :stencilProps="{
-              aspectRatio: this.ratio.w/this.ratio.h,
+              aspectRatio: ratio.w/ratio.h,
               linesClassnames: {
                 default: 'line',
               },

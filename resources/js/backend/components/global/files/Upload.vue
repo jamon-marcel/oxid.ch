@@ -1,23 +1,21 @@
 <template>
   <div>
     <label>Upload</label>
-    <vue-dropzone
-      ref="dropzone"
-      id="dropzone"
-      :options="fileConfig"
-      @vdropzone-complete="complete"
-    ></vue-dropzone>
+    <dropzone
+      :accepted-files="acceptedFiles"
+      :max-files="maxFiles"
+      :max-filesize="maxFilesize"
+      @uploaded="$parent.storeFile($event)"
+    ></dropzone>
     <span class="bubble is-restriction">{{restrictions}}</span>
   </div>
 </template>
 <script>
-import vue2Dropzone from "vue2-dropzone";
-import fileConfig from "@/components/global/files/config.js";
+import Dropzone from "@/components/global/upload/Dropzone.vue";
 
 export default {
-
   components: {
-    vueDropzone: vue2Dropzone,
+    Dropzone,
   },
 
   props: {
@@ -26,33 +24,5 @@ export default {
     maxFiles: Number,
     maxFilesize: Number,
   },
-
-  data() {
-    return {
-      fileConfig: fileConfig,
-      messages: {
-        uploadError: 'Invalid format or file to big!'
-      }
-    };
-  },
-
-  created() {
-    this.fileConfig.acceptedFiles = this.$props.acceptedFiles;
-    this.fileConfig.maxFiles = this.$props.maxFiles;
-    this.fileConfig.maxFilesize = this.$props.maxFilesize;
-  },
-
-  methods: {
-    complete(file) {
-      if (file.status == "error" && file.accepted == false) {
-        this.$notify({ type: "error", text: this.messages.uploadError });
-      } 
-      else {
-        let response = JSON.parse(file.xhr.response);
-        this.$parent.storeFile(response);
-      }
-      this.$refs.dropzone.removeFile(file);
-    },
-  }
 };
 </script>

@@ -59,7 +59,7 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | JWT → Sanctum, incl. the Vue 2 SPA's auth bootstrap | ✅ done — cookie flow verified with curl and in headless Chromium against the Vue 2 admin: login, 8 list screens, edit + save, upload, session expiry on navigation and on POST, logout; 145 routes, caches OK | `046c9e8` |
 | Form-request validation messages (L12+ wants strings) | ✅ checked, **no change needed** — all 10 form requests already return string messages (ran each one's rules + messages through the validator: 17 errors, 0 non-string); 422 shape verified unchanged in the Sanctum run | (docs only) |
 | Search phase 2: own scoring search + unit tests, drop Scout | ✅ done — 18 unit tests; 15 queries vs production in `07-search.md`, every phase 1 loss recovered; queries 2–9 ms; index flushed on save. Ranking tuning against real queries still open (needs the access logs) | `bd0eacb` |
-| **Rethink image handling — more generic** (requested 2026-10-04, see below) | — open, design first | |
+| Generic image handling: signed `/img/{file}`, `IsImage` trait, `<x-image>`, stored dimensions, legacy redirects | ✅ done — crops byte-identical to step 5 (93/93), home framing same crop; CRAWL_RESULT; see `05-image-pipeline.md`, "Generic image handling" | |
 
 The Laravel 13 bump and the image-cache → Glide dependency swap **must be
 the same commit** — Composer will not resolve anything on Laravel 11. See
@@ -71,8 +71,8 @@ Requested by the user on 2026-10-04, after step 7: the step 5 result —
 `ImageController` (5 per-purpose actions: `original`, `thumbnail`, `large`,
 `home`, `crop`) plus `ImageHelper` (one static method per page use:
 `largeImage`, `previewImage`, `teaserImage`, `homeImage`, `openGraphImage`) —
-is too special-cased and should become **more generic**. Not decided how;
-write the design up in `05-image-pipeline.md` first, then implement. Step 5's
+is too special-cased and should become **more generic**. Designed and done
+on 2026-10-04 — see `05-image-pipeline.md`, "Generic image handling". Step 5's
 verified behaviour (framing matches production 167/167, the URL shapes the
 public pages emit) is the regression baseline for it. Do it after the
 remaining backend steps, before the frontend port touches the admin's image
@@ -311,6 +311,60 @@ moved aside (framework defaults), and diff. Then decide per file.
   site's axios sent `X-CSRF-TOKEN: undefined` — harmless, it never makes a
   request. Left for `08-frontend-js.md` step 1, which deletes axios there.
 
+### Notes from the admin on Vue 3 + Vite
+
+One commit: a half-ported Vue 2/3 admin can't run, so Dropzone, Tiptap,
+vuedraggable and the cropper went in together.
+
+- **Build:** the admin joins `vite.config.js` (`@vitejs/plugin-vue`, `@`
+  alias). Laravel Mix is gone (`webpack.mix.js`, `mix-manifest.json`, the
+  `admin:*` scripts, `public/assets/backend/js` incl. the self-hosted
+  TinyMCE, 3.7 MB). Admin bundle 907 KB (Mix: 1,048 KB), mostly
+  Tiptap/ProseMirror. `vue` is aliased to its runtime ES build:
+  vuedraggable's UMD `require('vue')` pulled in Vue's CJS build and the
+  template compiler (−92 KB). axios is now a shared chunk with the public
+  site; public pages re-checked after that.
+- **Kept, deliberately mechanical:** Options API, the mixins, `this.axios`
+  (now `app.config.globalProperties.axios` instead of vue-axios — 109 call
+  sites untouched), `$notify` (`@kyvg/vue3-notification`). `$parent` calls
+  stay where the child is a direct child (Form → Listing → Actions, grid
+  Row → ButtonAdd/Media); none crosses a draggable.
+- **Replaced:** Vuex → a 3-line `reactive()` store; `vue-router` 4;
+  `vuedraggable` 4 (`#item` slot + `item-key`; images keyed by `name`
+  since new uploads have `id: null`); `vue-the-mask` → `maska`;
+  `moment` → `utils/date.js` (null-safe — moment showed "Invalid date");
+  `Vue.filter('truncate')` deleted with its only user.
+- **Tiptap** (`components/global/editor/`, from luvo): bold, superscript,
+  link (URL/E-Mail/Telefon; relative `../../projekt/…` links stay as they
+  are), "Worttrennung deaktivieren", H1–H3, remove formatting — the TinyMCE
+  toolbar's features. Pasting strips `style`/`class` (TinyMCE had
+  `paste_as_text`). Round trip: `.rewrite/tools/tiptap-roundtrip.mjs` over
+  all 213 stored values (6 tables, both languages): **0 visible
+  differences** (text, links, targets, headings, `<br>`, bold, sup, nowrap);
+  12 % smaller, the pasted inline fonts go. Tell the editors.
+- **Dead code deleted (≈ 770 LOC):** `global/upload/{ImageUpload,
+  MultiImageUpload}`, `projects/upload/{ImageUpload,FileUpload}`,
+  `projects/grid/ButtonAddArticle`, `config/dz-*.js`, `filters.js`. They
+  pointed at `/media/…` and `/image/…` URLs that don't exist. Dropzone is
+  left in 2 components instead of 6.
+- **Pre-existing bugs found and fixed:**
+  - **210 of 263 team members could not be edited**: `role`/`position` are
+    `null` in the DB, and `v-model="team.role.de"` threw on render (in Vue
+    2 too). The form now fills in `{de: null, en: null}`.
+  - `global/images/Listing` and `discourses/images/Listing` render
+    `<cropper>` without importing it — cropping on home/team/job/profile/
+    discourse images showed nothing. Imported now (crop → save verified).
+  - Wrong login credentials failed silently (`loginError` was never
+    shown). Shown now.
+  - `v-for` + `v-if` on one element (team list) — Vue 3 evaluates `v-if`
+    first; split.
+- **Test residue:** a broken test PNG made one upload 500 (bad image →
+  decoder exception, an unfriendly but pre-existing 500); my script then
+  cropped and **deleted a real home image** (`…renggli_luegisland_08.jpg`).
+  Restored the same minute: file re-downloaded from production (identical
+  size, 8070×5572), DB rows from a dump taken before the run. All test
+  tables restored from dumps; temp user deleted.
+
 ### To verify at the end of the backend phase
 
 - Same routes as the baseline: 145 since step 7 (146 before minus the
@@ -327,11 +381,11 @@ moved aside (framework defaults), and diff. Then decide per file.
 
 | Step | Status | Commit |
 |---|---|---|
-| Public site on Vite | ✅ done — 30 screenshots (15 pages × 1280/375) old Mix build vs Vite build: 27 pixel-identical, 3 differ only by the random home image; menu, map, Swiper, collapsible, lazysizes, scrollTo work; `vite` dev server checked | this commit |
-| Admin on Vue 3 + Vite | — | |
-| Dropzone v6 replacement | — | |
-| TinyMCE → Tiptap (incl. round-trip verification) | — | |
-| `projects/grid/` page builder | — | |
+| Public site on Vite | ✅ done — 30 screenshots (15 pages × 1280/375) old Mix build vs Vite build: 27 pixel-identical, 3 differ only by the random home image; menu, map, Swiper, collapsible, lazysizes, scrollTo work; `vite` dev server checked | `cba7799` |
+| Admin on Vue 3 + Vite | ✅ done — headless Chromium against the real admin: all 27 screens render without errors; login (incl. wrong-password message), editor, save, drag reorder, Dropzone upload → crop → delete, grid builder (add row, pick image, delete row), session expiry, logout | this commit |
+| Dropzone v6 replacement | ✅ done, same commit — thin wrapper `global/upload/Dropzone.vue` | this commit |
+| TinyMCE → Tiptap (incl. round-trip verification) | ✅ done, same commit — 213 stored values round-trip with 0 visible differences | this commit |
+| `projects/grid/` page builder | ✅ ported in the same commit (vuedraggable 4 slot syntax; `$parent` calls are direct parents, kept) | this commit |
 | Icons → Phosphor light, during the port (`09-admin-ui.md`) | — | |
 | Border tokens, 1px lines (`09-admin-ui.md`) | — | |
 | Menu: type scale + group headers | — | |

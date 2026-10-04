@@ -6,7 +6,7 @@
     </label>
     <input
       type="text"
-      :value="value"
+      :value="modelValue"
       @input="update($event.target.value)"
       @focus="focus()"
     >
@@ -28,7 +28,7 @@ export default {
       type: String,
       default: null
     },
-    value: {
+    modelValue: {
       type: String
     },
     required: {
@@ -37,10 +37,12 @@ export default {
     }
   },
 
+  emits: ['update:modelValue'],
+
   methods: {
     
     update(value) {
-      this.$emit('input', value)
+      this.$emit('update:modelValue', value)
     },
 
     focus() {

@@ -85,7 +85,7 @@
             :defaultPosition="defaultPosition"
             :defaultSize="defaultSize"
             :stencilProps="{
-              aspectRatio: this.$props.cropRatioW/this.$props.cropRatioH,
+              aspectRatio: cropRatioW/cropRatioH,
               linesClassnames: {
                 default: 'line',
               },
@@ -124,10 +124,14 @@ import ImageActions from "@/components/global/images/Actions.vue";
 // Form elements
 import FormText from "@/components/global/input/Text.vue"
 
+// Cropper
+import { Cropper } from "vue-advanced-cropper";
+
 export default {
   components: {
     ImageActions,
     FormText,
+    Cropper,
   },
 
   data() {

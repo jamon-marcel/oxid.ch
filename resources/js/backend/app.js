@@ -1,61 +1,32 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-require('./bootstrap');
-
-// Import Vue
-import Vue from 'vue';
-window.Vue = Vue;
-
-// VueAxios
-import VueAxios from 'vue-axios';
-import axios from 'axios';
-Vue.use(VueAxios, axios);
-
-// Store
+import { createApp } from 'vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import Notifications from '@kyvg/vue3-notification';
+import axios from './bootstrap';
 import store from './store';
-
-// Routes
 import routes from './routes';
+import App from '@/components/App.vue';
 
-// VueRouter
-import VueRouter from 'vue-router';
-Vue.use(VueRouter);
+// vue-advanced-cropper 2 no longer injects its core styles
+import 'vue-advanced-cropper/dist/style.css';
 
-// Import notifications
-import Notifications from 'vue-notification';
-Vue.use(Notifications);
+const router = createRouter({ history: createWebHistory(), routes });
 
-// Import and configure Vue Moment
-import moment from 'moment';
-import VueMoment from 'vue-moment';
-Vue.use(VueMoment, { moment });
-
-// Filters
-require('./filters');
-
-// Set up VueRouter
-const router = new VueRouter({ mode: 'history', routes: routes});
-
-// Set up router guards: protected routes need a live session
-router.beforeEach(async (to, from, next) => {
+// Protected routes need a live session
+router.beforeEach(async (to) => {
   const requiresAuth = to.matched.some(route => route.meta.requiresAuth);
 
   if (!requiresAuth && to.name !== 'login') {
-    next();
-    return;
+    return true;
   }
 
   try {
     await axios.post('/api/auth/me');
-    store.commit('loginUser');
-    next(to.name === 'login' ? { name: 'dashboard' } : undefined);
-  } catch (error) {
-    store.commit('logoutUser');
-    next(requiresAuth ? { name: 'login' } : undefined);
+    store.isLoggedIn = true;
+    return to.name === 'login' ? { name: 'dashboard' } : true;
+  }
+  catch (error) {
+    store.isLoggedIn = false;
+    return requiresAuth ? { name: 'login' } : true;
   }
 });
 
@@ -68,8 +39,8 @@ axios.interceptors.response.use(
     const url = (error.config && error.config.url) || '';
 
     if ((status === 401 || status === 419) && !url.includes('/api/auth/')) {
-      store.commit('logoutUser');
-      if (router.currentRoute.name !== 'login') {
+      store.isLoggedIn = false;
+      if (router.currentRoute.value.name !== 'login') {
         router.push({ name: 'login' });
       }
     }
@@ -77,14 +48,9 @@ axios.interceptors.response.use(
   }
 );
 
-// Mount App
-import AppComponent from '@/components/App.vue';
+const app = createApp(App);
 
-// Create the Vue instance
-new Vue({
-  el: '#app',
-  components: { AppComponent },
-  router,
-  store,
-  render: h => h(AppComponent)
-});
+// Components call this.axios, as they did with vue-axios
+app.config.globalProperties.axios = axios;
+
+app.use(router).use(Notifications).mount('#app');

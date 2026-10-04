@@ -38,28 +38,16 @@
                   @mouseenter="removeError('description_short', 'de')"
                 >
                   <label>Kurzbeschreibung *</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="discourse.description_short.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="discourse.description_short.de"></rich-text>
                   <div class="is-required">Pflichtfeld</div>
                 </div>
                 <div class="form-row">
                   <label>Beschreibung</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="discourse.description.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="discourse.description.de"></rich-text>
                 </div>
                 <div class="form-row is-last">
                   <label>Info</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="discourse.info.de"
-                  ></tinymce-editor>
+                  <rich-text v-model="discourse.info.de"></rich-text>
                 </div>
               </div>
               <div class="column-sidebar">
@@ -116,27 +104,15 @@
                 </div>
                 <div class="form-row">
                   <label>Kurzbeschreibung</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="discourse.description_short.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="discourse.description_short.en"></rich-text>
                 </div>
                 <div class="form-row">
                   <label>Beschreibung</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="discourse.description.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="discourse.description.en"></rich-text>
                 </div>
                 <div class="form-row is-last">
                   <label>Info</label>
-                  <tinymce-editor
-                    :api-key="tinyApiKey"
-                    :init="tinyConfig"
-                    v-model="discourse.info.en"
-                  ></tinymce-editor>
+                  <rich-text v-model="discourse.info.en"></rich-text>
                 </div>
               </div>
             </div>
@@ -164,15 +140,18 @@
                     v-model="discourse.images" 
                     @end="order"
                     ghost-class="draggable-ghost"
-                    draggable=".is-draggable">
-                    <div class="upload-item-row is-draggable" v-for="(image) in discourse.images" :key="image.id">
-                      <figure>
-                        <img :src="getSource(image.name, 'thumbnail')" height="300" width="300">
-                      </figure>
-                      <div>
-                        <span class="icon-move"></span>
+                    draggable=".is-draggable"
+                    item-key="name">
+                    <template #item="{ element: image }">
+                      <div class="upload-item-row is-draggable">
+                        <figure>
+                          <img :src="getSource(image.name, 'thumbnail')" height="300" width="300">
+                        </figure>
+                        <div>
+                          <span class="icon-move"></span>
+                        </div>
                       </div>
-                    </div>
+                    </template>
                   </draggable>
                 </div>
               </template>
@@ -220,9 +199,7 @@ import ImageListing from "@/components/discourses/images/Listing.vue";
 import FileUpload from "@/components/global/files/Upload.vue";
 import FileListing from "@/components/global/files/Listing.vue";
 
-// TinyMCE
-import tinyConfig from "@/config/tinyconfig.js";
-import TinymceEditor from "@tinymce/tinymce-vue";
+import RichText from "@/components/global/editor/Editor.vue";
 
 // Mixins
 import Utils from "@/mixins/utils";
@@ -237,7 +214,7 @@ import draggable from 'vuedraggable';
 export default {
   components: {
     FormFooter,
-    TinymceEditor,
+    RichText,
     FileUpload,
     FileListing,
     ImageUpload,
@@ -295,10 +272,6 @@ export default {
 
       // settings
       categories: [],
-
-      // TinyMCE
-      tinyConfig: tinyConfig,
-      tinyApiKey: 'vuaywur9klvlt3excnrd9xki1a5lj25v18b2j0d0nu5tbwro',
 
       // view
       view: 'grid',
