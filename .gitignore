@@ -16,3 +16,4 @@ yarn-error.log
 /bootstrap/cache/*
 
 INSTALL.txt
+DEPLOYMENT.md
