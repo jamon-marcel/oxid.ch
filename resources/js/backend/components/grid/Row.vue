@@ -229,20 +229,30 @@ async function pick(at) {
 }
 
 async function storeImage(imageId) {
-  await http.post('/api/project/grid/image/store', {
-    position,
-    grid_id: props.gridId,
-    project_image_id: imageId,
-    project_id: props.projectId,
-  });
+  try {
+    await http.post('/api/project/grid/image/store', {
+      position,
+      grid_id: props.gridId,
+      project_image_id: imageId,
+      project_id: props.projectId,
+    });
+    notify({ type: 'success', text: 'Bild hinzugefügt' });
+  }
+  catch {
+    // Notified by the http error handler
+  }
   isOverlayOpen.value = false;
-  notify({ type: 'success', text: 'Bild hinzugefügt' });
   fetch();
 }
 
 async function deleteImage(id) {
-  await http.delete(`/api/project/grid/image/delete/${id}`);
-  notify({ type: 'success', text: 'Bild gelöscht' });
+  try {
+    await http.delete(`/api/project/grid/image/delete/${id}`);
+    notify({ type: 'success', text: 'Bild gelöscht' });
+  }
+  catch {
+    // Notified by the http error handler; the row shows the current state
+  }
   fetch();
 }
 

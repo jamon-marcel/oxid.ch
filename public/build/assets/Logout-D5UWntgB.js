@@ -1,1 +1,0 @@
-import{P as e,n as t,o as n,s as r}from"./app-iWYKmPaT.js";r();var i={__name:`Logout`,setup(r){let i=n();return e(async()=>{try{await t.post(`/api/auth/logout`)}catch{}i.push({name:`login`})}),(e,t)=>null}};export{i as default};

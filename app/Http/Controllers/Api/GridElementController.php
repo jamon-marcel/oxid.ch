@@ -65,12 +65,16 @@ class GridElementController extends Controller
    */
   public function destroy($id)
   {
-    $element = $this->gridElement->find($id);
+    // 404 when it is already gone (e.g. another tab removed it), not a 500
+    $element = $this->gridElement->findOrFail($id);
     $imageId = $element->project_image_id;
-    if ($element->delete())
+    $element->delete();
+
+    // Still "used in the layout" while another box shows the same image
+    $image = $this->projectImage->find($imageId);
+    if ($image)
     {
-      $image = $this->projectImage->find($imageId);
-      $image->is_grid = 0;
+      $image->is_grid = $this->gridElement->where('project_image_id', $imageId)->exists() ? 1 : 0;
       $image->save();
     }
     return response()->json('successfully deleted');
