@@ -56,7 +56,7 @@ php artisan key:generate
 php artisan queue:work
 
 # Custom command to clear images
-php artisan app:clear-images
+php artisan images:clear
 ```
 
 ### Testing

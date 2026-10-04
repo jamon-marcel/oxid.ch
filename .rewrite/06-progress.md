@@ -1,8 +1,8 @@
 # Progress
 
 Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
-Backend steps 3 (dead code), 4 (Laravel 13 + Glide dependency) and search
-phase 1 done 2026-10-04.
+Backend steps 3 (dead code), 4 (Laravel 13 + Glide dependency), search
+phase 1, 5 (Glide images) and 6 (slim skeleton) done 2026-10-04.
 
 Production: **https://oxid-architektur.ch** (www.oxid.ch is a different, static page).
 
@@ -52,8 +52,8 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 | Delete dead code: 6 filter classes, `dompdf`/`media`/`content` configs | ✅ done — 144 routes, config caches; `home`, `small`, `thumbnail` images 200; `tiny`, `project` 400 | `0afa861` |
 | **One commit:** Laravel 13, PHP ^8.3, drop image-cache, add Glide + Intervention 4 | ✅ done — 0 advisories; 141 routes (the 3 image-cache `/img` routes gone); all 16 public pages 200, 404 renders as 404; all 36 read-only admin API GETs 200 with a JWT; upload 200. **Keyword search 500s** — see below | `a809fd2` |
 | Search phase 1: drop Algolia, Scout `collection` driver — **moved up from step 8**, it fixed the Guzzle 8 search 500 | ✅ done — 15 queries compared with production, see `07-search.md` | `e9d5dde` |
-| Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | ✅ done — 167 production renders compared, geometry matches 167/167; 5 routes incl. the admin's `large`/`thumbnail`/`original`; full crawl of every emitted URL: see notes | this commit |
-| Slim skeleton, `app/User.php` → `app/Models/User.php` | — | |
+| Glide routes, `ImageSupport`, requested sizes + WebP/AVIF, `ImageHelper` → `<picture>` | ✅ done — 167 production renders compared, geometry matches 167/167; 5 routes incl. the admin's `large`/`thumbnail`/`original`; full crawl of every emitted URL: see notes | `62c73c4` |
+| Slim skeleton, `app/User.php` → `app/Models/User.php` | ✅ done — same 146 routes, same per-route middleware; all 21 public pages 200, 404 renders as 404; 32 admin API GETs 200 with a JWT, `auth/me` + `auth/refresh` OK; 422 shape unchanged; `config:cache` + `route:cache` OK | this commit |
 | JWT → Sanctum | — | |
 | Form-request validation messages (L12+ wants strings) | — | |
 | Search phase 2: own scoring search + unit tests, drop Scout | — | |
@@ -99,6 +99,53 @@ Details in `05-image-pipeline.md`, "Result".
 - **Still to do for this step:** screenshot comparison of the public pages
   against production (the `<picture>` wrapper), and the admin image screens
   once the SPA runs again.
+
+### Notes from step 6
+
+- **Deleted:** `app/Http/Kernel.php`, all 7 `app/Http/Middleware/*`,
+  `app/Console/Kernel.php`, `app/Exceptions/Handler.php`, the Auth/Broadcast/
+  Event/Route service providers, `routes/channels.php`,
+  `tests/CreatesApplication.php`, and the legacy `database/seeds/` (a
+  pre-namespace copy of `database/seeders/`). Every custom middleware was a
+  stock subclass with default settings, except the two below.
+- **`bootstrap/app.php`** carries the only two non-defaults:
+  `throttle:200,1` prepended to the `api` group, and
+  `shouldRenderJsonWhen(api/* or expectsJson)`. The second replaces the old
+  `Authenticate` middleware, which turned `AuthenticationException` into a
+  401 `UnauthorizedHttpException` — without it, a guest hitting `api/*`
+  without `Accept: application/json` would be redirected to a non-existent
+  `login` route (500).
+- **Observable differences, all on unauthenticated `api/*` calls:** same 401
+  and same `{"message":"Unauthenticated."}`, but no `WWW-Authenticate:
+  JWTAuth` header (the SPA does not read it), and no `X-RateLimit-*` headers,
+  because the framework's middleware priority now runs auth before the
+  throttle. With `APP_DEBUG` on, the 401 body no longer carries a trace.
+- **New global middleware from the framework defaults:** `HandleCors`
+  (framework `cors` config: `api/*`, any origin, no credentials),
+  `ValidatePathEncoding`, `InvokeDeferredCallbacks`. `HandleCors` matters for
+  the Sanctum step — revisit in step 7's config diff and keep credentials off.
+- **`TrustProxies`:** still trusts no proxy, as before. If Hostpoint
+  terminates TLS in front of PHP and `https` URLs come out as `http`, this is
+  the place (`$middleware->trustProxies(at: ...)`); it was not set before
+  either.
+- **JWT sessions end once on deploy.** jwt-auth puts a hash of the user model
+  class into the token (`prv` claim); `App\User` → `App\Models\User`
+  changes it, so existing tokens fail and the SPA falls back to the login
+  screen. Harmless, and Sanctum replaces the tokens anyway.
+- **`config/app.php`** is down to the non-default keys plus the two custom
+  facade aliases (`AppHelper`, `ImageHelper`). The `Image` alias went —
+  nothing calls it, and the Intervention package registers it itself.
+  Providers are auto-discovered; `bootstrap/providers.php` lists only
+  `AppServiceProvider`.
+- **Factories/seeders:** autoload switched from `classmap` to PSR-4
+  (`Database\Factories`, `Database\Seeders`), and `UserFactory` is now a
+  class-based factory. Pre-existing and **not fixed**: the three other
+  factories still use the Laravel ≤7 `$factory->define()` syntax, and the
+  seeders call `Model::factory()` on models without `HasFactory`, so
+  `db:seed` fails. Nothing on production seeds; a QA-automation item.
+- `CLAUDE.md` named the image command `app:clear-images`; it is
+  `images:clear`. Fixed. The rest of `CLAUDE.md` (Algolia, image-cache,
+  Laravel 11) is rewritten at the end of the project.
 
 ### To verify at the end of the backend phase
 

@@ -103,10 +103,10 @@ config, a ~30-line axios module) and one hard-won warning, below.
 | File | What |
 |---|---|
 | `app/Http/Controllers/AuthController.php` | 82 LOC: `login`, `me`, `logout`, `refresh` |
-| `app/User.php` | `implements JWTSubject`, `getJWTIdentifier`, `getJWTCustomClaims` |
+| `app/Models/User.php` | `implements JWTSubject`, `getJWTIdentifier`, `getJWTCustomClaims` (moved from `app/User.php` in step 6) |
 | `config/jwt.php` | delete |
 | `config/auth.php` | guard `api` → `'driver' => 'jwt'` |
-| `app/Http/Middleware/Authenticate.php` | |
+| ~~`app/Http/Middleware/Authenticate.php`~~ | deleted in step 6; the 401 now comes from `shouldRenderJsonWhen()` in `bootstrap/app.php` |
 | `routes/api.php` | `auth:api` on 2 route groups; `prefix => 'auth'` group with 4 routes |
 | `resources/js/backend/app.js` | **~175 of its 227 LOC** — see `03-frontend-vue3.md` |
 
