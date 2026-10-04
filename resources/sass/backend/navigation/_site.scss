@@ -52,15 +52,18 @@ nav.site-nav {
     .site-nav__menu {
         flex: 1 1 auto;
         min-height: 0;
+        overflow-x: hidden;
         overflow-y: auto;
         padding-bottom: 20px;
+        // Only shows on short windows; dark, to match the panel
+        scrollbar-color: rgba($color-white, .2) transparent;
+        scrollbar-width: thin;
     }
 
     li {
         display: block;
 
         a {
-            border-left: $border-width solid transparent;
             color: $color-grey;
             display: block;
             @include font-regular();
@@ -77,7 +80,9 @@ nav.site-nav {
             }
 
             &.router-link-active {
-                border-left-color: $color-white;
+                text-decoration: underline;
+                text-decoration-thickness: $border-width;
+                text-underline-offset: 4px;
             }
         }
 
@@ -100,9 +105,11 @@ nav.site-nav {
         margin-top: 14px;
     }
 
-    // The pages of a group are indented under its header
+    // The pages of a group are indented under its header (width auto: a
+    // 100% wide list plus the margin made the menu scroll sideways)
     .site-nav__menu ul {
         margin-left: 14px;
+        width: auto;
     }
 
 
