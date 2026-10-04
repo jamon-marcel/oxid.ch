@@ -1,0 +1,1 @@
+function e(e,t=`large`){return`/img/${t}/${typeof e==`string`?e:e.name}`}function t(e){return new Promise((t,n)=>{let r=new Image;r.onload=()=>t(e),r.onerror=n,r.src=e})}export{t as n,e as t};

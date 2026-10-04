@@ -54,7 +54,7 @@ class JobController extends Controller
    * @return \Illuminate\Http\Response
    */
   
-  public function store(Request $request)
+  public function store(JobStoreRequest $request)
   {   
     $job = new Job([
       'title' => [

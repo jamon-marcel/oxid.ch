@@ -435,6 +435,37 @@ vuedraggable and the cropper went in together.
 - Converted screens live in `views/`; until an entity is converted its old
   `components/` screen keeps running in the new `App` shell (no page
   header / notifications of its own any more).
+- **Finished in the second commit:** every screen is `<script setup>`;
+  `mixins/`, the Options-API components and the `this.axios` shim are gone.
+  Structure as luvo: `views/<entity>/{Index,Form}.vue`,
+  `components/{ui,images,files,grid}`, `composables/`, `lib/`.
+- **Image handling, reused from luvo:** `ImageManager` (grid/list view with
+  drag order, edit overlay with a `#fields` slot for entity flags, cropper
+  with a ratio function) replaces four listing variants, the crop/listing
+  mixins and four near-identical image pages. Crop ratios unchanged:
+  project by orientation (16:10, plans 16:10.67, portrait 12:16), home 3:4,
+  the rest 16:10; same default crop box. Images used in the project layout
+  still can't be deleted. Admin image URLs go through `lib/images.js`
+  (`/img/thumbnail|large|original`), the one place to change when the
+  image agent moves the admin to API-supplied URLs.
+- **Backend fix:** `store()` of Discourse/Job/Project/Team took a plain
+  `Request` (only `update()` used the form request). With client checks the
+  only guard, an empty team create was a **500** (`firstname` NOT NULL).
+  All four use their `*StoreRequest` now → 422.
+- **Validation:** forms with rules the API doesn't make (project: images;
+  discourse: title + images; job: info) check all required fields in the
+  client too, so every error shows at once as before; the rest rely on the
+  API's 422.
+- **Removed CSS/SVG:** 14 `icon-*` partials and 12 icon SVGs no longer
+  referenced (icons are Phosphor components now); `icon-view`,
+  `icon-layout`, `icon-grid-list` and the button/select SVGs stay.
+- Verified (headless Chromium, all writes on dumped tables, restored
+  after): 7 lists; edit + save on every form (team member 10 with
+  `role: null` included); empty create on 6 forms (errors + tab markers);
+  project image overlay + cropper, documents tab; discourse list view;
+  upload → caption save → crop → publish → delete on all four image pages;
+  grid builder add row → pick image → delete image; session expiry on
+  navigation and on API call, re-login, logout.
 
 ### To verify at the end of the backend phase
 
@@ -460,9 +491,9 @@ vuedraggable and the cropper went in together.
 | Icons → Phosphor light, during the port (`09-admin-ui.md`) | ✅ done — as SVG files behind the existing CSS classes, not components (see notes) | `4dfc989` |
 | Border tokens, 1px lines (`09-admin-ui.md`) | ✅ done — `$border-width`, 39 lines; softer shadows; focus rings | `4dfc989` |
 | Menu: type scale + group headers | ✅ done | `4dfc989` |
-| **`<script setup>` + composables, luvo's shape** (scope changed 2026-10-04): foundation + news | ✅ done — `lib/{http,utils,images}`, composables `useResourceForm/useListing/useOrder/useEscape`, `components/ui/*`, `App.vue` + `views/layout/PageHeader`, lazy `router.js` with the session guard; news list/create/edit/order/toggle and server-side validation verified; old screens still run inside the new shell | this commit |
-| … projects, discourses, team, jobs, profile, contact | — | |
-| … image pages, listings, grid builder | — | |
+| **`<script setup>` + composables, luvo's shape** (scope changed 2026-10-04): foundation + news | ✅ done — `lib/{http,utils,images}`, composables `useResourceForm/useListing/useOrder/useEscape`, `components/ui/*`, `App.vue` + `views/layout/PageHeader`, lazy `router.js` with the session guard; news list/create/edit/order/toggle and server-side validation verified; old screens still run inside the new shell | `f4ac39b` |
+| … projects, discourses, team, jobs, profile, contact | ✅ done — all lists and forms; `ImageManager`, `FileManager`, `Uploader`, `useImages/useImageLibrary/useFiles` | this commit |
+| … image pages, listings, grid builder | ✅ done, same commit — one `views/images/Index.vue` for home/team/jobs/profile (route props); grid builder in `views/projects/Grid.vue` + `components/grid/`. No Options API, mixin or `$parent` left | this commit |
 | Login screen / splash | ⏳ login error shown (`15c4102`); random home image as background **waits for the image agent** — it is reworking `/img/home/…` | |
 
 ### To verify at the end of the frontend phase

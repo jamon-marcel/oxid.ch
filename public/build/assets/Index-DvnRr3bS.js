@@ -1,1 +1,0 @@
-import{P as e,s as t,v as n,x as r}from"./app-DJaS2x4n.js";import{t as i}from"./_plugin-vue_export-helper-BDNMzG2s.js";t();var a={},o={class:`container`};function s(t,i){return e(),r(`div`,o,[...i[0]||=[n(`main`,{class:`content`,role:`main`},[n(`div`,null,[n(`h1`,null,`Dashboard`)])],-1)]])}var c=i(a,[[`render`,s]]);export{c as default};

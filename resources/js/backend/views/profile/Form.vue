@@ -15,28 +15,14 @@
                   <LabelRequired />
                 </div>
                 <div class="form-row">
-                  <label>Subtitel</label>
-                  <input type="text" v-model="record.subtitle.de">
-                </div>
-                <div class="form-row is-last">
                   <label>Text</label>
-                  <Editor v-model="record.text.de" />
+                  <Editor v-model="record.description.de" class="is-tall" />
                 </div>
               </div>
               <div class="column-sidebar">
                 <div>
-                  <div class="form-row is-sm">
-                    <RadioButton label="Publizieren?" name="publish" v-model="record.publish" />
-                  </div>
                   <div class="form-row is-sm is-last">
-                    <label class="is-sm">Publizieren bis</label>
-                    <input
-                      v-maska="'##.##.####'"
-                      class="is-light"
-                      v-model="record.date_end"
-                      type="text"
-                      placeholder="z.B. 01.06.2020"
-                    >
+                    <RadioButton label="Publizieren?" name="publish" v-model="record.publish" />
                   </div>
                 </div>
               </div>
@@ -50,17 +36,13 @@
                   <input type="text" v-model="record.title.en">
                 </div>
                 <div class="form-row">
-                  <label>Subtitel</label>
-                  <input type="text" v-model="record.subtitle.en">
-                </div>
-                <div class="form-row is-last">
                   <label>Text</label>
-                  <Editor v-model="record.text.en" />
+                  <Editor v-model="record.description.en" class="is-tall" />
                 </div>
               </div>
             </div>
           </div>
-          <FormFooter :back="{ name: 'news' }" />
+          <FormFooter :back="{ name: 'profile' }" />
         </form>
       </div>
     </main>
@@ -68,7 +50,6 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import { vMaska } from 'maska/vue';
 import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
 import Tabs from '@/components/ui/Tabs.vue';
 import LabelRequired from '@/components/ui/LabelRequired.vue';
@@ -76,31 +57,27 @@ import RadioButton from '@/components/ui/RadioButton.vue';
 import FormFooter from '@/components/ui/FormFooter.vue';
 import Editor from '@/components/ui/editor/Editor.vue';
 import { useResourceForm } from '@/composables/useResourceForm';
-import { translations, formatDate } from '@/lib/utils';
+import { translations } from '@/lib/utils';
 
 const props = defineProps({
   type: { type: String, required: true },
 });
 
 const tabs = [
-  { key: 'data', label: 'Artikel' },
+  { key: 'data', label: 'Daten' },
   { key: 'translation', label: 'Übersetzung' },
 ];
 const tab = ref('data');
 
 const { record, errors, isLoading, isFetched, title, submit, clearError } = useResourceForm({
   type: props.type,
-  endpoint: 'news',
+  endpoint: 'profile',
   model: () => ({
     title: translations(),
-    subtitle: translations(),
-    text: translations(),
+    description: translations(),
     publish: 0,
-    sticky: 0,
-    date_end: null,
   }),
-  redirect: { name: 'news' },
-  titles: { create: 'News hinzufügen', edit: 'News bearbeiten' },
-  loaded: news => news.date_end = formatDate(news.date_end),
+  redirect: { name: 'profile' },
+  titles: { create: 'Profil hinzufügen', edit: 'Profil bearbeiten' },
 });
 </script>

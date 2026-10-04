@@ -55,7 +55,7 @@ class TeamController extends Controller
    * @return \Illuminate\Http\Response
    */
   
-  public function store(Request $request)
+  public function store(TeamStoreRequest $request)
   {   
     $team = new Team([
       'firstname' => $request->input('firstname'),

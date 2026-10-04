@@ -186,3 +186,11 @@
     grid-gap: 10px;
     @include responsive-prop('margin-top', $space-xs);
 }
+
+// Extra actions before the standard ones (e.g. the project layout link)
+.list-item-actions {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}

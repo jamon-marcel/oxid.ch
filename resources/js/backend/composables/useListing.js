@@ -11,8 +11,9 @@ import { confirmDelete } from '@/lib/utils';
  *           (status: GET /api/{resource}/status/{id},
  *            delete: DELETE /api/{resource}/destroy/{id})
  * loaded    (items) => void, after each fetch
+ * transform (response data) => items; default: data.data, else data
  */
-export function useListing({ list, resource, isLoading = ref(false), loaded = () => {} }) {
+export function useListing({ list, resource, isLoading = ref(false), loaded = () => {}, transform = data => data.data ?? data }) {
   const items = ref([]);
   const isFetched = ref(false);
 
@@ -20,7 +21,7 @@ export function useListing({ list, resource, isLoading = ref(false), loaded = ()
     isLoading.value = true;
     try {
       const { data } = await http.get(list);
-      items.value = data.data ?? data;
+      items.value = transform(data);
       loaded(items.value);
       isFetched.value = true;
     }

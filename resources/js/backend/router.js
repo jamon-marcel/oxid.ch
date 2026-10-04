@@ -5,8 +5,9 @@ import http from '@/lib/http';
 const create = { type: 'create' };
 const edit = { type: 'edit' };
 
-// Screens not yet moved to views/ (<script setup>) still use their
-// Create/Edit wrappers in components/
+// Home, team, jobs and profile images share one page
+const images = () => import('@/views/images/Index.vue');
+
 const routes = [
   { path: '/', redirect: { name: 'login' } },
   { name: 'admin', path: '/admin', redirect: { name: 'dashboard' } },
@@ -18,41 +19,41 @@ const routes = [
   { name: 'news', path: '/admin/home/news', component: () => import('@/views/news/Index.vue') },
   { name: 'news-create', path: '/admin/home/news/create', component: () => import('@/views/news/Form.vue'), props: create },
   { name: 'news-edit', path: '/admin/home/news/edit/:id', component: () => import('@/views/news/Form.vue'), props: edit },
-  { name: 'home-images', path: '/admin/home/images', component: () => import('@/components/home/images/Index.vue') },
+  { name: 'home-images', path: '/admin/home/images', component: images, props: { title: 'Home - Bilder', endpoint: 'home', sortable: false, ratio: 3 / 4 } },
 
   // Projects
-  { name: 'projects', path: '/admin/projects', component: () => import('@/components/projects/Index.vue') },
-  { name: 'project-create', path: '/admin/project/create', component: () => import('@/components/projects/Create.vue') },
-  { name: 'project-edit', path: '/admin/project/edit/:id', component: () => import('@/components/projects/Edit.vue') },
-  { name: 'project-grids', path: '/admin/project/grid/:id', component: () => import('@/components/projects/grid/Index.vue') },
+  { name: 'projects', path: '/admin/projects', component: () => import('@/views/projects/Index.vue') },
+  { name: 'project-create', path: '/admin/project/create', component: () => import('@/views/projects/Form.vue'), props: create },
+  { name: 'project-edit', path: '/admin/project/edit/:id', component: () => import('@/views/projects/Form.vue'), props: edit },
+  { name: 'project-grids', path: '/admin/project/grid/:id', component: () => import('@/views/projects/Grid.vue') },
 
   // Discourse
-  { name: 'discourses', path: '/admin/discourses', component: () => import('@/components/discourses/Index.vue') },
-  { name: 'discourse-create', path: '/admin/discourse/create', component: () => import('@/components/discourses/Create.vue') },
-  { name: 'discourse-edit', path: '/admin/discourse/edit/:id', component: () => import('@/components/discourses/Edit.vue') },
+  { name: 'discourses', path: '/admin/discourses', component: () => import('@/views/discourses/Index.vue') },
+  { name: 'discourse-create', path: '/admin/discourse/create', component: () => import('@/views/discourses/Form.vue'), props: create },
+  { name: 'discourse-edit', path: '/admin/discourse/edit/:id', component: () => import('@/views/discourses/Form.vue'), props: edit },
 
   // Team
-  { name: 'team', path: '/admin/team', component: () => import('@/components/team/team/Index.vue') },
-  { name: 'team-create', path: '/admin/team/create', component: () => import('@/components/team/team/Create.vue') },
-  { name: 'team-edit', path: '/admin/team/edit/:id', component: () => import('@/components/team/team/Edit.vue') },
-  { name: 'team-images', path: '/admin/team/images', component: () => import('@/components/team/images/Index.vue') },
+  { name: 'team', path: '/admin/team', component: () => import('@/views/team/Index.vue') },
+  { name: 'team-create', path: '/admin/team/create', component: () => import('@/views/team/Form.vue'), props: create },
+  { name: 'team-edit', path: '/admin/team/edit/:id', component: () => import('@/views/team/Form.vue'), props: edit },
+  { name: 'team-images', path: '/admin/team/images', component: images, props: { title: 'Team - Bilder', endpoint: 'team' } },
 
   // Jobs
-  { name: 'jobs', path: '/admin/job', component: () => import('@/components/jobs/Index.vue') },
-  { name: 'job-create', path: '/admin/job/create', component: () => import('@/components/jobs/Create.vue') },
-  { name: 'job-edit', path: '/admin/job/edit/:id', component: () => import('@/components/jobs/Edit.vue') },
-  { name: 'job-images', path: '/admin/job/images', component: () => import('@/components/jobs/images/Index.vue') },
+  { name: 'jobs', path: '/admin/job', component: () => import('@/views/jobs/Index.vue') },
+  { name: 'job-create', path: '/admin/job/create', component: () => import('@/views/jobs/Form.vue'), props: create },
+  { name: 'job-edit', path: '/admin/job/edit/:id', component: () => import('@/views/jobs/Form.vue'), props: edit },
+  { name: 'job-images', path: '/admin/job/images', component: images, props: { title: 'Jobs - Bilder', endpoint: 'job' } },
 
   // Profile
-  { name: 'profile', path: '/admin/profile', component: () => import('@/components/profile/text/Index.vue') },
-  { name: 'profile-create', path: '/admin/profile/create', component: () => import('@/components/profile/text/Create.vue') },
-  { name: 'profile-edit', path: '/admin/profile/edit/:id', component: () => import('@/components/profile/text/Edit.vue') },
-  { name: 'profile-images', path: '/admin/profile/images', component: () => import('@/components/profile/images/Index.vue') },
+  { name: 'profile', path: '/admin/profile', component: () => import('@/views/profile/Index.vue') },
+  { name: 'profile-create', path: '/admin/profile/create', component: () => import('@/views/profile/Form.vue'), props: create },
+  { name: 'profile-edit', path: '/admin/profile/edit/:id', component: () => import('@/views/profile/Form.vue'), props: edit },
+  { name: 'profile-images', path: '/admin/profile/images', component: images, props: { title: 'Profil - Bilder', endpoint: 'profile' } },
 
   // Contact
-  { name: 'contact', path: '/admin/contact', component: () => import('@/components/contact/Index.vue') },
-  { name: 'contact-create', path: '/admin/contact/create', component: () => import('@/components/contact/Create.vue') },
-  { name: 'contact-edit', path: '/admin/contact/edit/:id', component: () => import('@/components/contact/Edit.vue') },
+  { name: 'contact', path: '/admin/contact', component: () => import('@/views/contact/Index.vue') },
+  { name: 'contact-create', path: '/admin/contact/create', component: () => import('@/views/contact/Form.vue'), props: create },
+  { name: 'contact-edit', path: '/admin/contact/edit/:id', component: () => import('@/views/contact/Form.vue'), props: edit },
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });

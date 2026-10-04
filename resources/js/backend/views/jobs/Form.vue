@@ -14,29 +14,21 @@
                   <input type="text" v-model="record.title.de" @focus="clearError('title.de')">
                   <LabelRequired />
                 </div>
-                <div class="form-row">
-                  <label>Subtitel</label>
-                  <input type="text" v-model="record.subtitle.de">
+                <div :class="[errors['description.de'] ? 'has-error' : '', 'form-row']" @focusin="clearError('description.de')">
+                  <label>Beschreibung *</label>
+                  <Editor v-model="record.description.de" :has-error="!!errors['description.de']" />
+                  <LabelRequired />
                 </div>
-                <div class="form-row is-last">
-                  <label>Text</label>
-                  <Editor v-model="record.text.de" />
+                <div :class="[errors['info.de'] ? 'has-error' : '', 'form-row is-last']" @focusin="clearError('info.de')">
+                  <label>Info *</label>
+                  <Editor v-model="record.info.de" :has-error="!!errors['info.de']" />
+                  <LabelRequired />
                 </div>
               </div>
               <div class="column-sidebar">
                 <div>
-                  <div class="form-row is-sm">
-                    <RadioButton label="Publizieren?" name="publish" v-model="record.publish" />
-                  </div>
                   <div class="form-row is-sm is-last">
-                    <label class="is-sm">Publizieren bis</label>
-                    <input
-                      v-maska="'##.##.####'"
-                      class="is-light"
-                      v-model="record.date_end"
-                      type="text"
-                      placeholder="z.B. 01.06.2020"
-                    >
+                    <RadioButton label="Publizieren?" name="publish" v-model="record.publish" />
                   </div>
                 </div>
               </div>
@@ -50,17 +42,25 @@
                   <input type="text" v-model="record.title.en">
                 </div>
                 <div class="form-row">
-                  <label>Subtitel</label>
-                  <input type="text" v-model="record.subtitle.en">
+                  <label>Beschreibung</label>
+                  <Editor v-model="record.description.en" />
                 </div>
                 <div class="form-row is-last">
-                  <label>Text</label>
-                  <Editor v-model="record.text.en" />
+                  <label>Info</label>
+                  <Editor v-model="record.info.en" />
                 </div>
               </div>
             </div>
           </div>
-          <FormFooter :back="{ name: 'news' }" />
+          <div v-show="tab === 'files'">
+            <div class="form-row">
+              <Uploader v-bind="fileUpload" @uploaded="files.store" />
+            </div>
+            <div class="form-row">
+              <FileManager v-model:files="record.documents" @toggle="files.toggle" @destroy="files.destroy" />
+            </div>
+          </div>
+          <FormFooter :back="{ name: 'jobs' }" />
         </form>
       </div>
     </main>
@@ -68,39 +68,44 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import { vMaska } from 'maska/vue';
 import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
 import Tabs from '@/components/ui/Tabs.vue';
 import LabelRequired from '@/components/ui/LabelRequired.vue';
 import RadioButton from '@/components/ui/RadioButton.vue';
 import FormFooter from '@/components/ui/FormFooter.vue';
+import Uploader from '@/components/ui/Uploader.vue';
+import FileManager from '@/components/files/FileManager.vue';
 import Editor from '@/components/ui/editor/Editor.vue';
 import { useResourceForm } from '@/composables/useResourceForm';
-import { translations, formatDate } from '@/lib/utils';
+import { useFiles, fileUpload } from '@/composables/useFiles';
+import { translations, requiredErrors } from '@/lib/utils';
 
 const props = defineProps({
   type: { type: String, required: true },
 });
 
 const tabs = [
-  { key: 'data', label: 'Artikel' },
+  { key: 'data', label: 'Job' },
   { key: 'translation', label: 'Übersetzung' },
+  { key: 'files', label: 'Dokumente' },
 ];
 const tab = ref('data');
 
 const { record, errors, isLoading, isFetched, title, submit, clearError } = useResourceForm({
   type: props.type,
-  endpoint: 'news',
+  endpoint: 'job',
   model: () => ({
     title: translations(),
-    subtitle: translations(),
-    text: translations(),
+    description: translations(),
+    info: translations(),
+    documents: [],
     publish: 0,
-    sticky: 0,
-    date_end: null,
   }),
-  redirect: { name: 'news' },
-  titles: { create: 'News hinzufügen', edit: 'News bearbeiten' },
-  loaded: news => news.date_end = formatDate(news.date_end),
+  redirect: { name: 'jobs' },
+  titles: { create: 'Job hinzufügen', edit: 'Job bearbeiten' },
+  // Checked here too, so all errors show at once: the API doesn't check Info
+  validate: job => requiredErrors(job, ['title.de', 'description.de', 'info.de']),
 });
+
+const files = useFiles({ record, isLoading, endpoint: 'job' });
 </script>

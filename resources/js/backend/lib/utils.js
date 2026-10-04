@@ -31,6 +31,20 @@ export function formatDate(value) {
 }
 
 /**
+ * { field: true } for each empty field; paths like 'title.de'.
+ */
+export function requiredErrors(record, paths) {
+  const errors = {};
+  paths.forEach(path => {
+    const value = path.split('.').reduce((object, key) => object?.[key], record);
+    if (value === null || value === undefined || value === '' || (Array.isArray(value) && !value.length)) {
+      errors[path] = true;
+    }
+  });
+  return errors;
+}
+
+/**
  * { de: null, en: null }
  */
 export function translations() {

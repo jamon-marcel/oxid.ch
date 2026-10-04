@@ -1,1 +1,0 @@
-var e={methods:{progress(e){return e.classList.toggle(`is-loading`),e}}};export{e as t};

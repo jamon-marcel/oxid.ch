@@ -57,7 +57,7 @@ class ProjectController extends Controller
    * @return \Illuminate\Http\Response
    */
   
-  public function store(Request $request)
+  public function store(ProjectStoreRequest $request)
   {   
     $project = new Project([
       'title' => [

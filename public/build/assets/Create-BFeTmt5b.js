@@ -1,1 +1,0 @@
-import{C as e,L as t,P as n,s as r,x as i}from"./app-DJaS2x4n.js";import{t as a}from"./_plugin-vue_export-helper-BDNMzG2s.js";import{t as o}from"./Form-DHPY3a29.js";r();var s={components:{ProjectForm:o}};function c(r,a,o,s,c,l){let u=t(`project-form`);return n(),i(`div`,null,[e(u,{type:`create`})])}var l=a(s,[[`render`,c]]);export{l as default};

@@ -59,7 +59,7 @@ class DiscourseController extends Controller
    * @return \Illuminate\Http\Response
    */
   
-  public function store(Request $request)
+  public function store(DiscourseStoreRequest $request)
   {   
     $discourse = new Discourse([
       'heading' => [
