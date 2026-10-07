@@ -19,7 +19,7 @@
         "@tiptap/pm": "^3.31.4",
         "@tiptap/starter-kit": "^3.31.4",
         "@tiptap/vue-3": "^3.31.4",
-        "lazysizes": "5.1.2",
+        "lazysizes": "^5.3.2",
         "sortablejs": "^1.15.7",
         "swiper": "^14.3.0",
         "vue": "^3.5.43",
