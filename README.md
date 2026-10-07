@@ -35,6 +35,8 @@ npm run dev             # or: npm run build
 `.env` essentials: `DB_CONNECTION=mysql` (the framework default is
 SQLite), the DB credentials, and an `APP_URL` that matches the origin
 exactly — the admin's Sanctum cookie auth depends on it.
+`GOOGLE_MAPS_KEY` is the Maps JavaScript API key used on the contact
+page.
 
 Admin users are created with `php artisan tinker`; there is no sign-up.
 
