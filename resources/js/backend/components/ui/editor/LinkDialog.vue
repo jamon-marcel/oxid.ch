@@ -1,66 +1,68 @@
 <template>
-  <Lightbox :open="isOpen" title="Link" size="small" @close="onClose()">
-    <form :id="formId" @submit.prevent="apply()">
-      <div class="form-row">
-        <label>Typ</label>
-        <div class="select-wrapper">
-          <select v-model="link.type">
-            <option v-for="(label, type) in types" :key="type" :value="type">{{ label }}</option>
-          </select>
-        </div>
-      </div>
+  <AppDialog :open="isOpen" title="Link" size="md" :dismissible="false" @close="onClose()">
+    <form :id="formId" class="flex flex-col gap-16" @submit.prevent="apply()">
+      <FormGroup>
+        <FormLabel :for="`${formId}-type`">Typ</FormLabel>
+        <FormSelect :id="`${formId}-type`" v-model="link.type" :options="typeOptions" />
+      </FormGroup>
 
-      <div class="form-row" v-if="link.type === 'url'">
-        <label>URL</label>
-        <div class="editor-dialog__url">
-          <div class="select-wrapper">
-            <select v-model="link.protocol">
-              <option value="https://">https://</option>
-              <option value="http://">http://</option>
-            </select>
+      <FormGroup v-if="link.type === 'url'">
+        <FormLabel :for="`${formId}-value`">URL</FormLabel>
+        <div class="flex gap-8">
+          <div class="w-110 shrink-0">
+            <FormSelect :id="`${formId}-protocol`" v-model="link.protocol" :options="protocolOptions" />
           </div>
-          <input type="text" v-model="link.value" placeholder="www.example.com">
+          <FormInput :id="`${formId}-value`" v-model="link.value" class="min-w-0 flex-1" placeholder="www.example.com" />
         </div>
-      </div>
+      </FormGroup>
 
-      <div class="form-row" v-if="link.type === 'email'">
-        <label>E-Mail-Adresse</label>
-        <input type="text" v-model="link.value" placeholder="info@oxid-architektur.ch">
-      </div>
+      <FormGroup v-else>
+        <FormLabel :for="`${formId}-value`">{{ link.type === 'email' ? 'E-Mail-Adresse' : 'Telefonnummer' }}</FormLabel>
+        <FormInput :id="`${formId}-value`" v-model="link.value" :placeholder="link.type === 'email' ? 'info@oxid-architektur.ch' : '+41 44 000 00 00'" />
+      </FormGroup>
 
-      <div class="form-row" v-if="link.type === 'tel'">
-        <label>Telefonnummer</label>
-        <input type="text" v-model="link.value" placeholder="+41 44 000 00 00">
-      </div>
+      <FormGroup>
+        <FormLabel :for="`${formId}-title`">Titel (optional)</FormLabel>
+        <FormInput :id="`${formId}-title`" v-model="link.title" />
+      </FormGroup>
 
-      <div class="form-row">
-        <label>Titel (optional)</label>
-        <input type="text" v-model="link.title">
-      </div>
-
-      <div class="form-row" v-if="link.type === 'url'">
-        <label class="editor-dialog__checkbox">
-          <input type="checkbox" v-model="link.blank">
-          <span>In neuem Fenster öffnen</span>
-        </label>
-      </div>
+      <FormCheckbox v-if="link.type === 'url'" :id="`${formId}-blank`" v-model="blank">In neuem Fenster öffnen</FormCheckbox>
     </form>
     <template #footer>
-      <button type="submit" class="btn-secondary" :form="formId">Übernehmen</button>
-      <a href="javascript:;" v-if="isEditing" @click.prevent="remove()">Entfernen</a>
-      <a href="javascript:;" @click.prevent="close()">Abbrechen</a>
+      <div class="flex items-center gap-16">
+        <button v-if="isEditing" type="button" class="mr-auto cursor-pointer text-xs text-gray-400 transition-colors hover:text-gray-900 dark:text-warm-500 dark:hover:text-warm-100" @click="remove()">Link entfernen</button>
+        <div class="ml-auto flex gap-16">
+          <FormButton variant="secondary" @click="close()">Abbrechen</FormButton>
+          <FormButton type="submit" :form="formId">Übernehmen</FormButton>
+        </div>
+      </div>
     </template>
-  </Lightbox>
+  </AppDialog>
 </template>
 <script setup>
-import { ref, reactive } from 'vue';
-import Lightbox from '@/components/ui/Lightbox.vue';
+import { ref, reactive, computed } from 'vue';
+import AppDialog from '@/components/ui/dialog/AppDialog.vue';
+import FormGroup from '@/components/ui/form/FormGroup.vue';
+import FormLabel from '@/components/ui/form/FormLabel.vue';
+import FormInput from '@/components/ui/form/FormInput.vue';
+import FormSelect from '@/components/ui/form/FormSelect.vue';
+import FormCheckbox from '@/components/ui/form/FormCheckbox.vue';
+import FormButton from '@/components/ui/form/FormButton.vue';
 
 const props = defineProps({
   editor: { type: Object, required: true },
 });
 
-const types = { url: 'URL', email: 'E-Mail', tel: 'Telefon' };
+const typeOptions = [
+  { value: 'url', label: 'URL' },
+  { value: 'email', label: 'E-Mail' },
+  { value: 'tel', label: 'Telefon' },
+];
+
+const protocolOptions = [
+  { value: 'https://', label: 'https://' },
+  { value: 'http://', label: 'http://' },
+];
 
 const isOpen = ref(false);
 
@@ -68,6 +70,12 @@ const isOpen = ref(false);
 const formId = `link-${Math.random().toString(36).slice(2)}`;
 const isEditing = ref(false);
 const link = reactive({ type: 'url', protocol: 'https://', value: '', title: '', blank: false });
+
+// FormCheckbox stores 1/0
+const blank = computed({
+  get: () => link.blank ? 1 : 0,
+  set: value => link.blank = value === 1,
+});
 
 // Fill the form from an existing link's href. Relative links (/projekt/…)
 // stay as they are: the protocol select is skipped for them.

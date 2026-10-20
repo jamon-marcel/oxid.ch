@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { notify } from '@/lib/notify';
 import http from '@/lib/http';
-import { confirmDelete, translations } from '@/lib/utils';
+import { confirmDelete, displayName, translations } from '@/lib/utils';
 
 /**
  * A standalone image page (home, team, jobs, profile): every change is
@@ -50,7 +50,7 @@ export function useImageLibrary({ endpoint, isLoading = ref(false) }) {
   }
 
   async function destroy(image) {
-    if (!confirmDelete()) {
+    if (!await confirmDelete('Bild löschen', { text: `«${displayName(image.name)}» wirklich löschen?` })) {
       return;
     }
     if (await request(() => http.delete(`${base}/destroy/${image.name}`))) {

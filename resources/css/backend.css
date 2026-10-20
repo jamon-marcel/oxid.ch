@@ -1,0 +1,138 @@
+/*
+ * The admin's styles, after strut.ch's admin: Tailwind 4 with Google Sans,
+ * Tailwind's grays, a warm palette for dark mode and a pixel spacing scale
+ * (p-24 = 24px). Only the admin is scanned; the public site keeps its Sass.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
+@import 'tailwindcss' source(none);
+@source '../js/backend';
+@source '../views/backend';
+
+@import './spacing.css';
+
+@theme {
+  --font-sans: 'Google Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  /* Warm palette (dark mode) */
+  --color-warm-50: #faf9f7;
+  --color-warm-100: #f5f3f0;
+  --color-warm-200: #e8e4df;
+  --color-warm-300: #d4cec6;
+  --color-warm-400: #a8a196;
+  --color-warm-500: #857d72;
+  --color-warm-600: #6b6359;
+  --color-warm-700: #514a42;
+  --color-warm-800: #3a342d;
+  --color-warm-900: #272320;
+  --color-warm-950: #1a1715;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  /* The page doesn't shift when a dialog stops it from scrolling */
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+}
+
+/*
+ * Rich text (Tiptap). The content keeps TinyMCE's look where the stored
+ * HTML depends on it: headings 1–3, the "Worttrennung deaktivieren" marker
+ */
+.editor {
+  @apply overflow-hidden rounded-md border border-gray-200 bg-white;
+  @variant dark {
+    @apply border-warm-700 bg-warm-800;
+  }
+}
+
+.editor--error {
+  @apply border-red-400;
+  @variant dark {
+    @apply border-red-500;
+  }
+}
+
+.editor:focus-within {
+  @apply border-gray-300 ring-2 ring-gray-200;
+  @variant dark {
+    @apply border-warm-600 ring-warm-700;
+  }
+}
+
+.editor .tiptap {
+  @apply min-h-200 max-h-[600px] overflow-y-auto bg-white px-24 py-20 text-sm leading-normal text-gray-900 outline-none;
+  @variant dark {
+    @apply bg-warm-800 text-warm-100;
+  }
+}
+
+.editor-tall .tiptap {
+  @apply min-h-400;
+}
+
+.editor .tiptap p {
+  @apply mb-[1em];
+}
+
+.editor .tiptap div {
+  @apply m-0;
+}
+
+.editor .tiptap h1,
+.editor .tiptap h2,
+.editor .tiptap h3 {
+  @apply mb-[0.5em] font-medium;
+}
+
+.editor .tiptap h1 {
+  @apply text-lg;
+}
+
+.editor .tiptap h2 {
+  @apply text-base;
+}
+
+.editor .tiptap ul {
+  @apply mb-[0.5em] list-disc pl-[1.5em];
+}
+
+.editor .tiptap ol {
+  @apply mb-[0.5em] list-decimal pl-[1.5em];
+}
+
+.editor .tiptap li {
+  @apply mb-[0.25em];
+}
+
+.editor .tiptap li > p {
+  @apply mb-0;
+}
+
+.editor .tiptap a {
+  @apply text-gray-900 underline decoration-gray-300 underline-offset-4 hover:decoration-gray-900;
+  @variant dark {
+    @apply text-warm-100 decoration-warm-600 hover:decoration-warm-300;
+  }
+}
+
+.editor .tiptap strong {
+  @apply font-semibold;
+}
+
+/* Worttrennung deaktivieren */
+.editor .tiptap span[style*='nowrap'] {
+  @apply bg-gray-100 outline-1 outline-gray-400 outline-dotted;
+  @variant dark {
+    @apply bg-warm-700 outline-warm-500;
+  }
+}

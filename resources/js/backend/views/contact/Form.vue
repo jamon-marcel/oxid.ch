@@ -1,55 +1,29 @@
 <template>
-  <div class="container">
-    <LoadingIndicator v-if="isLoading" />
-    <main class="content" role="main" v-if="isFetched">
-      <div>
-        <h1>{{ title }}</h1>
-        <Tabs :tabs="tabs" v-model="tab" />
-        <form @submit.prevent="submit">
-          <div v-show="tab === 'data'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div class="form-row">
-                  <label>Adresse</label>
-                  <Editor v-model="record.address.de" class="is-tall" />
-                </div>
-                <div class="form-row">
-                  <label>Google Maps URL</label>
-                  <input type="text" v-model="record.google_maps_url">
-                </div>
-                <div class="form-row" v-for="field in textFields" :key="field.key">
-                  <label>{{ field.label }}</label>
-                  <Editor v-model="record[field.key].de" class="is-tall" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-show="tab === 'translation'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div class="form-row">
-                  <label>Adresse</label>
-                  <Editor v-model="record.address.en" class="is-tall" />
-                </div>
-                <div class="form-row" v-for="field in textFields" :key="field.key">
-                  <label>{{ field.label }}</label>
-                  <Editor v-model="record[field.key].en" class="is-tall" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <FormFooter :back="{ name: 'contact' }" />
-        </form>
-      </div>
-    </main>
-  </div>
+  <ResourceForm :title="title" :is-edit="isEdit" :loading="!isFetched" :busy="isLoading" :sidebar="false" @submit="submit" @cancel="router.push({ name: 'contact' })">
+    <Tabs v-model="tab" :tabs="tabs">
+      <Tab name="data">
+        <div class="flex max-w-[48rem] flex-col gap-24">
+          <FormField v-model="record.address.de" name="address.de" label="Adresse" type="editor" :errors="errors" tall />
+          <FormField v-model="record.google_maps_url" name="google_maps_url" label="Google Maps URL" :errors="errors" />
+          <FormField v-for="field in textFields" :key="field.key" v-model="record[field.key].de" :name="`${field.key}.de`" :label="field.label" type="editor" :errors="errors" tall />
+        </div>
+      </Tab>
+      <Tab name="translation">
+        <div class="flex max-w-[48rem] flex-col gap-24">
+          <FormField v-model="record.address.en" name="address.en" label="Adresse" type="editor" :errors="errors" tall />
+          <FormField v-for="field in textFields" :key="field.key" v-model="record[field.key].en" :name="`${field.key}.en`" :label="field.label" type="editor" :errors="errors" tall />
+        </div>
+      </Tab>
+    </Tabs>
+  </ResourceForm>
 </template>
 <script setup>
 import { ref } from 'vue';
-import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
-import Tabs from '@/components/ui/Tabs.vue';
-import FormFooter from '@/components/ui/FormFooter.vue';
-import Editor from '@/components/ui/editor/Editor.vue';
+import { useRouter } from 'vue-router';
+import ResourceForm from '@/components/resource/ResourceForm.vue';
+import FormField from '@/components/ui/form/FormField.vue';
+import Tabs from '@/components/ui/tabs/Tabs.vue';
+import Tab from '@/components/ui/tabs/Tab.vue';
 import { useResourceForm } from '@/composables/useResourceForm';
 import { translations } from '@/lib/utils';
 
@@ -57,8 +31,10 @@ const props = defineProps({
   type: { type: String, required: true },
 });
 
+const router = useRouter();
+
 const tabs = [
-  { key: 'data', label: 'Daten' },
+  { key: 'data', label: 'Kontakt' },
   { key: 'translation', label: 'Übersetzung' },
 ];
 const tab = ref('data');
@@ -69,7 +45,7 @@ const textFields = [
   { key: 'imprint', label: 'Impressum' },
 ];
 
-const { record, isLoading, isFetched, title, submit } = useResourceForm({
+const { record, errors, isEdit, isLoading, isFetched, title, submit } = useResourceForm({
   type: props.type,
   endpoint: 'contact',
   model: () => ({
@@ -80,6 +56,6 @@ const { record, isLoading, isFetched, title, submit } = useResourceForm({
     google_maps_url: null,
   }),
   redirect: { name: 'contact' },
-  titles: { create: 'Kontakt hinzufügen', edit: 'Kontakt bearbeiten' },
+  titles: { create: 'Neuer Kontakt', edit: 'Kontakt bearbeiten' },
 });
 </script>

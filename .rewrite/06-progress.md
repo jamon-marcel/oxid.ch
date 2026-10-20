@@ -770,6 +770,169 @@ pixel-compared; production serves JPEG, local AVIF/WebP)
 image 930. Both restored from the 2026-10-04 production dump; it was the
 only grid element missing from the whole table.
 
+### Admin layout from cra.ch (2026-10-20)
+
+*Superseded the same day by the Tailwind overhaul below (the user didn't
+like the look). What stays from it: the confirm dialog, the stale-close
+guard in the Lightbox and `scrollbar-gutter: stable`.*
+
+Taken from cra.ch's second admin review (`rework/laravel-13-vue-3`,
+`948f5eb` and before), where it fits oxid. Not taken: cra's fixed login
+image (oxid keeps the random home image), its darker list lines (oxid's
+are `#eee` already), and its picker, category and teaser changes (no
+counterpart here).
+
+- **Sidebar instead of the slide-in menu** (`views/layout/Sidebar.vue`,
+  `navigation/_sidebar.scss`; `PageHeader.vue` and the `site-header`
+  styles are gone): fixed on the left, `$sidebar-width` 248px; logo, the
+  same menu groups as before, the user's name and Logout at the bottom.
+  The active item has a soft background (`$color-active`) on its list and
+  on the pages below it (`<base>-create|edit|grids`). No drawer: the
+  admin is desktop-only, so `body` is `$page-min-width + $sidebar-width`
+  (1088px) wide at least and the page keeps its 840px. `main.content` and
+  the fixed `site-footer` start at the sidebar; the footer has a 1px top
+  line instead of its shadow, at the same height as the sidebar's user
+  section, so the two lines meet.
+- **Confirm dialog instead of `window.confirm`**: `lib/confirm.js`
+  (`await confirm({ title, text, action })`) and `ConfirmDialog.vue` in
+  `App.vue`, on the small Lightbox (1px border, no shadow), red button
+  (`.btn-secondary.is-danger`). `confirmDelete(title, options)` is async
+  now. Two deletes had no confirmation at all and have one now: "Zeile
+  löschen" in the project layout and a slot's "Löschen" (both only take
+  images out of the layout; the dialog says so).
+- **Lightbox: stale `close` events ignored.** The `<dialog>`'s close event
+  fires a task after `close()`; cancelling one confirm and opening the
+  next at once let the old event close the new dialog. The Lightbox now
+  only emits `close` when the dialog is really closed.
+- **Native scrollbar, `scrollbar-gutter: stable`** on `html` (was the
+  custom webkit scrollbar and `overflow-y: scroll`): an open Lightbox stops
+  the page from scrolling and the page no longer shifts sideways.
+- **Toggle dark when on** (`$color-dark`, was blue); its focus ring stays
+  blue like the inputs'.
+
+Checked in headless Chromium at 1440 × 900 and 1100 × 500, with a temporary
+user and an unpublished temporary news item (both deleted afterwards):
+active item on lists, forms, grid and image pages; footer and sidebar
+lines at the same y; confirm cancelled by the button, by Escape, then
+confirmed (the news item deleted through the UI); row and slot dialogs
+opened and cancelled (13 slots before and after); heading x the same with
+and without an open dialog; no native dialogs; Logout from the sidebar.
+`php artisan test`: 118 passed.
+
+### Admin overhaul with Tailwind 4 (2026-10-20)
+
+*Superseded the same day by the strut.ch port below (the user didn't like
+the mix). What stays from it: Tailwind 4 via `@tailwindcss/vite`, the
+deleted admin Sass and icons, the confirm dialog's `lib/confirm.js`.*
+
+The user asked for a complete overhaul with the `/ui` skill (Tailwind
+design guidelines), Tailwind instead of Sass, and a modern app shell.
+
+- **Tailwind 4** via `@tailwindcss/vite`; entry `resources/css/backend.css`
+  (replaces `resources/sass/backend/`, deleted with the 21 SVG icons in
+  `public/assets/backend/img/icons/` and the eot/svg/ttf font files).
+  `source(none)` + `@source '../js/backend'`: only the admin is scanned.
+  The public site's CSS build is unchanged (same file hash), `busu.css`
+  too.
+- **Look:** Euclid Circular A (the admin's font before, Regular and
+  Medium; no synthesized bold), zinc greys, a dark primary button, red
+  only for confirmed deletes, 16px Phosphor icons (regular weight),
+  opacity-based dividers, no cards except image tiles.
+- **Shell:** sidebar on `bg-zinc-100` (logo, three sections: News /
+  Projekte / Diskurs; Seiten: Team, Jobs, Profil, Kontakt; Bilder:
+  Startseite, Team, Jobs, Profil — the four "Bilder" entries are one group
+  now instead of one under each page), user name and e-mail with a logout
+  button. The page sits in a white rounded panel. Active item: white with
+  a ring, on its forms and the layout page too.
+- **Pages:** `PageHeader` (back link, title, description, actions on the
+  right). Lists are `ListItem` rows: title links to the form, grey second
+  line (subtitle, location, rubric · date, role), badges (Verborgen,
+  Angeheftet, Highlight, discourse category), icon actions, a grip on
+  hover for draggable lists. Team grouped by category with counts.
+- **Forms:** underline tabs (red dot on a tab with errors), fields with
+  the error under them ("Pflichtfeld" or the API's message) instead of
+  the permanent "Pflichtfeld" hint, settings in a grey well on the right
+  (Publiziert first), a sticky save bar at the bottom of the panel
+  (Abbrechen, Speichern). Project: Werkliste fields in their own section,
+  a "Layout" button in the header.
+- **Images and files:** whole images on a light square (`object-contain`),
+  hidden ones dimmed with a badge; Raster/Reihenfolge switch where the
+  order can change; the edit dialog is a medium dialog; documents are a
+  list with a language badge (team) instead of file-icon cards.
+- **Project layout:** rows are drawn from `components/grid/layouts.js`
+  (positions and boxes per layout; replaces 200 lines of markup), at most
+  `max-w-3xl`; "Zeile hinzufügen" opens a popover with layout pictograms
+  drawn from the same data (the `grid-*.svg` files are gone). Empty boxes
+  are dashed buttons.
+- **Login:** form on white on the left, the random published home image on
+  the right half (`.container-auth` keeps the blade's background).
+- **Copy:** "Publizieren?" → "Publiziert", "Plan?" → "Plan" and so on;
+  discourse image theme "hell"/"dunkel"; the image pages are "Bilder
+  Startseite" etc. with a short description.
+- **Deliberately not done:** a mobile menu (the guidelines want one; the
+  admin is desktop-only, `min-w-5xl`).
+
+Checked in headless Chromium at 1440 × 900 with a temporary user (deleted
+afterwards): screenshots of every screen; wrong password message; news
+create with an empty title (error under the field, red dot on the tab,
+cleared on focus), then filled with a link from the link dialog, the
+date mask and the toggle, saved, values back in the edit form, hidden
+through the list toggle, deleted through the confirm dialog; the upload
+button opens the file chooser; on project 57 a 2-2 row added, the picker
+opened with 12 images, the row deleted (9 rows before and after);
+layout popover closes on an outside click; active sidebar item on a form;
+logout. No native dialogs, no page errors. `php artisan test`: 118 passed.
+
+### Admin UI from strut.ch (2026-10-20)
+
+The user: "complete overhaul", strut.ch (github.com/marceli-to/strut.ch)
+"should have all we need". Its admin (`resources/js/app`) is ported as a
+whole UI layer; oxid's data layer stays (API, `useListing`,
+`useResourceForm`, `useOrder`, `useImages`, `useImageLibrary`,
+`useFiles`, upload, crop coords). strut's stores (Pinia), Uppy and its
+media library API are not taken.
+
+- **Design system as in strut:** Google Sans (Google Fonts), Tailwind's
+  grays, strut's warm palette for dark mode (follows the OS), the pixel
+  spacing scale (`resources/css/spacing.css`, copied), body
+  `text-sm tracking-wide`. The Euclid font files and the remaining
+  `public/assets/backend/css` are gone.
+- **Ported components** (strut's markup and classes, oxid's code style):
+  layout (sidebar with light 18px icons, groups Büro / Bilder, Abmelden at
+  the bottom; white rounded panel), `PageHeader`, `ResourceIndex` /
+  `ResourceForm`, `DataTable` (vuedraggable, groups), `SearchBar`
+  (floating, kept per list in sessionStorage), form fields, tabs,
+  `AppDialog`, `ConfirmDialog`, `Drawer`, toasts, `Badge`, media cards
+  with the hover action bar, edit drawer, crop dialog, upload zone, grid
+  editor (collapsible rows, layout drawer, image picker with "Nur
+  unplatzierte").
+- **Adapted to oxid:** ids instead of uuids; publish flags 0/1 (also as
+  strings) — `FormCheckbox` stores 1/0, the table dims `publish == 0`;
+  `DataTable` emits the reordered group only, so the team order still
+  posts one category; column `value` functions for translated fields
+  (`title.de`); `FormLabel` shows "Feld: Pflichtfeld" for client-side
+  errors (`true`); `lib/notify` and `lib/confirm` keep their API and get
+  strut's toast and dialog; the uploader keeps oxid's sequential upload
+  and shows rejections as toasts; the crop keeps the per-image ratio.
+- **Project layout** is the "Raster" tab of the project form (edit only),
+  like strut; `/admin/project/grid/{id}` redirects there. Rows and
+  pictograms come from `components/grid/layouts.js` (columns of cells
+  with ratios). Removing an image from a box asks nothing (as in strut;
+  it can be placed again), deleting a row does.
+- Not taken: strut's unsaved-changes guard, its "stay on the form after
+  saving" (oxid goes back to the list, as before), link types Seite/Projekt.
+
+Checked in headless Chromium (1440 × 900, light and dark) with a temporary
+user (deleted afterwards): screenshots of every screen; wrong password;
+news created with the empty-title error, a link from the link dialog, the
+date mask and publish, found by the search, values back in the form,
+toggled, delete cancelled then confirmed; file chooser; image drawer;
+an image in the layout can't be deleted; on project 57 a "Vier Bilder"
+row added, the picker (13 images, 3 unplaced) opened, the row deleted (9
+rows before and after); the old layout URL; active menu item; logout. Not
+checked: drag ordering (it rewrites `order` of live rows; vuedraggable
+feeds the existing `useOrder`). `php artisan test`: 118 passed.
+
 ### To verify at the end of the backend phase
 
 *Done, see "Final QA". The last point ran against the Vue 2 SPA in the

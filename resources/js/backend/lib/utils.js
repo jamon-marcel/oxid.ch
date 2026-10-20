@@ -1,16 +1,10 @@
-export function confirmDelete() {
-  return window.confirm('Bitte löschen bestätigen!');
-}
+import { confirm } from '@/lib/confirm';
 
 /**
- * Items grouped by the value of key, keeping the item objects (so changes
- * to an item show in every list that holds it).
+ * Asks before deleting (the confirm dialog); resolves true or false.
  */
-export function groupBy(items, key) {
-  return items.reduce((groups, item) => {
-    (groups[item[key]] ??= []).push(item);
-    return groups;
-  }, {});
+export function confirmDelete(title = 'Eintrag löschen', options = {}) {
+  return confirm({ title, ...options });
 }
 
 /**
@@ -65,4 +59,21 @@ export function displayName(name) {
  */
 export function translations() {
   return { de: null, en: null };
+}
+
+/**
+ * Plain text of an HTML string (tags out, entities decoded), cut to length
+ * (list cells). DOMParser doesn't run the HTML's scripts or handlers.
+ */
+export function truncate(html, length = 100) {
+  const text = new DOMParser().parseFromString(html ?? '', 'text/html').body.textContent.replace(/\s+/g, ' ').trim();
+  return text.length > length ? `${text.slice(0, length)}…` : text;
+}
+
+/**
+ * { id: label } (the settings endpoints) → [{ value: Number(id), label }]
+ * for a select.
+ */
+export function toOptions(settings) {
+  return Object.entries(settings ?? {}).map(([id, label]) => ({ value: Number(id), label }));
 }

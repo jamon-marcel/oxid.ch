@@ -19,13 +19,14 @@ const routes = [
   { name: 'news', path: '/admin/home/news', component: () => import('@/views/news/Index.vue') },
   { name: 'news-create', path: '/admin/home/news/create', component: () => import('@/views/news/Form.vue'), props: create },
   { name: 'news-edit', path: '/admin/home/news/edit/:id', component: () => import('@/views/news/Form.vue'), props: edit },
-  { name: 'home-images', path: '/admin/home/images', component: images, props: { title: 'Home - Bilder', endpoint: 'home', sortable: false, ratio: 3 / 4 } },
+  { name: 'home-images', path: '/admin/home/images', component: images, props: { title: 'Bilder Startseite', endpoint: 'home', sortable: false, ratio: 3 / 4 } },
 
   // Projects
   { name: 'projects', path: '/admin/projects', component: () => import('@/views/projects/Index.vue') },
   { name: 'project-create', path: '/admin/project/create', component: () => import('@/views/projects/Form.vue'), props: create },
   { name: 'project-edit', path: '/admin/project/edit/:id', component: () => import('@/views/projects/Form.vue'), props: edit },
-  { name: 'project-grids', path: '/admin/project/grid/:id', component: () => import('@/views/projects/Grid.vue') },
+  // The layout is a tab of the project form now
+  { name: 'project-grids', path: '/admin/project/grid/:id', redirect: to => ({ name: 'project-edit', params: { id: to.params.id }, query: { tab: 'grid' } }) },
 
   // Discourse
   { name: 'discourses', path: '/admin/discourses', component: () => import('@/views/discourses/Index.vue') },
@@ -36,19 +37,19 @@ const routes = [
   { name: 'team', path: '/admin/team', component: () => import('@/views/team/Index.vue') },
   { name: 'team-create', path: '/admin/team/create', component: () => import('@/views/team/Form.vue'), props: create },
   { name: 'team-edit', path: '/admin/team/edit/:id', component: () => import('@/views/team/Form.vue'), props: edit },
-  { name: 'team-images', path: '/admin/team/images', component: images, props: { title: 'Team - Bilder', endpoint: 'team' } },
+  { name: 'team-images', path: '/admin/team/images', component: images, props: { title: 'Bilder Team', endpoint: 'team' } },
 
   // Jobs
   { name: 'jobs', path: '/admin/job', component: () => import('@/views/jobs/Index.vue') },
   { name: 'job-create', path: '/admin/job/create', component: () => import('@/views/jobs/Form.vue'), props: create },
   { name: 'job-edit', path: '/admin/job/edit/:id', component: () => import('@/views/jobs/Form.vue'), props: edit },
-  { name: 'job-images', path: '/admin/job/images', component: images, props: { title: 'Jobs - Bilder', endpoint: 'job' } },
+  { name: 'job-images', path: '/admin/job/images', component: images, props: { title: 'Bilder Jobs', endpoint: 'job' } },
 
   // Profile
   { name: 'profile', path: '/admin/profile', component: () => import('@/views/profile/Index.vue') },
   { name: 'profile-create', path: '/admin/profile/create', component: () => import('@/views/profile/Form.vue'), props: create },
   { name: 'profile-edit', path: '/admin/profile/edit/:id', component: () => import('@/views/profile/Form.vue'), props: edit },
-  { name: 'profile-images', path: '/admin/profile/images', component: images, props: { title: 'Profil - Bilder', endpoint: 'profile' } },
+  { name: 'profile-images', path: '/admin/profile/images', component: images, props: { title: 'Bilder Profil', endpoint: 'profile' } },
 
   // Contact
   { name: 'contact', path: '/admin/contact', component: () => import('@/views/contact/Index.vue') },

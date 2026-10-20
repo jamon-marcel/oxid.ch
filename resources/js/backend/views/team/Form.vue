@@ -1,103 +1,51 @@
 <template>
-  <div class="container">
-    <LoadingIndicator v-if="isLoading" />
-    <main class="content" role="main" v-if="isFetched">
-      <div>
-        <h1>{{ title }}</h1>
-        <Tabs :tabs="tabs" v-model="tab" :errors="Object.keys(errors).length ? ['data'] : []" />
-        <form @submit.prevent="submit">
-          <div v-show="tab === 'data'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div :class="[errors.firstname ? 'has-error' : '', 'form-row']">
-                  <label>Vorname *</label>
-                  <input type="text" v-model="record.firstname" @focus="clearError('firstname')">
-                  <LabelRequired />
-                </div>
-                <div :class="[errors.name ? 'has-error' : '', 'form-row']">
-                  <label>Name *</label>
-                  <input type="text" v-model="record.name" @focus="clearError('name')">
-                  <LabelRequired />
-                </div>
-                <div class="form-row">
-                  <label>Funktion</label>
-                  <input type="text" v-model="record.role.de">
-                </div>
-                <div class="form-row">
-                  <label>Position</label>
-                  <input type="text" v-model="record.position.de">
-                </div>
-                <div class="form-row">
-                  <label>E-Mail</label>
-                  <input type="text" v-model="record.email">
-                </div>
-                <div class="form-row">
-                  <label>Telefon</label>
-                  <input type="text" v-model="record.phone">
-                </div>
-              </div>
-              <div class="column-sidebar">
-                <div>
-                  <div class="form-row is-sm">
-                    <label>Kategorie</label>
-                    <div class="select-wrapper is-sidebar">
-                      <select v-model="record.category" name="category">
-                        <option v-for="(label, id) in categories" :key="id" :value="Number(id)">{{ label }}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-row is-sm is-last">
-                    <Toggle label="Publizieren?" name="publish" v-model="record.publish" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-show="tab === 'translation'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div class="form-row">
-                  <label>Funktion</label>
-                  <input type="text" v-model="record.role.en">
-                </div>
-                <div class="form-row">
-                  <label>Position</label>
-                  <input type="text" v-model="record.position.en">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-show="tab === 'files'">
-            <div class="form-row">
-              <Uploader v-bind="fileUpload" @uploaded="files.store" />
-            </div>
-            <div class="form-row">
-              <FileManager v-model:files="record.documents" languages @toggle="files.toggle" @destroy="files.destroy" />
-            </div>
-          </div>
-          <FormFooter :back="{ name: 'team' }" />
-        </form>
-      </div>
-    </main>
-  </div>
+  <ResourceForm :title="title" :is-edit="isEdit" :loading="!isFetched" :busy="isLoading" @submit="submit" @cancel="router.push({ name: 'team' })">
+    <Tabs v-model="tab" :tabs="tabs" :errors="Object.keys(errors).length ? ['data'] : []">
+      <Tab name="data">
+        <div class="grid grid-cols-2 gap-24">
+          <FormField v-model="record.firstname" name="firstname" label="Vorname" :errors="errors" required />
+          <FormField v-model="record.name" name="name" label="Nachname" :errors="errors" required />
+          <FormField v-model="record.role.de" name="role.de" label="Funktion" placeholder="z.B. Architekt ETH SIA" :errors="errors" />
+          <FormField v-model="record.position.de" name="position.de" label="Position" placeholder="z.B. Partner" :errors="errors" />
+          <FormField v-model="record.phone" name="phone" label="Telefon" :errors="errors" />
+          <FormField v-model="record.email" name="email" label="E-Mail" type="email" :errors="errors" />
+        </div>
+      </Tab>
+      <Tab name="translation">
+        <div class="grid grid-cols-2 gap-24">
+          <FormField v-model="record.role.en" name="role.en" label="Funktion" :errors="errors" />
+          <FormField v-model="record.position.en" name="position.en" label="Position" :errors="errors" />
+        </div>
+      </Tab>
+      <Tab name="files">
+        <FileField v-model:files="record.documents" languages @uploaded="files.store" @toggle="files.toggle" @destroy="files.destroy" />
+      </Tab>
+    </Tabs>
+
+    <template #sidebar>
+      <FormField v-model="record.publish" name="publish" label="Veröffentlichen" type="checkbox" />
+      <FormField v-model="record.category" name="category" label="Kategorie" type="select" :options="toOptions(categories)" :errors="errors" />
+    </template>
+  </ResourceForm>
 </template>
 <script setup>
 import { ref } from 'vue';
-import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
-import Tabs from '@/components/ui/Tabs.vue';
-import LabelRequired from '@/components/ui/LabelRequired.vue';
-import Toggle from '@/components/ui/Toggle.vue';
-import FormFooter from '@/components/ui/FormFooter.vue';
-import Uploader from '@/components/ui/Uploader.vue';
-import FileManager from '@/components/files/FileManager.vue';
+import { useRouter } from 'vue-router';
+import ResourceForm from '@/components/resource/ResourceForm.vue';
+import FormField from '@/components/ui/form/FormField.vue';
+import Tabs from '@/components/ui/tabs/Tabs.vue';
+import Tab from '@/components/ui/tabs/Tab.vue';
+import FileField from '@/components/media/FileField.vue';
 import { useResourceForm } from '@/composables/useResourceForm';
-import { useFiles, fileUpload } from '@/composables/useFiles';
-import { translations } from '@/lib/utils';
+import { useFiles } from '@/composables/useFiles';
+import { translations, toOptions } from '@/lib/utils';
 import http from '@/lib/http';
 
 const props = defineProps({
   type: { type: String, required: true },
 });
+
+const router = useRouter();
 
 const tabs = [
   { key: 'data', label: 'Daten' },
@@ -109,7 +57,7 @@ const tab = ref('data');
 const categories = ref({});
 
 // 210 older members have role/position null; the model defaults fill them in
-const { record, errors, isLoading, isFetched, title, submit, clearError } = useResourceForm({
+const { record, errors, isEdit, isLoading, isFetched, title, submit } = useResourceForm({
   type: props.type,
   endpoint: 'team',
   model: () => ({
@@ -124,7 +72,7 @@ const { record, errors, isLoading, isFetched, title, submit, clearError } = useR
     category: 1,
   }),
   redirect: { name: 'team' },
-  titles: { create: 'Teammitglied hinzufügen', edit: 'Teammitglied bearbeiten' },
+  titles: { create: 'Neues Mitglied', edit: 'Mitglied bearbeiten' },
   load: [() => http.get('/api/settings/teamCategories').then(({ data }) => categories.value = data)],
 });
 

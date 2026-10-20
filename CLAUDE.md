@@ -25,7 +25,8 @@ was verified and how, known issues, and the deploy notes.
   Laravel 13, Sanctum 4, Glide 4 + Intervention Image 4,
   spatie/laravel-translatable (de/en fields as JSON).
 - Vite 8 with `laravel-vite-plugin`; Vue 3.5, vue-router, axios, Tiptap,
-  vue-advanced-cropper, SortableJS, Phosphor icons.
+  vue-advanced-cropper, SortableJS, Phosphor icons. The admin is styled
+  with Tailwind 4 (`@tailwindcss/vite`), the public site with Sass.
 - Public JS: no framework; Swiper 14 (discourse detail slider), lazysizes,
   Google Maps JS API on the contact page (`maps.js`, its own entry).
 
@@ -90,18 +91,39 @@ saved. See `.rewrite/07-search.md`.
 ### Admin SPA (`resources/js/backend/`)
 
 Built in the shape of the luvo project (github.com/marceli-to/luvo):
-`<script setup>` only, no Options API or mixins.
+`<script setup>` only, no Options API or mixins. The UI is ported from
+the strut.ch admin (github.com/marceli-to/strut.ch, `resources/js/app`);
+the data layer is oxid's own.
 
-- `lib/`: `http` (axios instance, XSRF, error notifications), `notify`,
-  `images`, `utils`.
+- `lib/`: `http` (axios instance, XSRF, error notifications), `notify`
+  (toasts), `confirm` (the confirm dialog: `await confirmDelete(title,
+  { text })` from `utils`, never `window.confirm`), `images`, `utils`.
 - `composables/`: `useResourceForm`, `useListing`, `useOrder`,
-  `useImages`, `useImageLibrary`, `useFiles`, `useEscape`.
-- `components/ui/`: `Card`, `Lightbox` (native `<dialog>`), `Toggle`,
-  `Tabs`, `Uploader`, `SortableList` (drag ordering via SortableJS),
-  `ListActions`, `Notifications`, Tiptap `editor/`.
+  `useImages`, `useImageLibrary`, `useFiles` — the API work.
+- `components/resource/`: `ResourceIndex` (list page: `DataTable`,
+  publish/edit/delete, drag ordering via `order`, groups, the floating
+  search) and `ResourceForm` (title, Abbrechen/Erstellen|Aktualisieren
+  fixed top right, main + sidebar). Every list and form view uses them.
+- `components/ui/`: `form/` (`FormField` with label, control and error —
+  the error replaces the label; `FormCheckbox` stores 1/0), `tabs/`,
+  `dialog/` (`AppDialog`, `ConfirmDialog`), `drawer/`, `toast/`,
+  `search/`, `badge/`, `table/DataTable` (vuedraggable), Tiptap `editor/`.
+- `components/media/`: `ImageField` (upload, cards, edit drawer, crop,
+  drag order) and `FileField` (documents), on `MediaCard`,
+  `MediaUploader`, `MediaEdit`, `MediaCrop`.
+- `components/grid/`: the project layout editor, a "Raster" tab of the
+  project form (`/admin/project/grid/{id}` redirects there). Rows and
+  pictograms are drawn from `layouts.js`.
 - `views/<resource>/{Index,Form}.vue`; `router.js` is lazy-loaded with a
-  session guard. Styles: `resources/sass/backend/` (1px `$border` tokens).
-- The admin is desktop-only (`$page-min-width: 840px`).
+  session guard.
+- Styles: Tailwind 4, `resources/css/backend.css` (Google Sans, grays,
+  strut's warm palette for dark mode via `prefers-color-scheme`) and
+  `resources/css/spacing.css`: **the spacing scale is in pixels**
+  (`p-24` = 24px, `w-240` = 240px, up to 500). It scans only
+  `resources/js/backend` and `resources/views/backend`. Write new markup
+  like strut's components, dark variants included.
+- Layout: sidebar `w-240` on gray-100, the page in a white rounded panel.
+  Desktop-only (`min-w-[64rem]`), no mobile menu.
 
 ### Public JS (`resources/js/frontend/`)
 

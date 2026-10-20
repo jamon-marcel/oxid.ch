@@ -1,80 +1,35 @@
 <template>
-  <div class="container">
-    <LoadingIndicator v-if="isLoading" />
-    <main class="content" role="main" v-if="isFetched">
-      <div>
-        <h1>{{ title }}</h1>
-        <Tabs :tabs="tabs" v-model="tab" :errors="Object.keys(errors).length ? ['data'] : []" />
-        <form @submit.prevent="submit">
-          <div v-show="tab === 'data'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div :class="[errors['title.de'] ? 'has-error' : '', 'form-row']">
-                  <label>Titel *</label>
-                  <input type="text" v-model="record.title.de" @focus="clearError('title.de')">
-                  <LabelRequired />
-                </div>
-                <div class="form-row">
-                  <label>Subtitel</label>
-                  <input type="text" v-model="record.subtitle.de">
-                </div>
-                <div class="form-row is-last">
-                  <label>Text</label>
-                  <Editor v-model="record.text.de" />
-                </div>
-              </div>
-              <div class="column-sidebar">
-                <div>
-                  <div class="form-row is-sm">
-                    <Toggle label="Publizieren?" name="publish" v-model="record.publish" />
-                  </div>
-                  <div class="form-row is-sm is-last">
-                    <label class="is-sm">Publizieren bis</label>
-                    <input
-                      class="is-light"
-                      :value="record.date_end"
-                      @input="record.date_end = $event.target.value = dateMask($event.target.value)"
-                      type="text"
-                      inputmode="numeric"
-                      placeholder="z.B. 01.06.2020"
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-show="tab === 'translation'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div class="form-row">
-                  <label>Titel</label>
-                  <input type="text" v-model="record.title.en">
-                </div>
-                <div class="form-row">
-                  <label>Subtitel</label>
-                  <input type="text" v-model="record.subtitle.en">
-                </div>
-                <div class="form-row is-last">
-                  <label>Text</label>
-                  <Editor v-model="record.text.en" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <FormFooter :back="{ name: 'news' }" />
-        </form>
-      </div>
-    </main>
-  </div>
+  <ResourceForm :title="title" :is-edit="isEdit" :loading="!isFetched" :busy="isLoading" @submit="submit" @cancel="router.push({ name: 'news' })">
+    <Tabs v-model="tab" :tabs="tabs" :errors="Object.keys(errors).length ? ['data'] : []">
+      <Tab name="data">
+        <div class="flex flex-col gap-24">
+          <FormField v-model="record.title.de" name="title.de" label="Titel" :errors="errors" required />
+          <FormField v-model="record.subtitle.de" name="subtitle.de" label="Untertitel" :errors="errors" />
+          <FormField v-model="record.text.de" name="text.de" label="Text" type="editor" :errors="errors" />
+        </div>
+      </Tab>
+      <Tab name="translation">
+        <div class="flex flex-col gap-24">
+          <FormField v-model="record.title.en" name="title.en" label="Titel" :errors="errors" />
+          <FormField v-model="record.subtitle.en" name="subtitle.en" label="Untertitel" :errors="errors" />
+          <FormField v-model="record.text.en" name="text.en" label="Text" type="editor" :errors="errors" />
+        </div>
+      </Tab>
+    </Tabs>
+
+    <template #sidebar>
+      <FormField v-model="record.publish" name="publish" label="Veröffentlichen" type="checkbox" />
+      <FormField v-model="dateEnd" name="date_end" label="Publizieren bis" placeholder="TT.MM.JJJJ" :errors="errors" />
+    </template>
+  </ResourceForm>
 </template>
 <script setup>
-import { ref } from 'vue';
-import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
-import Tabs from '@/components/ui/Tabs.vue';
-import LabelRequired from '@/components/ui/LabelRequired.vue';
-import Toggle from '@/components/ui/Toggle.vue';
-import FormFooter from '@/components/ui/FormFooter.vue';
-import Editor from '@/components/ui/editor/Editor.vue';
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import ResourceForm from '@/components/resource/ResourceForm.vue';
+import FormField from '@/components/ui/form/FormField.vue';
+import Tabs from '@/components/ui/tabs/Tabs.vue';
+import Tab from '@/components/ui/tabs/Tab.vue';
 import { useResourceForm } from '@/composables/useResourceForm';
 import { translations, formatDate, dateMask } from '@/lib/utils';
 
@@ -82,13 +37,15 @@ const props = defineProps({
   type: { type: String, required: true },
 });
 
+const router = useRouter();
+
 const tabs = [
   { key: 'data', label: 'Artikel' },
   { key: 'translation', label: 'Übersetzung' },
 ];
 const tab = ref('data');
 
-const { record, errors, isLoading, isFetched, title, submit, clearError } = useResourceForm({
+const { record, errors, isEdit, isLoading, isFetched, title, submit } = useResourceForm({
   type: props.type,
   endpoint: 'news',
   model: () => ({
@@ -100,7 +57,13 @@ const { record, errors, isLoading, isFetched, title, submit, clearError } = useR
     date_end: null,
   }),
   redirect: { name: 'news' },
-  titles: { create: 'News hinzufügen', edit: 'News bearbeiten' },
+  titles: { create: 'Neue News', edit: 'News bearbeiten' },
   loaded: news => news.date_end = formatDate(news.date_end),
+});
+
+// dd.mm.yyyy, the dots added while typing
+const dateEnd = computed({
+  get: () => record.value.date_end,
+  set: value => record.value.date_end = dateMask(value),
 });
 </script>

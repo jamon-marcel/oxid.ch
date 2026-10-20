@@ -1,5 +1,9 @@
 # Admin UI refresh
 
+*Replaced on 2026-10-20 by the strut.ch admin UI (`06-progress.md`,
+"Admin UI from strut.ch"); this file describes the 2026-10-04 Sass
+refresh.*
+
 *Done 2026-10-04. Outcome against the plan below:*
 
 - *Splash: login background is a random published home image, done with a

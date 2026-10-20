@@ -1,152 +1,106 @@
 <template>
-  <div class="container">
-    <LoadingIndicator v-if="isLoading" />
-    <main class="content" role="main" v-if="isFetched">
-      <div>
-        <h1>{{ title }}</h1>
-        <Tabs :tabs="tabs" v-model="tab" :errors="errorTabs" />
-        <form @submit.prevent="submit">
-          <div v-show="tab === 'data'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div v-for="field in requiredFields" :key="field.key" :class="[errors[field.key + '.de'] ? 'has-error' : '', 'form-row']">
-                  <label>{{ field.label }} *</label>
-                  <input type="text" v-model="record[field.key].de" @focus="clearError(field.key + '.de')">
-                  <LabelRequired />
-                </div>
-                <div :class="[errors.year ? 'has-error' : '', 'form-row']">
-                  <label>Jahr *</label>
-                  <input type="text" v-model="record.year" @focus="clearError('year')">
-                  <LabelRequired />
-                </div>
-                <div class="form-row">
-                  <label>Beschreibung</label>
-                  <Editor v-model="record.description.de" />
-                </div>
-                <div class="form-row">
-                  <label>Info</label>
-                  <Editor v-model="record.info.de" />
-                </div>
-                <h3 class="is-label">Infos Werkliste</h3>
-                <div class="form-row" v-for="field in worksFields" :key="field.key" :class="{ 'is-last': field.key === 'author_works' }">
-                  <label>{{ field.label }}</label>
-                  <input type="text" v-model="record[field.key]">
-                </div>
-              </div>
-              <div class="column-sidebar">
-                <div>
-                  <div class="form-row is-sm" v-for="select in selects" :key="select.key">
-                    <label>{{ select.label }}</label>
-                    <div class="select-wrapper is-sidebar">
-                      <select v-model="record[select.key]" :name="select.key">
-                        <option v-for="(label, id) in settings[select.key]" :key="id" :value="Number(id)">{{ label }}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-row is-sm" v-for="flag in flags" :key="flag.key">
-                    <Toggle :label="flag.label" :name="flag.key" v-model="record[flag.key]" />
-                  </div>
-                  <div class="form-row is-sm is-last">
-                    <Toggle label="Publizieren?" name="publish" v-model="record.publish" />
-                  </div>
-                </div>
-              </div>
-            </div>
+  <ResourceForm :title="title" :is-edit="isEdit" :loading="!isFetched" :busy="isLoading" :sidebar="tab !== 'grid'" @submit="submit" @cancel="router.push({ name: 'projects' })">
+    <Tabs v-model="tab" :tabs="tabs" :errors="errorTabs">
+      <Tab name="data">
+        <div class="flex flex-col gap-24">
+          <FormField v-model="record.title.de" name="title.de" label="Titel" :errors="errors" required />
+          <div class="grid grid-cols-2 gap-24">
+            <FormField v-model="record.title_short.de" name="title_short.de" label="Kurztitel" :errors="errors" required />
+            <FormField v-model="record.location.de" name="location.de" label="Ort" :errors="errors" required />
           </div>
-          <div v-show="tab === 'translation'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div class="form-row" v-for="field in requiredFields" :key="field.key">
-                  <label>{{ field.label }}</label>
-                  <input type="text" v-model="record[field.key].en">
-                </div>
-                <div class="form-row">
-                  <label>Beschreibung</label>
-                  <Editor v-model="record.description.en" />
-                </div>
-                <div class="form-row is-last">
-                  <label>Info</label>
-                  <Editor v-model="record.info.en" />
-                </div>
-              </div>
-            </div>
+          <FormField v-model="record.description.de" name="description.de" label="Beschreibung" type="editor" :errors="errors" />
+          <FormField v-model="record.info.de" name="info.de" label="Info" type="editor" :errors="errors" />
+          <h2 class="pt-16 text-xs font-medium tracking-[0.08em] text-gray-400 uppercase dark:text-warm-500">Werkliste</h2>
+          <div class="grid grid-cols-2 gap-24">
+            <FormField v-for="field in worksFields" :key="field.key" v-model="record[field.key]" :name="field.key" :label="field.label" :errors="errors" />
           </div>
-          <div v-show="tab === 'images'">
-            <div class="form-row">
-              <Uploader v-bind="imageUpload" @uploaded="images.store" />
-            </div>
-            <div class="form-row" v-if="record.images.length">
-              <ImageManager
-                v-model:images="record.images"
-                endpoint="project"
-                :ratio="cropRatio"
-                :is-protected="image => image.is_grid == 1"
-                @toggle="images.toggle"
-                @destroy="images.destroy"
-                @save-coords="images.saveCoords"
-              >
-                <template #fields="{ image }">
-                  <div class="form-row">
-                    <Toggle label="Vorschaubild Navigation?" name="is_preview_navigation" v-model="image.is_preview_navigation" />
-                  </div>
-                  <div class="form-row">
-                    <Toggle label="Vorschaubild Werkliste?" name="is_preview_works" v-model="image.is_preview_works" />
-                  </div>
-                  <div class="form-row">
-                    <Toggle label="Plan?" name="is_plan" v-model="image.is_plan" />
-                  </div>
-                </template>
-              </ImageManager>
-            </div>
+        </div>
+      </Tab>
+      <Tab name="translation">
+        <div class="flex flex-col gap-24">
+          <FormField v-model="record.title.en" name="title.en" label="Titel" :errors="errors" />
+          <div class="grid grid-cols-2 gap-24">
+            <FormField v-model="record.title_short.en" name="title_short.en" label="Kurztitel" :errors="errors" />
+            <FormField v-model="record.location.en" name="location.en" label="Ort" :errors="errors" />
           </div>
-          <div v-show="tab === 'files'">
-            <div class="form-row">
-              <Uploader v-bind="fileUpload" @uploaded="files.store" />
-            </div>
-            <div class="form-row" v-if="record.documents.length">
-              <FileManager v-model:files="record.documents" @toggle="files.toggle" @destroy="files.destroy" />
-            </div>
-          </div>
-          <FormFooter :back="{ name: 'projects' }" />
-        </form>
+          <FormField v-model="record.description.en" name="description.en" label="Beschreibung" type="editor" :errors="errors" />
+          <FormField v-model="record.info.en" name="info.en" label="Info" type="editor" :errors="errors" />
+        </div>
+      </Tab>
+      <Tab name="images">
+        <ImageField
+          v-model:images="record.images"
+          endpoint="project"
+          :ratio="cropRatio"
+          :is-protected="image => Number(image.is_grid) === 1"
+          :error="!!errors.images"
+          @uploaded="upload => { images.store(upload); delete errors.images; }"
+          @toggle="images.toggle"
+          @destroy="images.destroy"
+          @save-coords="images.saveCoords"
+        >
+          <template #badges="{ image }">
+            <Badge v-if="Number(image.is_grid) === 1">Im Layout</Badge>
+            <Badge v-if="Number(image.is_plan) === 1">Plan</Badge>
+          </template>
+          <template #fields="{ image }">
+            <FormField v-model="image.is_preview_navigation" name="is_preview_navigation" label="Vorschaubild Navigation" type="checkbox" />
+            <FormField v-model="image.is_preview_works" name="is_preview_works" label="Vorschaubild Werkliste" type="checkbox" />
+            <FormField v-model="image.is_plan" name="is_plan" label="Plan" type="checkbox" />
+          </template>
+        </ImageField>
+      </Tab>
+      <Tab name="files">
+        <FileField v-model:files="record.documents" @uploaded="files.store" @toggle="files.toggle" @destroy="files.destroy" />
+      </Tab>
+      <Tab v-if="isEdit" name="grid">
+        <GridEditor v-if="tab === 'grid'" :project-id="Number(route.params.id)" />
+      </Tab>
+    </Tabs>
+
+    <template #sidebar>
+      <div class="flex flex-col gap-12">
+        <FormField v-model="record.publish" name="publish" label="Veröffentlichen" type="checkbox" />
+        <FormField v-for="flag in flags" :key="flag.key" v-model="record[flag.key]" :name="flag.key" :label="flag.label" type="checkbox" />
       </div>
-    </main>
-  </div>
+      <FormField v-model="record.year" name="year" label="Jahr" :errors="errors" required />
+      <FormField v-for="select in selects" :key="select.key" v-model="record[select.key]" :name="select.key" :label="select.label" type="select" :options="toOptions(settings[select.key])" :errors="errors" />
+    </template>
+  </ResourceForm>
 </template>
 <script setup>
 import { ref, reactive, computed } from 'vue';
-import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
-import Tabs from '@/components/ui/Tabs.vue';
-import LabelRequired from '@/components/ui/LabelRequired.vue';
-import Toggle from '@/components/ui/Toggle.vue';
-import FormFooter from '@/components/ui/FormFooter.vue';
-import Uploader from '@/components/ui/Uploader.vue';
-import ImageManager from '@/components/images/ImageManager.vue';
-import FileManager from '@/components/files/FileManager.vue';
-import Editor from '@/components/ui/editor/Editor.vue';
+import { useRoute, useRouter } from 'vue-router';
+import ResourceForm from '@/components/resource/ResourceForm.vue';
+import FormField from '@/components/ui/form/FormField.vue';
+import Tabs from '@/components/ui/tabs/Tabs.vue';
+import Tab from '@/components/ui/tabs/Tab.vue';
+import Badge from '@/components/ui/badge/Badge.vue';
+import ImageField from '@/components/media/ImageField.vue';
+import FileField from '@/components/media/FileField.vue';
+import GridEditor from '@/components/grid/GridEditor.vue';
 import { useResourceForm } from '@/composables/useResourceForm';
-import { useImages, imageUpload } from '@/composables/useImages';
-import { useFiles, fileUpload } from '@/composables/useFiles';
-import { translations, requiredErrors } from '@/lib/utils';
+import { useImages } from '@/composables/useImages';
+import { useFiles } from '@/composables/useFiles';
+import { translations, requiredErrors, toOptions } from '@/lib/utils';
 import http from '@/lib/http';
 
 const props = defineProps({
   type: { type: String, required: true },
 });
 
-const tabs = [
+const route = useRoute();
+const router = useRouter();
+
+// The layout ("Raster") is saved right away; it needs a saved project
+const tabs = computed(() => [
   { key: 'data', label: 'Projekt' },
   { key: 'translation', label: 'Übersetzung' },
   { key: 'images', label: 'Bilder' },
   { key: 'files', label: 'Dokumente' },
-];
-const tab = ref('data');
-
-const requiredFields = [
-  { key: 'title', label: 'Titel' },
-  { key: 'title_short', label: 'Kurztitel' },
-  { key: 'location', label: 'Ort' },
-];
+  ...(props.type === 'edit' ? [{ key: 'grid', label: 'Raster' }] : []),
+]);
+const tab = ref(route.query.tab === 'grid' && props.type === 'edit' ? 'grid' : 'data');
 
 const worksFields = [
   { key: 'year_works', label: 'Jahr' },
@@ -162,17 +116,17 @@ const selects = [
 ];
 
 const flags = [
-  { key: 'has_detail', label: 'Detailseite?' },
-  { key: 'is_highlight', label: 'Highlight?' },
-  { key: 'is_filter_wood', label: 'Filter - Holz?' },
-  { key: 'is_filter_reuse', label: 'Filter - Umnutzung?' },
-  { key: 'is_filter_area', label: 'Filter - Areal?' },
+  { key: 'has_detail', label: 'Detailseite' },
+  { key: 'is_highlight', label: 'Highlight' },
+  { key: 'is_filter_wood', label: 'Filter Holz' },
+  { key: 'is_filter_reuse', label: 'Filter Umnutzung' },
+  { key: 'is_filter_area', label: 'Filter Areal' },
 ];
 
 const settings = reactive({ program: {}, author: {}, state: {} });
 const setting = (key, url) => () => http.get(url).then(({ data }) => settings[key] = data);
 
-const { record, errors, isLoading, isFetched, title, submit, clearError } = useResourceForm({
+const { record, errors, isEdit, isLoading, isFetched, title, submit } = useResourceForm({
   type: props.type,
   endpoint: 'project',
   model: () => ({
@@ -199,7 +153,7 @@ const { record, errors, isLoading, isFetched, title, submit, clearError } = useR
     author: 1,
   }),
   redirect: { name: 'projects' },
-  titles: { create: 'Projekt hinzufügen', edit: 'Projekt bearbeiten' },
+  titles: { create: 'Neues Projekt', edit: 'Projekt bearbeiten' },
   load: [
     setting('program', '/api/settings/program'),
     setting('state', '/api/settings/state'),

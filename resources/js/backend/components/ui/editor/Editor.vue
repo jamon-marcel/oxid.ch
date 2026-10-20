@@ -1,7 +1,7 @@
 <template>
-  <div :class="['editor', { 'editor--error': hasError }]">
+  <div class="editor" :class="{ 'editor--error': hasError }">
     <Toolbar v-if="editor" :editor="editor" />
-    <EditorContent :editor="editor" class="editor__content" />
+    <EditorContent :editor="editor" />
   </div>
 </template>
 <script setup>
@@ -25,6 +25,8 @@ defineProps({
 });
 
 const model = defineModel({ type: String, default: '' });
+
+const emit = defineEmits(['focus']);
 
 const editor = useEditor({
   content: model.value ?? '',
@@ -55,6 +57,7 @@ const editor = useEditor({
   onUpdate: ({ editor }) => {
     model.value = serialize(editor);
   },
+  onFocus: () => emit('focus'),
 });
 
 // Content set from outside (e.g. after loading the record)

@@ -1,15 +1,13 @@
 <template>
-  <div>
-    <Notifications />
-    <PageHeader v-if="!isAuth" />
+  <router-view v-if="isAuth" :key="route.fullPath" />
+  <AppLayout v-else>
     <router-view :key="route.fullPath" />
-  </div>
+  </AppLayout>
 </template>
 <script setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import PageHeader from '@/views/layout/PageHeader.vue';
-import Notifications from '@/components/ui/Notifications.vue';
+import AppLayout from '@/components/layout/AppLayout.vue';
 
 const route = useRoute();
 const isAuth = computed(() => ['login', 'logout'].includes(route.name));

@@ -1,6 +1,6 @@
 import { notify } from '@/lib/notify';
 import http from '@/lib/http';
-import { confirmDelete, translations } from '@/lib/utils';
+import { confirmDelete, displayName, translations } from '@/lib/utils';
 
 /**
  * Document actions of a form whose record has a documents array. New files
@@ -20,7 +20,7 @@ export function useFiles({ record, isLoading, endpoint, fields = () => ({}) }) {
   }
 
   async function destroy(file) {
-    if (!confirmDelete()) {
+    if (!await confirmDelete('Datei löschen', { text: `«${displayName(file.name)}» wirklich löschen?` })) {
       return;
     }
     isLoading.value = true;
@@ -62,7 +62,7 @@ export function useFiles({ record, isLoading, endpoint, fields = () => ({}) }) {
  * Uploader props for documents.
  */
 export const fileUpload = {
-  restrictions: 'pdf | max. 8 MB',
+  restrictions: 'PDF | max. 8 MB',
   acceptedFiles: '.pdf',
   maxFiles: 99,
   maxFilesize: 8,

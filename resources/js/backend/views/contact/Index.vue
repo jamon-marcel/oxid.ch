@@ -1,35 +1,22 @@
 <template>
-  <div class="container">
-    <LoadingIndicator v-if="isLoading" />
-    <main class="content" role="main">
-      <div>
-        <h1>Kontakt</h1>
-        <div class="list-items" v-if="contact.items.length">
-          <div
-            v-for="item in contact.items"
-            :key="item.id"
-            :class="[item.publish == 0 ? 'is-disabled' : '', 'list-item']"
-            data-icons="1"
-          >
-            <div class="list-item-body">
-              <div v-html="item.address.de"></div>
-            </div>
-            <ListActions :record="item" edit-route="contact-edit" :has-toggle="false" :has-destroy="false" />
-          </div>
-        </div>
-        <div v-else-if="contact.isFetched">
-          <p>Es sind noch keine Inhalte vorhanden...</p>
-        </div>
-      </div>
-    </main>
-  </div>
+  <ResourceIndex
+    title="Kontakt"
+    :listing="contact"
+    :columns="columns"
+    :routes="{ edit: 'contact-edit' }"
+    :togglable="false"
+    :deletable="false"
+  />
 </template>
 <script setup>
-import { ref, reactive } from 'vue';
-import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
-import ListActions from '@/components/ui/ListActions.vue';
+import { reactive } from 'vue';
+import ResourceIndex from '@/components/resource/ResourceIndex.vue';
 import { useListing } from '@/composables/useListing';
+import { truncate } from '@/lib/utils';
 
-const isLoading = ref(false);
-const contact = reactive(useListing({ list: '/api/contact/get', resource: 'contact', isLoading }));
+const columns = [
+  { key: 'address', label: 'Adresse', value: row => truncate(row.address?.de, 80), primary: true },
+];
+
+const contact = reactive(useListing({ list: '/api/contact/get', resource: 'contact' }));
 </script>

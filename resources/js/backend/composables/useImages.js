@@ -1,6 +1,6 @@
 import { notify } from '@/lib/notify';
 import http from '@/lib/http';
-import { confirmDelete, translations } from '@/lib/utils';
+import { confirmDelete, displayName, translations } from '@/lib/utils';
 
 /**
  * Image actions of a form whose record has an images array (project,
@@ -33,7 +33,7 @@ export function useImages({ record, isLoading, endpoint, fields = () => ({}) }) 
   }
 
   async function destroy(image) {
-    if (!confirmDelete()) {
+    if (!await confirmDelete('Bild löschen', { text: `«${displayName(image.name)}» wirklich löschen?` })) {
       return;
     }
     isLoading.value = true;
@@ -93,7 +93,7 @@ export function useImages({ record, isLoading, endpoint, fields = () => ({}) }) 
  * Uploader props for images.
  */
 export const imageUpload = {
-  restrictions: 'jpg, png | max. 8 MB',
+  restrictions: 'JPG, PNG | max. 8 MB',
   acceptedFiles: '.png,.jpg',
   maxFiles: 99,
   maxFilesize: 8,

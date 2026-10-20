@@ -1,88 +1,47 @@
 <template>
-  <div class="container">
-    <LoadingIndicator v-if="isLoading" />
-    <main class="content" role="main" v-if="isFetched">
-      <div>
-        <h1>{{ title }}</h1>
-        <Tabs :tabs="tabs" v-model="tab" :errors="Object.keys(errors).length ? ['data'] : []" />
-        <form @submit.prevent="submit">
-          <div v-show="tab === 'data'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div :class="[errors['title.de'] ? 'has-error' : '', 'form-row']">
-                  <label>Titel *</label>
-                  <input type="text" v-model="record.title.de" @focus="clearError('title.de')">
-                  <LabelRequired />
-                </div>
-                <div :class="[errors['description.de'] ? 'has-error' : '', 'form-row']" @focusin="clearError('description.de')">
-                  <label>Beschreibung *</label>
-                  <Editor v-model="record.description.de" :has-error="!!errors['description.de']" />
-                  <LabelRequired />
-                </div>
-                <div :class="[errors['info.de'] ? 'has-error' : '', 'form-row is-last']" @focusin="clearError('info.de')">
-                  <label>Info *</label>
-                  <Editor v-model="record.info.de" :has-error="!!errors['info.de']" />
-                  <LabelRequired />
-                </div>
-              </div>
-              <div class="column-sidebar">
-                <div>
-                  <div class="form-row is-sm is-last">
-                    <Toggle label="Publizieren?" name="publish" v-model="record.publish" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-show="tab === 'translation'">
-            <div class="grid-main-sidebar">
-              <div class="column-main">
-                <div class="form-row">
-                  <label>Titel</label>
-                  <input type="text" v-model="record.title.en">
-                </div>
-                <div class="form-row">
-                  <label>Beschreibung</label>
-                  <Editor v-model="record.description.en" />
-                </div>
-                <div class="form-row is-last">
-                  <label>Info</label>
-                  <Editor v-model="record.info.en" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-show="tab === 'files'">
-            <div class="form-row">
-              <Uploader v-bind="fileUpload" @uploaded="files.store" />
-            </div>
-            <div class="form-row">
-              <FileManager v-model:files="record.documents" @toggle="files.toggle" @destroy="files.destroy" />
-            </div>
-          </div>
-          <FormFooter :back="{ name: 'jobs' }" />
-        </form>
-      </div>
-    </main>
-  </div>
+  <ResourceForm :title="title" :is-edit="isEdit" :loading="!isFetched" :busy="isLoading" @submit="submit" @cancel="router.push({ name: 'jobs' })">
+    <Tabs v-model="tab" :tabs="tabs" :errors="Object.keys(errors).length ? ['data'] : []">
+      <Tab name="data">
+        <div class="flex flex-col gap-24">
+          <FormField v-model="record.title.de" name="title.de" label="Titel" :errors="errors" required />
+          <FormField v-model="record.description.de" name="description.de" label="Beschreibung" type="editor" :errors="errors" required />
+          <FormField v-model="record.info.de" name="info.de" label="Info" type="editor" :errors="errors" required />
+        </div>
+      </Tab>
+      <Tab name="translation">
+        <div class="flex flex-col gap-24">
+          <FormField v-model="record.title.en" name="title.en" label="Titel" :errors="errors" />
+          <FormField v-model="record.description.en" name="description.en" label="Beschreibung" type="editor" :errors="errors" />
+          <FormField v-model="record.info.en" name="info.en" label="Info" type="editor" :errors="errors" />
+        </div>
+      </Tab>
+      <Tab name="files">
+        <FileField v-model:files="record.documents" @uploaded="files.store" @toggle="files.toggle" @destroy="files.destroy" />
+      </Tab>
+    </Tabs>
+
+    <template #sidebar>
+      <FormField v-model="record.publish" name="publish" label="Veröffentlichen" type="checkbox" />
+    </template>
+  </ResourceForm>
 </template>
 <script setup>
 import { ref } from 'vue';
-import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
-import Tabs from '@/components/ui/Tabs.vue';
-import LabelRequired from '@/components/ui/LabelRequired.vue';
-import Toggle from '@/components/ui/Toggle.vue';
-import FormFooter from '@/components/ui/FormFooter.vue';
-import Uploader from '@/components/ui/Uploader.vue';
-import FileManager from '@/components/files/FileManager.vue';
-import Editor from '@/components/ui/editor/Editor.vue';
+import { useRouter } from 'vue-router';
+import ResourceForm from '@/components/resource/ResourceForm.vue';
+import FormField from '@/components/ui/form/FormField.vue';
+import Tabs from '@/components/ui/tabs/Tabs.vue';
+import Tab from '@/components/ui/tabs/Tab.vue';
+import FileField from '@/components/media/FileField.vue';
 import { useResourceForm } from '@/composables/useResourceForm';
-import { useFiles, fileUpload } from '@/composables/useFiles';
+import { useFiles } from '@/composables/useFiles';
 import { translations, requiredErrors } from '@/lib/utils';
 
 const props = defineProps({
   type: { type: String, required: true },
 });
+
+const router = useRouter();
 
 const tabs = [
   { key: 'data', label: 'Job' },
@@ -91,7 +50,7 @@ const tabs = [
 ];
 const tab = ref('data');
 
-const { record, errors, isLoading, isFetched, title, submit, clearError } = useResourceForm({
+const { record, errors, isEdit, isLoading, isFetched, title, submit } = useResourceForm({
   type: props.type,
   endpoint: 'job',
   model: () => ({
@@ -102,7 +61,7 @@ const { record, errors, isLoading, isFetched, title, submit, clearError } = useR
     publish: 0,
   }),
   redirect: { name: 'jobs' },
-  titles: { create: 'Job hinzufügen', edit: 'Job bearbeiten' },
+  titles: { create: 'Neuer Job', edit: 'Job bearbeiten' },
   // Checked here too, so all errors show at once: the API doesn't check Info
   validate: job => requiredErrors(job, ['title.de', 'description.de', 'info.de']),
 });

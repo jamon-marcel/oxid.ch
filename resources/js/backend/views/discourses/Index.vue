@@ -1,42 +1,32 @@
 <template>
-  <div class="container">
-    <LoadingIndicator v-if="isLoading" />
-    <main class="content" role="main">
-      <div>
-        <h1>Diskurs</h1>
-        <router-link :to="{ name: 'discourse-create' }" class="btn-add">
-          <span>Hinzufügen</span>
-        </router-link>
-        <div class="list-items" v-if="discourses.items.length">
-          <SortableList v-model="discourses.items" @end="order">
-            <div v-for="discourse in discourses.items" :key="discourse.id" :class="[discourse.publish == 0 ? 'is-disabled' : '', 'list-item is-draggable']" data-icons="3">
-              <div class="list-item-body">
-                {{ discourse.title.de }} - ({{ discourse.heading.de }}, {{ discourse.date.de }}) - {{ categories[discourse.category] }}
-              </div>
-              <ListActions :record="discourse" edit-route="discourse-edit" @toggle="discourses.toggle" @destroy="discourses.destroy" />
-            </div>
-          </SortableList>
-        </div>
-        <div v-else-if="discourses.isFetched">
-          <p>Es sind noch keine Einträge vorhanden...</p>
-        </div>
-      </div>
-    </main>
-  </div>
+  <ResourceIndex
+    title="Diskurs"
+    :listing="discourses"
+    :columns="columns"
+    :routes="{ create: 'discourse-create', edit: 'discourse-edit' }"
+    create-label="Neuer Eintrag"
+    :order="order"
+    :searchable="row => [row.title?.de, row.heading?.de, row.date?.de, categories[row.category]]"
+    search-placeholder="Titel, Rubrik, Datum oder Kategorie"
+  />
 </template>
 <script setup>
 import { ref, reactive } from 'vue';
-import LoadingIndicator from '@/components/ui/LoadingIndicator.vue';
-import ListActions from '@/components/ui/ListActions.vue';
-import SortableList from '@/components/ui/SortableList.vue';
+import ResourceIndex from '@/components/resource/ResourceIndex.vue';
 import { useListing } from '@/composables/useListing';
 import { useOrder } from '@/composables/useOrder';
 import http from '@/lib/http';
 
-const isLoading = ref(false);
-const discourses = reactive(useListing({ list: '/api/discourses/get', resource: 'discourse', isLoading }));
-const order = useOrder({ url: '/api/discourse/order', key: 'discourses' });
-
 const categories = ref({});
 http.get('/api/settings/discourseCategories').then(({ data }) => categories.value = data);
+
+const columns = [
+  { key: 'title', label: 'Titel', value: row => row.title?.de, primary: true, limit: 60 },
+  { key: 'heading', label: 'Rubrik', value: row => row.heading?.de },
+  { key: 'date', label: 'Datum', value: row => row.date?.de },
+  { key: 'category', label: 'Kategorie', value: row => categories.value[row.category] },
+];
+
+const discourses = reactive(useListing({ list: '/api/discourses/get', resource: 'discourse' }));
+const order = useOrder({ url: '/api/discourse/order', key: 'discourses' });
 </script>

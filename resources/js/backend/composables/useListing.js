@@ -48,8 +48,9 @@ export function useListing({ list, resource, isLoading = ref(false), loaded = ()
     }
   }
 
-  async function destroy(id) {
-    if (!confirmDelete()) {
+  // label: the entry's name in the confirm dialog
+  async function destroy(id, label = null) {
+    if (!await confirmDelete('Eintrag löschen', label ? { text: `«${label}» wirklich löschen?` } : {})) {
       return;
     }
     isLoading.value = true;
