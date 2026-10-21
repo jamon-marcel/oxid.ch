@@ -16,8 +16,10 @@ import http, { validationErrors } from '@/lib/http';
  * load      extra requests (() => Promise) the form waits for
  * loaded    (record) => void, after the record is loaded (e.g. reformat a date)
  * validate  (record) => { field: true } for checks the API doesn't do
+ * messages  show the API's validation messages (e.g. 'bereits vergeben')
+ *           instead of marking the fields only
  */
-export function useResourceForm({ type, endpoint, model, redirect, titles, load = [], loaded = () => {}, validate = () => ({}) }) {
+export function useResourceForm({ type, endpoint, model, redirect, titles, load = [], loaded = () => {}, validate = () => ({}), messages = false }) {
   const route = useRoute();
   const router = useRouter();
 
@@ -71,7 +73,7 @@ export function useResourceForm({ type, endpoint, model, redirect, titles, load 
       notify({ type: 'success', text: isEdit ? 'Änderungen gespeichert!' : 'Daten erfasst!' });
     }
     catch (error) {
-      errors.value = validationErrors(error) ?? errors.value;
+      errors.value = validationErrors(error, { messages }) ?? errors.value;
     }
     finally {
       isLoading.value = false;

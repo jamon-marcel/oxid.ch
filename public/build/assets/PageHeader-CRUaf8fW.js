@@ -1,0 +1,1 @@
+import{At as e,B as t,M as n,ft as r,w as i,x as a}from"./http-BfmJUmhu.js";r(),n();var o={class:`mb-40 flex items-center`},s={class:`text-lg font-medium text-gray-900 dark:text-warm-100`},c={__name:`PageHeader`,props:{title:{type:String,required:!0}},setup(n){return(r,c)=>(t(),i(`div`,o,[a(`h1`,s,e(n.title),1)]))}};export{c as t};

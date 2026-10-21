@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\JobImageController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ProfileImageController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\AuthController;
 
 /*
@@ -233,6 +234,15 @@ Route::middleware('auth:sanctum')->group(function() {
   Route::post('contact/create', [ContactController::class, 'store']);
   Route::get('contact/edit/{contact}', [ContactController::class, 'edit']);
   Route::post('contact/update/{contact}', [ContactController::class, 'update']);
+
+  /**
+   * User routes (admin logins)
+   */
+  Route::get('users/get', [UserController::class, 'get']);
+  Route::post('user/create', [UserController::class, 'store']);
+  Route::get('user/edit/{user}', [UserController::class, 'edit']);
+  Route::post('user/update/{user}', [UserController::class, 'update']);
+  Route::delete('user/destroy/{user}', [UserController::class, 'destroy']);
 
 });
 

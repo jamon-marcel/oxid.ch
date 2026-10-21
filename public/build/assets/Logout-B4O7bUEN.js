@@ -1,0 +1,1 @@
+import{M as e,R as t,n}from"./http-BfmJUmhu.js";import{c as r}from"./app-DAvnNtsm.js";e();var i={__name:`Logout`,setup(e){let i=r();return t(async()=>{try{await n.post(`/api/auth/logout`)}catch{}i.push({name:`login`})}),(e,t)=>null}};export{i as default};

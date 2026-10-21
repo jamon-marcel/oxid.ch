@@ -44,7 +44,7 @@
 import { useRoute } from 'vue-router';
 import {
   PhNewspaper, PhBuildings, PhChatsCircle, PhUsers, PhBriefcase, PhIdentificationCard,
-  PhAddressBook, PhImages, PhSignOut,
+  PhAddressBook, PhImages, PhUserGear, PhSignOut,
 } from '@phosphor-icons/vue';
 import OxidLogo from '@/components/layout/OxidLogo.vue';
 
@@ -74,6 +74,12 @@ const navigation = [
       { name: 'Team', route: 'team-images', match: ['team-images'], icon: PhImages },
       { name: 'Jobs', route: 'job-images', match: ['job-images'], icon: PhImages },
       { name: 'Profil', route: 'profile-images', match: ['profile-images'], icon: PhImages },
+    ],
+  },
+  {
+    title: 'System',
+    items: [
+      { name: 'Benutzer', route: 'users', match: ['user'], icon: PhUserGear },
     ],
   },
 ];

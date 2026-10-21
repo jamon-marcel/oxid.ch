@@ -30,6 +30,10 @@ export function handleErrors(router) {
           router.push({ name: 'login' });
         }
         break;
+      // Refused with a reason, e.g. deleting one's own account
+      case 403:
+        notify({ type: 'error', text: response.data?.message ?? '403 Forbidden' });
+        break;
       case 404:
         notify({ type: 'error', text: '404 Not Found' });
         break;
@@ -49,13 +53,15 @@ export function handleErrors(router) {
 /**
  * Fields that failed validation, as { 'title.de': true }. The API returns
  * Laravel's default errors: { 'title.de': ['Title is required!'] }.
+ * messages: keep the API's messages instead (FormField shows the first).
  */
-export function validationErrors(error) {
+export function validationErrors(error, { messages = false } = {}) {
   if (error.response?.status !== 422) {
     return null;
   }
+  const errors = error.response.data.errors ?? {};
   const fields = {};
-  Object.keys(error.response.data.errors ?? {}).forEach(field => fields[field] = true);
+  Object.keys(errors).forEach(field => fields[field] = messages ? errors[field] : true);
   return fields;
 }
 

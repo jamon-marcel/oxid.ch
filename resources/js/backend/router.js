@@ -55,6 +55,11 @@ const routes = [
   { name: 'contact', path: '/admin/contact', component: () => import('@/views/contact/Index.vue') },
   { name: 'contact-create', path: '/admin/contact/create', component: () => import('@/views/contact/Form.vue'), props: create },
   { name: 'contact-edit', path: '/admin/contact/edit/:id', component: () => import('@/views/contact/Form.vue'), props: edit },
+
+  // Users (admin logins)
+  { name: 'users', path: '/admin/users', component: () => import('@/views/users/Index.vue') },
+  { name: 'user-create', path: '/admin/user/create', component: () => import('@/views/users/Form.vue'), props: create },
+  { name: 'user-edit', path: '/admin/user/edit/:id', component: () => import('@/views/users/Form.vue'), props: edit },
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });

@@ -1,0 +1,1 @@
+import{B as e,M as t,U as n,w as r}from"./http-BfmJUmhu.js";import{a as i}from"./app-DAvnNtsm.js";t();var a={},o={class:`inline-flex items-center rounded-sm bg-gray-100 px-6 py-4 text-xs/none tracking-normal whitespace-nowrap text-gray-700 dark:bg-warm-800 dark:text-warm-200`};function s(t,i){return e(),r(`span`,o,[n(t.$slots,`default`)])}var c=i(a,[[`render`,s]]);export{c as t};

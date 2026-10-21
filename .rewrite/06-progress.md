@@ -933,6 +933,32 @@ rows before and after); the old layout URL; active menu item; logout. Not
 checked: drag ordering (it rewrites `order` of live rows; vuedraggable
 feeds the existing `useOrder`). `php artisan test`: 118 passed.
 
+### Users module (2026-10-21)
+
+Admin logins were only manageable in the database; now "System → Benutzer"
+lists them (name, e-mail) with create, edit and delete.
+
+- API: `users/get`, `user/create|edit|update|destroy` (`UserController`,
+  `UserStoreRequest`). E-mail unique, password min. 8 and confirmed;
+  empty on update keeps the current one. `User` casts `password` to
+  `hashed`.
+- One's own account can't be deleted (403 with a message; `http.js` now
+  shows a 403's message as a toast), so a user is always left.
+- A new password logs the user out elsewhere (Sanctum's
+  `AuthenticateSession` compares the hash). Changing one's own password
+  keeps the current session: the controller hands the updated user to the
+  `web` guard, so the stored hash is the new one. The test resets the
+  guards between requests, because in tests they'd keep the old user.
+- The form shows the API's messages ("E-Mail: bereits vergeben",
+  "Passwort: mindestens 8 Zeichen") via `useResourceForm({ messages: true })`;
+  other forms still only mark fields. Password fields get
+  `autocomplete="new-password"` (new `FormField` prop).
+- No roles: every user can do everything, as before.
+
+Checked in the browser with a temporary user (deleted afterwards): list,
+the errors above, deleting one's own account refused with the toast.
+`php artisan test`: 124 passed.
+
 ### To verify at the end of the backend phase
 
 *Done, see "Final QA". The last point ran against the Vue 2 SPA in the
