@@ -6,7 +6,6 @@
       <button v-if="rows.length > 1" type="button" class="cursor-pointer text-xs text-gray-500 hover:text-gray-900 dark:text-warm-400 dark:hover:text-warm-100" @click="toggleAll">
         {{ allCollapsed ? 'Alle ausklappen' : 'Alle einklappen' }}
       </button>
-      <a :href="`/projekt/${projectId}`" target="_blank" class="text-xs text-gray-500 hover:text-gray-900 dark:text-warm-400 dark:hover:text-warm-100">Vorschau</a>
       <button type="button" class="cursor-pointer rounded-md border border-gray-200 px-12 py-6 text-sm text-gray-700 hover:border-gray-400 dark:border-warm-700 dark:text-warm-300" @click="isLayoutPickerOpen = true">
         + Zeile hinzufügen
       </button>

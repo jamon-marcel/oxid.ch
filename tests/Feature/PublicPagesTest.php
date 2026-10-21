@@ -15,64 +15,73 @@ use Tests\TestCase;
  */
 class PublicPagesTest extends TestCase
 {
-  public function test_every_page_renders(): void
-  {
-    $pages = [
-      '/', '/projekte', '/werkliste/autorenschaft', '/werkliste/autorenschaft?search=1',
-      '/werkliste/jahr', '/werkliste/programm', '/werkliste/status',
-      '/diskurs', '/diskurs/recherche', '/diskurs/veranstaltungen', '/diskurs/publikationen',
-      '/buero/team', '/buero/profil', '/buero/jobs', '/kontakt', '/geschichte',
-      '/suche', '/suche/haus', '/suche?keyword=holz',
-    ];
+    public function test_every_page_renders(): void
+    {
+        $pages = [
+            '/', '/projekte', '/werkliste/autorenschaft', '/werkliste/autorenschaft?search=1',
+            '/werkliste/jahr', '/werkliste/programm', '/werkliste/status',
+            '/diskurs', '/diskurs/recherche', '/diskurs/veranstaltungen', '/diskurs/publikationen',
+            '/buero/team', '/buero/profil', '/buero/jobs', '/kontakt', '/geschichte',
+            '/suche', '/suche/haus', '/suche?keyword=holz',
+        ];
 
-    foreach ($pages as $page) {
-      $this->get($page)->assertOk();
+        foreach ($pages as $page) {
+            $this->get($page)->assertOk();
+        }
     }
-  }
 
-  public function test_works_overview_redirects_to_the_authors_list(): void
-  {
-    $this->get('/werkliste')->assertRedirect('/werkliste/autorenschaft')->assertStatus(301);
-  }
+    public function test_works_overview_redirects_to_the_authors_list(): void
+    {
+        $this->get('/werkliste')->assertRedirect('/werkliste/autorenschaft')->assertStatus(301);
+    }
 
-  public function test_project_browse_wraps_around(): void
-  {
-    $projects = Project::hasDetail()->orderBy('order')->get();
+    public function test_project_browse_wraps_around(): void
+    {
+        $projects = Project::hasDetail()->orderBy('order')->get();
 
-    $this->get('/projekt/' . $projects->first()->id)
-      ->assertViewHas('navBrowse', fn ($nav) => $nav['prev']->is($projects->last()) && $nav['next']->is($projects->get(1)));
+        $this->get('/projekt/'.$projects->first()->id)
+            ->assertViewHas('navBrowse', fn ($nav) => $nav['prev']->is($projects->last()) && $nav['next']->is($projects->get(1)));
 
-    $this->get('/projekt/' . $projects->last()->id)
-      ->assertViewHas('navBrowse', fn ($nav) => $nav['prev']->is($projects->get($projects->count() - 2)) && $nav['next']->is($projects->first()));
-  }
+        $this->get('/projekt/'.$projects->last()->id)
+            ->assertViewHas('navBrowse', fn ($nav) => $nav['prev']->is($projects->get($projects->count() - 2)) && $nav['next']->is($projects->first()));
+    }
 
-  public function test_unpublished_project_is_404_for_visitors_and_visible_to_admins(): void
-  {
-    $id = Project::where('publish', 0)->value('id') ?? $this->markTestSkipped('No unpublished project');
+    public function test_unpublished_project_is_404_and_only_in_the_preview(): void
+    {
+        $id = Project::where('publish', 0)->value('id') ?? $this->markTestSkipped('No unpublished project');
 
-    $this->get("/projekt/{$id}")->assertNotFound();
-    $this->actingAs(User::firstOrFail())->get("/projekt/{$id}")->assertOk();
-  }
+        $this->get("/projekt/{$id}")->assertNotFound();
+        $this->actingAs(User::firstOrFail())->get("/projekt/{$id}")->assertNotFound();
+        $this->get("/vorschau/projekt/{$id}")->assertOk();
+    }
 
-  public function test_unpublished_discourse_is_404_for_visitors_and_visible_to_admins(): void
-  {
-    $id = Discourse::where('publish', 0)->value('id') ?? $this->markTestSkipped('No unpublished discourse entry');
+    public function test_project_preview_is_for_admins_only(): void
+    {
+        $id = Project::published()->value('id');
 
-    $this->get("/diskurs/{$id}")->assertNotFound();
-    $this->actingAs(User::firstOrFail())->get("/diskurs/{$id}")->assertOk();
-  }
+        $this->get("/vorschau/projekt/{$id}")->assertRedirect('/admin/login');
+        $this->actingAs(User::firstOrFail())->get("/vorschau/projekt/{$id}")->assertOk();
+    }
 
-  public function test_published_pages_stay_public(): void
-  {
-    $this->get('/projekt/' . Project::published()->value('id'))->assertOk();
-    $this->get('/diskurs/' . Discourse::published()->value('id'))->assertOk();
-    $this->get('/projekte')->assertOk();
-  }
+    public function test_unpublished_discourse_is_404_for_visitors_and_visible_to_admins(): void
+    {
+        $id = Discourse::where('publish', 0)->value('id') ?? $this->markTestSkipped('No unpublished discourse entry');
 
-  public function test_projects_index_shows_the_first_published_project(): void
-  {
-    $first = Project::published()->orderBy('order')->firstOrFail();
+        $this->get("/diskurs/{$id}")->assertNotFound();
+        $this->actingAs(User::firstOrFail())->get("/diskurs/{$id}")->assertOk();
+    }
 
-    $this->get('/projekte')->assertViewHas('project', fn ($project) => $project->is($first));
-  }
+    public function test_published_pages_stay_public(): void
+    {
+        $this->get('/projekt/'.Project::published()->value('id'))->assertOk();
+        $this->get('/diskurs/'.Discourse::published()->value('id'))->assertOk();
+        $this->get('/projekte')->assertOk();
+    }
+
+    public function test_projects_index_shows_the_first_published_project(): void
+    {
+        $first = Project::published()->orderBy('order')->firstOrFail();
+
+        $this->get('/projekte')->assertViewHas('project', fn ($project) => $project->is($first));
+    }
 }

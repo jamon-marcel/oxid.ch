@@ -1,5 +1,5 @@
 {{-- Project index --}}
-@if (!request()->routeIs('page.project'))
+@if (!request()->routeIs('page.project', 'page.project.preview'))
   <ul class="{{request()->routeIs('page.project*') ? 'is-visible' : ''}}">
     <li class="project-filter">
       <a href="javascript:;" class="is-active" data-filter="btn" data-filter-value="all">Alle</a>
@@ -27,7 +27,7 @@
 @endif
 
 {{-- Project show --}}
-@if (request()->routeIs('page.project'))
+@if (request()->routeIs('page.project', 'page.project.preview'))
   <ul class="{{request()->routeIs('page.project*') ? 'is-visible' : ''}}">
     
     @if ($project->is_filter_wood)

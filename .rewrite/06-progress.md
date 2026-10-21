@@ -959,6 +959,17 @@ Checked in the browser with a temporary user (deleted afterwards): list,
 the errors above, deleting one's own account refused with the toast.
 `php artisan test`: 124 passed.
 
+### Project preview route (2026-10-21)
+
+"Vorschau" moved from the Raster toolbar into the project form's header
+(every tab, edit only; `ResourceForm` has an `#actions` slot for it). It
+links to `/vorschau/projekt/{id}` (`page.project.preview`, `auth`
+middleware, guests are redirected to `/admin/login`), which renders any
+project. `/projekt/{id}` is now published-only for everyone, admins
+included. The projects menu treats the preview like `page.project`.
+Discourse entries keep the old rule (unpublished visible when logged in);
+they have no preview button. `php artisan test`: 125 passed.
+
 ### To verify at the end of the backend phase
 
 *Done, see "Final QA". The last point ran against the Vue 2 SPA in the

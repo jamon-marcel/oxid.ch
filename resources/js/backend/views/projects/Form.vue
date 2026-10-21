@@ -58,6 +58,17 @@
       </Tab>
     </Tabs>
 
+    <template v-if="isEdit" #actions>
+      <a
+        :href="`/vorschau/projekt/${route.params.id}`"
+        target="_blank"
+        class="inline-flex items-center gap-8 rounded-md bg-sky-50 px-16 py-8 text-sm text-sky-700 transition-colors hover:bg-sky-100 dark:bg-sky-950 dark:text-sky-300 dark:hover:bg-sky-900"
+      >
+        <PhArrowSquareOut :size="16" weight="light" />
+        Vorschau
+      </a>
+    </template>
+
     <template #sidebar>
       <div class="flex flex-col gap-12">
         <FormField v-model="record.publish" name="publish" label="Veröffentlichen" type="checkbox" />
@@ -70,6 +81,7 @@
 </template>
 <script setup>
 import { ref, reactive, computed } from 'vue';
+import { PhArrowSquareOut } from '@phosphor-icons/vue';
 import { useRoute, useRouter } from 'vue-router';
 import ResourceForm from '@/components/resource/ResourceForm.vue';
 import FormField from '@/components/ui/form/FormField.vue';

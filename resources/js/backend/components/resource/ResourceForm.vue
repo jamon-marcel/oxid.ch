@@ -16,7 +16,11 @@
           </div>
         </template>
       </SidebarLayout>
-      <FormActions :submit-label="isEdit ? 'Aktualisieren' : 'Erstellen'" cancel-label="Abbrechen" :busy="busy" @cancel="emit('cancel')" />
+      <FormActions :submit-label="isEdit ? 'Aktualisieren' : 'Erstellen'" cancel-label="Abbrechen" :busy="busy" @cancel="emit('cancel')">
+        <template #before>
+          <slot name="actions" />
+        </template>
+      </FormActions>
     </form>
   </div>
 </template>
@@ -27,7 +31,8 @@ import FormActions from '@/components/ui/form/FormActions.vue';
 
 /**
  * Page frame for a resource form (header, save/cancel, main + sidebar
- * slots). Use together with useResourceForm().
+ * slots, extra header actions in #actions). Use together with
+ * useResourceForm().
  */
 defineProps({
   title: { type: String, required: true },

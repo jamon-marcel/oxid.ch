@@ -1,18 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\WorksController;
-use App\Http\Controllers\DiscourseController;
-use App\Http\Controllers\TeamController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\JobController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DiscourseController;
 use App\Http\Controllers\HistoryController;
-use App\Http\Controllers\SearchController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\WorksController;
 use App\Models\HomeImage;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +26,7 @@ Route::get('/', [HomeController::class, 'index'])->name('page.home');
 // Project routes
 Route::get('/projekte', [ProjectController::class, 'index'])->name('page.projects');
 Route::get('/projekt/{project}/{slug?}', [ProjectController::class, 'show'])->name('page.project');
+Route::get('/vorschau/projekt/{project}', [ProjectController::class, 'preview'])->middleware('auth')->name('page.project.preview');
 
 // Works routes
 Route::get('/werkliste', [WorksController::class, 'index'])->name('page.works');
