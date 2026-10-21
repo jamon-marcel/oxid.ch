@@ -1,0 +1,1 @@
+import{L as e,M as t,n,o as r}from"./http-BfmJUmhu.js";import{l as i}from"./utils-DeIyFPJe.js";t();function a({url:t,key:a,delay:o=500,saved:s=()=>{}}){let c=null;function l(e){i(e),clearTimeout(c),c=setTimeout(async()=>{try{await n.post(t,{[a]:e}),r({type:`success`,text:`Reihenfolge angepasst`}),s()}catch{}},o)}return e(()=>clearTimeout(c)),l}export{a as t};

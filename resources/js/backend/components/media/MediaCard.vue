@@ -11,11 +11,20 @@
     <div class="border-t border-gray-100 px-10 py-8 dark:border-warm-700">
       <div class="truncate text-xs text-gray-900 dark:text-warm-100" :title="label">{{ label }}</div>
       <div v-if="meta" class="mt-2 truncate text-xs text-gray-400 dark:text-warm-500" :title="meta">{{ meta }}</div>
-      <div v-if="hidden || $slots.badges" class="mt-6 flex flex-wrap items-center gap-4">
-        <Badge v-if="hidden">Verborgen</Badge>
+      <div v-if="$slots.badges" class="mt-6 flex flex-wrap items-center gap-4">
         <slot name="badges" />
       </div>
     </div>
+
+    <!-- Hidden: an eye in the corner, out of the way of the action bar -->
+    <span
+      v-if="hidden"
+      class="absolute top-8 right-8 flex size-24 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-sm transition-opacity duration-150 group-focus-within:opacity-0 group-hover:opacity-0 dark:bg-warm-900/90 dark:text-warm-200"
+      title="Verborgen"
+    >
+      <PhEyeSlash :size="14" weight="regular" />
+      <span class="sr-only">Verborgen</span>
+    </span>
 
     <!-- Actions: a bar sliding down from the top on hover -->
     <div class="absolute inset-x-8 top-8 -translate-y-[calc(100%+8px)] overflow-hidden rounded-md transition-transform duration-150 group-focus-within:translate-y-0 group-hover:translate-y-0">
@@ -49,7 +58,6 @@
 <script setup>
 import { computed } from 'vue';
 import { PhTrash, PhPencil, PhCrop, PhArrowSquareOut, PhFilePdf, PhEye, PhEyeSlash } from '@phosphor-icons/vue';
-import Badge from '@/components/ui/badge/Badge.vue';
 
 // An image or a file: preview, name and a second line, the actions in a bar
 // that slides in on hover

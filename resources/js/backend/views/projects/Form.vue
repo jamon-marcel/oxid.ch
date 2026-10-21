@@ -44,9 +44,11 @@
             <Badge v-if="Number(image.is_plan) === 1">Plan</Badge>
           </template>
           <template #fields="{ image }">
-            <FormField v-model="image.is_preview_navigation" name="is_preview_navigation" label="Vorschaubild Navigation" type="checkbox" />
-            <FormField v-model="image.is_preview_works" name="is_preview_works" label="Vorschaubild Werkliste" type="checkbox" />
-            <FormField v-model="image.is_plan" name="is_plan" label="Plan" type="checkbox" />
+            <div class="flex flex-col gap-12">
+              <FormField v-model="image.is_preview_navigation" name="is_preview_navigation" label="Vorschaubild Navigation" type="checkbox" />
+              <FormField v-model="image.is_preview_works" name="is_preview_works" label="Vorschaubild Werkliste" type="checkbox" />
+              <FormField v-model="image.is_plan" name="is_plan" label="Plan" type="checkbox" />
+            </div>
           </template>
         </ImageField>
       </Tab>
@@ -70,9 +72,11 @@
     </template>
 
     <template #sidebar>
-      <div class="flex flex-col gap-12">
-        <FormField v-model="record.publish" name="publish" label="Veröffentlichen" type="checkbox" />
-        <FormField v-for="flag in flags" :key="flag.key" v-model="record[flag.key]" :name="flag.key" :label="flag.label" type="checkbox" />
+      <div v-for="group in flagGroups" :key="group.label">
+        <FormLabel>{{ group.label }}</FormLabel>
+        <div class="flex flex-col gap-12">
+          <FormField v-for="flag in group.flags" :key="flag.key" v-model="record[flag.key]" :name="flag.key" :label="flag.label" type="checkbox" />
+        </div>
       </div>
       <FormField v-model="record.year" name="year" label="Jahr" :errors="errors" required />
       <FormField v-for="select in selects" :key="select.key" v-model="record[select.key]" :name="select.key" :label="select.label" type="select" :options="toOptions(settings[select.key])" :errors="errors" />
@@ -85,6 +89,7 @@ import { PhArrowSquareOut } from '@phosphor-icons/vue';
 import { useRoute, useRouter } from 'vue-router';
 import ResourceForm from '@/components/resource/ResourceForm.vue';
 import FormField from '@/components/ui/form/FormField.vue';
+import FormLabel from '@/components/ui/form/FormLabel.vue';
 import Tabs from '@/components/ui/tabs/Tabs.vue';
 import Tab from '@/components/ui/tabs/Tab.vue';
 import Badge from '@/components/ui/badge/Badge.vue';
@@ -127,12 +132,17 @@ const selects = [
   { key: 'state', label: 'Status' },
 ];
 
-const flags = [
-  { key: 'has_detail', label: 'Detailseite' },
-  { key: 'is_highlight', label: 'Highlight' },
-  { key: 'is_filter_wood', label: 'Filter Holz' },
-  { key: 'is_filter_reuse', label: 'Filter Umnutzung' },
-  { key: 'is_filter_area', label: 'Filter Areal' },
+const flagGroups = [
+  { label: 'Status', flags: [
+    { key: 'publish', label: 'Veröffentlichen' },
+    { key: 'has_detail', label: 'Detailseite' },
+    { key: 'is_highlight', label: 'Highlight' },
+  ] },
+  { label: 'Filter', flags: [
+    { key: 'is_filter_wood', label: 'Holz' },
+    { key: 'is_filter_reuse', label: 'Umnutzung' },
+    { key: 'is_filter_area', label: 'Areal' },
+  ] },
 ];
 
 const settings = reactive({ program: {}, author: {}, state: {} });

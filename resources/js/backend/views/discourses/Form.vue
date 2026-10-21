@@ -40,8 +40,10 @@
             <Badge v-if="Number(image.is_preview) === 1">Vorschaubild</Badge>
           </template>
           <template #fields="{ image }">
-            <FormField v-model="image.is_preview" name="is_preview" label="Vorschaubild" type="checkbox" />
-            <FormField v-model="image.theme" name="theme" label="Helles Theme" type="checkbox" />
+            <div class="flex flex-col gap-12">
+              <FormField v-model="image.is_preview" name="is_preview" label="Vorschaubild" type="checkbox" />
+              <FormField v-model="image.theme" name="theme" label="Helles Theme" type="checkbox" />
+            </div>
           </template>
         </ImageField>
       </Tab>
