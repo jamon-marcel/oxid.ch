@@ -1,6 +1,6 @@
 @extends('frontend.layout.pages')
 @section('seo_title', 'Werkliste nach Autorenschaft')
-@section('seo_description', 'Forsanose, Hochhaus Weberstrasse, Wannenholz, Murgareal, Giesshübel, Sunnige Hof')
+@section('seo_description', 'Werkliste von Oxid Architektur und Burkhalter Sumi Architekten, geordnet nach Autorenschaft.')
 @section('content')
 <section class="content content--works">
   @if ($projects)

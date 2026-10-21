@@ -1,6 +1,6 @@
 @extends('frontend.layout.home')
 @section('seo_title', 'Suche')
-@section('seo_description', '')
+@section('robots', 'noindex, follow')
 @section('content')
 <section class="content-search grid-home">
   @if ($image)

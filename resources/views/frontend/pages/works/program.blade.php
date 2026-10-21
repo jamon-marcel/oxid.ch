@@ -1,6 +1,6 @@
 @extends('frontend.layout.pages')
 @section('seo_title', 'Werkliste nach Programm')
-@section('seo_description', 'Forsanose, Hochhaus Weberstrasse, Wannenholz, Murgareal, Giesshübel, Sunnige Hof')
+@section('seo_description', 'Werkliste von Oxid Architektur und Burkhalter Sumi Architekten, geordnet nach Programm: Wohnen, Gewerbe/Büro, Hybrid und Öffentlich.')
 @section('content')
 <section class="content content--works">
   @if ($projects)

@@ -1294,8 +1294,38 @@ summary:
   every image they use into the Glide cache (cold renders 0.3–1.3 s each,
   so the first run takes a while; a warm run is ~20 s locally for 128
   pages / 6,162 URLs). Exits non-zero and lists the URLs that weren't 200.
+- `.env`: **`APP_ENV=production`** — the meta robots tag is `noindex`
+  on every other environment, and `php artisan seo:robots` (run by
+  composer's `post-autoload-dump`) writes a `Disallow: /` robots.txt.
+  Check `curl https://oxid-architektur.ch/robots.txt` after the deploy:
+  it must list the sitemap.
 - After go-live: `storage/app/public/cache/` (image-cache's output) can
   go; watch `laravel.log` for "Broken … rendition".
+
+## SEO (2026-10-21)
+
+- **Head** (`frontend/partials/head.blade.php`): pages set
+  `seo_title`/`seo_description`, optionally `og_image`, `og_type`,
+  `canonical`, `robots`. Inline `@section` values arrive escaped, so the
+  partial decodes each once; descriptions go through `App\Support\Seo::text`
+  (tags stripped, entities decoded, 160 chars at a word). Adds canonical
+  (projects and discourse: the slugged URL), meta robots (`noindex,
+  nofollow` outside production, `noindex, follow` on the search),
+  `og:type`/`og:locale`/`twitter:card`.
+- **og:image**: projects and discourse use `IsImage::ogUrl()`, a signed
+  1200 × 630 `fit=crop` Glide URL on top of the record's crop. The default
+  `assets/img/oxid-architektur-open-graph.jpg` was referenced but missing
+  (404 on production too); now Saurer Werk 2 (home image 17), 1200 × 630.
+- **Organization JSON-LD** on the homepage (`Seo::organization()`, data in
+  `config/seo.php`).
+- **`/sitemap.xml`, `/llms.txt`** (`SeoController`, after
+  github.com/marceli-to/ferratec-amp5.ch): the fixed pages, projects with
+  a detail page, published discourse.
+- **robots.txt** is no longer committed: `php artisan seo:robots` writes it
+  per environment (production: disallow `/admin`, `/api/`, `/suche`,
+  `/vorschau/`, plus the sitemap).
+- Verified: `tests/Feature/SeoTest.php`, `tests/Unit/SeoTextTest.php`;
+  the og:image rendition is 1200 × 630.
 
 ## Next after this project
 

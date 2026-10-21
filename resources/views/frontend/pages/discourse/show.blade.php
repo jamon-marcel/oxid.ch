@@ -1,8 +1,10 @@
 @extends('frontend.layout.pages')
 @section('seo_title', $discourse->title . ' - Diskurs')
-@section('seo_description', substr(strip_tags($discourse->description_short),0,255))
+@section('seo_description', $discourse->description_short ?: $discourse->description)
+@section('canonical', route('page.discourse.detail', ['discourse' => $discourse->id, 'slug' => AppHelper::slug($discourse->title)]))
+@section('og_type', 'article')
 @if ($discourse_og)
-  @section('og_image', url('/') . $discourse_og->url(1600))
+  @section('og_image', $discourse_og->ogUrl())
 @endif
 @section('content')
 <section class="content content--discourse">

@@ -68,6 +68,14 @@ trait IsImage
   }
 
   /**
+   * Absolute 1200 x 630 URL for og:image.
+   */
+  public function ogUrl(): string
+  {
+    return url(Glide::ogUrl($this->name, $this->crop()));
+  }
+
+  /**
    * One candidate per size, described by its real width. Sizes beyond the
    * image's own collapse into one candidate.
    */

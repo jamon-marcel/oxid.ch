@@ -1,8 +1,9 @@
 @extends('frontend.layout.pages')
 @section('seo_title', $project->title . ' - Projekte')
-@section('seo_description', substr(strip_tags($project->description),0,255))
+@section('seo_description', $project->description)
+@section('canonical', route('page.project', ['project' => $project->id, 'slug' => AppHelper::slug($project->title_short)]))
 @if ($project_og)
-  @section('og_image', url('/') . $project_og->url(1600))
+  @section('og_image', $project_og->ogUrl())
 @endif
 @section('content')
 <section class="content">

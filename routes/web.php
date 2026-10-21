@@ -9,6 +9,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SeoController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\WorksController;
 use App\Models\HomeImage;
@@ -20,6 +21,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 */
+// Sitemap and llms.txt (robots.txt: php artisan seo:robots)
+Route::get('sitemap.xml', [SeoController::class, 'sitemap']);
+Route::get('llms.txt', [SeoController::class, 'llms']);
+
 // Home routes
 Route::get('/', [HomeController::class, 'index'])->name('page.home');
 

@@ -1,6 +1,6 @@
 @extends('frontend.layout.pages')
 @section('seo_title', 'Kontakt')
-@section('seo_description', 'Oxid Architektur GmbH - Münstergasse 18a, 8001 Zürich')
+@section('seo_description', 'Oxid Architektur GmbH, Münstergasse 18a, 8001 Zürich. T +41 44 258 90 10, office@oxid-arch.ch')
 @section('content')
 <section class="content content--contact">
   <div class="contact">

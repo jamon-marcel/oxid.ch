@@ -1,6 +1,6 @@
 @extends('frontend.layout.pages')
 @section('seo_title', 'Team')
-@section('seo_description', 'Team, Profil, Jobs - Yves Schihin, Urs Rinklef')
+@section('seo_description', 'Das Team von Oxid Architektur in Zürich, geleitet von Yves Schihin und Urs Rinklef.')
 @section('content')
 <section class="content">
   @if ($images)

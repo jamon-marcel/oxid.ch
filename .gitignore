@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /public/.htaccess
+/public/robots.txt
 /storage/*.key
 /vendor
 /_backup-27082020

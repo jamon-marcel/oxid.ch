@@ -1,6 +1,6 @@
 @extends('frontend.layout.pages')
 @section('seo_title', 'Geschichte')
-@section('seo_description', '1984 Marianne Burkhalter und Christian Sumi, 2000 Burkhalter Sumi Architekten, 2020 Oxid Architektur')
+@section('seo_description', 'Geschichte von Oxid Architektur: 1984 gründen Marianne Burkhalter und Christian Sumi ihr Büro, 2020 wird Burkhalter Sumi Architekten zu Oxid Architektur.')
 @section('content')
 <section class="content content--history">
   <div class="history">
