@@ -11,6 +11,9 @@
 @import './spacing.css';
 
 @theme {
+  /* The page panel's width cap (max-w-admin) */
+  --container-admin: 80rem;
+
   --font-sans: 'Google Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
   /* Warm palette (dark mode) */

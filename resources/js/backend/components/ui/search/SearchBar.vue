@@ -1,6 +1,6 @@
 <template>
-  <!-- Floats at the bottom of the content area; Escape clears it -->
-  <div class="pointer-events-none fixed right-16 bottom-32 left-256 z-20 flex justify-center px-24">
+  <!-- Floats at the bottom of the panel (max-w-admin); Escape clears it -->
+  <div class="pointer-events-none fixed right-[max(1rem,calc(100vw-var(--container-admin)-16rem))] bottom-32 left-256 z-20 flex justify-center px-24">
     <div class="pointer-events-auto relative w-full max-w-400">
       <PhMagnifyingGlass :size="16" weight="light" class="absolute top-1/2 left-16 -translate-y-1/2 text-gray-400 dark:text-warm-500" />
       <input

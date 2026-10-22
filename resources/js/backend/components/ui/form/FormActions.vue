@@ -1,6 +1,6 @@
 <template>
-  <!-- The page's actions, fixed top right -->
-  <div class="fixed top-16 right-16 z-20 flex items-center gap-12 p-24">
+  <!-- The page's actions, fixed top right of the panel (max-w-admin, beside the w-240 sidebar) -->
+  <div class="fixed top-16 right-[max(1rem,calc(100vw-var(--container-admin)-16rem))] z-20 flex items-center gap-12 p-24">
     <slot name="before" />
     <slot>
       <FormButton v-if="cancelLabel" variant="secondary" @click="emit('cancel')">{{ cancelLabel }}</FormButton>
