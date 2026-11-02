@@ -59,9 +59,14 @@
       }
     }
 
-    // Show photos whole, like plans, at any window size
-    .visual-fit img {
-      object-fit: contain;
+    // Show photos whole, like plans, at any window size; the space
+    // around them is light gray, as with plans
+    .visual-fit {
+      background-color: $color-light;
+
+      img {
+        object-fit: contain;
+      }
     }
   }
 }
