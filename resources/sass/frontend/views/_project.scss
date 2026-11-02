@@ -58,6 +58,11 @@
         margin-bottom: 0 !important;
       }
     }
+
+    // Show photos whole, like plans, at any window size
+    .visual-fit img {
+      object-fit: contain;
+    }
   }
 }
 
