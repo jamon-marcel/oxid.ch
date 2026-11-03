@@ -12,18 +12,7 @@
       <a href="javascript:;" class="btn-scroll is-prev" data-project="prev"></a>
       <a href="javascript:;" class="btn-scroll is-next" data-project="next"></a>
       @foreach($project_grid as $grid)
-        @if ($grid->layout->key == '1' || $grid->layout->key == '1-1')
-          @include('frontend.pages.project.partials.grid-1')
-        @endif
-        @if ($grid->layout->key == '1-2' && count($grid->elements) == 3)
-          @include('frontend.pages.project.partials.grid-1-2')
-        @endif
-        @if ($grid->layout->key == '2-1' && count($grid->elements) == 3)
-          @include('frontend.pages.project.partials.grid-2-1')
-        @endif
-        @if ($grid->layout->key == '2-2' && count($grid->elements) == 4)
-          @include('frontend.pages.project.partials.grid-2-2')
-        @endif
+        @include('frontend.pages.project.partials.grid')
       @endforeach
     </div>
   @endif

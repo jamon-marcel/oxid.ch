@@ -39,6 +39,7 @@ php artisan test     # PHPUnit 12 (tests/Unit, tests/Feature)
 ./vendor/bin/pint    # code style
 php artisan migrate
 php artisan optimize # config/route/view cache — works, keep it that way
+./deploy.sh          # deploy HEAD to Hostpoint staging (see 06-progress.md, Deploy notes)
 ```
 
 `public/build/` and `public/assets/css/busu.css` are **committed**: run

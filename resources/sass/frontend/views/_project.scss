@@ -40,87 +40,87 @@
 
 .project-grids {
   position: relative;
+}
 
-  [class^='project-grid-'] {
+/*
+ * One row = one composition: columns of stacked images sharing the row's
+ * height, each at its own aspect ratio, divided only by the white gap.
+ * From Grid::composition(): --r (row width per unit of height) and --c
+ * (gaps in the width), per column --cr/--cn, per image --fr (its share of the column height).
+ *
+ * Desktop: the composition is as large as fits into the window (width of
+ * .project-grids, height of the viewport minus the footer) and centred;
+ * only when the height limits it is there gray at its sides.
+ */
+.project-grid__image {
+  margin-bottom: $grid-gap-sm;
 
-    figure {
-      margin-bottom: $grid-gap-sm;
-      @include bp-sm() {
-        margin-bottom: 0;
-      }
-    }
-  }
-
-  @include bp-sm() {
-    [class^='project-grid-'] {
-      margin-bottom: $grid-gap-sm;
-      &:last-child {
-        margin-bottom: 0 !important;
-      }
-    }
-
-    // Show photos whole, like plans, at any window size; the space
-    // around them is light gray, as with plans
-    .visual-fit {
-      background-color: $color-light;
-
-      img {
-        object-fit: contain;
-      }
-    }
+  img {
+    display: block;
+    height: auto;
+    width: 100%;
   }
 }
 
+.project-grid:last-child .project-grid__col:last-child .project-grid__image:last-child {
+  margin-bottom: 0;
+}
 
-.no-cssgrid {
+@include bp-sm() {
   .project-grids {
- 
-    @include bp-sm() {
-  
-      [class^='project-grid-'] {
-        display: flex;
-        > div,
-        > figure {
-          flex: 50%;
-        }
-      }
-  
-      .project-grid-1 {
-        > div,
-        > figure {
-          flex: 100%;
-        }
-      }
-    
-      .project-grid__stack {
-        margin-bottom: $grid-gap-sm;
-      }
+    container-type: inline-size;
+  }
+
+  .project-grid {
+    --g: #{$grid-gap-sm};
+    --h: min(100vh - #{$footer-height}, (100cqw - var(--c) * var(--g)) / var(--r));
+    background-color: $color-light;
+    display: flex;
+    height: var(--h);
+    justify-content: center;
+    margin-bottom: var(--g);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .project-grid__composition {
+    background-color: $color-white;
+    display: flex;
+    gap: var(--g);
+    height: 100%;
+  }
+
+  .project-grid__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--g);
+    width: calc(var(--cr) * (var(--h) - var(--cn) * var(--g)));
+  }
+
+  .project-grid__image {
+    flex: var(--fr) 1 0;
+    margin-bottom: 0;
+    min-height: 0;
+
+    picture,
+    img {
+      display: block;
+      height: 100%;
+      width: 100%;
+    }
+
+    img {
+      object-fit: cover;
+    }
+
+    &.is-plan img {
+      object-fit: contain;
     }
   }
 }
 
-.cssgrid {
-  .project-grids {
- 
-    @include bp-sm() {
-  
-      [class^='project-grid-'] {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-column-gap: $grid-gap-sm;
-      }
-  
-      .project-grid-1 {
-        grid-template-columns: 1fr;
-      }
-    
-      .project-grid__stack {
-        display: grid;
-        grid-row-gap: $grid-gap-sm;
-      }
-    }
-  }
-}
 
 // Project teaser (mobile only)
 .project-teaser {

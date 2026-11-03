@@ -3,7 +3,12 @@
 Survey done 2026-10-04 against `f140dca` on `master` (clean tree).
 All of it — backend, admin, public site JS — was done on 2026-10-04
 (`3960590` … `3699b16`). Everything is pushed to
-`origin/rework/laravel-13-vue-3`; nothing is deployed yet.
+`origin/rework/laravel-13-vue-3`.
+
+**2026-11-02: staging is live** at https://oxid-architektur.ch.marceli.to
+(Hostpoint, `pumutuxu@pumutuxu.myhostpoint.ch:/home/pumutuxu/www/oxid-architektur.ch`),
+deployed with `./deploy.sh` from the branch, on the production data of
+2026-11-02. Production is untouched. See "Deploy notes" → "Staging".
 
 The sections below are written in the order the work happened, and
 some later steps replaced earlier ones the same day (Dropzone → own
@@ -1242,6 +1247,59 @@ the page source but does nothing; converted with the rest, not removed.
   shipped a dead fancyBox 3.5.7. **Fixed** in `046a170`.
 
 ## Deploy notes
+
+### Staging (2026-11-02) and `deploy.sh`
+
+`./deploy.sh` (as in cristinarutz.ch) replaces the SSH + `git pull` plan
+below: it refuses uncommitted changes, runs the tests, `git archive HEAD`,
+`composer install --no-dev` locally, rsyncs with `--delete`, then on the
+server `optimize:clear`, `optimize`, `seo:robots`. Target is `HOST`/`DEST`
+at the top (now staging). PHP on the server: `/usr/local/php84/bin/php`.
+Never overwritten: `.env`, `public/.user.ini`, `public/storage`,
+`public/robots.txt`, `storage/**`, `bootstrap/cache/*.php`. Migrations are
+not run by the script.
+
+- **`public/.htaccess`** is gitignored (since 2023). The app's rules live in
+  `deploy/public.htaccess`; the deploy rebuilds the server's file as the
+  Hostpoint panel's block (up to `#@**HCP_END**@#`, PHP version) + those
+  rules. Edit rules in `deploy/public.htaccess`, not on the server. No
+  marker on the server → only the app rules; saving the PHP version in the
+  panel adds the block again.
+- **robots.txt:** composer's `post-autoload-dump` runs `seo:robots` in the
+  `.env`-less stage (= "production"); that file is excluded and the server
+  rewrites it for its own `APP_ENV` (staging → `Disallow: /`).
+- **`bootstrap/cache/.gitignore`** is now tracked (`bb79a08`): without the
+  folder, `package:discover` fails in the stage.
+- **Data:** `.rewrite/tools/staging-db.sh <prod-dump.sql> <out.sql>` loads
+  the prod dump into the scratch DB `oxid_staging`, lists uploads missing
+  locally, runs the two new migrations (width/height read from the files —
+  put prod's `uploads/` into `storage/app/public/uploads` first, merged
+  without `--delete`), dumps for MariaDB. 2026-11-02: prod dump
+  (`burkhal2_oxid`) + 177 new prod uploads, 0 images without size.
+- **Glide cache warmed locally** and uploaded: cache file names hash path +
+  params without `s`, so they don't depend on `APP_KEY`.
+  `DB_DATABASE=oxid_staging php -d memory_limit=1G artisan images:warm`:
+  131 pages, 6,286 images, ~1.2 GB, about 1.5 h on the Mac (AVIF).
+  Staging emits AVIF, so Hostpoint's Imagick writes it.
+- Server `.env`: `APP_ENV=staging`, `APP_DEBUG=false`, `APP_URL` +
+  `SANCTUM_STATEFUL_DOMAINS` the staging host, `SESSION_SECURE_COOKIE=true`,
+  `DB_CONNECTION=mysql`, `DB_HOST=pumutuxu.mysql.db.internal`,
+  `QUEUE_CONNECTION=sync`, `CACHE_STORE=file`, `GOOGLE_MAPS_KEY`. A line
+  without `KEY=` or a space after `=` breaks the whole file (500 with no
+  `laravel.log`). `optimize` after every `.env` change.
+- macOS `rsync` is openrsync: no `--info=progress2`, use `--progress`.
+- The staging DB password was pasted into a chat on 2026-11-02: change it.
+
+Open on staging: check the `.htaccess` block after re-saving PHP in the
+panel; `images:warm` on the server after the uploads/cache rsync (should
+find almost nothing to render); admin login, upload, crop; the client's
+decision on the gray background behind photos (`03b2779`).
+
+For go-live, point `deploy.sh` at production, take a fresh prod dump and
+`uploads/`, run `staging-db.sh` again (or `migrate --force` on the server)
+and upload the cache the same way.
+
+### Earlier plan (2026-10-04)
 
 `04-open-questions.md` #8: SSH + `git pull`, as in luvo. The full
 checklist with server-specific notes is in `DEPLOYMENT.md` at the repo

@@ -1,6 +1,6 @@
 import { debounce, desktop, scrollToElement } from './utils.js';
 
-// Full-height sections stepped through with prev/next buttons. On desktop the
+// Sections (full height or shorter) stepped through with prev/next buttons. On desktop the
 // current section follows the scroll position and the buttons hide at either
 // end; below that the Sass hides the buttons anyway.
 export function sections({ item, prev, next, onChange = () => {}, onStep = () => {} }) {
@@ -17,9 +17,12 @@ export function sections({ item, prev, next, onChange = () => {}, onStep = () =>
   };
 
   const update = debounce(() => {
-    const height = document.documentElement.scrollHeight / total;
-    // Switch in the middle between two sections
-    index = Math.floor((window.scrollY + height / 2) / height) + 1;
+    // The current section is the last one whose top has passed the middle
+    // of the window (sections may be shorter than the window); at the very
+    // bottom it is the last one.
+    const middle = window.innerHeight / 2;
+    const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 1;
+    index = atBottom ? total : Math.max(1, items.filter((el) => el.getBoundingClientRect().top <= middle).length);
     onChange(index);
     document.querySelectorAll(next).forEach((btn) => { btn.hidden = index === total; });
     document.querySelectorAll(prev).forEach((btn) => { btn.hidden = index === 1; });
