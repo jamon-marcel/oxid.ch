@@ -1291,9 +1291,8 @@ not run by the script.
 - The staging DB password was pasted into a chat on 2026-11-02: change it.
 
 Open on staging: check the `.htaccess` block after re-saving PHP in the
-panel; `images:warm` on the server after the uploads/cache rsync (should
-find almost nothing to render); admin login, upload, crop; the client's
-decision on the gray background behind photos (`03b2779`).
+panel; admin upload and crop. The uploads and the Glide cache are on the
+server. Client review of the project rows: see "Project rows" below.
 
 For go-live, point `deploy.sh` at production, take a fresh prod dump and
 `uploads/`, run `staging-db.sh` again (or `migrate --force` on the server)
@@ -1359,6 +1358,35 @@ summary:
   it must list the sitemap.
 - After go-live: `storage/app/public/cache/` (image-cache's output) can
   go; watch `laravel.log` for "Broken … rendition".
+
+## Project rows (2026-11-02/03, client feedback)
+
+The client wanted photos shown whole at any window size (`e929a06`,
+`object-fit: contain`), then no gray between rows: images always flush
+with the white line, multi-image rows scaled together as one composition
+(`6986592`):
+
+- `Grid::composition()`: per layout (`1`, `1-1`, `1-2`, `2-1`, `2-2`)
+  columns of stacked images. Each column's ratio = 1 / Σ(1/ratio), each
+  image's flex share sums to 1 per column (a smaller flex-grow sum leaves
+  height empty). Row: width = `--r` × height + `--c` × gap. Ratios are the
+  cropped sizes (`displaySize()`); crops are 3:4, 16:10 or 3:2.
+- One partial, `partials/grid.blade.php` (replaces `grid-1|1-2|2-1|2-2`).
+  A mixed row with a missing image now shows what it has (was skipped).
+- `_project.scss`, from `bp-sm`: `.project-grids` is a size container,
+  row height `min(100vh - footer, (100cqw - c·gap) / r)`, composition
+  centred on white, gray (`$color-light`) only beside it when the height
+  limits. Photos `cover` (exact fit), plans `contain`. Phones unchanged.
+- `lib/sections.js` (also used by `imagescroll.js`): the counter took
+  equal-height sections; it now counts the sections whose top passed the
+  middle of the window, and the last one at the very bottom.
+- Checked in the browser: 1280×800, 1100×1100, iPhone 12 Pro;
+  projects 30 (`1-1`, `1-2`), 56 (`2-2`), counter on 56.
+- Known: column lines don't line up between rows of different layouts
+  (a `1-2` row splits about 48:52, a `1-1` row 50:50) because nothing is
+  cropped. If the client minds: fixed 50/50 in mixed rows, the 3:4 image
+  loses about 3% top and bottom.
+- Example pages sent to the client: `/projekt/52`, `40`, `30`, `5`, `56`, `47`.
 
 ## SEO (2026-10-21)
 

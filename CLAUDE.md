@@ -75,6 +75,9 @@ site; keep its output path.
 - Blade: `<x-image :image="$image" preset="large" />` → `<picture>` with
   AVIF/WebP sources where the server can write them
   (`ImageSupport::modernFormats()`). Presets in `config/images.php`.
+- Project rows (`partials/grid.blade.php`): each row is one composition
+  sized from its images' ratios (`Grid::composition()` → CSS variables,
+  `_project.scss`), never cropped, flush with the white gap.
 - The admin uses the fixed `/img/thumbnail|large|original/{file}` routes
   (`resources/js/backend/lib/images.js`). `/img/crop/...` and
   `/img/home/...` are legacy URLs that 301 to signed ones.
