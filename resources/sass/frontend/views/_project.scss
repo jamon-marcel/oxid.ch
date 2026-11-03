@@ -48,9 +48,12 @@
  * From Grid::composition(): --r (row width per unit of height) and --c
  * (gaps in the width), per column --cr/--cn, per image --fr (its share of the column height).
  *
- * Desktop: the composition is as large as fits into the window (width of
- * .project-grids, height of the viewport minus the footer) and centred;
- * only when the height limits it is there gray at its sides.
+ * Desktop: every row on the page has the same width, --w from
+ * Grid::sharedWidth() (set on .project-grids): the widest at which each
+ * row fits into the window (--H, the viewport minus the footer), at most
+ * the width of .project-grids. Left and right edges line up on every row;
+ * each row's height follows from its ratio. Gray beside rows narrower
+ * than the container.
  */
 .project-grid__image {
   margin-bottom: $grid-gap-sm;
@@ -68,12 +71,13 @@
 
 @include bp-sm() {
   .project-grids {
+    --H: calc(100vh - #{$footer-height});
+    --g: #{$grid-gap-sm};
     container-type: inline-size;
   }
 
   .project-grid {
-    --g: #{$grid-gap-sm};
-    --h: min(100vh - #{$footer-height}, (100cqw - var(--c) * var(--g)) / var(--r));
+    --h: calc((var(--w) - var(--c) * var(--g)) / var(--r));
     background-color: $color-light;
     display: flex;
     height: var(--h);

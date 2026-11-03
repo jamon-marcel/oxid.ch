@@ -1387,6 +1387,17 @@ with the white line, multi-image rows scaled together as one composition
   cropped. If the client minds: fixed 50/50 in mixed rows, the 3:4 image
   loses about 3% top and bottom.
 - Example pages sent to the client: `/projekt/52`, `40`, `30`, `5`, `56`, `47`.
+- Client feedback (2026-11-03): gray at the sides is fine, but every row
+  should be the same width, compositions as wide as the landscape images.
+  Now one width per page: `Grid::sharedWidth()` puts
+  `min(100cqw, r₁·H + c₁·gap, …)` (one term per distinct row) into `--w`
+  on `.project-grids`; each row's height is `(--w − c·gap) / r`. The
+  narrowest row fitting the window sets the width for all; with ratios
+  1.33–1.62 landscape rows lose about 6% (project 7, with a 1.33 row,
+  about 17%). No re-cropping needed; identical heights too would need
+  fixed crops per layout. Checked: one left/right edge per page on
+  30, 52, 56, 7 @1600×900, 47 @1280×800, 40 @1100×1100, 5 @2560×1300;
+  max row height = viewport − footer; phones unchanged.
 
 ## SEO (2026-10-21)
 

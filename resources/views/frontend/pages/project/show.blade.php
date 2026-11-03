@@ -8,11 +8,12 @@
 @section('content')
 <section class="content">
   @if ($project_grid->isNotEmpty())
-    <div class="project-grids">
+    @php($compositions = $project_grid->map->composition())
+    <div class="project-grids" style="--w: {{ \App\Models\Grid::sharedWidth($compositions) }}">
       <a href="javascript:;" class="btn-scroll is-prev" data-project="prev"></a>
       <a href="javascript:;" class="btn-scroll is-next" data-project="next"></a>
-      @foreach($project_grid as $grid)
-        @include('frontend.pages.project.partials.grid')
+      @foreach($project_grid as $i => $grid)
+        @include('frontend.pages.project.partials.grid', ['composition' => $compositions[$i]])
       @endforeach
     </div>
   @endif

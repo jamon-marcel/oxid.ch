@@ -72,6 +72,24 @@ class Grid extends Base
 		];
 	}
 
+	/**
+	 * The one width every row on a page shares, as a CSS expression: the
+	 * widest at which each row still fits the window height (--H), never
+	 * wider than the container. Row i is r·H + c·gap wide at full height,
+	 * so the narrowest of those wins; each row's height then follows from
+	 * its own ratio (see _project.scss).
+	 */
+	public static function sharedWidth(iterable $compositions): string
+	{
+		$terms = collect($compositions)
+			->filter(fn ($composition) => $composition['columns'])
+			->map(fn ($composition) => sprintf('%s * var(--H) + %s * var(--g)', round($composition['ratio'], 4), round($composition['gaps'], 4)))
+			->unique()
+			->values();
+
+		return 'min('.$terms->prepend('100cqw')->implode(', ').')';
+	}
+
 	protected static function ratio($image): float
 	{
 		[$width, $height] = $image->displaySize() ?? [16, 10];

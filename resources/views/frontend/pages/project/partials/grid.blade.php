@@ -1,4 +1,3 @@
-@php($composition = $grid->composition())
 @if ($composition['columns'])
 <div class="project-grid project-grid-{{ $grid->layout->key }}" data-project="grid" style="--r: {{ round($composition['ratio'], 4) }}; --c: {{ round($composition['gaps'], 4) }}">
   <div class="project-grid__composition">
