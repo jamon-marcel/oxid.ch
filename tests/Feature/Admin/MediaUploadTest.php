@@ -44,6 +44,21 @@ class MediaUploadTest extends AdminTestCase
     $this->assertFileExists(storage_path('app/public/uploads/' . $name));
   }
 
+  public function test_a_large_image_is_scaled_down_on_upload(): void
+  {
+    if (\App\Support\Glide::driver() !== 'imagick') {
+      $this->markTestSkipped('Downscaling needs Imagick');
+    }
+    config(['images.upload_max' => 500]);
+
+    $name = $this->upload(UploadedFile::fake()->image('gross.jpg', 1200, 800))
+      ->assertOk()
+      ->assertJson(['orientation' => 'l'])
+      ->json('name');
+
+    $this->assertSame([500, 333], \App\Support\ImageSupport::dimensions(storage_path('app/public/uploads/' . $name)));
+  }
+
   public function test_orientation_comes_from_the_image_size(): void
   {
     $this->upload(UploadedFile::fake()->image('hoch.png', 300, 400))

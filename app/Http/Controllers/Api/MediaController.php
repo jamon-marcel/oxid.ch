@@ -64,6 +64,8 @@ class MediaController extends Controller
     $orientation = '';
     if (in_array($filetype, $image_types))
     {
+      ImageSupport::downscale($this->upload_path . '/' . $name);
+
       // From the file header (EXIF rotation included), not a full decode:
       // GD needs ~4 bytes per pixel, 269 MB for a 65 MP floor plan
       [$width, $height] = ImageSupport::dimensions($this->upload_path . '/' . $name) ?? [1, 0];

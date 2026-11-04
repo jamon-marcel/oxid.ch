@@ -13,6 +13,12 @@ return [
   ],
 
   /*
+   * Uploaded JPEG/PNG images are scaled down to this longer side (px). The
+   * site shows at most 2400; the rest leaves room for crops.
+   */
+  'upload_max' => 4000,
+
+  /*
    * Largest AVIF (longer side, px) this server renders itself; larger cold
    * renders are served as WebP. Unset = no limit. Production: 800, its
    * ImageMagick writes empty AVIFs or crashes from about 1000 px.

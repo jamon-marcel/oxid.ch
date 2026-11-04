@@ -3,6 +3,10 @@
 namespace App\Support;
 
 use Imagick;
+use Illuminate\Support\Facades\Log;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\ImageManager;
+use Throwable;
 
 class ImageSupport
 {
@@ -72,5 +76,36 @@ class ImageSupport
 		$orientation = function_exists('exif_read_data') ? (@exif_read_data($path)['Orientation'] ?? 1) : 1;
 
 		return $orientation >= 5 ? [$size[1], $size[0]] : [$size[0], $size[1]];
+	}
+
+	/**
+	 * Scales an uploaded JPEG/PNG down in place so its longer side is at
+	 * most images.upload_max, keeping its format (JPEG at quality 90). EXIF
+	 * rotation is applied to the pixels. Returns whether the file changed.
+	 *
+	 * Imagick only: GD needs ~4 bytes per pixel in PHP memory (a 20,000 px
+	 * upload would not fit), so without Imagick the upload stays as it is.
+	 */
+	public static function downscale(string $path): bool
+	{
+		$max = (int) config('images.upload_max');
+		$size = self::dimensions($path);
+		if (! $max || ! $size || max($size) <= $max || Glide::driver() !== 'imagick') {
+			return false;
+		}
+
+		try {
+			Imagick::setResourceLimit(Imagick::RESOURCETYPE_THREAD, 1);
+			$image = ImageManager::usingDriver(ImagickDriver::class)->decodePath($path);
+			$image->scaleDown($max, $max);
+			$image->save($path, quality: 90);
+
+			return true;
+		}
+		catch (Throwable $e) {
+			Log::warning('Upload not scaled down: ' . basename($path) . ': ' . $e->getMessage());
+
+			return false;
+		}
 	}
 }
