@@ -1261,7 +1261,7 @@ not run by the script.
 
 - **`public/.htaccess`** is gitignored (since 2023). The app's rules live in
   `deploy/public.htaccess`; the deploy rebuilds the server's file as the
-  Hostpoint panel's block (up to `#@**HCP_END**@#`, PHP version) + those
+  Hostpoint panel's block (up to `#@__HCP_END__@#`, PHP version) + those
   rules. Edit rules in `deploy/public.htaccess`, not on the server. No
   marker on the server → only the app rules; saving the PHP version in the
   panel adds the block again.
