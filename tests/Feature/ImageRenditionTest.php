@@ -48,6 +48,25 @@ class ImageRenditionTest extends TestCase
     $this->assertSame($response->getContent(), file_get_contents($this->cachedFiles()[0]));
   }
 
+  public function test_an_avif_over_the_limit_is_served_as_webp_unless_cached(): void
+  {
+    if (! ImageSupport::supports('avif') || ! ImageSupport::supports('webp')) {
+      $this->markTestSkipped('Needs AVIF and WebP');
+    }
+
+    // The 400 x 300 upload: 200 is within a limit of 250, 300 is not
+    config(['images.avif_max' => 250]);
+    $this->get(Glide::url($this->name, 200, null, 'avif'))->assertOk()->assertHeader('Content-Type', 'image/avif');
+    $this->get(Glide::url($this->name, 300, null, 'avif'))->assertOk()->assertHeader('Content-Type', 'image/webp');
+    $this->get(Glide::url($this->name, 300, [200, 100, 0, 0], 'avif'))->assertOk()->assertHeader('Content-Type', 'image/avif');
+
+    // Rendered while there was no limit: the cached AVIF is served
+    config(['images.avif_max' => null]);
+    $this->get(Glide::url($this->name, 400, null, 'avif'))->assertOk()->assertHeader('Content-Type', 'image/avif');
+    config(['images.avif_max' => 250]);
+    $this->get(Glide::url($this->name, 400, null, 'avif'))->assertOk()->assertHeader('Content-Type', 'image/avif');
+  }
+
   public function test_a_format_the_encoder_keeps_breaking_falls_back_to_the_upload_format(): void
   {
     $format = ImageSupport::modernFormats()[0] ?? null;

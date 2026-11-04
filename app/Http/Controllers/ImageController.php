@@ -120,6 +120,9 @@ class ImageController extends Controller
   protected function respond(string $filename, array $params, int $maxAge, array $cacheDirectives = []): Response
   {
     $format = in_array($params['fm'] ?? null, ImageSupport::modernFormats(), true) ? $params['fm'] : $this->sourceFormat($filename);
+    if ($format === 'avif' && ! $this->canRenderAvif($filename, $params)) {
+      $format = ImageSupport::supports('webp') ? 'webp' : $this->sourceFormat($filename);
+    }
     $image = $this->render($filename, $params, $format);
 
     // The encoder failed twice: the upload's own format for now, cached
@@ -159,6 +162,47 @@ class ImageController extends Controller
     }
 
     return null;
+  }
+
+  /**
+   * Whether an AVIF of this rendition may be served: always when it is
+   * cached, else only up to images.avif_max (longer side, in pixels). The
+   * production server's encoder writes empty files or crashes above about
+   * 1000 px, so larger cold renders go out as WebP there; the cache warmed
+   * on another machine keeps its AVIFs.
+   */
+  protected function canRenderAvif(string $filename, array $params): bool
+  {
+    $limit = config('images.avif_max');
+    if (! $limit) {
+      return true;
+    }
+
+    $avif = ['fm' => 'avif', 'q' => self::FORMAT_QUALITY['avif']] + $params;
+    if ($this->server->cacheFileExists('uploads/' . $filename, $avif)) {
+      return true;
+    }
+
+    return $this->outputSide($filename, $params) <= $limit;
+  }
+
+  /**
+   * The longer side of the rendition: fit=crop is exactly w x h; otherwise
+   * the (cropped) source scaled down to fit inside w x h, never up.
+   */
+  protected function outputSide(string $filename, array $params): int
+  {
+    $width = isset($params['w']) ? (int) $params['w'] : null;
+    $height = isset($params['h']) ? (int) $params['h'] : null;
+    if (($params['fit'] ?? null) === 'crop' && $width && $height) {
+      return max($width, $height);
+    }
+
+    $crop = isset($params['crop']) ? array_map('intval', explode(',', (string) $params['crop'])) : [];
+    [$sourceWidth, $sourceHeight] = count($crop) === 4 ? [$crop[0], $crop[1]] : (ImageSupport::dimensions($this->source($filename)) ?? [PHP_INT_MAX, PHP_INT_MAX]);
+    $scale = min(1, $width ? $width / $sourceWidth : 1, $height ? $height / $sourceHeight : 1);
+
+    return (int) round(max($sourceWidth, $sourceHeight) * $scale);
   }
 
   /**

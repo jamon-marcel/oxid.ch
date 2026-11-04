@@ -11,4 +11,11 @@ return [
     'teaser' => [1600, 2400],
     'home' => [1200, 2000],
   ],
+
+  /*
+   * Largest AVIF (longer side, px) this server renders itself; larger cold
+   * renders are served as WebP. Unset = no limit. Production: 800, its
+   * ImageMagick writes empty AVIFs or crashes from about 1000 px.
+   */
+  'avif_max' => env('IMAGES_AVIF_MAX') ? (int) env('IMAGES_AVIF_MAX') : null,
 ];
