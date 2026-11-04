@@ -10,7 +10,7 @@
   @endif
   <div class="span search">
     <form method="GET" action="{{ route('page.search.index') }}">
-      <input type="text" name="keyword" placeholder="Suchbegriff" value="{{ $keyword ?? ''}}">
+      <input type="text" name="keyword" placeholder="Suchbegriff" value="{{ $keyword ?? ''}}" @unless ($keyword ?? null) autofocus @endunless>
     </form>
     @if ($results)
       <div class="search__results">

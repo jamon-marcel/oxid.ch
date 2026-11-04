@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\HomeImage;
+use App\Support\ImageSupport;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
@@ -56,6 +58,12 @@ class WarmImages extends Command
       }
     }
 
+    // The homepage, the search page and the admin login each show one random
+    // home image, so the crawl sees only some of them: add them all
+    foreach ($this->homeImageUrls() as $url) {
+      $images[$url] = true;
+    }
+
     $this->info(count($pages) . ' pages, ' . count($images) . ' images');
     if ($this->option('dry-run')) {
       return self::SUCCESS;
@@ -75,6 +83,28 @@ class WarmImages extends Command
     }
 
     return $failed ? self::FAILURE : self::SUCCESS;
+  }
+
+  /**
+   * Every rendition of every published home image: the "home" preset
+   * (homepage, search) also covers the login background's sizes.
+   *
+   * @return list<string>
+   */
+  protected function homeImageUrls(): array
+  {
+    $formats = [...ImageSupport::modernFormats(), null];
+    $urls = [];
+    foreach (HomeImage::published()->get() as $image) {
+      foreach (config('images.presets.home') as $size) {
+        foreach ($formats as $format) {
+          $url = parse_url($image->url($size, $format));
+          $urls[] = $url['path'] . (isset($url['query']) ? '?' . $url['query'] : '');
+        }
+      }
+    }
+
+    return $urls;
   }
 
   protected function request(Kernel $kernel, string $uri): Response
