@@ -15,6 +15,13 @@ class Glide
 {
 	public static function server(): Server
 	{
+		// ImageMagick 7.1.2 on Hostpoint segfaults encoding large AVIFs
+		// (about 1500 x 2000 and up) on several threads; on one it is stable
+		// and no slower (2026-11-04). A segfault is a bare 503, nothing logged.
+		if (self::driver() === 'imagick') {
+			\Imagick::setResourceLimit(\Imagick::RESOURCETYPE_THREAD, 1);
+		}
+
 		return ServerFactory::create([
 			'source' => storage_path('app/public'),
 			'cache' => storage_path('app/.glide-cache'),
