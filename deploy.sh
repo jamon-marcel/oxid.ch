@@ -9,7 +9,7 @@
 # public/.user.ini (PHP settings), public/storage (symlink from `php artisan storage:link`), public/robots.txt, storage and
 # caches are never overwritten or deleted. Neither is a root .htaccess (production's document root is the
 # site folder, its .htaccess forwards into public/). public/.htaccess is rebuilt: the Hostpoint panel's block
-# (PHP version, up to #@__HCP_END__@#) is kept, the app's rules from deploy/public.htaccess follow it.
+# (PHP version, up to the #@__HCP_END__@# marker; also matched with ** in case the panel writes that) is kept, the app's rules from deploy/public.htaccess follow it.
 # Migrations are not run here: `ssh … /usr/local/php84/bin/php artisan migrate --force` when there are new ones.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -89,7 +89,7 @@ if [[ -n $DRY_RUN ]]; then
 fi
 
 echo "Updating public/.htaccess…"
-ssh "$HOST" "cd '$DEST/public' && { if grep -q '^#@__HCP_END__@#' .htaccess 2>/dev/null; then sed '/^#@__HCP_END__@#/q' .htaccess; echo '# Anything after the comment above is left alone'; echo; fi; cat; } > .htaccess.new && mv .htaccess.new .htaccess" < "$STAGE/deploy/public.htaccess"
+ssh "$HOST" "cd '$DEST/public' && { if grep -qE '^#@(__|[*][*])HCP_END(__|[*][*])@#' .htaccess 2>/dev/null; then sed -E '/^#@(__|[*][*])HCP_END(__|[*][*])@#/q' .htaccess; echo '# Anything after the comment above is left alone'; echo; fi; cat; } > .htaccess.new && mv .htaccess.new .htaccess" < "$STAGE/deploy/public.htaccess"
 
 echo "Refreshing caches…"
 # Cached config/routes/events are dropped by hand first: a stale cache (e.g. from the old Laravel 11 site)
