@@ -1463,10 +1463,14 @@ with the white line, multi-image rows scaled together as one composition
   middle of the window, and the last one at the very bottom.
 - Checked in the browser: 1280×800, 1100×1100, iPhone 12 Pro;
   projects 30 (`1-1`, `1-2`), 56 (`2-2`), counter on 56.
-- Known: column lines don't line up between rows of different layouts
-  (a `1-2` row splits about 48:52, a `1-1` row 50:50) because nothing is
-  cropped. If the client minds: fixed 50/50 in mixed rows, the 3:4 image
-  loses about 3% top and bottom.
+- ~~Known: column lines don't line up between rows of different layouts
+  (a `1-2` row splits about 48:52, a `1-1` row 50:50)~~ Fixed 2026-11-04
+  (client asked): `Grid::equalColumns()` splits `1-2`/`2-1` rows 50:50.
+  The stack keeps its exact fit and sets the height; the single image
+  gets the stack's column size and is cropped by `cover` (a 3:4 beside two
+  16:10 loses about 3% top and bottom; a plan is letterboxed). Checked on
+  30 @1600×900: `1-1` line at 790.2–802.2 px, `1-2` at 790–802. A `1-1`
+  row with two different ratios still splits by ratio.
 - Example pages sent to the client: `/projekt/52`, `40`, `30`, `5`, `56`, `47`.
 - Client feedback (2026-11-03): gray at the sides is fine, but every row
   should be the same width, compositions as wide as the landscape images.

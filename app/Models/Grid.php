@@ -63,7 +63,7 @@ class Grid extends Base
 			];
 		}
 
-		$columns = collect($columns);
+		$columns = collect(self::equalColumns($columns));
 
 		return [
 			'columns' => $columns->all(),
@@ -88,6 +88,27 @@ class Grid extends Base
 			->values();
 
 		return 'min('.$terms->prepend('100cqw')->implode(', ').')';
+	}
+
+	/**
+	 * Mixed rows (`1-2`, `2-1`: a single image beside a stack) split 50:50,
+	 * so their column line sits where it does in a `1-1` row. The stack
+	 * keeps its exact fit and sets the height; the single image takes the
+	 * stack's width and height and is cropped by `object-fit: cover`
+	 * (a 3:4 beside two 16:10 loses about 3% top and bottom).
+	 */
+	protected static function equalColumns(array $columns): array
+	{
+		if (count($columns) !== 2 || $columns[0]['gaps'] === $columns[1]['gaps']) {
+			return $columns;
+		}
+
+		$stack = $columns[0]['gaps'] > $columns[1]['gaps'] ? 0 : 1;
+		$single = 1 - $stack;
+		$columns[$single]['ratio'] = $columns[$stack]['ratio'];
+		$columns[$single]['gaps'] = $columns[$stack]['gaps'];
+
+		return $columns;
 	}
 
 	protected static function ratio($image): float
