@@ -11,7 +11,8 @@
   $seoRobots = \App\Support\Seo::indexable() ? ($seoYield('robots') ?: 'index, follow') : 'noindex, nofollow';
 @endphp
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+{{-- cssgrid: the class modernizr used to set; the works, discourse, history and ratio-box styles depend on it --}}
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="cssgrid">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
