@@ -25,6 +25,7 @@ export function close() {
 export function init() {
   document.addEventListener('click', (e) => {
     if (e.target.closest(SEL.btn)) {
+      e.preventDefault();
       toggle();
       return;
     }

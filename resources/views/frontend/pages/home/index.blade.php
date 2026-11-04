@@ -6,7 +6,7 @@
 <section class="content-home grid-home">
   @if ($image)
     <figure class="span visual-fit is-home">
-      <x-image :image="$image" preset="home" />
+      <x-image :image="$image" preset="home" priority />
     </figure>
     
   @endif

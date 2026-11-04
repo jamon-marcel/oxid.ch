@@ -4,8 +4,8 @@
 @section('content')
 <section class="content">
   @if ($images)
-    <a href="javascript:;" class="btn-scroll is-prev" data-imagescroll="prev" hidden></a>
-    <a href="javascript:;" class="btn-scroll is-next" data-imagescroll="next"></a>
+    <a href="javascript:;" class="btn-scroll is-prev" data-imagescroll="prev" aria-label="Vorheriges Bild" hidden></a>
+    <a href="javascript:;" class="btn-scroll is-next" data-imagescroll="next" aria-label="Nächstes Bild"></a>
     <div class="visual-list">
       @foreach($images as $image)
         <figure class="visual-fit" data-imagescroll="item">
@@ -16,7 +16,7 @@
   @endif
 </section>
 <div class="overlay-info" data-overlay="root" data-visible-onload="1">
-  <a href="javascript:;" class="btn-close" data-overlay="btn"></a>
+  <a href="javascript:;" class="btn-close" data-overlay="btn" aria-label="Schliessen"></a>
   <div>
     @if ($team['partner'])
       <h3>{{__('settings.partner')}}</h3>

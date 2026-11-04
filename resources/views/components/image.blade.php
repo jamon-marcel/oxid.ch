@@ -1,4 +1,4 @@
-@props(['image', 'preset', 'alt' => ''])
+@props(['image', 'preset', 'alt' => '', 'priority' => false])
 @php
   $sizes = config('images.presets.' . $preset);
   [$width, $height] = $image->displaySize() ?? [null, null];
@@ -7,5 +7,5 @@
   @foreach (\App\Support\ImageSupport::modernFormats() as $format)
     <source type="image/{{ $format }}" srcset="{{ $image->srcset($sizes, $format) }}">
   @endforeach
-  <img srcset="{{ $image->srcset($sizes) }}" src="{{ $image->url($sizes[0]) }}" @if ($width) width="{{ $width }}" height="{{ $height }}" @endif alt="{{ $alt }}">
+  <img srcset="{{ $image->srcset($sizes) }}" src="{{ $image->url($sizes[0]) }}" @if ($width) width="{{ $width }}" height="{{ $height }}" @endif alt="{{ $alt }}" @if ($priority) fetchpriority="high" @endif>
 </picture>

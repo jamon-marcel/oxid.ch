@@ -38,7 +38,7 @@
 <meta name="theme-color" content="#aa4939">
 <meta name="csrf-token" value="{{ csrf_token() }}" />
 <meta name="format-detection" content="telephone=no">
+<link rel="preload" href="/assets/css/fonts/EuclidCircularA-Regular-WebS.woff2" as="font" type="font/woff2" crossorigin>
 @vite('resources/sass/frontend/app.scss')
-<script src="{{ asset('assets/js/modernizr.min.js') }}"></script>
 </head>
 <body>

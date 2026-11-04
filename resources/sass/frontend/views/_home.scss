@@ -65,6 +65,16 @@ section.content-home {
 
     a {
       @extend %anchor-external-lg;
+
+      // Links stacked line by line: a 24px touch target each
+      @media (pointer: coarse) {
+        display: inline-block;
+        padding-block: 2px;
+
+        &:after {
+          translate: 0 2px;
+        }
+      }
     }
   }
 }

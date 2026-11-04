@@ -8,7 +8,7 @@
 @endif
 @section('content')
 <section class="content content--discourse">
-  <a href="javascript:window.history.back();" class="btn-close" data-swiper="themed"></a>
+  <a href="javascript:window.history.back();" class="btn-close" data-swiper="themed" aria-label="Schliessen"></a>
   <div class="swiper">
     <div class="swiper-wrapper">
       @if ($discourse->publishedImages)
@@ -28,7 +28,7 @@
   </div>
 </section>
 <div class="overlay-info is-discourse" data-overlay="root">
-  <a href="javascript:;" class="btn-close" data-overlay="btn"></a>
+  <a href="javascript:;" class="btn-close" data-overlay="btn" aria-label="Schliessen"></a>
   <div class="discourse-detail">
     <h1>{{$discourse->title}}</h1>
     {!! $discourse->description !!}
@@ -40,7 +40,7 @@
 <div class="menu-bar is-pages is-discourse">
   <div class="menu-bar__open" data-menu="bar">
     <div class="menu-footer menu-footer--discourse-show">
-      <a href="javascript:window.history.back();" class="btn-close is-sm" data-swiper="themed"></a>
+      <a href="javascript:window.history.back();" class="btn-close is-sm" data-swiper="themed" aria-label="Schliessen"></a>
       <h2 class="menu-footer__heading">{{$discourse->heading}}</h2>
       <h1>{{$discourse->title}}</h1>
       <div class="menu-footer__info">

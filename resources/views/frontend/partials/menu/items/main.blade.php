@@ -44,13 +44,13 @@
 </ul>
 <ul class="meta">
   <li>
-    <a href="{{ route('page.search.index') }}" class="icon-magnifier"></a>
+    <a href="{{ route('page.search.index') }}" class="icon-magnifier" aria-label="Suche"></a>
   </li>
   <li class="social"> 
-    <a href="https://www.linkedin.com/company/oxid-architektur/" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.linkedin.com/company/oxid-architektur/" target="_blank" rel="noopener noreferrer" aria-label="Oxid Architektur auf LinkedIn">
       @include('frontend.partials.icons.linkedin')
     </a>
-    <a href="https://www.instagram.com/oxid_architektur/" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.instagram.com/oxid_architektur/" target="_blank" rel="noopener noreferrer" aria-label="Oxid Architektur auf Instagram">
       @include('frontend.partials.icons.instagram')
     </a>
   </li>

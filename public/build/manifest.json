@@ -428,7 +428,7 @@
     ]
   },
   "resources/js/frontend/app.js": {
-    "file": "assets/app-4OlGgXgs.js",
+    "file": "assets/app-CB9BGpbe.js",
     "name": "app",
     "src": "resources/js/frontend/app.js",
     "isEntry": true,
@@ -443,7 +443,7 @@
     "isEntry": true
   },
   "resources/sass/frontend/app.scss": {
-    "file": "assets/app-CiHNEjG4.css",
+    "file": "assets/app-BlUstOvF.css",
     "name": "app",
     "names": [
       "app.css"

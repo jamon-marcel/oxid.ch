@@ -4,13 +4,13 @@
 @vite('resources/js/frontend/maps.js')
 @endif
 @production
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-171670650-1"></script>
+<!-- Google tag (gtag.js) - Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B6RDB30W93"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'UA-171670650-1');
+  gtag('config', 'G-B6RDB30W93');
 </script>
 @endproduction
 </body>

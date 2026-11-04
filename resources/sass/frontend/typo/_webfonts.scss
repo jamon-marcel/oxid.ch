@@ -13,7 +13,8 @@
   src: url('/assets/css/fonts/EuclidCircularA-Regular-WebS.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
       url('/assets/css/fonts/EuclidCircularA-Regular-WebS.woff2') format('woff2'), /* Super Modern Browsers */
       url('/assets/css/fonts/EuclidCircularA-Regular-WebS.woff') format('woff'), /* Pretty Modern Browsers */
-      url('/assets/css/fonts/EuclidCircularA-Regular-WebS.ttf')  format('truetype'), /* Safari, Android, iOS */
+      url('/assets/css/fonts/EuclidCircularA-Regular-WebS.ttf')  format('truetype'); /* Safari, Android, iOS */
+  font-display: swap;
 }
 
 @font-face {
@@ -22,5 +23,6 @@
   src: url('/assets/css/fonts/EuclidCircularA-Medium-WebS.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
       url('/assets/css/fonts/EuclidCircularA-Medium-WebS.woff2') format('woff2'), /* Super Modern Browsers */
       url('/assets/css/fonts/EuclidCircularA-Medium-WebS.woff') format('woff'), /* Pretty Modern Browsers */
-      url('/assets/css/fonts/EuclidCircularA-Medium-WebS.ttf')  format('truetype'), /* Safari, Android, iOS */
+      url('/assets/css/fonts/EuclidCircularA-Medium-WebS.ttf')  format('truetype'); /* Safari, Android, iOS */
+  font-display: swap;
 }

@@ -17,10 +17,10 @@
           @endif
           
           <span class="socials">
-            <a href="https://www.linkedin.com/company/oxid-architektur/" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.linkedin.com/company/oxid-architektur/" target="_blank" rel="noopener noreferrer" aria-label="Oxid Architektur auf LinkedIn">
               @include('frontend.partials.icons.linkedin')
             </a>
-            <a href="https://www.instagram.com/oxid_architektur/" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.instagram.com/oxid_architektur/" target="_blank" rel="noopener noreferrer" aria-label="Oxid Architektur auf Instagram">
               @include('frontend.partials.icons.instagram')
             </a>
           </span>

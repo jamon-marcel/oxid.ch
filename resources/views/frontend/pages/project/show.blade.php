@@ -10,8 +10,8 @@
   @if ($project_grid->isNotEmpty())
     @php($compositions = $project_grid->map->composition())
     <div class="project-grids" style="--w: {{ \App\Models\Grid::sharedWidth($compositions) }}">
-      <a href="javascript:;" class="btn-scroll is-prev" data-project="prev"></a>
-      <a href="javascript:;" class="btn-scroll is-next" data-project="next"></a>
+      <a href="javascript:;" class="btn-scroll is-prev" data-project="prev" aria-label="Zurück"></a>
+      <a href="javascript:;" class="btn-scroll is-next" data-project="next" aria-label="Weiter"></a>
       @foreach($project_grid as $i => $grid)
         @include('frontend.pages.project.partials.grid', ['composition' => $compositions[$i]])
       @endforeach
@@ -36,7 +36,7 @@
   @endif
 </section>
 <div class="overlay-info" data-overlay="root">
-  <a href="javascript:;" class="btn-close" data-overlay="btn"></a>
+  <a href="javascript:;" class="btn-close" data-overlay="btn" aria-label="Schliessen"></a>
   <div class="project">
     <h1>{{$project->title}}</h1>
     {!! $project->description !!}

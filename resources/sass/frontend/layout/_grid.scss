@@ -6,34 +6,15 @@
  */
 
 // Home
-.no-cssgrid {
-  .grid-home {
-    @extend %clearfix;
-    @include bp-sm() {
-      figure,
-      > div {
-        float: left;
-        width: 50%;
-      }
-
-      figure {
-        float: right;
-      }
+.grid-home {
+  @include bp-sm() {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    .span:nth-child(1) {
+      order: 2;
     }
-  }
-}
-
-.cssgrid {
-  .grid-home {
-    @include bp-sm() {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      .span:nth-child(1) {
-        order: 2;
-      }
-      .span:nth-child(2) {
-        order: 1;
-      }
+    .span:nth-child(2) {
+      order: 1;
     }
   }
 }
@@ -53,60 +34,28 @@
       margin-bottom: 0;
     }
   }
-}
 
-.no-cssgrid {
-  .grid-team {
-    @extend %clearfix;
-    @include bp-sm() {
-      margin-bottom: 0;
-    }
+  @include bp-sm() {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: $space-md;
+    grid-row-gap: $space-lg;
 
-    > div,
-    > article {
-      @include bp-sm() {
-        float: left;
-        width: 50%;
-        margin-bottom: $space-lg;
-      }
-    }
-  }
-}
-
-.cssgrid {
-  .grid-team {
-    @include bp-sm() {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-column-gap: $space-md;
-      grid-row-gap: $space-lg;
+    &,
+    &.is-last {
       margin-bottom: $space-lg;
-      .span:not(.span-alumni) {
-        margin-bottom: 0;
-      }
+    }
+    .span:not(.span-alumni) {
+      margin-bottom: 0;
     }
   }
 }
 
 // Contact
-.no-cssgrid {
-  .grid-contact {
-    @extend %clearfix;
-    @include bp-sm() {
-      > div {
-        float: left;
-        width: 50%;
-      }
-    }
-  }
-}
-
-.cssgrid {
-  .grid-contact {
-    @include bp-sm() {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-column-gap: 0;
-    }
+.grid-contact {
+  @include bp-sm() {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 0;
   }
 }
