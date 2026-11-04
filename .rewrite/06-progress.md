@@ -5,6 +5,11 @@ All of it — backend, admin, public site JS — was done on 2026-10-04
 (`3960590` … `3699b16`). Everything is pushed to
 `origin/rework/laravel-13-vue-3`.
 
+**2026-11-04: production is live** at https://oxid-architektur.ch
+(Hostpoint, `burkhal2@oxid-arch.ch:/home/burkhal2/www/oxid-architektur.ch`),
+`./deploy.sh production` from `master` (the branch is merged, fast-forward).
+See "Deploy notes" → "Go-live". Open after go-live: "Where things stand" → Open.
+
 **2026-11-02: staging is live** at https://oxid-architektur.ch.marceli.to
 (Hostpoint, `pumutuxu@pumutuxu.myhostpoint.ch:/home/pumutuxu/www/oxid-architektur.ch`),
 deployed with `./deploy.sh` from the branch, on the production data of
@@ -75,16 +80,26 @@ Branch: **`rework/laravel-13-vue-3`**, cut from `f140dca` on 2026-10-04.
 - **Tests:** 118 (`php artisan test`): 84 admin API feature tests on
   in-memory SQLite, 7 public-page and 2 rendition tests against the local
   MySQL copy, 19 search and 4 image unit tests, 2 examples.
-- **Open:**
-  1. Production facts to collect on Hostpoint: web PHP `upload_max_filesize`
-     / `post_max_size` / `memory_limit`, Imagick loaded? (decides larger
-     uploads and render memory), CLI PHP version, search queries from the
-     access logs (ranking tuning, `07-search.md`).
-  2. The deploy itself — see "Deploy notes". Production needs
-     `php artisan migrate` (two new migrations).
-  3. After go-live: watch `laravel.log` for "Broken … rendition"; delete
-     `storage/app/public/cache/`; the 120 unreferenced uploads are a
-     cleanup candidate.
+- **Open** (updated 2026-11-04, after go-live):
+  1. ~~Production facts~~ — collected 2026-11-04: web PHP 8.4 (panel, was
+     8.3), CLI `/usr/local/php84/bin/php` (the shell's default `php` was 8.2;
+     the user put php84 first on `PATH`), Imagick 7.1.2 with AVIF + WebP
+     (AVIF broken above ~1000 px, see "Go-live"), CLI `memory_limit` 256M.
+     Still open: search queries from the access logs (ranking tuning,
+     `07-search.md`).
+  2. ~~The deploy itself~~ — done 2026-11-04, see "Deploy notes" → "Go-live".
+  3. After go-live: watch `storage/logs/laravel-YYYY-MM-DD.log` (daily
+     files) for "Broken … rendition" and "Upload not scaled down"; the 120
+     unreferenced uploads are a cleanup candidate. (`storage/app/public/cache/`
+     wasn't on production; nothing to delete.)
+  4. Server cleanup: `rm -rf .claude tests` in the site folder (excluded from
+     the deploy, left over from the git checkout). Keep
+     `~/oxid-prod-before-golive.tgz` for a week or two, then delete it.
+  5. Staging: `public/.htaccess` probably lost its panel block (the old marker
+     pattern never matched, see "Go-live"): re-save PHP in the panel, check
+     `head -8 public/.htaccess`. Change the staging DB password.
+  6. Later: PHP 8.5 (Imagick there has AVIF + WebP; untested otherwise);
+     whether the AVIF limit can go with a newer ImageMagick on Hostpoint.
 - **QA scripts:** Playwright in `~/oxid-qa` (outside the repo; see
   "Public site JS"). The admin QA scripts of the earlier rounds lived in
   `/tmp/pw` and are gone. The user works in the same local admin: tests
@@ -1248,13 +1263,81 @@ the page source but does nothing; converted with the rest, not removed.
 
 ## Deploy notes
 
+### Go-live (2026-11-04)
+
+Production went from the old Laravel 11 git checkout to the rework, in the
+same folder (document root `public/`), with `./deploy.sh production`. Order:
+
+1. Server backup: `tar czf ~/oxid-prod-before-golive.tgz --exclude=…/storage`
+   (code, `.env`, `.git`, `vendor`, both `.htaccess`). Rollback: unpack it,
+   re-import the original dump (`~/backups/oxid-golive-2026-11-04/burkhal2_oxid-prod.sql`).
+2. Prod dump (phpMyAdmin, 09:38) → `staging-db.sh` → `oxid-golive.sql`
+   (452 KB, `DROP TABLE IF EXISTS` per table): 0 uploads missing, both
+   migrations, 0 images without size. `images:warm` locally on `oxid_staging`.
+3. FTP: `storage/app/public/uploads/` (1,066) and `storage/app/.glide-cache/`
+   (dotfolder: show hidden files). The old code uses neither.
+4. `./deploy.sh production --dry-run` (new): only old-code deletions
+   (`.git`, `webpack.mix.js`, `server.php`, `.styleci.yml`,
+   `public/mix-manifest.json`, old `resources/`, `vendor/`).
+5. `php artisan down` (old code) → phpMyAdmin import → new `.env` → panel
+   PHP 8.4 → `./deploy.sh production` → `php artisan up`.
+
+Checked: all public pages 200, no `noindex`, robots.txt / sitemap.xml /
+llms.txt, `/archfile` 301, images from the cache in ~50 ms, admin login,
+save, upload + crop + delete, reorder. Laravel log empty since the switch.
+
+What came up, and is now in the code:
+
+- **Panel marker:** Hostpoint writes `#@__HCP_END__@#`; `deploy.sh` looked
+  for `#@**HCP_END**@#` (the form this logbook had). It never matched, so
+  the `Use php-fpm …` line would have been dropped. `deploy.sh` now matches
+  both (pasted output showed `**`, the file itself had `__`).
+- **Panel PHP "latest":** pick a fixed version (`php84`); "latest" moves on
+  its own.
+- **Root `.htaccess`** (untracked, no effect since the document root is
+  `public/`) and `.claude/` are excluded from the deploy.
+- **Stale caches:** the deploy removes `bootstrap/cache/{config,routes-*,events}.php`
+  before artisan runs; the old site's cached config named removed providers.
+- **`/archfile`** → `http://login.archfile.oxid-arch.ch` 301, now in
+  `deploy/public.htaccess` (it was only in production's `.htaccess`).
+- **`.env`:** new `APP_KEY` (nothing encrypted in the DB, everyone is logged
+  out by Sanctum anyway); `SANCTUM_STATEFUL_DOMAINS` with `www.` (www serves
+  the site, no redirect); `GOOGLE_MAPS_KEY` (was hard-coded in the old
+  footer); `LOG_LEVEL=warning`; `IMAGES_AVIF_MAX=800`; no Algolia/JWT/Mail/
+  Redis/Pusher/AWS. Copy: `~/backups/oxid-golive-2026-11-04/.env-production`
+  (password `REPLACE_ME`).
+- **Home images:** homepage, search and admin login show one *random* home
+  image, so `images:warm` reached only 1–2 of the 10; the rest were cold on
+  the server (503, see next). `images:warm` now adds every published home
+  image in the `home` preset sizes and formats (`ed0a643`).
+- **AVIF on Hostpoint is broken above ~1000 px:** ImageMagick 7.1.2-34
+  (libheif). Same 8000 × 6000 original, cropped: 600 × 800 fine; 900 × 1200
+  and larger → on several threads a **segfault** (web: bare Apache 503,
+  nothing in the log), on one thread an **empty file** (the "Broken
+  rendition" guard then serves JPEG after two tries, ~20 s). JPEG and WebP
+  fine at every size. Fixes: one ImageMagick thread in `Glide::server()`
+  (`df2a354`, no crash); `images.avif_max` / `IMAGES_AVIF_MAX=800` — a cold
+  AVIF rendition larger than that is served as WebP, cached AVIFs (warmed on
+  the Mac) still go out as AVIF (`1961e60`). Verified on production: cold
+  1996 → WebP 200, 700 → AVIF 200, cached 2000 → AVIF.
+- **Uploads scaled down:** every new rendition of an 8000 × 6000 original
+  takes 5–7 s on the server just to decode it. Uploaded JPEG/PNG are now
+  scaled to a 4000 px longer side right after the upload
+  (`images.upload_max`, `ImageSupport::downscale`, Imagick, JPEG q90, PNG
+  alpha kept, EXIF rotation applied once) (`d61eb98`). 242 existing originals
+  are over 4000 px (max 20,000); not touched.
+- **Search:** an empty `/suche` autofocuses the field (not on result pages).
+- Logs are daily: `storage/logs/laravel-YYYY-MM-DD.log` (`LOG_STACK=daily`).
+- GitHub had a short outage (push "Internal Server Error"); `deploy.sh`
+  doesn't need it, it uploads the local `HEAD`.
+
 ### Staging (2026-11-02) and `deploy.sh`
 
 `./deploy.sh` (as in cristinarutz.ch) replaces the SSH + `git pull` plan
 below: it refuses uncommitted changes, runs the tests, `git archive HEAD`,
 `composer install --no-dev` locally, rsyncs with `--delete`, then on the
-server `optimize:clear`, `optimize`, `seo:robots`. Target is `HOST`/`DEST`
-at the top (now staging). PHP on the server: `/usr/local/php84/bin/php`.
+server `optimize:clear`, `optimize`, `seo:robots`. `HOST`/`DEST`
+per target, `./deploy.sh staging|production [--dry-run]` (since 2026-11-04). PHP on the server: `/usr/local/php84/bin/php`.
 Never overwritten: `.env`, `public/.user.ini`, `public/storage`,
 `public/robots.txt`, `storage/**`, `bootstrap/cache/*.php`. Migrations are
 not run by the script.
@@ -1294,9 +1377,7 @@ Open on staging: check the `.htaccess` block after re-saving PHP in the
 panel; admin upload and crop. The uploads and the Glide cache are on the
 server. Client review of the project rows: see "Project rows" below.
 
-For go-live, point `deploy.sh` at production, take a fresh prod dump and
-`uploads/`, run `staging-db.sh` again (or `migrate --force` on the server)
-and upload the cache the same way.
+Go-live: done 2026-11-04, see "Go-live" above.
 
 ### Earlier plan (2026-10-04)
 

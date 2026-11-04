@@ -39,7 +39,7 @@ php artisan test     # PHPUnit 12 (tests/Unit, tests/Feature)
 ./vendor/bin/pint    # code style
 php artisan migrate
 php artisan optimize # config/route/view cache — works, keep it that way
-./deploy.sh          # deploy HEAD to Hostpoint staging (see 06-progress.md, Deploy notes)
+./deploy.sh production [--dry-run]   # deploy HEAD to Hostpoint (or: staging); see 06-progress.md, Deploy notes
 ```
 
 `public/build/` and `public/assets/css/busu.css` are **committed**: run
@@ -72,6 +72,11 @@ site; keep its output path.
   (Imagick if loaded, else GD). Every rendition is checked before it is
   served; a broken one is re-rendered, then falls back to the upload's
   format (see `06-progress.md`, "Broken AVIF renders").
+- Production's ImageMagick breaks AVIFs above ~1000 px: Glide runs on one
+  thread, and with `IMAGES_AVIF_MAX` (production: 800) larger cold AVIF
+  renders go out as WebP; cached AVIFs (warmed locally) are kept.
+- Uploaded JPEG/PNG are scaled to a 4000 px longer side on upload
+  (`images.upload_max`, `ImageSupport::downscale`).
 - Blade: `<x-image :image="$image" preset="large" />` → `<picture>` with
   AVIF/WebP sources where the server can write them
   (`ImageSupport::modernFormats()`). Presets in `config/images.php`.
@@ -83,8 +88,10 @@ site; keep its output path.
   `/img/home/...` are legacy URLs that 301 to signed ones.
 - `php artisan images:warm` crawls the public pages in-process and
   renders every signed `/img/...` URL they emit into the Glide cache
-  (`storage/app/.glide-cache`); run it after a deploy. `--dry-run` only
-  counts.
+  (`storage/app/.glide-cache`), plus every published home image (those
+  pages pick one at random). Run it locally against the production data and
+  upload the cache: the server's AVIF encoder can't render the large ones.
+  `--dry-run` only counts.
 
 ### Search
 
